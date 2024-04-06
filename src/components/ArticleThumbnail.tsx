@@ -179,10 +179,11 @@ export const ArticleThumbnail = ({
   const mesh = play ? meshNoise : meshGesture;
 
   const albumArt = useImage(require('../assets/images/ikuokukonen.jpg'));
+  const r = 12;
   const rrct = {
     rect: { x: 0, y: 0, width: articleCardWidth, height: imageSideLength },
-    topLeft: { x: 12, y: 12 },
-    topRight: { x: 12, y: 12 },
+    topLeft: { x: r, y: r },
+    topRight: { x: r, y: r },
     bottomRight: { x: 0, y: 0 },
     bottomLeft: { x: 0, y: 0 },
   };
