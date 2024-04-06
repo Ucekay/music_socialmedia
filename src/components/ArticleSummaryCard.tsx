@@ -1,40 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet } from 'react-native';
-import RNColorThief from 'react-native-color-thief';
+// import RNColorThief from 'react-native-color-thief';
 
 import { ArticleThumbnail } from './ArticleThumbnail';
-import { increaseSaturation, rgb2Hex } from '../constants/ColorModifier';
+// import { increaseSaturation, rgb2Hex } from '../constants/ColorModifier';
 
-import type { Palette } from '../types';
+// import type { Palette } from '../types';
 import { Image, useImage } from '@shopify/react-native-skia';
 import { View } from 'react-native';
 import { Container } from '@shopify/react-native-skia/lib/typescript/src/renderer/Container';
 
 export default function ArticleSummaryCard() {
   const image = useImage(require('../assets/images/ikuokukonen.jpg'));
-  const [hexColors, setHexColors] = useState<string[]>([]);
+  //  const [hexColors, setHexColors] = useState<string[]>([]);
 
-  useEffect(() => {
-    const albumArt =
-      'https://m.media-amazon.com/images/I/81WewepiK2L._UF1000,1000_QL80_.jpg';
-    const albumArt2 =
-      'https://www.sonymusic.co.jp/adm_image/common/artist_image/70009000/70009283/jacket_image/302951.jpg';
-    RNColorThief.getPalette(albumArt2, 17, 10, false)
-      .then((palette: Palette) => {
-        const hexColors = rgb2Hex(palette);
-        setHexColors(hexColors);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  //  useEffect(() => {
+  //    const albumArt =
+  //      'https://m.media-amazon.com/images/I/81WewepiK2L._UF1000,1000_QL80_.jpg';
+  //    const albumArt2 =
+  //      'https://www.sonymusic.co.jp/adm_image/common/artist_image/70009000/70009283/jacket_image/302951.jpg';
+  //    RNColorThief.getPalette(albumArt2, 17, 10, false)
+  //      .then((palette: Palette) => {
+  //        const hexColors = rgb2Hex(palette);
+  //        setHexColors(hexColors);
+  //      })
+  //      .catch((error) => {
+  //        console.log(error);
+  //      });
+  //  }, []);
 
-  if (hexColors.length === 0) return null;
-  const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
+  //  if (hexColors.length === 0) return null;
+  //  const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
 
   return (
     <View style={styles.container}>
-      <ArticleThumbnail rows={3} cols={3} colors={gradientColors} play={true} />
+      <ArticleThumbnail rows={3} cols={3} colors={palette.otto} play={true} />
       <View style={styles.summaryContainer}>
         <View>
           <Text style={styles.articleTitle}>Article Title</Text>
