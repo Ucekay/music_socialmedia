@@ -195,7 +195,6 @@ export const ArticleThumbnail = ({
           { width: articleCardWidth, height: imageSideLength },
         ]}
       >
-        <Mask mask={<RoundedRect rect={rrct} />}>
           <Group>
             <ImageShader image={image} tx='repeat' ty='repeat' />
             {rects.map((r, i) => {
@@ -233,7 +232,6 @@ export const ArticleThumbnail = ({
             height={imageSideLength}
             fit='contain'
           />
-        </Mask>
       </Canvas>
     </View>
   );
