@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 // import RNColorThief from 'react-native-color-thief';
 
@@ -6,9 +6,8 @@ import { ArticleThumbnail } from './ArticleThumbnail';
 // import { increaseSaturation, rgb2Hex } from '../constants/ColorModifier';
 
 // import type { Palette } from '../types';
-import { Image, useImage } from '@shopify/react-native-skia';
+import { useImage } from '@shopify/react-native-skia';
 import { View } from 'react-native';
-import { Container } from '@shopify/react-native-skia/lib/typescript/src/renderer/Container';
 
 export default function ArticleSummaryCard() {
   const image = useImage(require('../assets/images/ikuokukonen.jpg'));
