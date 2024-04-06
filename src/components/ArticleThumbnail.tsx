@@ -184,7 +184,6 @@ export const ArticleThumbnail = ({
 
   const meshGesture = useSharedValue(defaultMesh);
 
-  const gesture = useHandles(meshGesture, defaultMesh, window);
   const mesh = play ? meshNoise : meshGesture;
 
   const albumArt = useImage(require('../assets/images/ikuokukonen.jpg'));
