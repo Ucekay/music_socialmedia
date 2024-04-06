@@ -1,10 +1,10 @@
+import { View, Text } from '@/src/components/Themed';
 import React from 'react';
 
 export default function TabOneScreen() {
   return (
-    <div>
-      <h1>Tab One</h1>
-      <p>Tab one content</p>
-    </div>
+    <View>
+      <Text>Tab One</Text>
+    </View>
   );
 }

@@ -7,7 +7,7 @@ const articleData = [
     artistName: '星野源',
     userID: '@melodymagic001',
     user: 'HarmonyFan',
-    userAvatarUrl: 'https://api.dicebear.com/v2/avatars/melodymagic001.svg',
+    userAvatarUrl: 'https://api.dicebear.com/7.x/pixel-art/png',
   },
   {
     articleID: 'art002',

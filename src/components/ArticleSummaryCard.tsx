@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import RNColorThief from 'react-native-color-thief';
+import { Image } from 'expo-image';
 
 import { ArticleThumbnail } from './ArticleThumbnail';
 import { increaseSaturation, rgb2Hex } from '../constants/ColorModifier';
+import type { Palette, articleDataType } from '../types';
+import { COLORS } from '../constants/Colors';
 
-import type { Palette } from '../types';
-import { Image, useImage } from '@shopify/react-native-skia';
-import { View } from 'react-native';
-import { Container } from '@shopify/react-native-skia/lib/typescript/src/renderer/Container';
-
-export default function ArticleSummaryCard() {
-  const image = useImage(require('../assets/images/ikuokukonen.jpg'));
+export default function ArticleSummaryCard({
+  article,
+}: {
+  article: articleDataType;
+}) {
   const [hexColors, setHexColors] = useState<string[]>([]);
-
   useEffect(() => {
     const albumArt =
       'https://m.media-amazon.com/images/I/81WewepiK2L._UF1000,1000_QL80_.jpg';
@@ -21,28 +21,38 @@ export default function ArticleSummaryCard() {
       'https://www.sonymusic.co.jp/adm_image/common/artist_image/70009000/70009283/jacket_image/302951.jpg';
     RNColorThief.getPalette(albumArt2, 17, 10, false)
       .then((palette: Palette) => {
-        const hexColors = rgb2Hex(palette);
+        const hexColors: string[] = rgb2Hex(palette);
         setHexColors(hexColors);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         console.log(error);
       });
   }, []);
-
   if (hexColors.length === 0) return null;
   const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
+
+  const {
+    articleID,
+    articleTitle,
+    songName,
+    artistName,
+    userID,
+    user,
+    userAvatarUrl,
+  } = article;
 
   return (
     <View style={styles.container}>
       <ArticleThumbnail rows={3} cols={3} colors={gradientColors} play={true} />
       <View style={styles.summaryContainer}>
         <View>
-          <Text style={styles.articleTitle}>Article Title</Text>
+          <Text style={styles.articleTitle}>{articleTitle}</Text>
         </View>
         <View>
-          <Text style={styles.songName}>Song Name</Text>
-          <Text style={styles.artistName}>Artist Name</Text>
+          <Text style={styles.songName}>{songName}</Text>
+          <Text style={styles.artistName}>{artistName}</Text>
         </View>
+        <Image source={userAvatarUrl} style={styles.avatar} />
       </View>
     </View>
   );
@@ -73,6 +83,13 @@ const styles = StyleSheet.create({
   },
   artistName: {
     fontSize: 16,
+    color: COLORS.neutral700,
+  },
+  avatar: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'blue',
   },
 });
 

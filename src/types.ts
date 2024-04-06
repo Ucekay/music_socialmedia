@@ -32,3 +32,14 @@ export type Palette = {
   g: number;
   b: number;
 }[];
+
+export type articleDataType = {
+  articleID: string;
+  articleTitle: string;
+  articleContent: string;
+  songName: string;
+  artistName: string;
+  userID: string;
+  user: string;
+  userAvatarUrl: string;
+};
