@@ -26,3 +26,9 @@ export type StackParamList = {
   FrostedCard: undefined;
   SpeedTest: undefined;
 };
+
+export type Palette = {
+  r: number;
+  g: number;
+  b: number;
+}[];

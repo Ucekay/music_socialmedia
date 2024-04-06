@@ -1,75 +1,8 @@
 import React, { useState, useEffect } from 'react';
-//import { getColors } from 'react-native-image-colors';
-import RNColorThief from 'react-native-color-thief';
-
-import { CoonsPatchMeshGradient } from '../../components/CoonsPatchMeshGradient';
-import { increaseSaturation, rgb2Hex } from '../../constants/ColorModifier';
-//import { increaseSaturation } from '@/src/constants/ColorModifier';
-
-//interface ImageColorResult {
-//  [key: string]: string;
-//  background: string;
-//  detail: string;
-//  primary: string;
-//  secondary: string;
-//  platform: string;
-//}
-
-//const useImageColor = () => {
-//  const [colors, setColors] = useState<ImageColorResult | null>(null);
-//
-//  useEffect(() => {
-//    const albumArt =
-//      'https://m.media-amazon.com/images/I/81WewepiK2L._UF1000,1000_QL80_.jpg';
-//
-//    getColors(albumArt, { quality: 'highest' }).then(setColors);
-//  }, []);
-//  return colors;
-//};
+import ArticleSummaryCard from '@/src/components/ArticleSummaryCard';
 
 export default function TabTwoScreen() {
-  //  const UIImageColors = useImageColor();
-  //  const excludedKey = 'platform';
-  //  if (!UIImageColors) return null;
-  //  let imagePalette = Object.keys(UIImageColors)
-  //    .filter((key) => key !== excludedKey)
-  //    .map((key) => UIImageColors[key] as string);
-  //  imagePalette = imagePalette.map((color) => increaseSaturation(color, 2));
-  //  const repeatedPalette = [
-  //    ...imagePalette,
-  //    ...imagePalette,
-  //    ...imagePalette,
-  //    ...imagePalette,
-  //  ].sort(() => Math.random() - 0.5);
-
-  const [hexColors, setHexColors] = useState<string[]>([]);
-
-  useEffect(() => {
-    const albumArt =
-      'https://m.media-amazon.com/images/I/81WewepiK2L._UF1000,1000_QL80_.jpg';
-    const albumArt2 =
-      'https://www.sonymusic.co.jp/adm_image/common/artist_image/70009000/70009283/jacket_image/302951.jpg';
-    RNColorThief.getPalette(albumArt2, 17, 10, false)
-      .then((palette) => {
-        const hexColors = rgb2Hex(palette);
-        setHexColors(hexColors);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
-  if (hexColors.length === 0) return null;
-  const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
-
-  return (
-    <CoonsPatchMeshGradient
-      rows={3}
-      cols={3}
-      colors={gradientColors}
-      play={true}
-    />
-  );
+  return <ArticleSummaryCard />;
 }
 
 const palette = {

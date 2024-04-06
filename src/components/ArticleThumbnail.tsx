@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import type { CubicBezierHandle } from "@shopify/react-native-skia";
+import React, { useMemo } from 'react';
+import type { CubicBezierHandle } from '@shopify/react-native-skia';
 import {
   Skia,
   isEdge,
@@ -11,25 +11,30 @@ import {
   vec,
   useImage,
   useClock,
-} from "@shopify/react-native-skia";
-import { View, useWindowDimensions, StyleSheet } from "react-native";
-import type { SharedValue } from "react-native-reanimated";
+  Image,
+  RoundedRect,
+  Mask,
+  topLeft,
+  rect,
+} from '@shopify/react-native-skia';
+import { View, useWindowDimensions, StyleSheet } from 'react-native';
+import type { SharedValue } from 'react-native-reanimated';
 import Animated, {
   useDerivedValue,
   useSharedValue,
-} from "react-native-reanimated";
+} from 'react-native-reanimated';
 import {
   GestureDetector,
   GestureHandlerRootView,
-} from "react-native-gesture-handler";
+} from 'react-native-gesture-handler';
 
-import { createNoise2D } from "../components/SimpleNoise";
+import { createNoise2D } from './SimpleNoise';
 
-import { symmetric } from "./Math";
-import { Cubic } from "./Cubic";
-import { Curves } from "./Curves";
-import { useHandles } from "./useHandles";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { symmetric } from './Math';
+import { Cubic } from './Cubic';
+import { Curves } from './Curves';
+import { useHandles } from './useHandles';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],
@@ -84,7 +89,7 @@ const useRectToPatch = (
     ];
   }, [mesh]);
 
-interface CoonsPatchMeshGradientProps {
+interface ArticleThumbnailProps {
   rows: number;
   cols: number;
   colors: string[];
@@ -95,9 +100,9 @@ interface CoonsPatchMeshGradientProps {
 }
 
 const F = 6000;
-const A = 60;
+const A = 40;
 
-export const CoonsPatchMeshGradient = ({
+export const ArticleThumbnail = ({
   rows,
   cols,
   colors,
@@ -105,17 +110,19 @@ export const CoonsPatchMeshGradient = ({
   lines,
   handles,
   play,
-}: CoonsPatchMeshGradientProps) => {
+}: ArticleThumbnailProps) => {
   const { width, height } = useWindowDimensions();
+  const imageSideLength = 160;
+  const articleCardWidth = width - 32;
   const window = useMemo(
-    () => Skia.XYWHRect(0, 0, width, height),
-    [height, width]
+    () => Skia.XYWHRect(0, 0, articleCardWidth, imageSideLength),
+    [imageSideLength, articleCardWidth]
   );
 
   const clock = useClock();
-  const image = useImage(require("../assets/images/debug.png"));
-  const dx = width / cols;
-  const dy = height / rows;
+  const image = useImage(require('../assets/images/debug.png'));
+  const dx = articleCardWidth / cols;
+  const dy = imageSideLength / rows;
   const C = dx / 3;
 
   const defaultMesh = new Array(cols + 1)
@@ -180,44 +187,63 @@ export const CoonsPatchMeshGradient = ({
   const gesture = useHandles(meshGesture, defaultMesh, window);
   const mesh = play ? meshNoise : meshGesture;
 
+  const albumArt = useImage(require('../assets/images/ikuokukonen.jpg'));
+  const rrct = {
+    rect: { x: 0, y: 0, width: articleCardWidth, height: imageSideLength },
+    topLeft: { x: 12, y: 12 },
+    topRight: { x: 12, y: 12 },
+    bottomRight: { x: 0, y: 0 },
+    bottomLeft: { x: 0, y: 0 },
+  };
+
   return (
     <View>
-      <Canvas style={{ width, height }}>
-        <Group>
-          <ImageShader image={image} tx="repeat" ty="repeat" />
-          {rects.map((r, i) => {
+      <Canvas
+        style={[
+          styles.container,
+          { width: articleCardWidth, height: imageSideLength },
+        ]}
+      >
+        <Mask mask={<RoundedRect rect={rrct} />}>
+          <Group>
+            <ImageShader image={image} tx='repeat' ty='repeat' />
+            {rects.map((r, i) => {
+              return (
+                <RectPatch
+                  key={i}
+                  r={r}
+                  mesh={mesh}
+                  debug={debug}
+                  lines={lines}
+                  colors={colors}
+                  defaultMesh={defaultMesh}
+                />
+              );
+            })}
+          </Group>
+          {defaultMesh.map(({ pos }, index) => {
+            if (isEdge(pos, window) || !handles) {
+              return null;
+            }
             return (
-              <RectPatch
-                key={i}
-                r={r}
+              <Cubic
+                key={index}
                 mesh={mesh}
-                debug={debug}
-                lines={lines}
-                colors={colors}
-                defaultMesh={defaultMesh}
+                index={index}
+                color={colors[index]}
               />
             );
           })}
-        </Group>
-        {defaultMesh.map(({ pos }, index) => {
-          if (isEdge(pos, window) || !handles) {
-            return null;
-          }
-          return (
-            <Cubic
-              key={index}
-              mesh={mesh}
-              index={index}
-              color={colors[index]}
-            />
-          );
-        })}
+          <Image
+            image={albumArt}
+            x={(articleCardWidth - imageSideLength) / 2}
+            y={0}
+            width={imageSideLength}
+            height={imageSideLength}
+            fit='contain'
+          />
+        </Mask>
       </Canvas>
-      <GestureHandlerRootView>
-        <GestureDetector gesture={gesture}>
-          <Animated.View style={StyleSheet.absoluteFill} />
-        </GestureDetector>
-      </GestureHandlerRootView>
     </View>
   );
 };
@@ -251,3 +277,11 @@ const RectPatch = ({
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {},
+  Thumbnail: {
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+});
