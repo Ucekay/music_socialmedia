@@ -13,13 +13,20 @@ export default function ArticleSummaryCard({
 }: {
   article: articleDataType;
 }) {
+  const {
+    articleID,
+    articleTitle,
+    songName,
+    artistName,
+    artworkUrl,
+    userID,
+    user,
+    userAvatarUrl,
+  } = article;
+
   const [hexColors, setHexColors] = useState<string[]>([]);
   useEffect(() => {
-    const albumArt =
-      'https://m.media-amazon.com/images/I/81WewepiK2L._UF1000,1000_QL80_.jpg';
-    const albumArt2 =
-      'https://www.sonymusic.co.jp/adm_image/common/artist_image/70009000/70009283/jacket_image/302951.jpg';
-    RNColorThief.getPalette(albumArt2, 17, 10, false)
+    RNColorThief.getPalette(artworkUrl, 17, 2, false)
       .then((palette: Palette) => {
         const hexColors: string[] = rgb2Hex(palette);
         setHexColors(hexColors);
@@ -31,28 +38,32 @@ export default function ArticleSummaryCard({
   if (hexColors.length === 0) return null;
   const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
 
-  const {
-    articleID,
-    articleTitle,
-    songName,
-    artistName,
-    userID,
-    user,
-    userAvatarUrl,
-  } = article;
-
   return (
     <View style={styles.container}>
-      <ArticleThumbnail rows={3} cols={3} colors={gradientColors} play={true} />
+      <ArticleThumbnail
+        rows={3}
+        cols={3}
+        colors={gradientColors}
+        play={true}
+        artworkUrl={artworkUrl}
+      />
       <View style={styles.summaryContainer}>
         <View>
           <Text style={styles.articleTitle}>{articleTitle}</Text>
         </View>
-        <View>
-          <Text style={styles.songName}>{songName}</Text>
-          <Text style={styles.artistName}>{artistName}</Text>
+        <View style={styles.infoContainer}>
+          <View>
+            <Text style={styles.songName}>{songName}</Text>
+            <Text style={styles.artistName}>{artistName}</Text>
+          </View>
+          <View style={styles.authorContainer}>
+            <Image source={userAvatarUrl} style={styles.avatar} />
+            <View>
+              <Text>{user}</Text>
+              <Text style={styles.userID}>{userID}</Text>
+            </View>
+          </View>
         </View>
-        <Image source={userAvatarUrl} style={styles.avatar} />
       </View>
     </View>
   );
@@ -74,22 +85,37 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
   },
-  textContainer: {},
+  infoContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    justifyContent: 'space-between',
+    alignContent: 'flex-end',
+  },
   articleTitle: {
     fontSize: 28,
   },
   songName: {
-    fontSize: 16,
+    fontSize: 20,
   },
   artistName: {
     fontSize: 16,
     color: COLORS.neutral700,
   },
+  authorContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: 8,
+  },
   avatar: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'blue',
+    backgroundColor: 'lightblue',
+  },
+  userID: {
+    fontSize: 11,
+    color: COLORS.neutral700,
   },
 });
 

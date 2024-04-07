@@ -6,8 +6,7 @@ import type { articleDataType } from '@/src/types';
 const articles = articleData;
 
 export default function TabTwoScreen(articles: articleDataType[]) {
-  const article1: articleDataType = articleData[0];
-  console.log(articles);
-  console.log(article1);
+  const article1: articleDataType = articleData[1];
+
   return <ArticleSummaryCard article={article1} />;
 }

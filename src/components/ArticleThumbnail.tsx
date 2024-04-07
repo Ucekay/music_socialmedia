@@ -16,6 +16,7 @@ import {
   Mask,
   topLeft,
   rect,
+  Blur,
 } from '@shopify/react-native-skia';
 import { View, useWindowDimensions, StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
@@ -97,10 +98,11 @@ interface ArticleThumbnailProps {
   lines?: boolean;
   handles?: boolean;
   play?: boolean;
+  artworkUrl: string;
 }
 
-const F = 6000;
-const A = 40;
+const F = 8000;
+const A = 30;
 
 export const ArticleThumbnail = ({
   rows,
@@ -110,6 +112,7 @@ export const ArticleThumbnail = ({
   lines,
   handles,
   play,
+  artworkUrl,
 }: ArticleThumbnailProps) => {
   const { width, height } = useWindowDimensions();
   const imageSideLength = 160;
@@ -186,7 +189,7 @@ export const ArticleThumbnail = ({
 
   const mesh = play ? meshNoise : meshGesture;
 
-  const albumArt = useImage(require('../assets/images/ikuokukonen.jpg'));
+  const artwork = useImage(artworkUrl);
   const rrct = {
     rect: { x: 0, y: 0, width: articleCardWidth, height: imageSideLength },
     topLeft: { x: 12, y: 12 },
@@ -220,6 +223,7 @@ export const ArticleThumbnail = ({
               );
             })}
           </Group>
+
           {defaultMesh.map(({ pos }, index) => {
             if (isEdge(pos, window) || !handles) {
               return null;
@@ -234,7 +238,7 @@ export const ArticleThumbnail = ({
             );
           })}
           <Image
-            image={albumArt}
+            image={artwork}
             x={(articleCardWidth - imageSideLength) / 2}
             y={0}
             width={imageSideLength}

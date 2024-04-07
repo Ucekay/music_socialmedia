@@ -39,6 +39,7 @@ export type articleDataType = {
   articleContent: string;
   songName: string;
   artistName: string;
+  artworkUrl: string;
   userID: string;
   user: string;
   userAvatarUrl: string;
