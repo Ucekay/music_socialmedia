@@ -3,8 +3,6 @@ import React from 'react';
 import { COLORS } from '../constants/Colors';
 
 const reviewColor = '#38BDF8';
-const liveReportColor = '#F97316';
-const playlistColor = '#FFC0CB';
 
 type ArticleTagProps = {
   type: string;
@@ -15,15 +13,19 @@ const ArticleTag = ({ type }: ArticleTagProps) => {
     case 'general':
       return (
         <View style={styles.tagContainer}>
-          <View style={styles.general}></View>
-          <Text>General</Text>
+          <View style={styles.container}>
+            <View style={styles.general}></View>
+            <Text>General</Text>
+          </View>
         </View>
       );
     case 'review':
       return (
         <View style={styles.tagContainer}>
-          <View style={styles.review}></View>
-          <Text>Review</Text>
+          <View style={styles.container}>
+            <View style={styles.review}></View>
+            <Text>Review</Text>
+          </View>
         </View>
       );
     case 'live report':
@@ -47,8 +49,10 @@ const ArticleTag = ({ type }: ArticleTagProps) => {
     default:
       return (
         <View style={styles.tagContainer}>
-          <View style={styles.tag}></View>
-          <Text>{type}</Text>
+          <View style={styles.container}>
+            <View style={styles.tag}></View>
+            <Text>{type}</Text>
+          </View>
         </View>
       );
   }

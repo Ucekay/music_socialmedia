@@ -14,9 +14,6 @@ import {
   Image,
   RoundedRect,
   Mask,
-  topLeft,
-  rect,
-  Blur,
 } from '@shopify/react-native-skia';
 import { View, useWindowDimensions, StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
@@ -24,18 +21,12 @@ import Animated, {
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated';
-import {
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
 
 import { createNoise2D } from './SimpleNoise';
 
 import { symmetric } from './Math';
 import { Cubic } from './Cubic';
 import { Curves } from './Curves';
-import { useHandles } from './useHandles';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],
@@ -206,46 +197,46 @@ export const ArticleThumbnail = ({
           { width: articleCardWidth, height: imageSideLength },
         ]}
       >
-        <Mask mask={<RoundedRect rect={rrct} />}>
-          <Group>
-            <ImageShader image={image} tx='repeat' ty='repeat' />
-            {rects.map((r, i) => {
-              return (
-                <RectPatch
-                  key={i}
-                  r={r}
-                  mesh={mesh}
-                  debug={debug}
-                  lines={lines}
-                  colors={colors}
-                  defaultMesh={defaultMesh}
-                />
-              );
-            })}
-          </Group>
-
-          {defaultMesh.map(({ pos }, index) => {
-            if (isEdge(pos, window) || !handles) {
-              return null;
-            }
+        {/*<Mask mask={<RoundedRect rect={rrct} />}>*/}
+        <Group>
+          <ImageShader image={image} tx='repeat' ty='repeat' />
+          {rects.map((r, i) => {
             return (
-              <Cubic
-                key={index}
+              <RectPatch
+                key={i}
+                r={r}
                 mesh={mesh}
-                index={index}
-                color={colors[index]}
+                debug={debug}
+                lines={lines}
+                colors={colors}
+                defaultMesh={defaultMesh}
               />
             );
           })}
-          <Image
-            image={artwork}
-            x={(articleCardWidth - imageSideLength) / 2}
-            y={0}
-            width={imageSideLength}
-            height={imageSideLength}
-            fit='contain'
-          />
-        </Mask>
+        </Group>
+
+        {defaultMesh.map(({ pos }, index) => {
+          if (isEdge(pos, window) || !handles) {
+            return null;
+          }
+          return (
+            <Cubic
+              key={index}
+              mesh={mesh}
+              index={index}
+              color={colors[index]}
+            />
+          );
+        })}
+        <Image
+          image={artwork}
+          x={(articleCardWidth - imageSideLength) / 2}
+          y={0}
+          width={imageSideLength}
+          height={imageSideLength}
+          fit='contain'
+        />
+        {/*</Mask>*/}
       </Canvas>
     </View>
   );

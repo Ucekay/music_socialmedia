@@ -5,14 +5,15 @@ import articleData from '@/src/assets/articleData';
 import type { articleDataType } from '@/src/types';
 import { View } from '@/src/components/Themed';
 
-const articles = articleData;
-
-export default function TabTwoScreen(articles: articleDataType[]) {
+export default function TabTwoScreen() {
+  const article1 = articleData[0];
+  console.log(article1);
   return (
     <FlatList
-      data={articles}
+      data={articleData}
       renderItem={({ item }) => <ArticleSummaryCard article={item} />}
-      keyExtractor={(item) => item.articleID}
+      keyExtractor={(item: articleDataType) => item.articleID}
+      contentContainerStyle={{ padding: 16 }}
     />
   );
 }
