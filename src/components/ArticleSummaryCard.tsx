@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import RNColorThief from 'react-native-color-thief';
+// import RNColorThief from 'react-native-color-thief';
 import { Image } from 'expo-image';
 
 import { ArticleThumbnail } from './ArticleThumbnail';
@@ -24,26 +24,26 @@ export default function ArticleSummaryCard({
     userAvatarUrl,
   } = article;
 
-  const [hexColors, setHexColors] = useState<string[]>([]);
-  useEffect(() => {
-    RNColorThief.getPalette(artworkUrl, 17, 2, false)
-      .then((palette: Palette) => {
-        const hexColors: string[] = rgb2Hex(palette);
-        setHexColors(hexColors);
-      })
-      .catch((error: Error) => {
-        console.log(error);
-      });
-  }, []);
-  if (hexColors.length === 0) return null;
-  const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
+  // const [hexColors, setHexColors] = useState<string[]>([]);
+  // useEffect(() => {
+  //   RNColorThief.getPalette(artworkUrl, 17, 2, false)
+  //     .then((palette: Palette) => {
+  //       const hexColors: string[] = rgb2Hex(palette);
+  //       setHexColors(hexColors);
+  //     })
+  //     .catch((error: Error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
+  // if (hexColors.length === 0) return null;
+  // const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
 
   return (
     <View style={styles.container}>
       <ArticleThumbnail
         rows={3}
         cols={3}
-        colors={gradientColors}
+        colors={palette.otto}
         play={true}
         artworkUrl={artworkUrl}
       />
