@@ -3,7 +3,6 @@ import { FlatList } from 'react-native';
 import ArticleSummaryCard from '@/src/components/ArticleSummaryCard';
 import articleData from '@/src/assets/articleData';
 import type { articleDataType } from '@/src/types';
-import { View } from '@/src/components/Themed';
 
 export default function TabTwoScreen() {
   const article1 = articleData[0];

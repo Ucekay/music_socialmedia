@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 //import RNColorThief from 'react-native-color-thief';
 import { Image } from 'expo-image';
