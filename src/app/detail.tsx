@@ -1,14 +1,11 @@
 import {
-    Dimensions,
     Image,
     ScrollView,
     StyleSheet,
     Text,
     View,
-    Button,
     TouchableOpacity
   } from "react-native";
-import ArticleScroll from "../components/AriticleScroll";
 import InfoTag from "../components/InfoTag";
 import React, { useRef, useState } from 'react';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
@@ -19,18 +16,18 @@ const Detail = (): JSX.Element => {
   const [containerHeight, setContainerHeight] = useState(460);
   return (
     <View style={styles.bottomSheetContainer}>
-      <TouchableOpacity onPress={() => {sheetRef.current?.open(); setHeight(460); setContainerHeight(460)}} >
+      <TouchableOpacity onPress={() => {sheetRef.current?.open(); setHeight(460); setContainerHeight(460)}} style={styles.imageContainer}>
         <Image source={require("../assets/images/ikuokukonen.jpg")} style={styles.image} />
       </TouchableOpacity>
       <BottomSheet 
       ref={sheetRef} 
       containerHeight={containerHeight}
       height={height}
-      disableDragHandlePanning={true} 
+      disableDragHandlePanning={false} 
       disableBodyPanning={true} 
       style={{backgroundColor:'#ffffff', shadowOffset:{width:4, height:-8}, shadowOpacity:50}}
-      backdropMaskColor={'#ffffff'}
-      hideDragHandle={true}
+      backdropMaskColor={'#00000000'}
+      hideDragHandle={false}
       >
         <ScrollView onScroll={() => {if (height != 680) {setContainerHeight(680); setHeight(680)}} }> 
           <View style={[styles.headingContainer, { paddingTop: 50 }]}>
@@ -60,12 +57,16 @@ const Detail = (): JSX.Element => {
 export default Detail
 
 const styles = StyleSheet.create({
+  imageContainer:{
+    flex:1
+  },
   image:{
-    width: 375,
-    height: 375,
+    width: 400,
+    height: 400
   },
   bottomSheetContainer: {
     flex: 1,
+    alignItems: 'center'
   },
   bottomSheet: {
     color: '#ffffff'
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
   paragraph: {
     fontSize: 16,
     lineHeight: 24,
-    marginBottom: 16,
+    marginBottom: 64,
   },
   article: {
     paddingTop: 24,
