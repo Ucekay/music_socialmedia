@@ -43,4 +43,5 @@ export type articleDataType = {
   userID: string;
   user: string;
   userAvatarUrl: string;
+  type: string;
 };

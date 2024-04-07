@@ -10,6 +10,7 @@ const articleData = [
     userID: '@Taro1234',
     user: 'たろう',
     userAvatarUrl: 'https://api.dicebear.com/8.x/pixel-art/png',
+    type: 'review',
   },
   {
     articleID: 'art002',
@@ -22,6 +23,7 @@ const articleData = [
     userID: '@rhythmsecret002',
     user: 'BeatMaster',
     userAvatarUrl: 'https://api.dicebear.com/8.x/lorelei/png',
+    type: 'live report',
   },
   {
     articleID: 'art003',
@@ -34,6 +36,7 @@ const articleData = [
     userID: '@hNinjaX',
     user: '忍者X',
     userAvatarUrl: 'https://api.dicebear.com/8.x/bottts/png',
+    type: 'general',
   },
   {
     articleID: 'art004',
@@ -46,6 +49,7 @@ const articleData = [
     userID: '@Yumi789',
     user: 'ゆみちゃん',
     userAvatarUrl: 'https://api.dicebear.com/8.x/personas/png',
+    type: 'playlist',
   },
   {
     articleID: 'art005',
@@ -53,9 +57,12 @@ const articleData = [
     articleContent: '即興演奏はジャズの魂であり...',
     songName: 'What a Wonderful World',
     artistName: 'Louis Armstrong',
+    artworkUrl:
+      'https://m.media-amazon.com/images/I/71oBdOk+2BL._UF1000,1000_QL80_.jpg',
     userID: '@TokyoGhoul',
     user: '東京喰種👹',
     userAvatarUrl: 'https://api.dicebear.com/8.x/notionists/png',
+    type: 'review',
   },
   {
     articleID: 'art006',
@@ -63,10 +70,12 @@ const articleData = [
     articleContent: 'クラシック音楽が現代音楽に与える影響について...',
     songName: 'ノクターン',
     artistName: 'ショパン',
+    artworkUrl: 'https://cdn.goope.jp/83265/231001124206-6518ea8eec9c2.jpg',
     userID: '@Neko123',
     user: 'ねこまるにゃんこ',
     userAvatarUrl:
       'https://api.dicebear.com/8.x/avataaars/png?seed=Felix&accessories=round&eyebrows=raisedExcited&skinColor=ffdbb4&top=bob',
+    type: 'live report',
   },
   {
     articleID: 'art007',
@@ -74,9 +83,12 @@ const articleData = [
     articleContent: 'ポップミュージックが社会に与える影響とは...',
     songName: 'Lemon',
     artistName: '米津玄師',
+    artworkUrl:
+      'https://m.media-amazon.com/images/I/91ufveUUmGL._UF1000,1000_QL80_.jpg',
     userID: '@MochiMochi',
     user: 'もちもち大福',
     userAvatarUrl: 'https://api.dicebear.com/8.x/croodles/png',
+    type: 'general',
   },
   {
     articleID: 'art008',
@@ -84,9 +96,12 @@ const articleData = [
     articleContent: 'ロック音楽の歴史とそのアイコンたち...',
     songName: 'Bohemian Rhapsody',
     artistName: 'Queen',
+    artworkUrl:
+      'https://m.media-amazon.com/images/I/61dk4SHy1CL._UF1000,1000_QL80_.jpg',
     userID: '@GamerPro9',
     user: 'ゲーマー進化論',
     userAvatarUrl: 'https://api.dicebear.com/8.x/big-ears/png',
+    type: 'playlist',
   },
   {
     articleID: 'art009',
@@ -94,9 +109,12 @@ const articleData = [
     articleContent: 'テクノロジーが生み出す新しい音の世界...',
     songName: 'Shelter',
     artistName: 'Porter Robinson & Madeon',
+    artworkUrl:
+      'https://m.media-amazon.com/images/I/61SywDA813L._UF1000,1000_QL80_.jpg',
     userID: '@RamenKing88',
     user: 'ラーメン王',
     userAvatarUrl: 'https://api.dicebear.com/8.x/micah/png',
+    type: 'review',
   },
   {
     articleID: 'art010',
@@ -105,8 +123,11 @@ const articleData = [
     songName: 'Fantasy',
     artistName: 'Mariah Carey',
     userID: '@KawaiiQueen',
+    artworkUrl:
+      'https://m.media-amazon.com/images/I/61rGJYmZZbL._UF1000,1000_QL80_.jpg',
     user: 'かわいい女王様',
     userAvatarUrl: 'https://api.dicebear.com/8.x/thumbs/png',
+    type: 'live report',
   },
 ];
 

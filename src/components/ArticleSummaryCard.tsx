@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-// import RNColorThief from 'react-native-color-thief';
+import RNColorThief from 'react-native-color-thief';
 import { Image } from 'expo-image';
 
 import { ArticleThumbnail } from './ArticleThumbnail';
+import ArticleTag from './ArticleTag';
 import { increaseSaturation, rgb2Hex } from '../constants/ColorModifier';
 import type { Palette, articleDataType } from '../types';
 import { COLORS } from '../constants/Colors';
@@ -22,28 +23,29 @@ export default function ArticleSummaryCard({
     userID,
     user,
     userAvatarUrl,
+    type,
   } = article;
 
-  // const [hexColors, setHexColors] = useState<string[]>([]);
-  // useEffect(() => {
-  //   RNColorThief.getPalette(artworkUrl, 17, 2, false)
-  //     .then((palette: Palette) => {
-  //       const hexColors: string[] = rgb2Hex(palette);
-  //       setHexColors(hexColors);
-  //     })
-  //     .catch((error: Error) => {
-  //       console.log(error);
-  //     });
-  // }, []);
-  // if (hexColors.length === 0) return null;
-  // const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
+  const [hexColors, setHexColors] = useState<string[]>([]);
+  useEffect(() => {
+    RNColorThief.getPalette(artworkUrl, 17, 2, false)
+      .then((palette: Palette) => {
+        const hexColors: string[] = rgb2Hex(palette);
+        setHexColors(hexColors);
+      })
+      .catch((error: Error) => {
+        console.log(error);
+      });
+  }, []);
+  if (hexColors.length === 0) return null;
+  const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
 
   return (
     <View style={styles.container}>
       <ArticleThumbnail
         rows={3}
         cols={3}
-        colors={palette.otto}
+        colors={gradientColors}
         play={true}
         artworkUrl={artworkUrl}
       />
@@ -51,11 +53,12 @@ export default function ArticleSummaryCard({
         <View>
           <Text style={styles.articleTitle}>{articleTitle}</Text>
         </View>
+
+        <View>
+          <Text style={styles.songName}>{songName}</Text>
+          <Text style={styles.artistName}>{artistName}</Text>
+        </View>
         <View style={styles.infoContainer}>
-          <View>
-            <Text style={styles.songName}>{songName}</Text>
-            <Text style={styles.artistName}>{artistName}</Text>
-          </View>
           <View style={styles.authorContainer}>
             <Image source={userAvatarUrl} style={styles.avatar} />
             <View>
@@ -63,6 +66,7 @@ export default function ArticleSummaryCard({
               <Text style={styles.userID}>{userID}</Text>
             </View>
           </View>
+          <ArticleTag type={type} />
         </View>
       </View>
     </View>
@@ -87,10 +91,8 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
     justifyContent: 'space-between',
-    alignContent: 'flex-end',
+    alignItems: 'flex-end',
   },
   articleTitle: {
     fontSize: 28,
@@ -104,12 +106,12 @@ const styles = StyleSheet.create({
   },
   authorContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
     gap: 8,
   },
   avatar: {
-    width: 28,
-    height: 28,
+    width: 32,
+    height: 32,
     borderRadius: 14,
     backgroundColor: 'lightblue',
   },
