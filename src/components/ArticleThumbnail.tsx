@@ -89,10 +89,11 @@ interface ArticleThumbnailProps {
   lines?: boolean;
   handles?: boolean;
   play?: boolean;
+  artworkUrl: string;
 }
 
-const F = 6000;
-const A = 40;
+const F = 8000;
+const A = 30;
 
 export const ArticleThumbnail = ({
   rows,
@@ -102,6 +103,7 @@ export const ArticleThumbnail = ({
   lines,
   handles,
   play,
+  artworkUrl,
 }: ArticleThumbnailProps) => {
   const { width, height } = useWindowDimensions();
   const imageSideLength = 160;
@@ -178,12 +180,11 @@ export const ArticleThumbnail = ({
 
   const mesh = play ? meshNoise : meshGesture;
 
-  const albumArt = useImage(require('../assets/images/ikuokukonen.jpg'));
-  const r = 12;
+  const artwork = useImage(artworkUrl);
   const rrct = {
     rect: { x: 0, y: 0, width: articleCardWidth, height: imageSideLength },
-    topLeft: { x: r, y: r },
-    topRight: { x: r, y: r },
+    topLeft: { x: 12, y: 12 },
+    topRight: { x: 12, y: 12 },
     bottomRight: { x: 0, y: 0 },
     bottomLeft: { x: 0, y: 0 },
   };
@@ -196,45 +197,46 @@ export const ArticleThumbnail = ({
           { width: articleCardWidth, height: imageSideLength },
         ]}
       >
-        <Mask mask={<RoundedRect rect={rrct} />}>
-          <Group>
-            <ImageShader image={image} tx='repeat' ty='repeat' />
-            {rects.map((r, i) => {
-              return (
-                <RectPatch
-                  key={i}
-                  r={r}
-                  mesh={mesh}
-                  debug={debug}
-                  lines={lines}
-                  colors={colors}
-                  defaultMesh={defaultMesh}
-                />
-              );
-            })}
-          </Group>
-          {defaultMesh.map(({ pos }, index) => {
-            if (isEdge(pos, window) || !handles) {
-              return null;
-            }
+        {/*<Mask mask={<RoundedRect rect={rrct} />}>*/}
+        <Group>
+          <ImageShader image={image} tx='repeat' ty='repeat' />
+          {rects.map((r, i) => {
             return (
-              <Cubic
-                key={index}
+              <RectPatch
+                key={i}
+                r={r}
                 mesh={mesh}
-                index={index}
-                color={colors[index]}
+                debug={debug}
+                lines={lines}
+                colors={colors}
+                defaultMesh={defaultMesh}
               />
             );
           })}
-          <Image
-            image={albumArt}
-            x={(articleCardWidth - imageSideLength) / 2}
-            y={0}
-            width={imageSideLength}
-            height={imageSideLength}
-            fit='contain'
-          />
-        </Mask>
+        </Group>
+
+        {defaultMesh.map(({ pos }, index) => {
+          if (isEdge(pos, window) || !handles) {
+            return null;
+          }
+          return (
+            <Cubic
+              key={index}
+              mesh={mesh}
+              index={index}
+              color={colors[index]}
+            />
+          );
+        })}
+        <Image
+          image={artwork}
+          x={(articleCardWidth - imageSideLength) / 2}
+          y={0}
+          width={imageSideLength}
+          height={imageSideLength}
+          fit='contain'
+        />
+        {/*</Mask>*/}
       </Canvas>
     </View>
   );

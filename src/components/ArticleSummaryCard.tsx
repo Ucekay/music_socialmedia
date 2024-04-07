@@ -1,46 +1,72 @@
-import React from 'react';
-import { Text, StyleSheet } from 'react-native';
-// import RNColorThief from 'react-native-color-thief';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+//import RNColorThief from 'react-native-color-thief';
+import { Image } from 'expo-image';
 
 import { ArticleThumbnail } from './ArticleThumbnail';
+import ArticleTag from './ArticleTag';
 // import { increaseSaturation, rgb2Hex } from '../constants/ColorModifier';
+import type { Palette, articleDataType } from '../types';
+import { COLORS } from '../constants/Colors';
 
-// import type { Palette } from '../types';
-import { useImage } from '@shopify/react-native-skia';
-import { View } from 'react-native';
+export default function ArticleSummaryCard({
+  article,
+}: {
+  article: articleDataType;
+}) {
+  const {
+    articleID,
+    articleTitle,
+    songName,
+    artistName,
+    artworkUrl,
+    userID,
+    user,
+    userAvatarUrl,
+    type,
+  } = article;
 
-export default function ArticleSummaryCard() {
-  const image = useImage(require('../assets/images/ikuokukonen.jpg'));
-  //  const [hexColors, setHexColors] = useState<string[]>([]);
-
-  //  useEffect(() => {
-  //    const albumArt =
-  //      'https://m.media-amazon.com/images/I/81WewepiK2L._UF1000,1000_QL80_.jpg';
-  //    const albumArt2 =
-  //      'https://www.sonymusic.co.jp/adm_image/common/artist_image/70009000/70009283/jacket_image/302951.jpg';
-  //    RNColorThief.getPalette(albumArt2, 17, 10, false)
-  //      .then((palette: Palette) => {
-  //        const hexColors = rgb2Hex(palette);
-  //        setHexColors(hexColors);
-  //      })
-  //      .catch((error) => {
-  //        console.log(error);
-  //      });
-  //  }, []);
-
-  //  if (hexColors.length === 0) return null;
-  //  const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
+  // const [hexColors, setHexColors] = useState<string[]>([]);
+  // useEffect(() => {
+  //   RNColorThief.getPalette(artworkUrl, 17, 2, false)
+  //     .then((palette: Palette) => {
+  //       const hexColors: string[] = rgb2Hex(palette);
+  //       setHexColors(hexColors);
+  //     })
+  //     .catch((error: Error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
+  // if (hexColors.length === 0) return null;
+  // const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
 
   return (
     <View style={styles.container}>
-      <ArticleThumbnail rows={3} cols={3} colors={palette.otto} play={true} />
+      <ArticleThumbnail
+        rows={3}
+        cols={3}
+        colors={palette.otto}
+        play={true}
+        artworkUrl={artworkUrl}
+      />
       <View style={styles.summaryContainer}>
         <View>
-          <Text style={styles.articleTitle}>Article Title</Text>
+          <Text style={styles.articleTitle}>{articleTitle}</Text>
         </View>
+
         <View>
-          <Text style={styles.songName}>Song Name</Text>
-          <Text style={styles.artistName}>Artist Name</Text>
+          <Text style={styles.songName}>{songName}</Text>
+          <Text style={styles.artistName}>{artistName}</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <View style={styles.authorContainer}>
+            <Image source={userAvatarUrl} style={styles.avatar} />
+            <View>
+              <Text>{user}</Text>
+              <Text style={styles.userID}>{userID}</Text>
+            </View>
+          </View>
+          <ArticleTag type={type} />
         </View>
       </View>
     </View>
@@ -52,7 +78,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 16,
+    marginVertical: 16,
   },
   summaryContainer: {
     backgroundColor: 'white',
@@ -63,15 +89,35 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
   },
-  textContainer: {},
+  infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
   articleTitle: {
     fontSize: 28,
   },
   songName: {
-    fontSize: 16,
+    fontSize: 20,
   },
   artistName: {
     fontSize: 16,
+    color: COLORS.neutral700,
+  },
+  authorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  avatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 14,
+    backgroundColor: 'lightblue',
+  },
+  userID: {
+    fontSize: 11,
+    color: COLORS.neutral700,
   },
 });
 
