@@ -48,7 +48,7 @@ import InfoTag from "./InfoTag";
       overflow: "hidden",
     },
     headingContainer: {
-      width: width,
+      width: 343,
       height: 200,
       justifyContent: "center",
       alignItems: "center",
