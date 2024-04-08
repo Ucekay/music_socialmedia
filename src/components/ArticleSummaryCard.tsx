@@ -82,15 +82,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 8,
+    borderBottomRightRadius: 12,
+    borderBottomLeftRadius: 12,
+    backgroundColor: COLORS.neutral50,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+
+    elevation: 10,
   },
   summaryContainer: {
-    backgroundColor: 'white',
     width: '100%',
     paddingVertical: 12,
     paddingHorizontal: 16,
     gap: 8,
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
+    backgroundColor: COLORS.neutral50,
   },
   infoContainer: {
     flexDirection: 'row',
@@ -98,7 +111,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   articleTitle: {
-    fontSize: 28,
+    fontSize: 26,
   },
   songName: {
     fontSize: 20,
