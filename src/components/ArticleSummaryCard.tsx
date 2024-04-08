@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
+    backgroundColor: COLORS.neutral50,
 
     shadowColor: '#000',
     shadowOffset: {

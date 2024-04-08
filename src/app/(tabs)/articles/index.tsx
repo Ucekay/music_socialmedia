@@ -1,12 +1,15 @@
 import React from 'react';
 import { View, FlatList } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useHeaderHeight } from '@react-navigation/elements';
 import ArticleSummaryCard from '@/src/components/ArticleSummaryCard';
 import articleData from '@/src/assets/articleData';
 
 const itemSize = 317;
 
 export default function TabOneScreen() {
+  const tabBarHeight = useBottomTabBarHeight();
   return (
     <FlashList
       data={articleData}

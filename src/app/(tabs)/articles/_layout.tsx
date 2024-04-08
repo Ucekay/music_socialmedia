@@ -1,4 +1,6 @@
+import { StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
+import { BlurView } from 'expo-blur';
 
 export default function ArticleStack() {
   return (
@@ -8,7 +10,14 @@ export default function ArticleStack() {
         options={{
           title: 'Articles',
           headerTransparent: true,
-          headerBlurEffect: 'prominent',
+          headerStyle: { backgroundColor: 'rgba(256, 256, 256, 0.7)' },
+          headerBackground: () => (
+            <BlurView
+              tint='light'
+              intensity={60}
+              style={StyleSheet.absoluteFill}
+            />
+          ),
         }}
       />
     </Stack>
