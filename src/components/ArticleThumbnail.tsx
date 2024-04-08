@@ -200,12 +200,7 @@ export const ArticleThumbnail = ({
 
   return (
     <View>
-      <Canvas
-        style={[
-          styles.container,
-          { width: articleCardWidth, height: imageSideLength },
-        ]}
-      >
+      <Canvas style={{ width: articleCardWidth, height: imageSideLength }}>
         <Mask mask={<RoundedRect rect={rrct} />}>
           <Group>
             <ImageShader image={image} tx='repeat' ty='repeat' />

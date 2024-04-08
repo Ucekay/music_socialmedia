@@ -82,6 +82,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 8,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+
+    elevation: 10,
   },
   summaryContainer: {
     backgroundColor: 'white',
@@ -98,7 +108,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   articleTitle: {
-    fontSize: 28,
+    fontSize: 26,
   },
   songName: {
     fontSize: 20,
