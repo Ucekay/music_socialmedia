@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 //import RNColorThief from 'react-native-color-thief';
 import { Image } from 'expo-image';
+import { Link } from 'expo-router';
 
 import { ArticleThumbnail } from './ArticleThumbnail';
 import ArticleTag from './ArticleTag';
@@ -41,35 +42,37 @@ export default function ArticleSummaryCard({
   // const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
 
   return (
-    <View style={styles.container}>
-      <ArticleThumbnail
-        rows={3}
-        cols={3}
-        colors={palette.otto}
-        play={true}
-        artworkUrl={artworkUrl}
-      />
-      <View style={styles.summaryContainer}>
-        <View>
-          <Text style={styles.articleTitle}>{articleTitle}</Text>
-        </View>
-
-        <View>
-          <Text style={styles.songName}>{songName}</Text>
-          <Text style={styles.artistName}>{artistName}</Text>
-        </View>
-        <View style={styles.infoContainer}>
-          <View style={styles.authorContainer}>
-            <Image source={userAvatarUrl} style={styles.avatar} />
-            <View>
-              <Text>{user}</Text>
-              <Text style={styles.userID}>{userID}</Text>
-            </View>
+    <Link href={`/articles/${article.articleID}`} asChild>
+      <Pressable style={styles.container}>
+        <ArticleThumbnail
+          rows={3}
+          cols={3}
+          colors={palette.otto}
+          play={true}
+          artworkUrl={artworkUrl}
+        />
+        <View style={styles.summaryContainer}>
+          <View>
+            <Text style={styles.articleTitle}>{articleTitle}</Text>
           </View>
-          <ArticleTag type={type} />
+
+          <View>
+            <Text style={styles.songName}>{songName}</Text>
+            <Text style={styles.artistName}>{artistName}</Text>
+          </View>
+          <View style={styles.infoContainer}>
+            <View style={styles.authorContainer}>
+              <Image source={userAvatarUrl} style={styles.avatar} />
+              <View>
+                <Text>{user}</Text>
+                <Text style={styles.userID}>{userID}</Text>
+              </View>
+            </View>
+            <ArticleTag type={type} />
+          </View>
         </View>
-      </View>
-    </View>
+      </Pressable>
+    </Link>
   );
 }
 
@@ -78,14 +81,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 16,
+    marginVertical: 8,
   },
   summaryContainer: {
     backgroundColor: 'white',
     width: '100%',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    gap: 12,
+    gap: 8,
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
   },

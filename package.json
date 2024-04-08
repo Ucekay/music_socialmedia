@@ -15,9 +15,11 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
     "@react-navigation/native": "^6.0.2",
+    "@shopify/flash-list": "1.6.3",
     "@shopify/react-native-skia": "^1.0.6",
     "cdt2d": "^1.0.0",
     "expo": "~50.0.14",
+    "expo-dev-client": "~3.3.11",
     "expo-font": "~11.10.3",
     "expo-image": "~1.10.6",
     "expo-linking": "~6.2.2",

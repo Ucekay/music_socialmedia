@@ -1,10 +1,5 @@
-import { View, Text } from '@/src/components/Themed';
-import React from 'react';
+import { Redirect } from 'expo-router';
 
-export default function TabOneScreen() {
-  return (
-    <View>
-      <Text>Tab One</Text>
-    </View>
-  );
+export default function TabIndex() {
+  return <Redirect href='/articles' />;
 }
