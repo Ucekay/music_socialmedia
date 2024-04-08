@@ -82,25 +82,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 8,
+    borderBottomRightRadius: 12,
+    borderBottomLeftRadius: 12,
 
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 5,
     },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
 
     elevation: 10,
   },
   summaryContainer: {
-    backgroundColor: 'white',
     width: '100%',
     paddingVertical: 12,
     paddingHorizontal: 16,
     gap: 8,
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
+    backgroundColor: COLORS.neutral50,
   },
   infoContainer: {
     flexDirection: 'row',

@@ -12,7 +12,10 @@ export default function TabOneScreen() {
       data={articleData}
       renderItem={({ item }) => <ArticleSummaryCard article={item} />}
       estimatedItemSize={itemSize}
-      contentContainerStyle={{ paddingHorizontal: 16 }}
+      contentContainerStyle={{
+        paddingHorizontal: 16,
+        backgroundColor: 'white',
+      }}
     />
   );
 }
