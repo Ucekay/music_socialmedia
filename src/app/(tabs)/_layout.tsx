@@ -32,11 +32,7 @@ export default function TabLayout() {
           backgroundColor: 'rgba(256, 256, 256, 0.7)',
         },
         tabBarBackground: () => (
-          <BlurView
-            tint='light'
-            intensity={60}
-            style={StyleSheet.absoluteFill}
-          />
+          <BlurView tint='regular' style={StyleSheet.absoluteFill} />
         ),
       }}
     >

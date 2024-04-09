@@ -4,9 +4,10 @@ import {
   Text,
   Image,
   StyleSheet,
+  ScrollView,
   useWindowDimensions,
 } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { BlurView } from '@candlefinance/blur-view';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -27,23 +28,46 @@ const ArticleDetailScreen = () => {
   }
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Stack.Screen
         options={{
           title: '',
-          headerShown: true,
           headerBackVisible: false,
           headerTransparent: true,
+          header: () => (
+            <BlurView
+              blurTintColor='#ffffff00'
+              colorTintOpacity={0}
+              blurRadius={5}
+              style={{
+                height: top,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 5,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 8,
+
+                elevation: 10,
+              }}
+            />
+          ),
           headerBackground: () => (
             <LinearGradient
-              colors={['rgba(256,267,256,0.8)', 'transparent']}
+              colors={['rgba(256,256,256,1)', 'transparent']}
               style={StyleSheet.absoluteFill}
             />
           ),
         }}
       />
-      <Image src={article.artworkUrl || defaultImage} style={styles.artwork} />
-      <Text>Article Detail Screen : {id}</Text>
+      <ScrollView>
+        <Image
+          src={article.artworkUrl || defaultImage}
+          style={styles.artwork}
+        />
+        <Text>Article Detail Screen : {id}</Text>
+      </ScrollView>
     </View>
   );
 };

@@ -12,11 +12,7 @@ export default function ArticleStack() {
           headerTransparent: true,
           headerStyle: { backgroundColor: 'rgba(256, 256, 256, 0.7)' },
           headerBackground: () => (
-            <BlurView
-              tint='light'
-              intensity={60}
-              style={StyleSheet.absoluteFill}
-            />
+            <BlurView tint='regular' style={StyleSheet.absoluteFill} />
           ),
         }}
       />
