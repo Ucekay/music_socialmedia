@@ -5,22 +5,32 @@ import {
     View,
   } from "react-native";
 
-  const InfoTag = (): JSX.Element => {
+interface Props {
+  title: string,
+  authorName: string,
+  authorId: string,
+  authorAvator: string,
+  song: string,
+  artist: string,
+  paragragh: string
+}
+
+const InfoTag = (props: Props): JSX.Element => {
     return (
-      <View>
+      <View style={styles.infoTag}>
         <View style={styles.author}>
           <Image
             style={styles.image} 
-            source={require("../assets/images/author1.jpg")}
+            source={require(props.authorAvator)}
           />
-          <Text style={styles.authorName}>コードの巡航者</Text>
-          <Text style={styles.authorId}>@ChordJunkousha</Text>
+          <Text style={styles.authorName}>{props.authorName}</Text>
+          <Text style={styles.authorId}>{props.authorId}</Text>
         </View>
         <View style={styles.songInfo}>
-          <Text style={styles.songName}>Song Name  幾億光年</Text>
+          <Text style={styles.songName}>Song Name {props.song}</Text>
         </View>
         <View style={styles.artistInfo}>
-          <Text style={styles.artistName}>Artist Name  Omoinotake</Text>
+          <Text style={styles.artistName}>Artist Name  {props.artist}</Text>
         </View>
       </View>
     )
@@ -67,5 +77,8 @@ import {
     artistName: {
       fontSize: 15,
       lineHeight: 20
+    },
+    infoTag: {
+      marginLeft: 32
     }
   })
