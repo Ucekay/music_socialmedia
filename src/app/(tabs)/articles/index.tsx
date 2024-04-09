@@ -9,13 +9,17 @@ import articleData from '@/src/assets/articleData';
 const itemSize = 317;
 
 export default function TabOneScreen() {
+  const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
+
   return (
     <FlashList
       data={articleData}
       renderItem={({ item }) => <ArticleSummaryCard article={item} />}
       estimatedItemSize={itemSize}
       contentContainerStyle={{
+        paddingTop: headerHeight,
+        paddingBottom: tabBarHeight,
         paddingHorizontal: 16,
         backgroundColor: 'white',
       }}
