@@ -7,7 +7,7 @@ import {
   } from "react-native";
 import React, { useRef, useState } from 'react';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
-import ArticleScroll from "../components/ArticleScroll";
+import ArticleScroll from "../../components/ArticleScroll";
 
 let PostData = {
   title: '時空を超える旋律:Omoinotake「幾億光年」の心の叫び' , 
@@ -28,7 +28,7 @@ const Detail = (): JSX.Element => {
   return (
     <View style={styles.bottomSheetContainer}>
       <TouchableOpacity onPress={() => {sheetRef.current?.open(); setHeight(460); setContainerHeight(460)}} style={styles.imageContainer}>
-        <Image source={require("../assets/images/ikuokukonen.jpg")} style={styles.image} />
+        <Image source={require("../../assets/images/ikuokukonen.jpg")} style={styles.image} />
       </TouchableOpacity>
       <BottomSheet 
       ref={sheetRef} 
