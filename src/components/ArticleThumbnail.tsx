@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { Image } from 'expo-image';
 import type { CubicBezierHandle } from '@shopify/react-native-skia';
 import {
   Skia,
@@ -11,7 +12,6 @@ import {
   vec,
   useImage,
   useClock,
-  Image,
   RoundedRect,
   Mask,
   topLeft,
@@ -98,11 +98,14 @@ interface ArticleThumbnailProps {
   lines?: boolean;
   handles?: boolean;
   play?: boolean;
+  articleID: string;
   artworkUrl: string;
 }
 
 const F = 8000;
 const A = 30;
+
+const AnimatedExpoImage = Animated.createAnimatedComponent(Image);
 
 export const ArticleThumbnail = ({
   rows,
@@ -112,6 +115,7 @@ export const ArticleThumbnail = ({
   lines,
   handles,
   play,
+  articleID,
   artworkUrl,
 }: ArticleThumbnailProps) => {
   const { width, height } = useWindowDimensions();
@@ -189,7 +193,10 @@ export const ArticleThumbnail = ({
 
   const mesh = play ? meshNoise : meshGesture;
 
-  const artwork = useImage(artworkUrl);
+  // const artwork = useImage(artworkUrl);
+
+  const defaultImage = require('@/src/assets/images/snsicon.png');
+
   const rrct = {
     rect: { x: 0, y: 0, width: articleCardWidth, height: imageSideLength },
     topLeft: { x: 12, y: 12 },
@@ -199,8 +206,8 @@ export const ArticleThumbnail = ({
   };
 
   return (
-    <View>
-      <Canvas style={{ width: articleCardWidth, height: imageSideLength }}>
+    <View style={styles.container}>
+      <Canvas style={{ width: '100%', height: imageSideLength }}>
         <Mask mask={<RoundedRect rect={rrct} />}>
           <Group>
             <ImageShader image={image} tx='repeat' ty='repeat' />
@@ -232,16 +239,13 @@ export const ArticleThumbnail = ({
               />
             );
           })}
-          <Image
-            image={artwork}
-            x={(articleCardWidth - imageSideLength) / 2}
-            y={0}
-            width={imageSideLength}
-            height={imageSideLength}
-            fit='contain'
-          />
         </Mask>
       </Canvas>
+      <AnimatedExpoImage
+        source={artworkUrl || defaultImage}
+        sharedTransitionTag={`image-${articleID}`}
+        style={styles.image}
+      />
     </View>
   );
 };
@@ -277,9 +281,20 @@ const RectPatch = ({
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
   Thumbnail: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+  },
+  image: {
+    position: 'absolute',
+
+    width: 160,
+    aspectRatio: 1,
   },
 });

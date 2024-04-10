@@ -49,6 +49,7 @@ export default function ArticleSummaryCard({
           cols={3}
           colors={gradientColors}
           play={true}
+          articleID={articleID}
           artworkUrl={artworkUrl}
         />
         <View style={styles.summaryContainer}>

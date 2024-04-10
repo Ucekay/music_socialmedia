@@ -2,25 +2,26 @@ import React from 'react';
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   ScrollView,
   useWindowDimensions,
 } from 'react-native';
-import { BlurView } from '@candlefinance/blur-view';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Image } from 'expo-image';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams } from 'expo-router';
+import Animated from 'react-native-reanimated';
+import { VariableBlurView } from '@candlefinance/blur-view';
 
+import EntryBottomSheet from '@/src/components/EntryBottomSheet';
 import articleData from '@/src/assets/articleData';
-import { articleDataType } from '@/src/types';
+
+const AnimatedExpoImage = Animated.createAnimatedComponent(Image);
 
 const ArticleDetailScreen = () => {
   const { id } = useLocalSearchParams();
   const { top } = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
-  const firstGradientStop = top / headerHeight;
   const article = articleData.find((item) => item.articleID === id);
   const defaultImage = require('@/src/assets/images/snsicon.png');
   if (!article) {
@@ -35,39 +36,22 @@ const ArticleDetailScreen = () => {
           headerBackVisible: false,
           headerTransparent: true,
           header: () => (
-            <BlurView
-              blurTintColor='#ffffff00'
-              colorTintOpacity={0}
-              blurRadius={5}
+            <VariableBlurView
               style={{
                 height: top,
-                shadowColor: '#000',
-                shadowOffset: {
-                  width: 0,
-                  height: 5,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 8,
-
-                elevation: 10,
               }}
             />
           ),
-          headerBackground: () => (
-            <LinearGradient
-              colors={['rgba(256,256,256,1)', 'transparent']}
-              style={StyleSheet.absoluteFill}
-            />
-          ),
+
+          animation: 'fade',
         }}
       />
-      <ScrollView>
-        <Image
-          src={article.artworkUrl || defaultImage}
-          style={styles.artwork}
-        />
-        <Text>Article Detail Screen : {id}</Text>
-      </ScrollView>
+      <AnimatedExpoImage
+        source={article.artworkUrl || defaultImage}
+        sharedTransitionTag={`image-${id}`}
+        style={styles.artwork}
+      />
+      <EntryBottomSheet />
     </View>
   );
 };

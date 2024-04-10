@@ -1,13 +1,14 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { BlurView } from 'expo-blur';
+import { VariableBlurView } from '@candlefinance/blur-view';
 import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import Colors from '@/src/constants/Colors';
 import { useColorScheme } from '@/src/components/useColorScheme';
 import { useClientOnlyValue } from '@/src/components/useClientOnlyValue';
+import { LinearGradient } from 'expo-linear-gradient';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -29,10 +30,36 @@ export default function TabLayout() {
         headerShown: useClientOnlyValue(false, true),
         tabBarStyle: {
           position: 'absolute',
-          backgroundColor: 'rgba(256, 256, 256, 0.7)',
+          borderTopWidth: 0,
         },
+        tabBarShowLabel: false,
         tabBarBackground: () => (
-          <BlurView tint='regular' style={StyleSheet.absoluteFill} />
+          <>
+            <LinearGradient
+              colors={[
+                'rgba(256,256,256,0)',
+                'rgba(256,256,256,0.7)',
+                'rgba(256,256,256,1)',
+              ]}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+              }}
+            />
+            <VariableBlurView
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                transform: [{ rotate: '180deg' }],
+              }}
+            />
+          </>
         ),
       }}
     >
