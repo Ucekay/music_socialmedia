@@ -1,14 +1,23 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { VariableBlurView } from '@candlefinance/blur-view';
-import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+
+import { useClientOnlyValue } from '@/src/components/useClientOnlyValue';
+import { LinearGradient } from 'expo-linear-gradient';
+import { VariableBlurView } from '@candlefinance/blur-view';
 
 import Colors from '@/src/constants/Colors';
 import { useColorScheme } from '@/src/components/useColorScheme';
-import { useClientOnlyValue } from '@/src/components/useClientOnlyValue';
-import { LinearGradient } from 'expo-linear-gradient';
+import {
+  BackdropFilter,
+  Blur,
+  Canvas,
+  rotate,
+} from '@shopify/react-native-skia';
+
+const bottomTabBarHeight = 79;
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -20,6 +29,7 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const width = useWindowDimensions().width;
 
   return (
     <Tabs
@@ -36,28 +46,14 @@ export default function TabLayout() {
         tabBarBackground: () => (
           <>
             <LinearGradient
-              colors={[
-                'rgba(256,256,256,0)',
-                'rgba(256,256,256,0.7)',
-                'rgba(256,256,256,1)',
-              ]}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-              }}
+              colors={['rgba(256,256,256,0)', 'rgba(256,256,256,1)']}
+              style={StyleSheet.absoluteFill}
             />
             <VariableBlurView
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                transform: [{ rotate: '180deg' }],
-              }}
+              style={[
+                StyleSheet.absoluteFill,
+                { transform: [{ rotate: '180deg' }] },
+              ]}
             />
           </>
         ),

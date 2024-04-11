@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text } from '@/src/components/Themed';
+import { Dimensions, StyleSheet, View, Text } from 'react-native';
 
 export default function TabTwoScreen() {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+
   return (
     <View>
-      <Text>Tab One</Text>
+      <Text>Tab Two</Text>
     </View>
   );
 }
