@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { View, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
@@ -10,14 +10,6 @@ import { VariableBlurView } from '@candlefinance/blur-view';
 
 import Colors from '@/src/constants/Colors';
 import { useColorScheme } from '@/src/components/useColorScheme';
-import {
-  BackdropFilter,
-  Blur,
-  Canvas,
-  rotate,
-} from '@shopify/react-native-skia';
-
-const bottomTabBarHeight = 79;
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -29,7 +21,6 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const width = useWindowDimensions().width;
 
   return (
     <Tabs
@@ -46,7 +37,7 @@ export default function TabLayout() {
         tabBarBackground: () => (
           <>
             <LinearGradient
-              colors={['rgba(256,256,256,0)', 'rgba(256,256,256,1)']}
+              colors={Colors[colorScheme ?? 'light'].tabBarGradient}
               style={StyleSheet.absoluteFill}
             />
             <VariableBlurView

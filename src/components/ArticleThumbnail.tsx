@@ -21,6 +21,7 @@ import {
 import { View, useWindowDimensions, StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
 import Animated, {
+  useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated';
@@ -105,8 +106,6 @@ interface ArticleThumbnailProps {
 const F = 8000;
 const A = 30;
 
-const AnimatedExpoImage = Animated.createAnimatedComponent(Image);
-
 export const ArticleThumbnail = ({
   rows,
   cols,
@@ -119,8 +118,9 @@ export const ArticleThumbnail = ({
   artworkUrl,
 }: ArticleThumbnailProps) => {
   const { width, height } = useWindowDimensions();
-  const imageSideLength = 160;
+
   const articleCardWidth = width - 32;
+  const imageSideLength = 160;
   const window = useMemo(
     () => Skia.XYWHRect(0, 0, articleCardWidth, imageSideLength),
     [imageSideLength, articleCardWidth]
@@ -193,8 +193,6 @@ export const ArticleThumbnail = ({
 
   const mesh = play ? meshNoise : meshGesture;
 
-  // const artwork = useImage(artworkUrl);
-
   const defaultImage = require('@/src/assets/images/snsicon.png');
 
   const rrct = {
@@ -208,44 +206,39 @@ export const ArticleThumbnail = ({
   return (
     <View style={styles.container}>
       <Canvas style={{ width: '100%', height: imageSideLength }}>
-        <Mask mask={<RoundedRect rect={rrct} />}>
-          <Group>
-            <ImageShader image={image} tx='repeat' ty='repeat' />
-            {rects.map((r, i) => {
-              return (
-                <RectPatch
-                  key={i}
-                  r={r}
-                  mesh={mesh}
-                  debug={debug}
-                  lines={lines}
-                  colors={colors}
-                  defaultMesh={defaultMesh}
-                />
-              );
-            })}
-          </Group>
-
-          {defaultMesh.map(({ pos }, index) => {
-            if (isEdge(pos, window) || !handles) {
-              return null;
-            }
+        <Group>
+          <ImageShader image={image} tx='repeat' ty='repeat' />
+          {rects.map((r, i) => {
             return (
-              <Cubic
-                key={index}
+              <RectPatch
+                key={i}
+                r={r}
                 mesh={mesh}
-                index={index}
-                color={colors[index]}
+                debug={debug}
+                lines={lines}
+                colors={colors}
+                defaultMesh={defaultMesh}
               />
             );
           })}
-        </Mask>
+        </Group>
+
+        {defaultMesh.map(({ pos }, index) => {
+          if (isEdge(pos, window) || !handles) {
+            return null;
+          }
+          return (
+            <Cubic
+              key={index}
+              mesh={mesh}
+              index={index}
+              color={colors[index]}
+            />
+          );
+        })}
       </Canvas>
-      <AnimatedExpoImage
-        source={artworkUrl || defaultImage}
-        sharedTransitionTag={`image-${articleID}`}
-        style={styles.image}
-      />
+
+      <Image source={artworkUrl || defaultImage} style={styles.image} />
     </View>
   );
 };
@@ -286,14 +279,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-  },
-  Thumbnail: {
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
   },
   image: {
     position: 'absolute',
-
     width: 160,
     aspectRatio: 1,
   },

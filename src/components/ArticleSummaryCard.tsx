@@ -1,14 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  useWindowDimensions,
+  useColorScheme,
+} from 'react-native';
 import RNColorThief from 'react-native-color-thief';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 
 import { ArticleThumbnail } from './ArticleThumbnail';
 import ArticleTag from './ArticleTag';
-import { increaseSaturation, rgb2Hex } from '../constants/ColorModifier';
+import { increaseSaturation, rgb2Hex } from './ColorModifier';
 import type { Palette, articleDataType } from '../types';
-import { COLORS } from '../constants/Colors';
+import Colors from '../constants/Colors';
+import Animated, {
+  interpolateColor,
+  useAnimatedStyle,
+  useDerivedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 export default function ArticleSummaryCard({
   article,
@@ -26,7 +39,7 @@ export default function ArticleSummaryCard({
     userAvatarUrl,
     type,
   } = article;
-
+  const colorScheme = useColorScheme();
   const [hexColors, setHexColors] = useState<string[]>([]);
   useEffect(() => {
     RNColorThief.getPalette(artworkUrl, 17, 2, false)
@@ -38,40 +51,88 @@ export default function ArticleSummaryCard({
         console.log(error);
       });
   }, []);
+
+  const progress = useDerivedValue(() => {
+    return colorScheme === 'dark' ? withTiming(1) : withTiming(0);
+  }, [colorScheme]);
+  const animatedBackground = useAnimatedStyle(() => {
+    const backGroundColor = interpolateColor(
+      progress.value,
+      [0, 1],
+      [Colors.light.secondlyBackground, Colors.dark.secondlyBackground]
+    );
+    return {
+      backgroundColor: backGroundColor,
+    };
+  });
+  const animatedTextColor = useAnimatedStyle(() => {
+    const textColor = interpolateColor(
+      progress.value,
+      [0, 1],
+      [Colors.light.text, Colors.dark.text]
+    );
+    return {
+      color: textColor,
+    };
+  });
+  const AnimatedSecondlyTextColor = useAnimatedStyle(() => {
+    const secondlyTextColor = interpolateColor(
+      progress.value,
+      [0, 1],
+      [Colors.light.secondlyText, Colors.dark.secondlyText]
+    );
+    return { color: secondlyTextColor };
+  });
+
   if (hexColors.length === 0) return null;
   const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
 
   return (
     <Link href={`/articles/${article.articleID}`} asChild>
-      <Pressable style={styles.container}>
-        <ArticleThumbnail
-          rows={3}
-          cols={3}
-          colors={gradientColors}
-          play={true}
-          articleID={articleID}
-          artworkUrl={artworkUrl}
-        />
-        <View style={styles.summaryContainer}>
-          <View>
-            <Text style={styles.articleTitle}>{articleTitle}</Text>
-          </View>
-
-          <View>
-            <Text style={styles.songName}>{songName}</Text>
-            <Text style={styles.artistName}>{artistName}</Text>
-          </View>
-          <View style={styles.infoContainer}>
-            <View style={styles.authorContainer}>
-              <Image source={userAvatarUrl} style={styles.avatar} />
-              <View>
-                <Text>{user}</Text>
-                <Text style={styles.userID}>{userID}</Text>
-              </View>
+      <Pressable style={{ flex: 1 }}>
+        <Animated.View style={[styles.container, animatedBackground]}>
+          <ArticleThumbnail
+            rows={3}
+            cols={3}
+            colors={gradientColors}
+            play={true}
+            articleID={articleID}
+            artworkUrl={artworkUrl}
+          />
+          <View style={styles.summaryContainer}>
+            <View>
+              <Animated.Text style={[styles.articleTitle, animatedTextColor]}>
+                {articleTitle}
+              </Animated.Text>
             </View>
-            <ArticleTag type={type} />
+            <View>
+              <Animated.Text style={[styles.songName, animatedTextColor]}>
+                {songName}
+              </Animated.Text>
+              <Animated.Text
+                style={[styles.artistName, AnimatedSecondlyTextColor]}
+              >
+                {artistName}
+              </Animated.Text>
+            </View>
+            <View style={styles.infoContainer}>
+              <View style={styles.authorContainer}>
+                <Image source={userAvatarUrl} style={styles.avatar} />
+                <View>
+                  <Animated.Text style={[styles.useName, animatedTextColor]}>
+                    {user}
+                  </Animated.Text>
+                  <Animated.Text
+                    style={[styles.userID, AnimatedSecondlyTextColor]}
+                  >
+                    {userID}
+                  </Animated.Text>
+                </View>
+              </View>
+              <ArticleTag type={type} />
+            </View>
           </View>
-        </View>
+        </Animated.View>
       </Pressable>
     </Link>
   );
@@ -83,9 +144,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 8,
-    borderBottomRightRadius: 12,
-    borderBottomLeftRadius: 12,
-    backgroundColor: COLORS.neutral50,
+    borderRadius: 12,
+    borderCurve: 'continuous',
 
     shadowColor: '#000',
     shadowOffset: {
@@ -104,7 +164,7 @@ const styles = StyleSheet.create({
     gap: 8,
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
-    backgroundColor: COLORS.neutral50,
+    borderCurve: 'continuous',
   },
   infoContainer: {
     flexDirection: 'row',
@@ -112,14 +172,15 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   articleTitle: {
-    fontSize: 26,
+    fontSize: 22,
+    fontWeight: '500',
   },
   songName: {
-    fontSize: 20,
+    fontSize: 17,
+    fontWeight: '500',
   },
   artistName: {
-    fontSize: 16,
-    color: COLORS.neutral700,
+    fontSize: 17,
   },
   authorContainer: {
     flexDirection: 'row',
@@ -127,14 +188,16 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   avatar: {
-    width: 32,
-    height: 32,
+    width: 28,
+    height: 28,
     borderRadius: 14,
     backgroundColor: 'lightblue',
   },
+  useName: {
+    fontSize: 12,
+  },
   userID: {
     fontSize: 11,
-    color: COLORS.neutral700,
   },
 });
 
