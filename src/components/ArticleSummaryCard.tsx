@@ -52,45 +52,25 @@ export default function ArticleSummaryCard({
       });
   }, []);
 
-  const progress = useDerivedValue(() => {
-    return colorScheme === 'dark' ? withTiming(1) : withTiming(0);
-  }, [colorScheme]);
-  const animatedBackground = useAnimatedStyle(() => {
-    const backGroundColor = interpolateColor(
-      progress.value,
-      [0, 1],
-      [Colors.light.secondlyBackground, Colors.dark.secondlyBackground]
-    );
-    return {
-      backgroundColor: backGroundColor,
-    };
-  });
-  const animatedTextColor = useAnimatedStyle(() => {
-    const textColor = interpolateColor(
-      progress.value,
-      [0, 1],
-      [Colors.light.text, Colors.dark.text]
-    );
-    return {
-      color: textColor,
-    };
-  });
-  const AnimatedSecondlyTextColor = useAnimatedStyle(() => {
-    const secondlyTextColor = interpolateColor(
-      progress.value,
-      [0, 1],
-      [Colors.light.secondlyText, Colors.dark.secondlyText]
-    );
-    return { color: secondlyTextColor };
-  });
-
+  const themeBackgroundStyle =
+    colorScheme === 'dark'
+      ? { backgroundColor: Colors.dark.secondlyBackground }
+      : { backgroundColor: Colors.light.secondlyBackground };
+  const themeTextColor =
+    colorScheme === 'dark'
+      ? { color: Colors.dark.text }
+      : { color: Colors.light.text };
+  const themeSecondlyTextColor =
+    colorScheme === 'dark'
+      ? { color: Colors.dark.secondlyText }
+      : { color: Colors.light.secondlyText };
   if (hexColors.length === 0) return null;
   const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
 
   return (
     <Link href={`/articles/${article.articleID}`} asChild>
       <Pressable style={{ flex: 1 }}>
-        <Animated.View style={[styles.container, animatedBackground]}>
+        <Animated.View style={[styles.container, themeBackgroundStyle]}>
           <ArticleThumbnail
             rows={3}
             cols={3}
@@ -101,16 +81,16 @@ export default function ArticleSummaryCard({
           />
           <View style={styles.summaryContainer}>
             <View>
-              <Animated.Text style={[styles.articleTitle, animatedTextColor]}>
+              <Animated.Text style={[styles.articleTitle, themeTextColor]}>
                 {articleTitle}
               </Animated.Text>
             </View>
             <View>
-              <Animated.Text style={[styles.songName, animatedTextColor]}>
+              <Animated.Text style={[styles.songName, themeTextColor]}>
                 {songName}
               </Animated.Text>
               <Animated.Text
-                style={[styles.artistName, AnimatedSecondlyTextColor]}
+                style={[styles.artistName, themeSecondlyTextColor]}
               >
                 {artistName}
               </Animated.Text>
@@ -119,11 +99,11 @@ export default function ArticleSummaryCard({
               <View style={styles.authorContainer}>
                 <Image source={userAvatarUrl} style={styles.avatar} />
                 <View>
-                  <Animated.Text style={[styles.useName, animatedTextColor]}>
+                  <Animated.Text style={[styles.useName, themeTextColor]}>
                     {user}
                   </Animated.Text>
                   <Animated.Text
-                    style={[styles.userID, AnimatedSecondlyTextColor]}
+                    style={[styles.userID, themeSecondlyTextColor]}
                   >
                     {userID}
                   </Animated.Text>

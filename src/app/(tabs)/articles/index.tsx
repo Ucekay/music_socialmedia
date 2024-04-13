@@ -23,22 +23,13 @@ export default function TabOneScreen() {
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
   const colorScheme = useColorScheme();
-  const progress = useDerivedValue(() => {
-    return colorScheme === 'dark' ? withTiming(1) : withTiming(0);
-  }, [colorScheme]);
-  const animatedStyle = useAnimatedStyle(() => {
-    const backGroundColor = interpolateColor(
-      progress.value,
-      [0, 1],
-      [Colors.light.background, Colors.dark.background]
-    );
-    return {
-      backgroundColor: backGroundColor,
-    };
-  });
+  const themeContainerStyle =
+    colorScheme === 'dark'
+      ? { backgroundColor: Colors.dark.background }
+      : { backgroundColor: Colors.light.background };
 
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
+    <Animated.View style={[styles.container, themeContainerStyle]}>
       <FlashList
         data={articleData}
         renderItem={({ item }) => (

@@ -21,6 +21,10 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const themeContainerStyle =
+    colorScheme === 'dark'
+      ? Colors['dark'].tabBarGradient
+      : Colors['light'].tabBarGradient;
 
   return (
     <Tabs
@@ -37,7 +41,7 @@ export default function TabLayout() {
         tabBarBackground: () => (
           <>
             <LinearGradient
-              colors={Colors[colorScheme ?? 'light'].tabBarGradient}
+              colors={themeContainerStyle}
               style={StyleSheet.absoluteFill}
             />
             <VariableBlurView
