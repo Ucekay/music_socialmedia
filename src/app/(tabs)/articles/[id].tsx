@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import Animated from 'react-native-reanimated';
-import { VariableBlurView } from '@candlefinance/blur-view';
+import { VariableBlurView } from '@ucekay/blur-view-fix';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 
 import articleData from '@/src/assets/articleData';

@@ -6,7 +6,7 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import { useClientOnlyValue } from '@/src/components/useClientOnlyValue';
 import { LinearGradient } from 'expo-linear-gradient';
-import { VariableBlurView } from '@candlefinance/blur-view';
+import { VariableBlurView } from '@ucekay/blur-view-fix';
 
 import Colors from '@/src/constants/Colors';
 import { useColorScheme } from '@/src/components/useColorScheme';
@@ -45,10 +45,14 @@ export default function TabLayout() {
               style={StyleSheet.absoluteFill}
             />
             <VariableBlurView
-              style={[
-                StyleSheet.absoluteFill,
-                { transform: [{ rotate: '180deg' }] },
-              ]}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                transform: [{ rotate: '180deg' }],
+              }}
             />
           </>
         ),
