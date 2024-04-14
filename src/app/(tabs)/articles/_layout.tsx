@@ -1,8 +1,15 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, useColorScheme } from 'react-native';
 import { Stack } from 'expo-router';
 import { BlurView } from 'expo-blur';
+import React from 'react';
+import Colors from '@/src/constants/Colors';
 
 export default function ArticleStack() {
+  const colorScheme = useColorScheme();
+  const themeContainerStyle =
+    colorScheme === 'dark'
+      ? { backgroundColor: Colors['dark'].headerBackground }
+      : { backgroundColor: Colors['light'].headerBackground };
   return (
     <Stack>
       <Stack.Screen
@@ -10,13 +17,9 @@ export default function ArticleStack() {
         options={{
           title: 'Articles',
           headerTransparent: true,
-          headerStyle: { backgroundColor: 'rgba(256, 256, 256, 0.7)' },
+          headerStyle: { ...themeContainerStyle },
           headerBackground: () => (
-            <BlurView
-              tint='light'
-              intensity={60}
-              style={StyleSheet.absoluteFill}
-            />
+            <BlurView tint='regular' style={StyleSheet.absoluteFill} />
           ),
         }}
       />

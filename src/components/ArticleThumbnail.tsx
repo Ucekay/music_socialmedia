@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { Image } from 'expo-image';
 import type { CubicBezierHandle } from '@shopify/react-native-skia';
 import {
   Skia,
@@ -11,16 +12,10 @@ import {
   vec,
   useImage,
   useClock,
-  Image,
-  RoundedRect,
-  Mask,
 } from '@shopify/react-native-skia';
 import { View, useWindowDimensions, StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
-import Animated, {
-  useDerivedValue,
-  useSharedValue,
-} from 'react-native-reanimated';
+import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 
 import { createNoise2D } from './SimpleNoise';
 
@@ -89,6 +84,7 @@ interface ArticleThumbnailProps {
   lines?: boolean;
   handles?: boolean;
   play?: boolean;
+  articleID: string;
   artworkUrl: string;
 }
 
@@ -103,11 +99,13 @@ export const ArticleThumbnail = ({
   lines,
   handles,
   play,
+  articleID,
   artworkUrl,
 }: ArticleThumbnailProps) => {
   const { width, height } = useWindowDimensions();
-  const imageSideLength = 160;
+
   const articleCardWidth = width - 32;
+  const imageSideLength = 160;
   const window = useMemo(
     () => Skia.XYWHRect(0, 0, articleCardWidth, imageSideLength),
     [imageSideLength, articleCardWidth]
@@ -180,7 +178,8 @@ export const ArticleThumbnail = ({
 
   const mesh = play ? meshNoise : meshGesture;
 
-  const artwork = useImage(artworkUrl);
+  const defaultImage = require('@/src/assets/images/snsicon.png');
+
   const rrct = {
     rect: { x: 0, y: 0, width: articleCardWidth, height: imageSideLength },
     topLeft: { x: 12, y: 12 },
@@ -190,9 +189,8 @@ export const ArticleThumbnail = ({
   };
 
   return (
-    <View>
-      <Canvas style={{ width: articleCardWidth, height: imageSideLength }}>
-        {/*<Mask mask={<RoundedRect rect={rrct} />}>*/}
+    <View style={styles.container}>
+      <Canvas style={{ width: '100%', height: imageSideLength }}>
         <Group>
           <ImageShader image={image} tx='repeat' ty='repeat' />
           {rects.map((r, i) => {
@@ -223,16 +221,9 @@ export const ArticleThumbnail = ({
             />
           );
         })}
-        <Image
-          image={artwork}
-          x={(articleCardWidth - imageSideLength) / 2}
-          y={0}
-          width={imageSideLength}
-          height={imageSideLength}
-          fit='contain'
-        />
-        {/*</Mask>*/}
       </Canvas>
+
+      <Image source={artworkUrl || defaultImage} style={styles.image} />
     </View>
   );
 };
@@ -268,9 +259,19 @@ const RectPatch = ({
 };
 
 const styles = StyleSheet.create({
-  container: {},
-  Thumbnail: {
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
+  },
+  image: {
+    position: 'absolute',
+    width: 160,
+    aspectRatio: 1,
   },
 });

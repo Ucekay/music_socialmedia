@@ -1,121 +1,67 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useColorScheme } from 'react-native';
 import React from 'react';
-import { COLORS } from '../constants/Colors';
+import { TagsColors } from '../constants/Colors';
 
-const reviewColor = '#38BDF8';
+const reviewColor = '#cbe8fd';
+const reviewTextColor = '#0a6fa3';
+const liveReportColor = '#f8e0c8';
+const livereportTextColor = '#975b03';
+const playlistColor = '#ffdbe5';
+const playlistTextColor = '#a24d6a';
 
 type ArticleTagProps = {
   type: string;
 };
 
 const ArticleTag = ({ type }: ArticleTagProps) => {
+  const colorScheme = useColorScheme();
+  let Color;
   switch (type) {
     case 'general':
-      return (
-        <View style={styles.tagContainer}>
-          <View style={styles.container}>
-            <View style={styles.general}></View>
-            <Text>General</Text>
-          </View>
-        </View>
-      );
+      Color = TagsColors.general;
+      break;
     case 'review':
-      return (
-        <View style={styles.tagContainer}>
-          <View style={styles.container}>
-            <View style={styles.review}></View>
-            <Text>Review</Text>
-          </View>
-        </View>
-      );
-    case 'live report':
-      return (
-        <View style={styles.tagContainer}>
-          <View style={styles.container}>
-            <View style={styles.liveReport}></View>
-            <Text>Live Report</Text>
-          </View>
-        </View>
-      );
+      Color = TagsColors.review;
+      break;
+    case 'liveReport':
+      Color = TagsColors.liveReport;
+      break;
     case 'playlist':
-      return (
-        <View style={styles.tagContainer}>
-          <View style={styles.container}>
-            <View style={styles.playlist}></View>
-            <Text>Playlist</Text>
-          </View>
-        </View>
-      );
+      Color = TagsColors.playlist;
+      break;
     default:
-      return (
-        <View style={styles.tagContainer}>
-          <View style={styles.container}>
-            <View style={styles.tag}></View>
-            <Text>{type}</Text>
-          </View>
-        </View>
-      );
+      Color = TagsColors.general;
+      break;
   }
+
+  function titleCase(style: string) {
+    return style[0].toUpperCase() + style.slice(1).toLowerCase();
+  }
+  return (
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: Color[colorScheme ?? 'light'].background },
+      ]}
+    >
+      {/*<View style={[styles.dot, { backgroundColor: bgColor }]}></View>*/}
+      <Text style={{ color: Color[colorScheme ?? 'light'].text }}>
+        {titleCase(type)}
+      </Text>
+    </View>
+  );
 };
 
 export default ArticleTag;
 
 const styles = StyleSheet.create({
-  tagContainer: {
-    flexDirection: 'row',
-    gap: 8,
-    alignItems: 'flex-end',
-    height: 32,
-  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-  },
-  general: {
-    backgroundColor: COLORS.neutral300,
-    width: 10,
-    height: 10,
-    borderTopLeftRadius: 100,
-    borderTopRightRadius: 100,
-    borderBottomRightRadius: 100,
-    borderBottomLeftRadius: 100,
-  },
-  generalText: {},
-  review: {
-    backgroundColor: reviewColor,
-    width: 10,
-    height: 10,
-    borderTopLeftRadius: 100,
-    borderTopRightRadius: 100,
-    borderBottomRightRadius: 100,
-    borderBottomLeftRadius: 100,
-  },
-  liveReport: {
-    backgroundColor: 'orange',
-    width: 10,
-    height: 10,
-    borderTopLeftRadius: 100,
-    borderTopRightRadius: 100,
-    borderBottomRightRadius: 100,
-    borderBottomLeftRadius: 100,
-  },
-  playlist: {
-    backgroundColor: 'pink',
-    width: 10,
-    height: 10,
-    borderTopLeftRadius: 100,
-    borderTopRightRadius: 100,
-    borderBottomRightRadius: 100,
-    borderBottomLeftRadius: 100,
-  },
-  tag: {
-    backgroundColor: COLORS.neutral300,
-    width: 10,
-    height: 10,
-    borderTopLeftRadius: 100,
-    borderTopRightRadius: 100,
-    borderBottomRightRadius: 100,
-    borderBottomLeftRadius: 100,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderCurve: 'continuous',
   },
 });
