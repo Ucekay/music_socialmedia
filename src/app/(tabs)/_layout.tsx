@@ -6,7 +6,7 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import { useClientOnlyValue } from '@/src/components/useClientOnlyValue';
 import { LinearGradient } from 'expo-linear-gradient';
-import { VariableBlurView } from '@ucekay/blur-view-fix';
+import { BlurView } from 'expo-blur';
 
 import Colors from '@/src/constants/Colors';
 import { useColorScheme } from '@/src/components/useColorScheme';
@@ -44,7 +44,8 @@ export default function TabLayout() {
               colors={themeContainerStyle}
               style={StyleSheet.absoluteFill}
             />
-            <VariableBlurView
+            <BlurView
+              tint='regular'
               style={{
                 position: 'absolute',
                 top: 0,

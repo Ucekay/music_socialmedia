@@ -1,27 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  useWindowDimensions,
-  useColorScheme,
-} from 'react-native';
-import RNColorThief from 'react-native-color-thief';
+import React from 'react';
+import { View, StyleSheet, Pressable, useColorScheme } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 
 import { ArticleThumbnail } from './ArticleThumbnail';
 import ArticleTag from './ArticleTag';
-import { increaseSaturation, rgb2Hex } from './ColorModifier';
-import type { Palette, articleDataType } from '../types';
+import type { articleDataType } from '../types';
 import Colors from '../constants/Colors';
-import Animated, {
-  interpolateColor,
-  useAnimatedStyle,
-  useDerivedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
 export default function ArticleSummaryCard({
   article,
@@ -40,17 +26,6 @@ export default function ArticleSummaryCard({
     type,
   } = article;
   const colorScheme = useColorScheme();
-  const [hexColors, setHexColors] = useState<string[]>([]);
-  useEffect(() => {
-    RNColorThief.getPalette(artworkUrl, 17, 2, false)
-      .then((palette: Palette) => {
-        const hexColors: string[] = rgb2Hex(palette);
-        setHexColors(hexColors);
-      })
-      .catch((error: Error) => {
-        console.log(error);
-      });
-  }, []);
 
   const themeBackgroundStyle =
     colorScheme === 'dark'
@@ -64,8 +39,6 @@ export default function ArticleSummaryCard({
     colorScheme === 'dark'
       ? { color: Colors.dark.secondlyText }
       : { color: Colors.light.secondlyText };
-  if (hexColors.length === 0) return null;
-  const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
 
   return (
     <Link href={`/articles/${article.articleID}`} asChild>
@@ -74,7 +47,7 @@ export default function ArticleSummaryCard({
           <ArticleThumbnail
             rows={3}
             cols={3}
-            colors={gradientColors}
+            colors={palette.otto}
             play={true}
             articleID={articleID}
             artworkUrl={artworkUrl}
