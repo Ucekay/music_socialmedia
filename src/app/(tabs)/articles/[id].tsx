@@ -1,27 +1,17 @@
-import React, { useCallback, useMemo, useRef } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  useWindowDimensions,
-} from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import Animated from 'react-native-reanimated';
 import { VariableBlurView } from '@ucekay/blur-view-fix';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import articleData from '@/src/assets/articleData';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 
 const ArticleDetailScreen = () => {
   const { id } = useLocalSearchParams();
   const { top } = useSafeAreaInsets();
-  const tabBarHeight = useBottomTabBarHeight();
   const windowsHeight = useWindowDimensions().height;
 
   const snapPoint0 = windowsHeight - 375 + 24;

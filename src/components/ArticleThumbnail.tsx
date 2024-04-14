@@ -12,31 +12,16 @@ import {
   vec,
   useImage,
   useClock,
-  RoundedRect,
-  Mask,
-  topLeft,
-  rect,
-  Blur,
 } from '@shopify/react-native-skia';
 import { View, useWindowDimensions, StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
-import Animated, {
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-} from 'react-native-reanimated';
-import {
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
+import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 
 import { createNoise2D } from './SimpleNoise';
 
 import { symmetric } from './Math';
 import { Cubic } from './Cubic';
 import { Curves } from './Curves';
-import { useHandles } from './useHandles';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],
