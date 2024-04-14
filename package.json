@@ -22,7 +22,7 @@
     "@shopify/flash-list": "1.6.3",
     "@shopify/react-native-skia": "^1.0.6",
     "cdt2d": "^1.0.0",
-    "expo": "~50.0.14",
+    "expo": "^50.0.15",
     "expo-blur": "~12.9.2",
     "expo-build-properties": "~0.11.1",
     "expo-dev-client": "~3.3.11",
