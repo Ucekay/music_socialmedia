@@ -2,7 +2,7 @@ import React from "react-native"
 import { Redirect } from 'expo-router'
 
 const Index = (): JSX.Element => {
-  return <Redirect href='../../pages/detail' /> 
+  return <Redirect href='../../pages/detailLight' /> 
 }
 
 export default Index
