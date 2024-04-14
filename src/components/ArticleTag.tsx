@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, useColorScheme } from 'react-native';
 import React from 'react';
-import { COLORS } from '../constants/Colors';
+import { TagsColors } from '../constants/Colors';
 
 const reviewColor = '#cbe8fd';
 const reviewTextColor = '#0a6fa3';
@@ -14,46 +14,40 @@ type ArticleTagProps = {
 };
 
 const ArticleTag = ({ type }: ArticleTagProps) => {
-  let bgColor;
+  const colorScheme = useColorScheme();
+  let Color;
   switch (type) {
     case 'general':
-      bgColor = COLORS.neutral100;
+      Color = TagsColors.general;
       break;
     case 'review':
-      bgColor = reviewColor;
+      Color = TagsColors.review;
       break;
-    case 'live report':
-      bgColor = liveReportColor;
-      break;
-    case 'playlist':
-      bgColor = playlistColor;
-      break;
-    default:
-      bgColor = COLORS.neutral300;
-      break;
-  }
-  let textColor;
-  switch (type) {
-    case 'review':
-      textColor = reviewTextColor;
-      break;
-    case 'live report':
-      textColor = livereportTextColor;
+    case 'liveReport':
+      Color = TagsColors.liveReport;
       break;
     case 'playlist':
-      textColor = playlistTextColor;
+      Color = TagsColors.playlist;
       break;
     default:
-      textColor = COLORS.neutral700;
+      Color = TagsColors.general;
       break;
   }
+
   function titleCase(style: string) {
     return style[0].toUpperCase() + style.slice(1).toLowerCase();
   }
   return (
-    <View style={[styles.container, { backgroundColor: bgColor }]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: Color[colorScheme ?? 'light'].background },
+      ]}
+    >
       {/*<View style={[styles.dot, { backgroundColor: bgColor }]}></View>*/}
-      <Text style={{ color: textColor }}>{titleCase(type)}</Text>
+      <Text style={{ color: Color[colorScheme ?? 'light'].text }}>
+        {titleCase(type)}
+      </Text>
     </View>
   );
 };
