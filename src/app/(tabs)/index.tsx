@@ -1,5 +1,7 @@
 import { Redirect } from 'expo-router';
 
-export default function TabIndex() {
-  return <Redirect href='../detail.tsx' />;
+const TabIndex = (): JSX.Element => {
+  return <Redirect href={'/(tabs)/articles'} />;
 }
+
+export default TabIndex;
