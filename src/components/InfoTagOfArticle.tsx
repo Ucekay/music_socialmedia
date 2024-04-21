@@ -2,21 +2,33 @@ import {
     Image,
     StyleSheet,
     Text,
-    View,
+    Pressable,
+    View
   } from "react-native";
 import { ArticleProps } from "../types/articleData";
+import { Link } from "expo-router";
+
 
 const InfoTag = (props: ArticleProps): JSX.Element => {
-    return (
+  return (
       <View style={styles.infoTag}>
-        <View style={styles.author}>
-          <Image
-            style={styles.image} 
-            source={{uri: props.userAvatarUrl}}
-          />
-          <Text style={styles.authorName}>{props.user}</Text>
-          <Text style={styles.authorId}>{props.userID}</Text>
-        </View>
+         <Link href={{
+          pathname:'/profile',
+          params: {
+            userID: props.userID
+          }
+         }} asChild>
+          <Pressable>
+            <View style={styles.author}>    
+              <Image
+                style={styles.image} 
+                source={{uri: props.userAvatarUrl}}
+              />
+              <Text style={styles.authorName}>{props.user}</Text>
+              <Text style={styles.authorId}>{props.userID}</Text>
+            </View>
+          </Pressable>
+        </Link> 
         <View style={styles.songInfo}>
           <Text style={styles.songName}>Song  {props.songName}</Text>
         </View>
@@ -24,8 +36,8 @@ const InfoTag = (props: ArticleProps): JSX.Element => {
           <Text style={styles.artistName}>Artist  {props.artistName}</Text>
         </View>
       </View>
-    )
-  }
+  )
+}
 
   export default InfoTag
 
