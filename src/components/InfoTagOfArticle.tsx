@@ -4,19 +4,7 @@ import {
     Text,
     View,
   } from "react-native";
-
-  interface ArticleProps {
-    articleID?: string,
-    articleTitle?: string,
-    articleContent?: string,
-    songName?: string,
-    artistName?: string,
-    artworkUrl?: string,
-    userID?: string,
-    user?: string,
-    userAvatarUrl: string,
-    type?: string,
-  }
+import { ArticleProps } from "../types/articleData";
 
 const InfoTag = (props: ArticleProps): JSX.Element => {
     return (
@@ -30,10 +18,10 @@ const InfoTag = (props: ArticleProps): JSX.Element => {
           <Text style={styles.authorId}>{props.userID}</Text>
         </View>
         <View style={styles.songInfo}>
-          <Text style={styles.songName}>Song Name {props.songName}</Text>
+          <Text style={styles.songName}>Song  {props.songName}</Text>
         </View>
         <View style={styles.artistInfo}>
-          <Text style={styles.artistName}>Artist Name  {props.songName}</Text>
+          <Text style={styles.artistName}>Artist  {props.artistName}</Text>
         </View>
       </View>
     )
@@ -46,7 +34,7 @@ const InfoTag = (props: ArticleProps): JSX.Element => {
       width: 343,
       height: 28,
       flexDirection: 'row',
-      marginBottom: 12
+      marginBottom: 6
     },
     image: {
       width: 28,
@@ -66,7 +54,7 @@ const InfoTag = (props: ArticleProps): JSX.Element => {
     songInfo: {
       width: 343,
       height: 20,
-      flexDirection: 'row'
+      flexDirection: 'row',
     },
     artistInfo: {
       width: 343,
@@ -78,7 +66,7 @@ const InfoTag = (props: ArticleProps): JSX.Element => {
       lineHeight: 20
     },
     artistName: {
-      fontSize: 15,
+      fontSize: 16,
       lineHeight: 20
     },
     infoTag: {

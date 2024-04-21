@@ -4,19 +4,7 @@ import {
     View
   } from "react-native";
 import InfoTag from "../components/InfoTagOfArticle";
-
-interface ArticleProps {
-    articleID: string,
-    articleTitle: string,
-    articleContent: string,
-    songName: string,
-    artistName: string,
-    artworkUrl: string,
-    userID: string,
-    user: string,
-    userAvatarUrl: string,
-    type: string,
-  }
+import { ArticleProps } from "../types/articleData";
 
 const ArticleScroll = (props: ArticleProps): JSX.Element => {
   return(
@@ -39,13 +27,13 @@ const styles = StyleSheet.create({
         width: 343,
         justifyContent: "center",
         backgroundColor: "white",
-        marginBottom: 20,
+        marginBottom: 15,
       },
       title: {
         fontSize: 28,
         lineHeight: 32,
         marginHorizontal: 32,
-        marginBottom: 20,
+        marginBottom: 15,
       },
       paragraph: {
         fontSize: 16,
@@ -53,7 +41,6 @@ const styles = StyleSheet.create({
         marginBottom: 64,
       },
       article: {
-        paddingTop: 24,
         paddingHorizontal: 16,
       },
     });
