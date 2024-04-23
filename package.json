@@ -13,6 +13,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@10play/tentap-editor": "^0.4.55",
     "@evilmartians/harmony": "^1.2.0",
     "@expo/vector-icons": "^14.0.0",
     "@gorhom/bottom-sheet": "gorhom/react-native-bottom-sheet#pull/1784/head",
@@ -47,6 +48,7 @@
     "react-native-screens": "^3.30.1",
     "react-native-svg": "^15.1.0",
     "react-native-web": "~0.19.6",
+    "react-native-webview": "^13.8.6",
     "react-navigation": "^5.0.0",
     "react-navigation-shared-element": "^3.1.3"
   },
