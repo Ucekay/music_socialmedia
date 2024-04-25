@@ -2,13 +2,6 @@ import { StyleSheet, Text, View, useColorScheme } from 'react-native';
 import React from 'react';
 import { TagsColors } from '../constants/Colors';
 
-const reviewColor = '#cbe8fd';
-const reviewTextColor = '#0a6fa3';
-const liveReportColor = '#f8e0c8';
-const livereportTextColor = '#975b03';
-const playlistColor = '#ffdbe5';
-const playlistTextColor = '#a24d6a';
-
 type ArticleTagProps = {
   type: string;
 };

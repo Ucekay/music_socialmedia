@@ -3,11 +3,13 @@ import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { VariableBlurView } from '@ucekay/blur-view-fix';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import articleData from '@/src/assets/articleData';
+import { Line } from 'react-native-svg';
 
 const ArticleDetailScreen = () => {
   const { id } = useLocalSearchParams();
@@ -34,11 +36,24 @@ const ArticleDetailScreen = () => {
             headerBackVisible: false,
             headerTransparent: true,
             header: () => (
-              <VariableBlurView
-                style={{
-                  height: top,
-                }}
-              />
+              <>
+                <LinearGradient
+                  colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0)']}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: top,
+                  }}
+                />
+                <BlurView
+                  tint='regular'
+                  style={{
+                    height: top,
+                  }}
+                />
+              </>
             ),
           }}
         />
