@@ -1,12 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
-import { Button, Platform, StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/src/components/EditScreenInfo';
-import { Text, View } from '@/src/components/Themed';
+import React from 'react';
+import {
+  SafeAreaView,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Button,
+  useWindowDimensions,
+} from 'react-native';
+import { RichText, Toolbar, useEditorBridge } from '@10play/tentap-editor';
 import { Stack, useNavigation } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ModalScreen() {
   const navigation = useNavigation();
+  const editor = useEditorBridge({
+    autofocus: true,
+    avoidIosKeyboard: true,
+    initialContent,
+  });
+  const { top } = useSafeAreaInsets();
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
+  const headerHeight = isLandscape ? 32 : 44;
+  const keyboardVerticalOffset = headerHeight + top;
   return (
     <View style={styles.container}>
       <Stack.Screen
@@ -15,32 +32,27 @@ export default function ModalScreen() {
             <Button
               title='Close'
               onPress={() => {
-                // This will close the modal
                 navigation.goBack();
               }}
             />
           ),
         }}
       />
-      <Text style={styles.title}>Modal</Text>
-      <View
-        style={styles.separator}
-        lightColor='#eee'
-        darkColor='rgba(255,255,255,0.1)'
-      />
-      <EditScreenInfo path='app/modal.tsx' />
-
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      <RichText editor={editor} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardAvoidingView}
+        keyboardVerticalOffset={keyboardVerticalOffset}
+      >
+        <Toolbar editor={editor} />
+      </KeyboardAvoidingView>
     </View>
   );
 }
-
+const initialContent = `<p>This is a basic example!</p>`;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
     fontSize: 20,
@@ -50,5 +62,10 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: '80%',
+  },
+  keyboardAvoidingView: {
+    position: 'absolute',
+    width: '100%',
+    bottom: 0,
   },
 });

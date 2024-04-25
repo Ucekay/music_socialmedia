@@ -8,6 +8,7 @@ import ArticleTag from './ArticleTag';
 import type { articleDataType } from '../types';
 import Colors from '../constants/Colors';
 import Animated from 'react-native-reanimated';
+import { increaseSaturation } from './ColorModifier';
 
 export default function ArticleSummaryCard({
   article,
@@ -26,6 +27,17 @@ export default function ArticleSummaryCard({
     type,
   } = article;
   const colorScheme = useColorScheme();
+  const [hexColors, setHexColors] = useState<string[]>([]);
+  useEffect(() => {
+    RNColorThief.getPalette(artworkUrl, 17, 2, false)
+      .then((palette: Palette) => {
+        const hexColors: string[] = rgb2Hex(palette);
+        setHexColors(hexColors);
+      })
+      .catch((error: Error) => {
+        console.log(error);
+      });
+  }, []);
 
   const themeBackgroundStyle =
     colorScheme === 'dark'
@@ -39,6 +51,9 @@ export default function ArticleSummaryCard({
     colorScheme === 'dark'
       ? { color: Colors.dark.secondlyText }
       : { color: Colors.light.secondlyText };
+  if (hexColors.length === 0) return null;
+
+  const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
 
   return (
     <Link href={`/articles/${article.articleID}`} asChild>
