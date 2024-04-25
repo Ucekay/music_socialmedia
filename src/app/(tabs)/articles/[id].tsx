@@ -9,7 +9,6 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import articleData from '@/src/assets/articleData';
-import { Line } from 'react-native-svg';
 
 const ArticleDetailScreen = () => {
   const { id } = useLocalSearchParams();

@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { View, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { useClientOnlyValue } from '@/src/components/useClientOnlyValue';
 import { LinearGradient } from 'expo-linear-gradient';
