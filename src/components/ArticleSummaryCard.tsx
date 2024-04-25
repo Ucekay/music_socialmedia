@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Pressable, useColorScheme } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
-
+import Animated from 'react-native-reanimated';
+import RNColorThief from 'react-native-color-thief';
 import { ArticleThumbnail } from './ArticleThumbnail';
 import ArticleTag from './ArticleTag';
-import type { articleDataType } from '../types';
+import type { Palette, articleDataType } from '../types';
 import Colors from '../constants/Colors';
-import Animated from 'react-native-reanimated';
-import { increaseSaturation } from './ColorModifier';
+import { increaseSaturation, rgb2Hex } from './ColorModifier';
 
 export default function ArticleSummaryCard({
   article,
