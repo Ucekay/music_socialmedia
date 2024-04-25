@@ -65,6 +65,7 @@ export default function ArticleSummaryCard({
       ? { color: Colors.dark.secondlyText }
       : { color: Colors.light.secondlyText };
   if (hexColors.length === 0) return null;
+
   const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
 
   return (
