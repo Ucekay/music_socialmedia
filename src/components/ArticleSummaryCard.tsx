@@ -62,7 +62,7 @@ export default function ArticleSummaryCard({
           <ArticleThumbnail
             rows={3}
             cols={3}
-            colors={palette.otto}
+            colors={gradientColors}
             play={true}
             articleID={articleID}
             artworkUrl={artworkUrl}
