@@ -1,35 +1,5 @@
-const amber = {
-  200: '#f8e0c8',
-  300: '#f4c79a',
-  700: '#975b03',
-  800: '#6c4002',
-};
-
-const blue = {
-  200: '#cbe8fd',
-  300: '#9fd5fc',
-  700: '#0a6fa3',
-  800: '#054f75',
-};
-
-const rose = {
-  200: '#ffdbe5',
-  300: '#febdd0',
-  700: '#a24d6a',
-  800: '#74364b',
-};
-
-const slate = {
-  50: '#fafbfe',
-  200: '#dfe3f4',
-  300: '#cacedf',
-  400: '#b5b9ca',
-  600: '#808393',
-  700: '#666978',
-  800: '#474a58',
-  900: '#2b2e3b',
-  950: '#11141f',
-};
+import palette from '@evilmartians/harmony/dist/base';
+import chroma from 'chroma-js';
 
 const tintColorLight = '#2f95dc';
 const tintColorDark = '#fff';
@@ -41,9 +11,9 @@ const headerDark = 'rgba(0, 0, 0, 0.7)';
 export default {
   light: {
     text: '#000',
-    secondlyText: slate[600],
+    secondlyText: chroma(palette.slate['600']).hex(),
     background: '#fff',
-    secondlyBackground: slate[50],
+    secondlyBackground: chroma(palette.slate['50']).hex(),
     tabBarGradient: tabBarGradientLight,
     headerBackground: headerLight,
     tint: tintColorLight,
@@ -52,9 +22,9 @@ export default {
   },
   dark: {
     text: '#fff',
-    secondlyText: slate[400],
+    secondlyText: chroma(palette.slate['400']).hex(),
     background: '#000',
-    secondlyBackground: slate[900],
+    secondlyBackground: chroma(palette.slate['900']).hex(),
     tabBarGradient: tabBarGradientDark,
     headerBackground: headerDark,
     tint: tintColorDark,
@@ -66,42 +36,42 @@ export default {
 export const TagsColors = {
   general: {
     light: {
-      background: slate[200],
-      text: slate[700],
+      background: chroma(palette.slate['200']).hex(),
+      text: chroma(palette.slate['700']).hex(),
     },
     dark: {
-      background: slate[800],
-      text: slate[300],
+      background: chroma(palette.slate['800']).hex(),
+      text: chroma(palette.slate['300']).hex(),
     },
   },
   review: {
     light: {
-      background: blue[200],
-      text: blue[700],
+      background: chroma(palette.blue['200']).hex(),
+      text: chroma(palette.blue['700']).hex(),
     },
     dark: {
-      background: blue[800],
-      text: blue[300],
+      background: chroma(palette.blue['800']).hex(),
+      text: chroma(palette.blue['300']).hex(),
     },
   },
   liveReport: {
     light: {
-      background: amber[200],
-      text: amber[700],
+      background: chroma(palette.amber['200']).hex(),
+      text: chroma(palette.amber['700']).hex(),
     },
     dark: {
-      background: amber[800],
-      text: amber[300],
+      background: chroma(palette.amber['800']).hex(),
+      text: chroma(palette.amber['300']).hex(),
     },
   },
   playlist: {
     light: {
-      background: rose[200],
-      text: rose[700],
+      background: chroma(palette.rose['200']).hex(),
+      text: chroma(palette.rose['700']).hex(),
     },
     dark: {
-      background: rose[800],
-      text: rose[300],
+      background: chroma(palette.rose['800']).hex(),
+      text: chroma(palette.rose['300']).hex(),
     },
   },
 };
