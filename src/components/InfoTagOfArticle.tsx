@@ -13,7 +13,7 @@ const InfoTag = (props: ArticleProps): JSX.Element => {
   return (
       <View style={styles.infoTag}>
          <Link href={{
-          pathname:'/profile',
+          pathname:'../../pages/profile',
           params: {
             userID: props.userID
           }
