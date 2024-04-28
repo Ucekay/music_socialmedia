@@ -1,14 +1,19 @@
 import { Text, Image, View, StyleSheet, TouchableOpacity } from 'react-native'
+import { useLocalSearchParams } from 'expo-router';
+import userData from '@/src/assets/userData';
 
 const Profile = () :JSX.Element => {
+  const { userID } = useLocalSearchParams();
+  const profile = userData.find((item: any) => item.userID === userID)
+  const defaultImage = require('@/src/assets/images/snsicon.png');
   return (
     <View style={styles.container}>
       <View style={styles.userIdContainer}>  
-        <Text style={styles.userId}>@NoteNavigator</Text>
-      </View>
+        <Text style={styles.userId}>{profile?.userID}</Text>
+      </View >
       <View style={styles.heading}>
         <Image 
-        source={require('../../assets/images/author1.jpeg')}
+        src={profile?.userAvatarUrl || defaultImage}
         style={styles.image}
         />
         <View style={styles.followData}>
@@ -25,8 +30,8 @@ const Profile = () :JSX.Element => {
           </View>
         </TouchableOpacity>
       </View>
-      <Text style={styles.userName}>ノト半島</Text>
-      <Text style={styles.userIntro}>この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章をもって、文書の体裁を整えます。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。こ</Text>
+      <Text style={styles.userName}>{profile?.user}</Text>
+      <Text style={styles.userIntro}>{profile?.bio}</Text>
     </View>
   );
 };

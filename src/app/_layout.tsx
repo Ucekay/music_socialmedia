@@ -59,6 +59,7 @@ function RootLayoutNav() {
           name='modal'
           options={{ presentation: 'fullScreenModal' }}
         />
+        <Stack.Screen name='pages' />
       </Stack>
     </ThemeProvider>
   );
