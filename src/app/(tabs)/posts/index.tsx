@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, StyleSheet, Text, Pressable, ScrollView} from 'react-native';
-import { Image } from 'expo-image';
 import { FlashList } from '@shopify/flash-list';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
@@ -17,22 +16,26 @@ import Animated, {
 
 
 import postData from '@/src/assets/postData';
-import { type PostDataType } from '@/src/types';
-import { FontWeight } from '@shopify/react-native-skia';
 import PostCard from '@/src/components/PostCard';
 
 const PostsScreen = () : JSX.Element => {
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
+  const colorScheme = useColorScheme();
+  const themeContainerStyle =
+    colorScheme === 'dark'
+      ? { backgroundColor: Colors.dark.background }
+      : { backgroundColor: Colors.light.background };
   return (
-    <Animated.View style={styles.container}>
+    <Animated.View style={[styles.container, themeContainerStyle]}>
     <FlashList
       data={postData}
       renderItem={({ item }) => (
         <PostCard {...item} />
       )}
       contentContainerStyle={{
-        paddingBottom: tabBarHeight
+        paddingBottom: tabBarHeight,
+        paddingTop: headerHeight,
       }}
     />
   </Animated.View>

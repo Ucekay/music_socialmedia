@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, Text, Pressable} from 'react-native';
 import { Image } from 'expo-image';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { type PostDataType } from '../types';
+import IconA from './Icon/AntDesign';
 
 const MusicBarOfPost = (props: PostDataType): JSX.Element => {
   return(
@@ -12,12 +12,13 @@ const MusicBarOfPost = (props: PostDataType): JSX.Element => {
       <View style={styles.musicContainer}>
         <Image 
         source={props.musicUrl}
-        style={styles.musicImage}/>
+        style={styles.musicImage}>
+          <IconA name='play' size={16} style={styles.playIcon}/>
+        </Image>
         <View>
           <Text style={styles.text2}>{props.songName}</Text>
           <Text style={[styles.text2, {fontWeight:'500'}]}>{props.artistName}</Text>
         </View>
-        <Icon name='play' size={16} color={'#ffffff'} style={styles.playIcon}/>
       </View>
     </Image>
   )
@@ -43,16 +44,18 @@ const styles = StyleSheet.create({
         height:40,
         width: 40,
         borderRadius:4,
-        marginHorizontal:16
+        marginHorizontal:16,
+        justifyContent: 'center',
+        alignItems: 'center'
       },
       text2:{
         fontSize:16,
         fontWeight: "700",
         lineHeight: 21,
-        color: "#ffffff"
+        color: '#ffffff'
       },
       playIcon:{
-        marginRight:16,
-        marginLeft:160
+        color: "#ffffff",
+        opacity: 0.8
       }
 })

@@ -73,7 +73,7 @@ const postData = [
     songName: '',
     artistName: '',
     musicUrl: '',
-    ImageUrl: '',
+    ImageUrl: 'https://api.dicebear.com/8.x/croodles/png',
     userID: '@MochiMochi',
     user: 'もちもち大福',
     userAvatarUrl: 'https://api.dicebear.com/8.x/croodles/png',

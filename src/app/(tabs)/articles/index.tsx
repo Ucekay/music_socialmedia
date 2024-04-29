@@ -1,17 +1,11 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { Stack } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import Colors from '@/src/constants/Colors';
-import Animated, {
-  interpolateColor,
-  useAnimatedStyle,
-  useDerivedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
 import ArticleSummaryCard from '@/src/components/ArticleSummaryCard';
 import articleData from '@/src/assets/articleData';

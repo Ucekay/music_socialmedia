@@ -2,113 +2,150 @@ import React from 'react';
 import { View, StyleSheet, Text, Pressable} from 'react-native';
 import { Image } from 'expo-image';
 import MusicBarOfPost from './MusicBarOfPost';
-import  Icon  from 'react-native-vector-icons/FontAwesome';
+import IconA from './Icon/AntDesign';
 import { type PostDataType } from '../types';
+import { Link } from 'expo-router';
 
 const PostCard = (props: PostDataType): JSX.Element => {
   if (props.musicUrl != '' && props.ImageUrl == '') {
     return(
-        <Pressable style={styles.postContainer}>
-            <View style={styles.postHeader}>
-            <Pressable style={styles.headerLeft}>
-                <Image 
-                source={props.userAvatarUrl}
-                style={styles.image}
-                />
-                <Text style={styles.text1}>{props.user}</Text>
-            </Pressable>
-            <View style={styles.headerRight}>
-                <Text>6m</Text>
-                <Icon name='ellipsis-h' size={16} style={styles.threeDots}/>
-            </View>  
-            </View>
-            <Text style={styles.postContent}>{props.postContent}</Text>
-            <MusicBarOfPost {...props}/>
-            <View style={styles.Icons}>
-                <Icon name="heart-o" size={20}/>
-                <Icon name="comment-o" size={20}/>
-                <Icon name="retweet" size={20}/>
-                <Icon name="send-o" size={20}/>
-            </View>
-        </Pressable>
+        <Link 
+          href={{
+            pathname:'/(tabs)/posts/[id]',
+            params:{
+                id: props.postID
+            }
+          }} asChild>    
+            <Pressable style={styles.postContainer}>
+            
+                <View style={styles.postHeader}>
+                <View style={styles.headerLeft}>
+                    <Image 
+                    source={props.userAvatarUrl}
+                    style={styles.image}
+                    />
+                    <Text style={styles.text1}>{props.user}</Text>
+                </View>
+                <View style={styles.headerRight}>
+                    <Text>6m</Text>
+                    <IconA name='ellipsis1' size={16} style={styles.threeDots}/>
+                </View>  
+                </View>
+                <Text style={styles.postContent}>{props.postContent}</Text>
+                <MusicBarOfPost {...props}/>
+                <View style={styles.Icons}>
+                    <IconA name="hearto" size={20}/>
+                    <IconA name="message1" size={20}/>
+                    <IconA name="retweet" size={20}/>
+                    <IconA name="upload" size={20}/>
+                </View>
+            </Pressable>    
+        </Link>
     )
 } else if (props.musicUrl != '' && props.ImageUrl != '' ) {
     return(
-        <Pressable style={styles.postContainer}>
-            <View style={styles.postHeader}>
-            <Pressable style={styles.headerLeft}>
-                <Image 
-                source={props.userAvatarUrl}
-                style={styles.image}
-                />
-                <Text style={styles.text1}>{props.user}</Text>
+        <Link 
+          href={{
+            pathname:'/(tabs)/posts/[id]',
+            params:{
+                id: props.postID
+            }
+          }}asChild> 
+            <Pressable style={styles.postContainer}>
+            
+                <View style={styles.postHeader}>
+                <View style={styles.headerLeft}>
+                    <Image 
+                    source={props.userAvatarUrl}
+                    style={styles.image}
+                    />
+                    <Text style={styles.text1}>{props.user}</Text>
+                </View>
+                <View style={styles.headerRight}>
+                    <Text>6m</Text>
+                    <IconA name='ellipsis1' size={16} style={styles.threeDots}/>
+                </View>  
+                </View>
+                <Text style={styles.postContent}>{props.postContent}</Text>
+                <Image source={props.ImageUrl} style={styles.postimage}/>
+                <MusicBarOfPost {...props}/>
+                <View style={styles.Icons}>
+                    <IconA name="hearto" size={20}/>
+                    <IconA name="message1" size={20}/>
+                    <IconA name="retweet" size={20}/>
+                    <IconA name="upload" size={20}/>
+                </View>
             </Pressable>
-            <View style={styles.headerRight}>
-                <Text>6m</Text>
-                <Icon name='ellipsis-h' size={16} style={styles.threeDots}/>
-            </View>  
-            </View>
-            <Text style={styles.postContent}>{props.postContent}</Text>
-            <Image source={props.ImageUrl} style={styles.postimage}/>
-            <MusicBarOfPost {...props}/>
-            <View style={styles.Icons}>
-                <Icon name="heart-o" size={20}/>
-                <Icon name="comment-o" size={20}/>
-                <Icon name="retweet" size={20}/>
-                <Icon name="send-o" size={20}/>
-            </View>
-        </Pressable>
+        </Link>
     )
 } else if (props.musicUrl == '' && props.ImageUrl != '' ) {
     return(
-        <Pressable style={styles.postContainer}>
-        <View style={styles.postHeader}>
-        <Pressable style={styles.headerLeft}>
-            <Image 
-            source={props.userAvatarUrl}
-            style={styles.image}
-            />
-            <Text style={styles.text1}>{props.user}</Text>
-        </Pressable>
-        <View style={styles.headerRight}>
-            <Text>6m</Text>
-            <Icon name='ellipsis-h' size={16} style={styles.threeDots}/>
-        </View>  
-        </View>
-        <Text style={styles.postContent}>{props.postContent}</Text>
-        <Image source={props.ImageUrl} style={styles.postimage}/>
-        <View style={styles.Icons}>
-            <Icon name="heart-o" size={20}/>
-            <Icon name="comment-o" size={20}/>
-            <Icon name="retweet" size={20}/>
-            <Icon name="send-o" size={20}/>
-        </View>
-    </Pressable>
+        <Link 
+          href={{
+            pathname:'/(tabs)/posts/[id]',
+            params:{
+                id: props.postID
+            }
+          }}asChild
+        >
+            <Pressable style={styles.postContainer}>
+                <View style={styles.postHeader}>
+                <View style={styles.headerLeft}>
+                    <Image 
+                    source={props.userAvatarUrl}
+                    style={styles.image}
+                    />
+                    <Text style={styles.text1}>{props.user}</Text>
+                </View>
+                <View style={styles.headerRight}>
+                    <Text>6m</Text>
+                    <IconA name='ellipsis1' size={16} style={styles.threeDots}/>
+                </View>  
+                </View>
+                <Text style={styles.postContent}>{props.postContent}</Text>
+                <Image source={props.ImageUrl} style={styles.postimage}/>
+                <View style={styles.Icons}>
+                    <IconA name="hearto" size={20}/>
+                    <IconA name="message1" size={20}/>
+                    <IconA name="retweet" size={20}/>
+                    <IconA name="upload" size={20}/>
+                </View>
+            </Pressable>    
+        </Link>
     )
 } else {
     return(
-        <Pressable style={styles.postContainer}>
-        <View style={styles.postHeader}>
-        <Pressable style={styles.headerLeft}>
-            <Image 
-            source={props.userAvatarUrl}
-            style={styles.image}
-            />
-            <Text style={styles.text1}>{props.user}</Text>
-        </Pressable>
-        <View style={styles.headerRight}>
-            <Text>6m</Text>
-            <Icon name='ellipsis-h' size={16} style={styles.threeDots}/>
-        </View>  
-        </View>
-        <Text style={styles.postContent}>{props.postContent}</Text>
-        <View style={styles.Icons}>
-            <Icon name="heart-o" size={20}/>
-            <Icon name="comment-o" size={20}/>
-            <Icon name="retweet" size={20}/>
-            <Icon name="send-o" size={20}/>
-        </View>
-    </Pressable>
+        <Link 
+        href={{
+          pathname:'/(tabs)/posts/[id]',
+          params:{
+              id: props.postID
+          }
+        }}asChild
+        >
+            <Pressable style={styles.postContainer}>    
+                <View style={styles.postHeader}>
+                <View style={styles.headerLeft}>
+                    <Image 
+                    source={props.userAvatarUrl}
+                    style={styles.image}
+                    />
+                    <Text style={styles.text1}>{props.user}</Text>
+                </View>
+                <View style={styles.headerRight}>
+                    <Text>6m</Text>
+                    <IconA name='ellipsis1' size={16} style={styles.threeDots}/>
+                </View>  
+                </View>
+                <Text style={styles.postContent}>{props.postContent}</Text>
+                <View style={styles.Icons}>
+                    <IconA name="hearto" size={20}/>
+                    <IconA name="message1" size={20}/>
+                    <IconA name="retweet" size={20}/>
+                    <IconA name="upload" size={20}/>
+                </View>
+            </Pressable>
+        </Link>   
     )
 }
 }
@@ -166,7 +203,10 @@ const styles = StyleSheet.create({
         marginRight:12
       },
       postimage: {
-        height: 'auto',
-        width: 'auto'
+        marginLeft: 62,
+        marginRight:12,
+        width:'70%',
+        height:100,
+        marginBottom:16
       }
 })
