@@ -89,6 +89,14 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name='posts'
+        options={{
+          title: 'Posts',
+          headerShown: false,
+          tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+        }}
+      />
     </Tabs>
   );
 }

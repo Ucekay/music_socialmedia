@@ -1,13 +1,14 @@
 import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Link, useLocalSearchParams } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import postData from '@/src/assets/postData';
 import IconA from '@/src/components/Icon/AntDesign';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
 
 const PostDatailScreen = (): JSX.Element => {
   const { id }= useLocalSearchParams();
@@ -17,28 +18,37 @@ const PostDatailScreen = (): JSX.Element => {
   }
   return(
     <View style={styles.container}>
-        <View style={styles.userContainer}>
-        <Image 
-        style={styles.userAvator}
-        source={post?.userAvatarUrl}/>
+      <Link href={{
+        pathname: '../../pages/profile',
+        params:{
+          userID: post.userID
+        }
+      }}>
         <View>
-            <Text style={styles.text1}>{post.user}</Text>
-            <Text style={styles.text2}>{post.userID}</Text>
+          <View style={styles.userContainer}>
+            <Image 
+            style={styles.userAvator}
+            source={post?.userAvatarUrl}/>
+              <View>
+                <Text style={styles.text1}>{post.user}</Text>
+                <Text style={styles.text2}>{post.userID}</Text>
+              </View>
+          </View>
         </View>
-        </View>
-        <Text style={[styles.text1, {marginHorizontal:16}, {marginBottom:16}]}>{post.postContent}</Text>
-        <View style={styles.infoContainer}>  
-          <Text style={styles.text3}>9:38・2024/03/24</Text>
-        </View>
-        <View style={styles.infoContainer}>  
-          <Text style={styles.text3}>53件のいいね</Text>
-        </View>
-        <View style={styles.iconContainer}>
-          <IconA name='hearto' size={20} style={{marginLeft:16}}/>
-          <IconA name='message1' size={20} />
-          <IconA name='retweet' size={20} />
-          <IconA name='upload' size={20} style={{marginRight:16}}/>
-        </View>
+      </Link>
+      <Text style={[styles.text1, {marginHorizontal:16}, {marginBottom:16}]}>{post.postContent}</Text>
+      <View style={styles.infoContainer}>  
+        <Text style={styles.text3}>9:38・2024/03/24</Text>
+      </View>
+      <View style={styles.infoContainer}>  
+        <Text style={styles.text3}>53件のいいね</Text>
+      </View>
+      <View style={styles.iconContainer}>
+        <IconA name='hearto' size={20} style={{marginLeft:16}}/>
+        <IconA name='message1' size={20} />
+        <IconA name='retweet' size={20} />
+        <IconA name='upload' size={20} style={{marginRight:16}}/>
+      </View>
     </View>
   )
 }
@@ -53,7 +63,8 @@ const styles = StyleSheet.create({
   userContainer:{
     flexDirection:'row',
     marginTop:10,
-    marginBottom:16
+    marginBottom:16,
+    width: '100%'
   },
   text1:{
     fontSize:16,

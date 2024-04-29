@@ -7,7 +7,7 @@ const Profile = () :JSX.Element => {
   const profile = userData.find((item: any) => item.userID === userID)
   const defaultImage = require('@/src/assets/images/snsicon.png');
   if (!profile) {
-    return <Text>Article not found.</Text>;
+    return <Text>Profile not found.</Text>;
   }
   return (
     <View style={styles.container}>
