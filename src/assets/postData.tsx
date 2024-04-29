@@ -46,9 +46,9 @@ const postData = [
   {
     postID: 'post005',
     postContent: '新しいarticle投稿しました！',
-    songName: '',
-    artistName: '',
-    musicUrl: '',
+    songName: 'What a Wonderful World',
+    artistName: 'Louis Armstrong',
+    musicUrl: 'https://m.media-amazon.com/images/I/71oBdOk+2BL._UF1000,1000_QL80_.jpg',
     ImageUrl: '',
     userID: '@TokyoGhoul',
     user: '東京喰種👹',
