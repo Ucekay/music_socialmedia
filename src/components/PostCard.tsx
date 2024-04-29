@@ -155,7 +155,9 @@ export default PostCard;
 const styles = StyleSheet.create({
     postContainer: {
         backgroundColor: "#ffffff",
-        flex: 1
+        flex: 1,
+        borderBottomColor: 'rgba(67, 80, 96, 0.3)',
+        borderBottomWidth: 0.5
       },
       postHeader: {
         flexDirection: "row",
