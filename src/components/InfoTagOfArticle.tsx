@@ -5,14 +5,14 @@ import {
     Pressable,
     View
   } from "react-native";
-import { ArticleProps } from "../types/articleData";
+import { ArticleProps } from "../types"
 import { Link } from "expo-router";
 
 
 const InfoTag = (props: ArticleProps): JSX.Element => {
   return (
       <View style={styles.infoTag}>
-         <Link href={{
+        <Link href={{
           pathname:'../../pages/profile',
           params: {
             userID: props.userID
@@ -39,7 +39,7 @@ const InfoTag = (props: ArticleProps): JSX.Element => {
   )
 }
 
-  export default InfoTag
+export default InfoTag
 
   const styles = StyleSheet.create({
     author: {

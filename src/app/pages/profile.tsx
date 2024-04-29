@@ -1,4 +1,4 @@
-import { Text, Image, View, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, Image, View, StyleSheet, Pressable } from 'react-native'
 import { useLocalSearchParams } from 'expo-router';
 import userData from '@/src/assets/userData';
 
@@ -6,6 +6,9 @@ const Profile = () :JSX.Element => {
   const { userID } = useLocalSearchParams();
   const profile = userData.find((item: any) => item.userID === userID)
   const defaultImage = require('@/src/assets/images/snsicon.png');
+  if (!profile) {
+    return <Text>Article not found.</Text>;
+  }
   return (
     <View style={styles.container}>
       <View style={styles.userIdContainer}>  
@@ -24,11 +27,11 @@ const Profile = () :JSX.Element => {
           <Text style={styles.text1}>143</Text>
           <Text style={styles.text2}>Follorwing</Text>
         </View>
-        <TouchableOpacity>
+        <Pressable>
           <View style={styles.followButton}>
             <Text style={styles.followButtonText}>フォロー</Text>
           </View>
-        </TouchableOpacity>
+        </Pressable>
       </View>
       <Text style={styles.userName}>{profile?.user}</Text>
       <Text style={styles.userIntro}>{profile?.bio}</Text>

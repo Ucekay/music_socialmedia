@@ -4,7 +4,7 @@ import {
     View
   } from "react-native";
 import InfoTag from "../components/InfoTagOfArticle";
-import { ArticleProps } from "../types/articleData";
+import { ArticleProps } from "../types";
 
 const ArticleScroll = (props: ArticleProps): JSX.Element => {
   return(

@@ -45,3 +45,28 @@ export type articleDataType = {
   userAvatarUrl: string;
   type: string;
 };
+
+export type ArticleProps = {
+  articleID: string,
+  articleTitle: string,
+  articleContent: string,
+  songName: string,
+  artistName: string,
+  artworkUrl: string,
+  userID: string,
+  user: string,
+  userAvatarUrl: string,
+  type: string,
+};
+
+export type PostDataType = {
+  postID: string,
+  postContent: string,
+  songName?: string,
+  artistName?: string,
+  musicUrl?: string,
+  ImageUrl?: string,
+  userID: string,
+  user: string,
+  userAvatarUrl: string,
+}
