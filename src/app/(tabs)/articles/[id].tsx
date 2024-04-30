@@ -5,11 +5,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
-import BottomSheet, { BottomSheetView, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet, {
+  BottomSheetView,
+  BottomSheetScrollView,
+} from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import articleData from '@/src/assets/articleData';
-import { Line } from 'react-native-svg';
 import ArticleScroll from '@/src/components/ArticleScroll';
 
 const ArticleDetailScreen = () => {
@@ -65,8 +67,8 @@ const ArticleDetailScreen = () => {
         />
 
         <BottomSheet snapPoints={snapPoints} style={{ flex: 1 }}>
-          <BottomSheetScrollView> 
-            <ArticleScroll {...article}/>
+          <BottomSheetScrollView>
+            <ArticleScroll {...article} />
           </BottomSheetScrollView>
         </BottomSheet>
       </View>

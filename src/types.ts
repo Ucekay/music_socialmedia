@@ -36,7 +36,7 @@ export type Palette = {
 export type articleDataType = {
   articleID: string;
   articleTitle: string;
-  articleContent: string;
+  articleBody: string;
   songName: string;
   artistName: string;
   artworkUrl: string;

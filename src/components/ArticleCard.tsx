@@ -3,17 +3,13 @@ import { View, StyleSheet, Pressable, useColorScheme } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 
-import { ArticleThumbnail } from './ArticleThumbnail';
+import { ArticleGraphic } from './ArticleGraphic';
 import ArticleTag from './ArticleTag';
 import type { articleDataType } from '../types';
 import Colors from '../constants/Colors';
 import Animated from 'react-native-reanimated';
 
-export default function ArticleSummaryCard({
-  article,
-}: {
-  article: articleDataType;
-}) {
+export default function ArticleCard({ article }: { article: articleDataType }) {
   const {
     articleID,
     articleTitle,
@@ -44,7 +40,7 @@ export default function ArticleSummaryCard({
     <Link href={`/articles/${article.articleID}`} asChild>
       <Pressable style={{ flex: 1 }}>
         <Animated.View style={[styles.container, themeBackgroundStyle]}>
-          <ArticleThumbnail
+          <ArticleGraphic
             rows={3}
             cols={3}
             colors={palette.otto}

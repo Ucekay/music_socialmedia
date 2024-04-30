@@ -2,7 +2,7 @@ const articleData = [
   {
     articleID: 'art001',
     articleTitle: 'メロディの魔法',
-    articleContent: '新しいメロディがどのようにして生まれるか...',
+    articleBody: '新しいメロディがどのようにして生まれるか...',
     songName: '喜劇',
     artistName: '星野源',
     artworkUrl:
@@ -15,7 +15,7 @@ const articleData = [
   {
     articleID: 'art002',
     articleTitle: 'リズムの秘密',
-    articleContent: 'リズムは音楽の骨格であり...',
+    articleBody: 'リズムは音楽の骨格であり...',
     songName: '瞬き',
     artistName: 'back number',
     artworkUrl:
@@ -28,7 +28,7 @@ const articleData = [
   {
     articleID: 'art003',
     articleTitle: 'ハーモニーの探求',
-    articleContent: '和音の組み合わせが生み出すハーモニーについて...',
+    articleBody: '和音の組み合わせが生み出すハーモニーについて...',
     songName: '打上花火',
     artistName: 'DAOKO × 米津玄師',
     artworkUrl:
@@ -41,7 +41,7 @@ const articleData = [
   {
     articleID: 'art004',
     articleTitle: 'ギターソロの魅力',
-    articleContent: 'ギターソロが曲にどのような影響を与えるか...',
+    articleBody: 'ギターソロが曲にどのような影響を与えるか...',
     songName: '紅蓮華',
     artistName: 'LiSA',
     artworkUrl:
@@ -54,7 +54,7 @@ const articleData = [
   {
     articleID: 'art005',
     articleTitle: 'ジャズの即興演奏',
-    articleContent: '即興演奏はジャズの魂であり...',
+    articleBody: '即興演奏はジャズの魂であり...',
     songName: 'What a Wonderful World',
     artistName: 'Louis Armstrong',
     artworkUrl:
@@ -67,7 +67,7 @@ const articleData = [
   {
     articleID: 'art006',
     articleTitle: 'クラシック音楽の深遠',
-    articleContent: 'クラシック音楽が現代音楽に与える影響について...',
+    articleBody: 'クラシック音楽が現代音楽に与える影響について...',
     songName: 'ノクターン',
     artistName: 'ショパン',
     artworkUrl: 'https://cdn.goope.jp/83265/231001124206-6518ea8eec9c2.jpg',
@@ -80,7 +80,7 @@ const articleData = [
   {
     articleID: 'art007',
     articleTitle: 'ポップミュージックの進化',
-    articleContent: 'ポップミュージックが社会に与える影響とは...',
+    articleBody: 'ポップミュージックが社会に与える影響とは...',
     songName: 'Lemon',
     artistName: '米津玄師',
     artworkUrl:
@@ -93,7 +93,7 @@ const articleData = [
   {
     articleID: 'art008',
     articleTitle: 'ロックの伝説',
-    articleContent: 'ロック音楽の歴史とそのアイコンたち...',
+    articleBody: 'ロック音楽の歴史とそのアイコンたち...',
     songName: 'Bohemian Rhapsody',
     artistName: 'Queen',
     artworkUrl:
@@ -106,7 +106,7 @@ const articleData = [
   {
     articleID: 'art009',
     articleTitle: 'エレクトロニックミュージックの未来',
-    articleContent: 'テクノロジーが生み出す新しい音の世界...',
+    articleBody: 'テクノロジーが生み出す新しい音の世界...',
     songName: 'Shelter',
     artistName: 'Porter Robinson & Madeon',
     artworkUrl:
@@ -119,7 +119,7 @@ const articleData = [
   {
     articleID: 'art010',
     articleTitle: '音楽プロデューサーの役割',
-    articleContent: '音楽プロデューサーがアーティストと共に作り上げる作品...',
+    articleBody: '音楽プロデューサーがアーティストと共に作り上げる作品...',
     songName: 'Fantasy',
     artistName: 'Mariah Carey',
     userID: '@KawaiiQueen',

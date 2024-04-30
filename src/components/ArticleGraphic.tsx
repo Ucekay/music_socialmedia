@@ -91,7 +91,7 @@ interface ArticleThumbnailProps {
 const F = 8000;
 const A = 30;
 
-export const ArticleThumbnail = ({
+export const ArticleGraphic = ({
   rows,
   cols,
   colors,
