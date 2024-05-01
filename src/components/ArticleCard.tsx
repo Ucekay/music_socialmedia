@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, Pressable, useColorScheme } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  useColorScheme,
+} from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 
@@ -37,32 +43,28 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
       : { color: Colors.light.secondlyText };
 
   return (
-    <Link href={`/home/(article)/${article.articleID}`} asChild>
+    <Link href={`/(tabs)/home/(article)/${article.articleID}`} asChild>
       <Pressable style={{ flex: 1 }}>
-        <Animated.View style={[styles.container, themeBackgroundStyle]}>
+        <View style={[styles.container, themeBackgroundStyle]}>
           <ArticleGraphic
             rows={3}
             cols={3}
             colors={palette.otto}
-            play={true}
+            play={false}
             articleID={articleID}
             artworkUrl={artworkUrl}
           />
           <View style={styles.summaryContainer}>
             <View>
-              <Animated.Text style={[styles.articleTitle, themeTextColor]}>
+              <Text style={[styles.articleTitle, themeTextColor]}>
                 {articleTitle}
-              </Animated.Text>
+              </Text>
             </View>
             <View>
-              <Animated.Text style={[styles.songName, themeTextColor]}>
-                {songName}
-              </Animated.Text>
-              <Animated.Text
-                style={[styles.artistName, themeSecondlyTextColor]}
-              >
+              <Text style={[styles.songName, themeTextColor]}>{songName}</Text>
+              <Text style={[styles.artistName, themeSecondlyTextColor]}>
                 {artistName}
-              </Animated.Text>
+              </Text>
             </View>
             <View style={styles.infoContainer}>
               <View style={styles.authorContainer}>
@@ -81,7 +83,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
               <ArticleTag type={type} />
             </View>
           </View>
-        </Animated.View>
+        </View>
       </Pressable>
     </Link>
   );

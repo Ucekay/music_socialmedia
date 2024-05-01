@@ -1,8 +1,20 @@
-import { Text, View, StyleSheet, Pressable } from 'react-native';
+import { Text, View, StyleSheet, useColorScheme } from 'react-native';
 import { Image } from 'expo-image';
+
 import userData from '../assets/userData';
+import Colors from '../constants/Colors';
+import ButtonOnProfile from './ButtonOnProfile';
+
+import { preview } from 'react-native-ide';
 
 const UserProfileTop = ({ userID }: { userID: string }) => {
+  const colorScheme = useColorScheme();
+
+  const themeTextColor = {
+    color: Colors[colorScheme ?? 'light'].text,
+  };
+
+  const isMyAccount = userID === '@MyAccount' ? true : false;
   const userInfo = userData.find((item) => item.userID === userID);
   const defaultImage = require('../assets/images/snsicon.png');
   if (!userInfo) {
@@ -10,36 +22,52 @@ const UserProfileTop = ({ userID }: { userID: string }) => {
   }
   return (
     <View style={styles.container}>
-      <View style={styles.profileHeader}>
-        <Image
-          source={userInfo.userAvatarUrl || defaultImage}
-          style={styles.avatar}
-        />
-        <View>
-          <View style={styles.socialStateContainer}>
-            <View style={styles.socialState}>
-              <Text style={styles.socialStateText}>132</Text>
-              <Text style={styles.socialStateLabel}>Followers</Text>
-            </View>
-            <View style={styles.socialState}>
-              <Text style={styles.socialStateText}>132</Text>
-              <Text style={styles.socialStateLabel}>Following</Text>
+      <View style={styles.profile}>
+        <View style={styles.profileHeader}>
+          <Image
+            source={userInfo.userAvatarUrl || defaultImage}
+            style={styles.avatar}
+          />
+          <View>
+            <View style={styles.socialStateContainer}>
+              <View style={styles.socialState}>
+                <Text style={[styles.socialStateText, themeTextColor]}>
+                  132
+                </Text>
+                <Text style={[styles.socialStateLabel, themeTextColor]}>
+                  Followers
+                </Text>
+              </View>
+              <View style={styles.socialState}>
+                <Text style={[styles.socialStateText, themeTextColor]}>
+                  132
+                </Text>
+                <Text style={[styles.socialStateLabel, themeTextColor]}>
+                  Following
+                </Text>
+              </View>
             </View>
           </View>
+          <ButtonOnProfile isMyAccount={isMyAccount} />
         </View>
+        <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
       </View>
+      <Text style={[styles.userBio, themeTextColor]}>{userInfo.bio}</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
+    padding: 16,
+    gap: 16,
+  },
+  profile: {
+    gap: 12,
   },
   profileHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
     gap: 24,
   },
   avatar: {
@@ -61,6 +89,15 @@ const styles = StyleSheet.create({
   },
   socialStateLabel: {
     fontSize: 12,
+    fontWeight: '400',
+  },
+  userName: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#000000',
+  },
+  userBio: {
+    fontSize: 15,
     fontWeight: '400',
   },
 });

@@ -19,6 +19,8 @@ export default {
     tint: tintColorLight,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,
+    followButtonBg: chroma(palette.slate['900']).hex(),
+    followButtonText: 'white',
   },
   dark: {
     text: '#fff',
@@ -30,6 +32,8 @@ export default {
     tint: tintColorDark,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
+    followButtonBg: chroma(palette.slate['100']).hex(),
+    followButtonText: 'black',
   },
 };
 
