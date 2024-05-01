@@ -37,7 +37,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
       : { color: Colors.light.secondlyText };
 
   return (
-    <Link href={`/articles/${article.articleID}`} asChild>
+    <Link href={`/home/(article)/${article.articleID}`} asChild>
       <Pressable style={{ flex: 1 }}>
         <Animated.View style={[styles.container, themeBackgroundStyle]}>
           <ArticleGraphic

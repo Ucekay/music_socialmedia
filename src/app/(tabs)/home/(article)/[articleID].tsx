@@ -5,24 +5,21 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
-import BottomSheet, {
-  BottomSheetView,
-  BottomSheetScrollView,
-} from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import articleData from '@/src/assets/articleData';
-import ArticleScroll from '@/src/components/ArticleScroll';
+import ArticleContent from '@/src/components/ArticleContent';
 
 const ArticleDetailScreen = () => {
-  const { id } = useLocalSearchParams();
+  const { articleID } = useLocalSearchParams();
   const { top } = useSafeAreaInsets();
   const windowsHeight = useWindowDimensions().height;
 
   const snapPoint0 = windowsHeight - 375 + 24;
   const snapPoints = useMemo(() => [snapPoint0, '80%'], []);
 
-  const article = articleData.find((item) => item.articleID === id);
+  const article = articleData.find((item) => item.articleID === articleID);
   const defaultImage = require('@/src/assets/images/snsicon.png');
   if (!article) {
     return <Text>Article not found.</Text>;
@@ -68,7 +65,7 @@ const ArticleDetailScreen = () => {
 
         <BottomSheet snapPoints={snapPoints} style={{ flex: 1 }}>
           <BottomSheetScrollView>
-            <ArticleScroll {...article} />
+            <ArticleContent {...article} />
           </BottomSheetScrollView>
         </BottomSheet>
       </View>

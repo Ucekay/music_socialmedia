@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native';
-import InfoTag from '../components/InfoTagOfArticle';
+import InfoTag from './InfoTagOfArticle';
 import { articleDataType } from '../types';
 
-const ArticleScroll = (props: articleDataType): JSX.Element => {
+const ArticleContent = (props: articleDataType): JSX.Element => {
   return (
     <View>
       <View style={[styles.headingContainer, { paddingTop: 20 }]}>
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ArticleScroll;
+export default ArticleContent;

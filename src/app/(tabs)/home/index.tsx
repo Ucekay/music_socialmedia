@@ -6,14 +6,9 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { Stack } from 'expo-router';
 import { useColorScheme } from 'react-native';
 import Colors from '@/src/constants/Colors';
-import Animated, {
-  interpolateColor,
-  useAnimatedStyle,
-  useDerivedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 
-import ArticleSummaryCard from '@/src/components/ArticleSummaryCard';
+import ArticleCard from '@/src/components/ArticleCard';
 import articleData from '@/src/assets/articleData';
 import type { articleDataType } from '@/src/types';
 
@@ -29,11 +24,11 @@ export default function TabOneScreen() {
       : { backgroundColor: Colors.light.background };
 
   return (
-    <Animated.View style={[styles.container, themeContainerStyle]}>
+    <View style={[styles.container, themeContainerStyle]}>
       <FlashList
         data={articleData}
         renderItem={({ item }) => (
-          <ArticleSummaryCard article={item as articleDataType} />
+          <ArticleCard article={item as articleDataType} />
         )}
         estimatedItemSize={itemSize}
         contentContainerStyle={{
@@ -42,7 +37,7 @@ export default function TabOneScreen() {
           paddingHorizontal: 16,
         }}
       />
-    </Animated.View>
+    </View>
   );
 }
 

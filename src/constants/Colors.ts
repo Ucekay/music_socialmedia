@@ -5,7 +5,7 @@ const tintColorLight = '#2f95dc';
 const tintColorDark = '#fff';
 const tabBarGradientLight = ['rgba(256,256,256,0)', 'rgba(256,256,256,1)'];
 const tabBarGradientDark = ['rgba(0,0,0,0)', 'rgba(0,0,0,1)'];
-const headerLight = 'rgba(256, 256, 256, 0.7)';
+const headerLight = 'rgba(250, 251, 254, 0.7)';
 const headerDark = 'rgba(0, 0, 0, 0.7)';
 
 export default {
