@@ -5,7 +5,7 @@ import { Link } from 'expo-router';
 const InfoTag = (props: articleDataType): JSX.Element => {
   return (
     <View style={styles.infoTag}>
-      <Link href={`/(tabs)/home/(profile)/${props.userID}`} asChild>
+      <Link href={`/(tabs)/home/${props.userID}/`} asChild>
         <Pressable>
           <View style={styles.author}>
             <Image style={styles.image} source={{ uri: props.userAvatarUrl }} />

@@ -67,19 +67,17 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
               </Text>
             </View>
             <View style={styles.infoContainer}>
-              <View style={styles.authorContainer}>
-                <Image source={userAvatarUrl} style={styles.avatar} />
-                <View>
-                  <Animated.Text style={[styles.useName, themeTextColor]}>
-                    {user}
-                  </Animated.Text>
-                  <Animated.Text
-                    style={[styles.userID, themeSecondlyTextColor]}
-                  >
-                    {userID}
-                  </Animated.Text>
-                </View>
-              </View>
+              <Link href={`/(tabs)/home/${userID}/`} asChild>
+                <Pressable style={styles.authorContainer}>
+                  <Image source={userAvatarUrl} style={styles.avatar} />
+                  <View>
+                    <Text style={[styles.useName, themeTextColor]}>{user}</Text>
+                    <Text style={[styles.userID, themeSecondlyTextColor]}>
+                      {userID}
+                    </Text>
+                  </View>
+                </Pressable>
+              </Link>
               <ArticleTag type={type} />
             </View>
           </View>

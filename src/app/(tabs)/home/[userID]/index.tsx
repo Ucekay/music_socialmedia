@@ -13,11 +13,6 @@ export default function Profile() {
 
   return (
     <View style={[styles.container, themeContainerStyle]}>
-      <Stack.Screen
-        options={{
-          title: `${userID}`,
-        }}
-      />
       <UserProfileTop userID={userID} />
     </View>
   );

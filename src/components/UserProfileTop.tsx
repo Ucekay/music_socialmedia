@@ -5,8 +5,6 @@ import userData from '../assets/userData';
 import Colors from '../constants/Colors';
 import ButtonOnProfile from './ButtonOnProfile';
 
-import { preview } from 'react-native-ide';
-
 const UserProfileTop = ({ userID }: { userID: string }) => {
   const colorScheme = useColorScheme();
 
@@ -32,7 +30,7 @@ const UserProfileTop = ({ userID }: { userID: string }) => {
             <View style={styles.socialStateContainer}>
               <View style={styles.socialState}>
                 <Text style={[styles.socialStateText, themeTextColor]}>
-                  132
+                  {userInfo.followers}
                 </Text>
                 <Text style={[styles.socialStateLabel, themeTextColor]}>
                   Followers
@@ -40,7 +38,7 @@ const UserProfileTop = ({ userID }: { userID: string }) => {
               </View>
               <View style={styles.socialState}>
                 <Text style={[styles.socialStateText, themeTextColor]}>
-                  132
+                  {userInfo.following}
                 </Text>
                 <Text style={[styles.socialStateLabel, themeTextColor]}>
                   Following
