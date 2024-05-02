@@ -33,6 +33,7 @@ const PostCard = (props: PostDataType): JSX.Element => {
                 </View>
                 <Text style={styles.postContent}>{props.postContent}</Text>
                 <MusicBarOfPost {...props}/>
+                <View style={{height:8}}/>
                 <View style={styles.Icons}>
                     <IconA name="hearto" size={20}/>
                     <IconA name="message1" size={20}/>
@@ -69,6 +70,7 @@ const PostCard = (props: PostDataType): JSX.Element => {
                 <Text style={styles.postContent}>{props.postContent}</Text>
                 <Image source={props.ImageUrl} style={styles.postimage}/>
                 <MusicBarOfPost {...props}/>
+                <View style={{height:8}}/>
                 <View style={styles.Icons}>
                     <IconA name="hearto" size={20}/>
                     <IconA name="message1" size={20}/>
@@ -162,7 +164,7 @@ const styles = StyleSheet.create({
       postHeader: {
         flexDirection: "row",
         alignItems: "center",
-        marginTop: 16,
+        marginTop: 8,
       },
       text1: {
         fontSize: 16,
@@ -180,14 +182,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginLeft: 62,
         marginRight: 12,
-        marginBottom: 12
+        marginBottom: 16
       },
       Icons:{
         alignItems: 'center',
         flexDirection: 'row',
         marginLeft: 62,
         gap: 16,
-        marginBottom: 12,
+        marginBottom: 16,
       },
       headerRight:{
         alignItems: 'center',
