@@ -59,7 +59,7 @@ const ArticleDetailScreen = () => {
         />
 
         <Image
-          source={article.artworkUrl || defaultImage}
+          source={article.imageUrl || defaultImage}
           style={styles.artwork}
         />
 

@@ -4,9 +4,11 @@ import { Image } from 'expo-image';
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
 import ButtonOnProfile from './ButtonOnProfile';
+import { useLocalSearchParams } from 'expo-router';
 
-const UserProfileTop = ({ userID }: { userID: string }) => {
+const UserProfileTop = () => {
   const colorScheme = useColorScheme();
+  const { userID } = useLocalSearchParams<{ userID: string }>();
 
   const themeTextColor = {
     color: Colors[colorScheme ?? 'light'].text,

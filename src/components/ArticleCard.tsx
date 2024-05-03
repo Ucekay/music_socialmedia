@@ -11,9 +11,9 @@ import { Link } from 'expo-router';
 
 import { ArticleGraphic } from './ArticleGraphic';
 import ArticleTag from './ArticleTag';
+import ArticleCardSubhead from './ArticleCardSubhead';
 import type { articleDataType } from '../types';
 import Colors from '../constants/Colors';
-import Animated from 'react-native-reanimated';
 
 export default function ArticleCard({ article }: { article: articleDataType }) {
   const {
@@ -21,7 +21,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
     articleTitle,
     songName,
     artistName,
-    artworkUrl,
+    imageUrl,
     userID,
     user,
     userAvatarUrl,
@@ -52,7 +52,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
             colors={palette.otto}
             play={false}
             articleID={articleID}
-            artworkUrl={artworkUrl}
+            artworkUrl={imageUrl}
           />
           <View style={styles.summaryContainer}>
             <View>
@@ -60,14 +60,9 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
                 {articleTitle}
               </Text>
             </View>
-            <View>
-              <Text style={[styles.songName, themeTextColor]}>{songName}</Text>
-              <Text style={[styles.artistName, themeSecondlyTextColor]}>
-                {artistName}
-              </Text>
-            </View>
+            <ArticleCardSubhead article={article} />
             <View style={styles.infoContainer}>
-              <Link href={`/(tabs)/home/${userID}/`} asChild>
+              <Link href={`/(tabs)/home/(profile)/${article.userID}`} asChild>
                 <Pressable style={styles.authorContainer}>
                   <Image source={userAvatarUrl} style={styles.avatar} />
                   <View>
@@ -123,13 +118,6 @@ const styles = StyleSheet.create({
   articleTitle: {
     fontSize: 22,
     fontWeight: '500',
-  },
-  songName: {
-    fontSize: 17,
-    fontWeight: '500',
-  },
-  artistName: {
-    fontSize: 17,
   },
   authorContainer: {
     flexDirection: 'row',
