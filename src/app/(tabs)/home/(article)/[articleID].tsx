@@ -2,12 +2,11 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, useNavigation, useLocalSearchParams } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-
 import articleData from '@/src/assets/articleData';
 import ArticleContent from '@/src/components/ArticleContent';
 
@@ -15,6 +14,7 @@ const ArticleDetailScreen = () => {
   const { articleID } = useLocalSearchParams();
   const { top } = useSafeAreaInsets();
   const windowsHeight = useWindowDimensions().height;
+  const navigation = useNavigation();
 
   const snapPoint0 = windowsHeight - 375 + 24;
   const snapPoints = useMemo(() => [snapPoint0, '80%'], []);
@@ -61,6 +61,7 @@ const ArticleDetailScreen = () => {
         <Image
           source={article.imageUrl || defaultImage}
           style={styles.artwork}
+          onTouchEnd={() => navigation.goBack()}
         />
 
         <BottomSheet snapPoints={snapPoints} style={{ flex: 1 }}>
