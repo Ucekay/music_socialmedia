@@ -81,5 +81,5 @@ export type PostDataTypeD = {
   userID: string,
   user: string,
   userAvatarUrl: string,
-  style: any
+  style?: any
 };

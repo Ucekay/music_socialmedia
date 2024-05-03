@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, Text, Pressable} from 'react-native';
+import { View, StyleSheet, Text, Pressable, Dimensions, Image as Img} from 'react-native';
 import { Image } from 'expo-image';
 import MusicBarOfPost from './MusicBarOfPost';
 import IconA from './Icon/AntDesign';
 import { type PostDataType } from '../types';
 import { Link } from 'expo-router';
+
+const screen = Dimensions.get("screen")
 
 const PostCard = (props: PostDataType): JSX.Element => {
   if (props.musicUrl != '' && props.ImageUrl == '') {
@@ -209,8 +211,10 @@ const styles = StyleSheet.create({
       postimage: {
         marginLeft: 62,
         marginRight:12,
-        width:'70%',
-        height:100,
+        width: screen.width-74,
+        height: 150,
+        borderRadius:10,
+        maxHeight: screen.width-74,
         marginBottom:16
       }
 })

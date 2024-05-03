@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { Image } from 'expo-image';
+import React, { useMemo, useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Pressable, Dimensions, Image, Modal } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { BlurView } from 'expo-blur';
@@ -10,6 +9,9 @@ import postData from '@/src/assets/postData';
 import IconA from '@/src/components/Icon/AntDesign';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import MusicBarOfPost from '@/src/components/MusicBarOfPost';
+import UserTagPD from '@/src/components/UserTagPD';
+
+const screen = Dimensions.get("screen")
 
 const PostDatailScreen = (): JSX.Element => {
   const { id }= useLocalSearchParams();
@@ -17,104 +19,115 @@ const PostDatailScreen = (): JSX.Element => {
   if (!post) {
     return <Text>Post not found.</Text>;
   }
+  if (post?.ImageUrl) {
+    const [height, setHeight] = useState<number>(0);
+    const [modalStatus, setModalStatus] = useState(false);
+    useEffect(() => {
+      Image.getSize(post.ImageUrl,
+      (originalWidth, originalHeight) => {
+        const newHeight = Number(screen.width) * originalHeight / originalWidth
+        setHeight(newHeight)
+      }
+      )
+    }, []);
+    if (post.musicUrl == '') {
+      return(
+        <View style={styles.container}>
+          <UserTagPD 
+            user={post.user}
+            userAvatarUrl={post.userAvatarUrl}
+            userID={post.userID}/>
+          <Text style={[styles.text1, {marginHorizontal:16}, {marginBottom:16}]}>{post.postContent}</Text>
+          <Pressable onPress={() => setModalStatus(true)}>
+            <Image
+            style={[{width:screen.width*0.9},{height:height*0.9},{marginHorizontal:screen.width*0.05}, {borderRadius:10}]} 
+            src={post.ImageUrl}/>
+          </Pressable>
+          <Modal 
+          visible={modalStatus}
+          animationType='fade'
+          onRequestClose={() => setModalStatus(false)}
+          style={[{width:screen.width}, {height:screen.height}, {justifyContent:'center'}, {backgroundColor:'#000000'}]}>
+            <Pressable onPress={() => setModalStatus(false)}>
+              <View style={[{width:screen.width}, {height:screen.height}, {justifyContent:'center'}, {backgroundColor:'#000000'}]}>
+                <Pressable>
+                  <GestureHandlerRootView >
+                    <Image src={post.ImageUrl} style={[{width: screen.width}, {height:height}]}
+                        />
+                  </GestureHandlerRootView>
+                </Pressable>
+              </View>
+            </Pressable>
+          </Modal>
+          <View style={styles.infoContainer}>  
+            <Text style={styles.text3}>9:38・2024/03/24</Text>
+          </View>
+          <View style={styles.infoContainer}>  
+            <Text style={styles.text3}>53件のいいね</Text>
+          </View>
+          <View style={styles.iconContainer}>
+            <IconA name='hearto' size={20} style={{marginLeft:16}}/>
+            <IconA name='message1' size={20} />
+            <IconA name='retweet' size={20} />
+            <IconA name='upload' size={20} style={{marginRight:16}}/>
+          </View>
+        </View>
+    )
+    } else {
+    return(
+      <View style={styles.container}>
+          <UserTagPD 
+          user={post.user}
+          userAvatarUrl={post.userAvatarUrl}
+          userID={post.userID}/>
+          <Text style={[styles.text1, {marginHorizontal:16}, {marginBottom:16}]}>{post.postContent}</Text>
+          <MusicBarOfPost {...post} style={{marginLeft:12}}/>
+          <Pressable onPress={() => setModalStatus(true)}>
+            <Image
+            style={[{width:screen.width*0.9},{height:height*0.9},{marginHorizontal:screen.width*0.05}, {borderRadius:10}]} 
+            src={post.ImageUrl}/>
+          </Pressable>
+          <Modal 
+          visible={modalStatus}
+          animationType='Fade'
+          onRequestClose={() => setModalStatus(false)}
+          style={[{width:screen.width}, {height:screen.height}, {justifyContent:'center'}, {backgroundColor:'#000000'}]}>
+            <Pressable onPress={() => setModalStatus(false)}>
+              <View style={[{width:screen.width}, {height:screen.height}, {justifyContent:'center'}, {backgroundColor:'#000000'}]}>
+                <Pressable>
+                  <GestureHandlerRootView >
+                    <Image src={post.ImageUrl} style={[{width: screen.width}, {height:height}]}
+                        />
+                  </GestureHandlerRootView>
+                </Pressable>
+              </View>
+            </Pressable>
+          </Modal>
+          <View style={styles.infoContainer}>  
+            <Text style={styles.text3}>9:38・2024/03/24</Text>
+          </View>
+          <View style={styles.infoContainer}>  
+            <Text style={styles.text3}>53件のいいね</Text>
+          </View>
+          <View style={styles.iconContainer}>
+            <IconA name='hearto' size={20} style={{marginLeft:16}}/>
+            <IconA name='message1' size={20} />
+            <IconA name='retweet' size={20} />
+            <IconA name='upload' size={20} style={{marginRight:16}}/>
+          </View>
+        </View>
+    )
+    }
+  }
   if (post.musicUrl != '' && post.ImageUrl == ''){
   return(
     <View style={styles.container}>
-      <Link href={{
-        pathname: '../../pages/profile',
-        params:{
-          userID: post.userID
-        }
-      }}>
-        <View>
-          <View style={styles.userContainer}>
-            <Image 
-            style={styles.userAvator}
-            source={post?.userAvatarUrl}/>
-              <View>
-                <Text style={styles.text1}>{post.user}</Text>
-                <Text style={styles.text2}>{post.userID}</Text>
-              </View>
-          </View>
-        </View>
-      </Link>
+      <UserTagPD 
+        user={post.user}
+        userAvatarUrl={post.userAvatarUrl}
+        userID={post.userID}/>
       <Text style={[styles.text1, {marginHorizontal:16}, {marginBottom:16}]}>{post.postContent}</Text>
       <MusicBarOfPost {...post} style={{marginLeft:12}} />
-      <View style={styles.infoContainer}>  
-        <Text style={styles.text3}>9:38・2024/03/24</Text>
-      </View>
-      <View style={styles.infoContainer}>  
-        <Text style={styles.text3}>53件のいいね</Text>
-      </View>
-      <View style={styles.iconContainer}>
-        <IconA name='hearto' size={20} style={{marginLeft:16}}/>
-        <IconA name='message1' size={20} />
-        <IconA name='retweet' size={20} />
-        <IconA name='upload' size={20} style={{marginRight:16}}/>
-      </View>
-    </View>
-  )
-} else if (post.musicUrl != '' && post.ImageUrl != '' ) {
-  return(
-    <View style={styles.container}>
-        <Link href={{
-          pathname: '../../pages/profile',
-          params:{
-            userID: post.userID
-          }
-        }}>
-          <View>
-            <View style={styles.userContainer}>
-              <Image 
-              style={styles.userAvator}
-              source={post?.userAvatarUrl}/>
-              <View>
-                  <Text style={styles.text1}>{post.user}</Text>
-                  <Text style={styles.text2}>{post.userID}</Text>
-              </View>
-            </View>
-          </View>
-        </Link>
-        <Text style={[styles.text1, {marginHorizontal:16}, {marginBottom:16}]}>{post.postContent}</Text>
-        <MusicBarOfPost {...post} style={{marginLeft:12}}/>
-        <Image style={[{height:150},{marginHorizontal:12}]} source={post.ImageUrl}/>
-        <View style={styles.infoContainer}>  
-          <Text style={styles.text3}>9:38・2024/03/24</Text>
-        </View>
-        <View style={styles.infoContainer}>  
-          <Text style={styles.text3}>53件のいいね</Text>
-        </View>
-        <View style={styles.iconContainer}>
-          <IconA name='hearto' size={20} style={{marginLeft:16}}/>
-          <IconA name='message1' size={20} />
-          <IconA name='retweet' size={20} />
-          <IconA name='upload' size={20} style={{marginRight:16}}/>
-        </View>
-      </View>
-  )
-} else if (post.musicUrl == '' && post.ImageUrl != '' ) {
-  return(
-    <View style={styles.container}>
-      <Link href={{
-        pathname: '../../pages/profile',
-        params:{
-          userID: post.userID
-        }
-      }}>
-        <View>
-          <View style={styles.userContainer}>
-            <Image 
-            style={styles.userAvator}
-            source={post?.userAvatarUrl}/>
-              <View>
-                <Text style={styles.text1}>{post.user}</Text>
-                <Text style={styles.text2}>{post.userID}</Text>
-              </View>
-          </View>
-        </View>
-      </Link>
-      <Text style={[styles.text1, {marginHorizontal:16}, {marginBottom:16}]}>{post.postContent}</Text>
-      <Image style={[{height:150},{marginHorizontal:12}]} source={post.ImageUrl}/>
       <View style={styles.infoContainer}>  
         <Text style={styles.text3}>9:38・2024/03/24</Text>
       </View>
@@ -132,24 +145,10 @@ const PostDatailScreen = (): JSX.Element => {
 } else {
   return(
     <View style={styles.container}>
-      <Link href={{
-        pathname: '../../pages/profile',
-        params:{
-          userID: post.userID
-        }
-      }}>
-        <View>
-          <View style={styles.userContainer}>
-            <Image 
-            style={styles.userAvator}
-            source={post?.userAvatarUrl}/>
-              <View>
-                <Text style={styles.text1}>{post.user}</Text>
-                <Text style={styles.text2}>{post.userID}</Text>
-              </View>
-          </View>
-        </View>
-      </Link>
+      <UserTagPD 
+        user={post.user}
+        userAvatarUrl={post.userAvatarUrl}
+        userID={post.userID}/>
       <Text style={[styles.text1, {marginHorizontal:16}, {marginBottom:16}]}>{post.postContent}</Text>
       <View style={styles.infoContainer}>  
         <Text style={styles.text3}>9:38・2024/03/24</Text>
