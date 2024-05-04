@@ -8,20 +8,21 @@ import {
 } from 'react-native';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, useNavigation, useLocalSearchParams } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { VariableBlurView } from '@ucekay/blur-view-fix';
-
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import articleData from '@/src/assets/articleData';
+import ArticleContent from '@/src/components/ArticleContent';
 
 const ArticleDetailScreen = () => {
   const platform = Platform.OS;
-  const { id } = useLocalSearchParams();
+  const { articleID } = useLocalSearchParams();
   const { top } = useSafeAreaInsets();
   const windowsHeight = useWindowDimensions().height;
+  const navigation = useNavigation();
 
   const header = () => {
     if (platform === 'ios') {
@@ -59,7 +60,7 @@ const ArticleDetailScreen = () => {
   const snapPoint0 = windowsHeight - 375 + 24;
   const snapPoints = useMemo(() => [snapPoint0, '80%'], []);
 
-  const article = articleData.find((item) => item.articleID === id);
+  const article = articleData.find((item) => item.articleID === articleID);
   const defaultImage = require('@/src/assets/images/snsicon.png');
   if (!article) {
     return <Text>Article not found.</Text>;
@@ -80,14 +81,15 @@ const ArticleDetailScreen = () => {
         />
 
         <Image
-          source={article.artworkUrl || defaultImage}
+          source={article.imageUrl || defaultImage}
           style={styles.artwork}
+          onTouchEnd={() => navigation.goBack()}
         />
 
         <BottomSheet snapPoints={snapPoints} style={{ flex: 1 }}>
-          <BottomSheetView style={styles.contentContainer}>
-            <Text>This is awesome 🎉</Text>
-          </BottomSheetView>
+          <BottomSheetScrollView>
+            <ArticleContent {...article} />
+          </BottomSheetScrollView>
         </BottomSheet>
       </View>
     </GestureHandlerRootView>

@@ -17,11 +17,11 @@ import { View, useWindowDimensions, StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 
-import { createNoise2D } from './SimpleNoise';
+import { createNoise2D } from './forMeshGradient/SimpleNoise';
 
-import { symmetric } from './Math';
-import { Cubic } from './Cubic';
-import { Curves } from './Curves';
+import { symmetric } from './forMeshGradient/Math';
+import { Cubic } from './forMeshGradient/Cubic';
+import { Curves } from './forMeshGradient/Curves';
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],
@@ -76,7 +76,7 @@ const useRectToPatch = (
     ];
   }, [mesh]);
 
-interface ArticleThumbnailProps {
+interface ArticleGraphicProps {
   rows: number;
   cols: number;
   colors: string[];
@@ -91,7 +91,7 @@ interface ArticleThumbnailProps {
 const F = 8000;
 const A = 30;
 
-export const ArticleThumbnail = ({
+export const ArticleGraphic = ({
   rows,
   cols,
   colors,
@@ -101,7 +101,7 @@ export const ArticleThumbnail = ({
   play,
   articleID,
   artworkUrl,
-}: ArticleThumbnailProps) => {
+}: ArticleGraphicProps) => {
   const { width, height } = useWindowDimensions();
 
   const articleCardWidth = width - 32;
@@ -179,14 +179,6 @@ export const ArticleThumbnail = ({
   const mesh = play ? meshNoise : meshGesture;
 
   const defaultImage = require('@/src/assets/images/snsicon.png');
-
-  const rrct = {
-    rect: { x: 0, y: 0, width: articleCardWidth, height: imageSideLength },
-    topLeft: { x: 12, y: 12 },
-    topRight: { x: 12, y: 12 },
-    bottomRight: { x: 0, y: 0 },
-    bottomLeft: { x: 0, y: 0 },
-  };
 
   return (
     <View style={styles.container}>

@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Pressable, useColorScheme } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  useColorScheme,
+} from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
-import Animated from 'react-native-reanimated';
 import RNColorThief from 'react-native-color-thief';
-import { ArticleThumbnail } from './ArticleThumbnail';
+
+import { ArticleGraphic } from './ArticleGraphic';
 import ArticleTag from './ArticleTag';
+import ArticleCardSubhead from './ArticleCardSubhead';
 import type { Palette, articleDataType } from '../types';
 import Colors from '../constants/Colors';
 import { increaseSaturation, rgb2Hex } from './ColorModifier';
 
-export default function ArticleSummaryCard({
-  article,
-}: {
-  article: articleDataType;
-}) {
+export default function ArticleCard({ article }: { article: articleDataType }) {
   const {
     articleID,
     articleTitle,
-    songName,
-    artistName,
-    artworkUrl,
+    imageUrl,
     userID,
     user,
     userAvatarUrl,
@@ -29,7 +30,7 @@ export default function ArticleSummaryCard({
   const colorScheme = useColorScheme();
   const [hexColors, setHexColors] = useState<string[]>([]);
   useEffect(() => {
-    RNColorThief.getPalette(artworkUrl, 17, 2, false)
+    RNColorThief.getPalette(imageUrl, 17, 2, false)
       .then((palette: Palette) => {
         const hexColors: string[] = rgb2Hex(palette);
         setHexColors(hexColors);
@@ -51,56 +52,49 @@ export default function ArticleSummaryCard({
     colorScheme === 'dark'
       ? { color: Colors.dark.secondlyText }
       : { color: Colors.light.secondlyText };
-  if (hexColors.length === 0) return null;
-
-  const gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
+  let gradientColors;
+  if (hexColors.length === 0) {
+    //gradientColors = palette.otto;
+    return null;
+  } else {
+    gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
+  }
 
   return (
-    <Link href={`/articles/${article.articleID}`} asChild>
+    <Link href={`/(tabs)/home/(article)/${article.articleID}`} asChild>
       <Pressable style={{ flex: 1 }}>
-        <Animated.View style={[styles.container, themeBackgroundStyle]}>
-          <ArticleThumbnail
+        <View style={[styles.container, themeBackgroundStyle]}>
+          <ArticleGraphic
             rows={3}
             cols={3}
             colors={gradientColors}
             play={true}
             articleID={articleID}
-            artworkUrl={artworkUrl}
+            artworkUrl={imageUrl}
           />
           <View style={styles.summaryContainer}>
             <View>
-              <Animated.Text style={[styles.articleTitle, themeTextColor]}>
+              <Text style={[styles.articleTitle, themeTextColor]}>
                 {articleTitle}
-              </Animated.Text>
+              </Text>
             </View>
-            <View>
-              <Animated.Text style={[styles.songName, themeTextColor]}>
-                {songName}
-              </Animated.Text>
-              <Animated.Text
-                style={[styles.artistName, themeSecondlyTextColor]}
-              >
-                {artistName}
-              </Animated.Text>
-            </View>
+            <ArticleCardSubhead article={article} />
             <View style={styles.infoContainer}>
-              <View style={styles.authorContainer}>
-                <Image source={userAvatarUrl} style={styles.avatar} />
-                <View>
-                  <Animated.Text style={[styles.useName, themeTextColor]}>
-                    {user}
-                  </Animated.Text>
-                  <Animated.Text
-                    style={[styles.userID, themeSecondlyTextColor]}
-                  >
-                    {userID}
-                  </Animated.Text>
-                </View>
-              </View>
+              <Link href={`/(tabs)/home/(profile)/${article.userID}`} asChild>
+                <Pressable style={styles.authorContainer}>
+                  <Image source={userAvatarUrl} style={styles.avatar} />
+                  <View>
+                    <Text style={[styles.useName, themeTextColor]}>{user}</Text>
+                    <Text style={[styles.userID, themeSecondlyTextColor]}>
+                      {userID}
+                    </Text>
+                  </View>
+                </Pressable>
+              </Link>
               <ArticleTag type={type} />
             </View>
           </View>
-        </Animated.View>
+        </View>
       </Pressable>
     </Link>
   );
@@ -142,13 +136,6 @@ const styles = StyleSheet.create({
   articleTitle: {
     fontSize: 22,
     fontWeight: '500',
-  },
-  songName: {
-    fontSize: 17,
-    fontWeight: '500',
-  },
-  artistName: {
-    fontSize: 17,
   },
   authorContainer: {
     flexDirection: 'row',
