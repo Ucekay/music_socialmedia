@@ -1,6 +1,6 @@
 import { Text, View, FlatList, StyleSheet } from 'react-native';
 import { withLayoutContext, useLocalSearchParams, Stack } from 'expo-router';
-import { Tabs } from 'react-native-collapsible-tab-view';
+import { Tabs, CollapsibleRef } from 'react-native-collapsible-tab-view';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import Animated from 'react-native-reanimated';
 
@@ -8,6 +8,7 @@ import UserProfileTop from '@/src/components/UserProfileTop';
 import userArticleData from '@/src/assets/userArticleData';
 import ArticleCard from '@/src/components/ArticleCard';
 import { articleDataType } from '@/src/types';
+import React from 'react';
 
 const TEXT_HEIGHT = 65.7;
 const itemSize = 320;
@@ -34,27 +35,31 @@ const postData = [
   '最近のお気に入りの曲を教えてください！音楽で心を癒したいです。',
 ];
 
+const Header = () => {
+  return (
+    <>
+      <View>
+        <Text>test</Text>
+      </View>
+    </>
+  );
+};
+
 const ProfileNavigator = () => {
   const { userID } = useLocalSearchParams<{ userID: string }>();
   const tabBarHeight = useBottomTabBarHeight();
 
   return (
-    <Tabs.Container
-      renderHeader={() => (
-        <Animated.View style={{ zIndex: 0, pointerEvents: 'box-none' }}>
-          <UserProfileTop />
-        </Animated.View>
-      )}
-    >
-      <Tabs.Tab name='A' label={'Post'}>
-        <Tabs.FlashList
+    <Tabs.Container renderHeader={() => <UserProfileTop />}>
+      <Tabs.Tab name='post' label='Post'>
+        <Tabs.FlatList
           data={postData}
           renderItem={({ item }) => (
             <View style={{ padding: 16 }}>
               <Text>{item}</Text>
             </View>
           )}
-          estimatedItemSize={TEXT_HEIGHT + 32}
+          keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{
             backgroundColor: 'white',
             paddingBottom: tabBarHeight,
@@ -62,13 +67,13 @@ const ProfileNavigator = () => {
           }}
         />
       </Tabs.Tab>
-      <Tabs.Tab name='B' label={'Article'}>
-        <Tabs.FlashList
+      <Tabs.Tab name='article' label='Article'>
+        <Tabs.FlatList
           data={userArticleData}
           renderItem={({ item }) => (
             <ArticleCard article={item as articleDataType} />
           )}
-          estimatedItemSize={itemSize}
+          keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{
             backgroundColor: 'white',
             paddingBottom: tabBarHeight,
@@ -79,7 +84,6 @@ const ProfileNavigator = () => {
     </Tabs.Container>
   );
 };
-
 export default ProfileNavigator;
 
 const styles = StyleSheet.create({
