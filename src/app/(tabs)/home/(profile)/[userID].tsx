@@ -2,6 +2,7 @@ import { Text, View, FlatList, StyleSheet } from 'react-native';
 import { withLayoutContext, useLocalSearchParams, Stack } from 'expo-router';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import Animated from 'react-native-reanimated';
 
 import UserProfileTop from '@/src/components/UserProfileTop';
 import userArticleData from '@/src/assets/userArticleData';
@@ -38,7 +39,13 @@ const ProfileNavigator = () => {
   const tabBarHeight = useBottomTabBarHeight();
 
   return (
-    <Tabs.Container renderHeader={() => <UserProfileTop />}>
+    <Tabs.Container
+      renderHeader={() => (
+        <Animated.View style={{ zIndex: 0, pointerEvents: 'box-none' }}>
+          <UserProfileTop />
+        </Animated.View>
+      )}
+    >
       <Tabs.Tab name='A' label={'Post'}>
         <Tabs.FlashList
           data={postData}
@@ -48,7 +55,11 @@ const ProfileNavigator = () => {
             </View>
           )}
           estimatedItemSize={TEXT_HEIGHT + 32}
-          contentContainerStyle={{ padding: 16 }}
+          contentContainerStyle={{
+            backgroundColor: 'white',
+            paddingBottom: tabBarHeight,
+            padding: 16,
+          }}
         />
       </Tabs.Tab>
       <Tabs.Tab name='B' label={'Article'}>
@@ -59,6 +70,7 @@ const ProfileNavigator = () => {
           )}
           estimatedItemSize={itemSize}
           contentContainerStyle={{
+            backgroundColor: 'white',
             paddingBottom: tabBarHeight,
             paddingHorizontal: 16,
           }}

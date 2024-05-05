@@ -1,10 +1,11 @@
 import { Text, View, StyleSheet, useColorScheme } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
+import Animated from 'react-native-reanimated';
 
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
 import ButtonOnProfile from './ButtonOnProfile';
-import { useLocalSearchParams } from 'expo-router';
 
 const UserProfileTop = () => {
   const colorScheme = useColorScheme();
@@ -21,39 +22,41 @@ const UserProfileTop = () => {
     return <Text>User not found</Text>;
   }
   return (
-    <View style={[styles.container, { pointerEvents: 'box-none' }]}>
-      <View style={styles.profile}>
-        <View style={styles.profileHeader}>
-          <Image
-            source={userInfo.userAvatarUrl || defaultImage}
-            style={styles.avatar}
-          />
-          <View>
-            <View style={styles.socialStateContainer}>
-              <View style={styles.socialState}>
-                <Text style={[styles.socialStateText, themeTextColor]}>
-                  {userInfo.followers}
-                </Text>
-                <Text style={[styles.socialStateLabel, themeTextColor]}>
-                  Followers
-                </Text>
-              </View>
-              <View style={styles.socialState}>
-                <Text style={[styles.socialStateText, themeTextColor]}>
-                  {userInfo.following}
-                </Text>
-                <Text style={[styles.socialStateLabel, themeTextColor]}>
-                  Following
-                </Text>
+    <Animated.View style={{ pointerEvents: 'box-none' }}>
+      <View style={styles.container}>
+        <View style={styles.profile}>
+          <View style={styles.profileHeader}>
+            <Image
+              source={userInfo.userAvatarUrl || defaultImage}
+              style={styles.avatar}
+            />
+            <View>
+              <View style={styles.socialStateContainer}>
+                <View style={styles.socialState}>
+                  <Text style={[styles.socialStateText, themeTextColor]}>
+                    {userInfo.followers}
+                  </Text>
+                  <Text style={[styles.socialStateLabel, themeTextColor]}>
+                    Followers
+                  </Text>
+                </View>
+                <View style={styles.socialState}>
+                  <Text style={[styles.socialStateText, themeTextColor]}>
+                    {userInfo.following}
+                  </Text>
+                  <Text style={[styles.socialStateLabel, themeTextColor]}>
+                    Following
+                  </Text>
+                </View>
               </View>
             </View>
+            <ButtonOnProfile isMyAccount={isMyAccount} />
           </View>
-          <ButtonOnProfile isMyAccount={isMyAccount} />
+          <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
         </View>
-        <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
+        <Text style={[styles.userBio, themeTextColor]}>{userInfo.bio}</Text>
       </View>
-      <Text style={[styles.userBio, themeTextColor]}>{userInfo.bio}</Text>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -64,9 +67,11 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   profile: {
+    backgroundColor: '#ffffff',
     gap: 12,
   },
   profileHeader: {
+    backgroundColor: '#ffffff',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 24,
@@ -78,10 +83,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
   },
   socialStateContainer: {
+    backgroundColor: '#ffffff',
     flexDirection: 'row',
     gap: 16,
   },
   socialState: {
+    backgroundColor: '#ffffff',
     alignItems: 'center',
   },
   socialStateText: {
