@@ -1,8 +1,7 @@
-import { Text, View, FlatList, StyleSheet } from 'react-native';
-import { withLayoutContext, useLocalSearchParams, Stack } from 'expo-router';
-import { Tabs, CollapsibleRef } from 'react-native-collapsible-tab-view';
+import { Text, View, StyleSheet } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
+import { Tabs } from 'react-native-collapsible-tab-view';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import Animated from 'react-native-reanimated';
 
 import UserProfileTop from '@/src/components/UserProfileTop';
 import userArticleData from '@/src/assets/userArticleData';
@@ -35,16 +34,6 @@ const postData = [
   '最近のお気に入りの曲を教えてください！音楽で心を癒したいです。',
 ];
 
-const Header = () => {
-  return (
-    <>
-      <View>
-        <Text>test</Text>
-      </View>
-    </>
-  );
-};
-
 const ProfileNavigator = () => {
   const { userID } = useLocalSearchParams<{ userID: string }>();
   const tabBarHeight = useBottomTabBarHeight();
@@ -52,14 +41,15 @@ const ProfileNavigator = () => {
   return (
     <Tabs.Container renderHeader={() => <UserProfileTop />}>
       <Tabs.Tab name='post' label='Post'>
-        <Tabs.FlatList
+        <Tabs.FlashList
           data={postData}
           renderItem={({ item }) => (
             <View style={{ padding: 16 }}>
               <Text>{item}</Text>
             </View>
           )}
-          keyExtractor={(item, index) => index.toString()}
+          // keyExtractor={(item, index) => index.toString()}
+          estimatedItemSize={TEXT_HEIGHT}
           contentContainerStyle={{
             backgroundColor: 'white',
             paddingBottom: tabBarHeight,
@@ -68,12 +58,13 @@ const ProfileNavigator = () => {
         />
       </Tabs.Tab>
       <Tabs.Tab name='article' label='Article'>
-        <Tabs.FlatList
+        <Tabs.FlashList
           data={userArticleData}
           renderItem={({ item }) => (
             <ArticleCard article={item as articleDataType} />
           )}
-          keyExtractor={(item, index) => index.toString()}
+          //keyExtractor={(item, index) => index.toString()}
+          estimatedItemSize={itemSize}
           contentContainerStyle={{
             backgroundColor: 'white',
             paddingBottom: tabBarHeight,
