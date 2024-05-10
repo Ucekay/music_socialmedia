@@ -1,15 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { View, Pressable, StyleSheet, useWindowDimensions } from 'react-native';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
 
-import { useClientOnlyValue } from '@/src/components/useClientOnlyValue';
+import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 
 import Colors from '@/src/constants/Colors';
-import { useColorScheme } from '@/src/components/useColorScheme';
+import { useColorScheme } from '@/src/hooks/useColorScheme';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -52,7 +51,6 @@ export default function TabLayout() {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                transform: [{ rotate: '180deg' }],
               }}
             />
           </>
@@ -61,7 +59,7 @@ export default function TabLayout() {
     >
       <Tabs.Screen name='index' options={{ href: null }} />
       <Tabs.Screen
-        name='articles'
+        name='home'
         options={{
           title: 'Articles',
           headerShown: false,

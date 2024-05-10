@@ -17,11 +17,11 @@ import { View, useWindowDimensions, StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 
-import { createNoise2D } from './SimpleNoise';
+import { createNoise2D } from './forMeshGradient/SimpleNoise';
 
-import { symmetric } from './Math';
-import { Cubic } from './Cubic';
-import { Curves } from './Curves';
+import { symmetric } from './forMeshGradient/Math';
+import { Cubic } from './forMeshGradient/Cubic';
+import { Curves } from './forMeshGradient/Curves';
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],
@@ -91,7 +91,7 @@ interface ArticleThumbnailProps {
 const F = 8000;
 const A = 30;
 
-export const ArticleThumbnail = ({
+export const ArticleGraphic = ({
   rows,
   cols,
   colors,
