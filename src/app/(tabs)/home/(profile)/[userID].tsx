@@ -48,7 +48,6 @@ const ProfileNavigator = () => {
               <Text>{item}</Text>
             </View>
           )}
-          // keyExtractor={(item, index) => index.toString()}
           estimatedItemSize={TEXT_HEIGHT}
           contentContainerStyle={{
             backgroundColor: 'white',
@@ -63,7 +62,6 @@ const ProfileNavigator = () => {
           renderItem={({ item }) => (
             <ArticleCard article={item as articleDataType} />
           )}
-          //keyExtractor={(item, index) => index.toString()}
           estimatedItemSize={itemSize}
           contentContainerStyle={{
             backgroundColor: 'white',
