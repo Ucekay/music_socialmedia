@@ -8,7 +8,7 @@ const tabBarGradientDark = ['rgba(0,0,0,0)', 'rgba(0,0,0,1)'];
 const headerLight = 'rgba(250, 251, 254, 0.7)';
 const headerDark = 'rgba(0, 0, 0, 0.7)';
 
-export default {
+const Colors = {
   light: {
     text: '#000',
     secondlyText: chroma(palette.slate['600']).hex(),
@@ -36,6 +36,8 @@ export default {
     followButtonText: 'black',
   },
 };
+
+export default Colors;
 
 export const TagsColors = {
   general: {
@@ -70,14 +72,21 @@ export const TagsColors = {
   },
   playlist: {
     light: {
-      background: chroma(palette.rose['200']).hex(),
-      text: chroma(palette.rose['700']).hex(),
+      background: chroma(palette.purple['200']).hex(),
+      text: chroma(palette.purple['700']).hex(),
     },
     dark: {
-      background: chroma(palette.rose['800']).hex(),
-      text: chroma(palette.rose['300']).hex(),
+      background: chroma(palette.purple['800']).hex(),
+      text: chroma(palette.purple['300']).hex(),
     },
   },
+};
+
+export const iconColors = {
+  waveform: chroma(palette.rose['500']).hex(),
+  musicMic: chroma(palette.rose['500']).hex(),
+  location: chroma(palette.teal['500']).hex(),
+  listBullet: chroma(palette.amber['500']).hex(),
 };
 
 export const COLORS = {
