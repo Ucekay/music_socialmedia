@@ -17,7 +17,6 @@ import ArticleCardSubhead from './ArticleCardSubhead';
 import type { Palette, articleDataType } from '../types';
 import Colors from '../constants/Colors';
 import { increaseSaturation, rgb2Hex } from './ColorModifier';
-import ArticleCardImage from './ArticleCardImage';
 
 export default function ArticleCard({ article }: { article: articleDataType }) {
   const {
