@@ -14,7 +14,7 @@ const HeartIcon = (props: any): JSX.Element => {
     }
   }
   return (
-    <IconA onPress={HandleClick} name={name} style={[{color: color}, props.style]} size={20}/>
+    <IconA onPress={HandleClick} name={name} style={[{color: color}, props.style]} size={props.size}/>
   )
 }
 

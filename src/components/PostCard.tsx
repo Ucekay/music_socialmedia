@@ -18,30 +18,32 @@ const PostCard = (props: PostDataType): JSX.Element => {
                 id: props.postID
             }
           }} asChild> 
-            <Pressable style={styles.postContainer}>
-            
-                <View style={styles.postHeader}>
-                <View style={styles.headerLeft}>
-                    <Image 
-                    source={props.userAvatarUrl}
-                    style={styles.image}
-                    />
-                    <Text style={styles.text1}>{props.user}</Text>
-                </View>
-                <View style={styles.headerRight}>
-                    <Text>6m</Text>
+            <Pressable style={styles.postContainer}>            
+              <View style={styles.postHeader}>
+                <Image 
+                  source={props.userAvatarUrl}
+                  style={styles.image}
+                />
+                <View style={{flex:1}}>
+                  <View style={[{justifyContent: 'space-between'}, {flexDirection: 'row'}, {flex:1}]}>
+                    <View style={styles.headerLeft}>
+                      <Text style={styles.text1}>{props.user}</Text>
+                      <Text>6m</Text>
+                    </View>
                     <IconA name='ellipsis1' size={16} style={styles.threeDots}/>
-                </View>  
+                  </View>
+                  <View>
+                    <Text style={styles.postContent}>{props.postContent}</Text>
+                    {(props.ImageUrl != '') && (<Image source={props.ImageUrl} style={styles.postimage}/>)}
+                    {(props.musicUrl != '') && (<MusicBarOfPost {...props} style={{marginLeft:0}}/>)}
+                  </View>
                 </View>
-                <Text style={styles.postContent}>{props.postContent}</Text>
-                {(props.ImageUrl != '') && (<Image source={props.ImageUrl} style={styles.postimage}/>)}
-                {(props.musicUrl != '') && (<MusicBarOfPost {...props}/>)}
-                <View style={{height:8}}/>
+              </View>
                 <View style={styles.Icons}>
-                    <HeartIcon/>
-                    <IconA name="message1" size={20}/>
-                    <IconA name="retweet" size={20}/>
-                    <IconA name="upload" size={20}/>
+                    <HeartIcon size={16}/>
+                    <IconA name="message1" size={16}/>
+                    <IconA name="retweet" size={16}/>
+                    <IconA name="upload" size={16}/>
                 </View>
             </Pressable>
         </Link>
@@ -56,55 +58,59 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffffff",
         flex: 1,
         borderBottomColor: 'rgba(67, 80, 96, 0.3)',
-        borderBottomWidth: 0.5
+        borderBottomWidth: 0.2
       },
       postHeader: {
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "flex-start",
         marginTop: 8,
+        flex:1
       },
       text1: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "500",
         lineHeight: 16
       },
       image: {
-        width: 36,
-        height: 36,
-        borderRadius: 18,
+        width: 30,
+        height: 30,
+        borderRadius: 15,
         marginLeft: 14,
-        marginRight: 12
+        marginRight: 12,
+        borderWidth: 0.3,
+        borderColor: '#000000'
       },
       postContent: {
-        fontSize: 16,
-        marginLeft: 62,
+        fontSize: 14,
+        lineHeight:20,
         marginRight: 12,
-        marginBottom: 16
+        marginBottom: 10,
+        marginTop: 4
       },
       Icons:{
         alignItems: 'center',
         flexDirection: 'row',
-        marginLeft: 62,
-        gap: 16,
-        marginBottom: 16,
+        marginLeft: 56,
+        gap: 24,
+        marginBottom: 12,
       },
       headerRight:{
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent:'flex-end',
         flexDirection: 'row',
-        width: '50%',
+        width: 'auto',
         gap:12
       },
       headerLeft:{
-        alignItems: 'center',
         flexDirection: 'row',
-        width: '50%'
+        marginRight:8,
+        alignItems: 'baseline',
+        gap: 8
       },
       threeDots:{
         marginRight:12
       },
       postimage: {
-        marginLeft: 62,
         marginRight:12,
         width: screen.width-74,
         height: 150,
