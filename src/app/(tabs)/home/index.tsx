@@ -12,7 +12,7 @@ import ArticleCard from '@/src/components/ArticleCard';
 import articleData from '@/src/assets/articleData';
 import type { articleDataType } from '@/src/types';
 
-const itemSize = 320;
+const itemSize = 308;
 
 export default function TabOneScreen() {
   const headerHeight = useHeaderHeight();

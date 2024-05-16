@@ -42,13 +42,14 @@ export default Colors;
 export const TagsColors = {
   general: {
     light: {
-      background: chroma(palette.slate['200']).hex(),
-      text: chroma(palette.slate['700']).hex(),
+      background: chroma(palette.purple['200']).hex(),
+      text: chroma(palette.purple['700']).hex(),
     },
     dark: {
-      background: chroma(palette.slate['800']).hex(),
-      text: chroma(palette.slate['300']).hex(),
+      background: chroma(palette.purple['800']).hex(),
+      text: chroma(palette.purple['300']).hex(),
     },
+    tint: chroma(palette.purple['500']).hex(),
   },
   review: {
     light: {
@@ -59,6 +60,7 @@ export const TagsColors = {
       background: chroma(palette.blue['800']).hex(),
       text: chroma(palette.blue['300']).hex(),
     },
+    tint: chroma(palette.blue['500']).hex(),
   },
   liveReport: {
     light: {
@@ -69,24 +71,19 @@ export const TagsColors = {
       background: chroma(palette.amber['800']).hex(),
       text: chroma(palette.amber['300']).hex(),
     },
+    tint: chroma(palette.amber['500']).hex(),
   },
   playlist: {
     light: {
-      background: chroma(palette.purple['200']).hex(),
-      text: chroma(palette.purple['700']).hex(),
+      background: chroma(palette.rose['200']).hex(),
+      text: chroma(palette.rose['700']).hex(),
     },
     dark: {
-      background: chroma(palette.purple['800']).hex(),
-      text: chroma(palette.purple['300']).hex(),
+      background: chroma(palette.rose['800']).hex(),
+      text: chroma(palette.rose['300']).hex(),
     },
+    tint: chroma(palette.rose['500']).hex(),
   },
-};
-
-export const iconColors = {
-  waveform: chroma(palette.rose['500']).hex(),
-  musicMic: chroma(palette.rose['500']).hex(),
-  location: chroma(palette.teal['500']).hex(),
-  listBullet: chroma(palette.amber['500']).hex(),
 };
 
 export const COLORS = {

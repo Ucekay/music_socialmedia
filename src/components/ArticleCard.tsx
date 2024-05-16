@@ -50,7 +50,11 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
           <ArticleCardVisual imageUrl={imageUrl} articleType={type} />
           <View style={styles.summaryContainer}>
             <View>
-              <Text style={[styles.articleTitle, themeTextColor]}>
+              <Text
+                style={[styles.articleTitle, themeTextColor]}
+                numberOfLines={2}
+                ellipsizeMode='tail'
+              >
                 {articleTitle}
               </Text>
             </View>
