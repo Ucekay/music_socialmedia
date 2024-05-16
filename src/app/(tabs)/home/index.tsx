@@ -34,7 +34,7 @@ export default function TabOneScreen() {
         contentContainerStyle={{
           paddingTop: headerHeight,
           paddingBottom: tabBarHeight,
-          paddingHorizontal: 16,
+          paddingHorizontal: 20,
         }}
       />
     </View>
