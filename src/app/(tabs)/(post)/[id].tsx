@@ -10,6 +10,7 @@ import IconA from '@/src/components/Icon/AntDesign';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import MusicBarOfPost from '@/src/components/MusicBarOfPost';
 import UserTagPD from '@/src/components/UserTagPD';
+import HeartIcon from '@/src/components/Icon/HeartIcon';
 
 const screen = Dimensions.get("screen")
 
@@ -30,7 +31,6 @@ const PostDatailScreen = (): JSX.Element => {
       }
       )
     }, []);
-    if (post.musicUrl == '') {
       return(
         <View style={styles.container}>
           <UserTagPD 
@@ -59,6 +59,7 @@ const PostDatailScreen = (): JSX.Element => {
               </View>
             </Pressable>
           </Modal>
+          {(post.musicUrl != '') && (<MusicBarOfPost {...post} style={{marginLeft:12}}/>)}
           <View style={styles.infoContainer}>  
             <Text style={styles.text3}>9:38・2024/03/24</Text>
           </View>
@@ -66,7 +67,7 @@ const PostDatailScreen = (): JSX.Element => {
             <Text style={styles.text3}>53件のいいね</Text>
           </View>
           <View style={styles.iconContainer}>
-            <IconA name='hearto' size={20} style={{marginLeft:16}}/>
+            <HeartIcon style={{marginLeft:16}}/>
             <IconA name='message1' size={20} />
             <IconA name='retweet' size={20} />
             <IconA name='upload' size={20} style={{marginRight:16}}/>
@@ -81,28 +82,7 @@ const PostDatailScreen = (): JSX.Element => {
           userAvatarUrl={post.userAvatarUrl}
           userID={post.userID}/>
           <Text style={[styles.text1, {marginHorizontal:16}, {marginBottom:16}]}>{post.postContent}</Text>
-          <MusicBarOfPost {...post} style={{marginLeft:12}}/>
-          <Pressable onPress={() => setModalStatus(true)}>
-            <Image
-            style={[{width:screen.width*0.9},{height:height*0.9},{marginHorizontal:screen.width*0.05}, {borderRadius:10}]} 
-            src={post.ImageUrl}/>
-          </Pressable>
-          <Modal 
-          visible={modalStatus}
-          animationType='fade'
-          onRequestClose={() => setModalStatus(false)}
-          style={[{width:screen.width}, {height:screen.height}, {justifyContent:'center'}, {backgroundColor:'#000000'}]}>
-            <Pressable onPress={() => setModalStatus(false)}>
-              <View style={[{width:screen.width}, {height:screen.height}, {justifyContent:'center'}, {backgroundColor:'#000000'}]}>
-                <Pressable>
-                  <GestureHandlerRootView >
-                    <Image src={post.ImageUrl} style={[{width: screen.width}, {height:height}]}
-                        />
-                  </GestureHandlerRootView>
-                </Pressable>
-              </View>
-            </Pressable>
-          </Modal>
+          {(post.musicUrl != '') && (<MusicBarOfPost {...post} style={{marginLeft:12}}/>)}
           <View style={styles.infoContainer}>  
             <Text style={styles.text3}>9:38・2024/03/24</Text>
           </View>
@@ -110,7 +90,7 @@ const PostDatailScreen = (): JSX.Element => {
             <Text style={styles.text3}>53件のいいね</Text>
           </View>
           <View style={styles.iconContainer}>
-            <IconA name='hearto' size={20} style={{marginLeft:16}}/>
+            <HeartIcon style={{marginLeft:16}}/>
             <IconA name='message1' size={20} />
             <IconA name='retweet' size={20} />
             <IconA name='upload' size={20} style={{marginRight:16}}/>
@@ -119,53 +99,8 @@ const PostDatailScreen = (): JSX.Element => {
     )
     }
   }
-  if (post.musicUrl != '' && post.ImageUrl == ''){
-  return(
-    <View style={styles.container}>
-      <UserTagPD 
-        user={post.user}
-        userAvatarUrl={post.userAvatarUrl}
-        userID={post.userID}/>
-      <Text style={[styles.text1, {marginHorizontal:16}, {marginBottom:16}]}>{post.postContent}</Text>
-      <MusicBarOfPost {...post} style={{marginLeft:12}} />
-      <View style={styles.infoContainer}>  
-        <Text style={styles.text3}>9:38・2024/03/24</Text>
-      </View>
-      <View style={styles.infoContainer}>  
-        <Text style={styles.text3}>53件のいいね</Text>
-      </View>
-      <View style={styles.iconContainer}>
-        <IconA name='hearto' size={20} style={{marginLeft:16}}/>
-        <IconA name='message1' size={20} />
-        <IconA name='retweet' size={20} />
-        <IconA name='upload' size={20} style={{marginRight:16}}/>
-      </View>
-    </View>
-  )
-} else {
-  return(
-    <View style={styles.container}>
-      <UserTagPD 
-        user={post.user}
-        userAvatarUrl={post.userAvatarUrl}
-        userID={post.userID}/>
-      <Text style={[styles.text1, {marginHorizontal:16}, {marginBottom:16}]}>{post.postContent}</Text>
-      <View style={styles.infoContainer}>  
-        <Text style={styles.text3}>9:38・2024/03/24</Text>
-      </View>
-      <View style={styles.infoContainer}>  
-        <Text style={styles.text3}>53件のいいね</Text>
-      </View>
-      <View style={styles.iconContainer}>
-        <IconA name='hearto' size={20} style={{marginLeft:16}}/>
-        <IconA name='message1' size={20} />
-        <IconA name='retweet' size={20} />
-        <IconA name='upload' size={20} style={{marginRight:16}}/>
-      </View>
-    </View>
-  )
-}
-}
+  
+
 
 export default PostDatailScreen;
 

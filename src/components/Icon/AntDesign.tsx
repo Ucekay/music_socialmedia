@@ -4,13 +4,13 @@ import  Icon  from "react-native-vector-icons/AntDesign";
 interface Props {
     name: string,
     size: number,
-    HandleClick?: any,
+    onPress?: any,
     style?: any
 }
 
 const IconA = (props: Props): JSX.Element => {
     return(
-        <Pressable onPress={props.HandleClick}>
+        <Pressable onPress={props.onPress}>
             <Icon 
             name={props.name}
             size={props.size} 

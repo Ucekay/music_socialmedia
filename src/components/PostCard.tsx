@@ -5,48 +5,11 @@ import MusicBarOfPost from './MusicBarOfPost';
 import IconA from './Icon/AntDesign';
 import { type PostDataType } from '../types';
 import { Link } from 'expo-router';
+import HeartIcon from './Icon/HeartIcon';
 
 const screen = Dimensions.get("screen")
 
 const PostCard = (props: PostDataType): JSX.Element => {
-  if (props.musicUrl != '' && props.ImageUrl == '') {
-    return(
-        <Link 
-          href={{
-            pathname:"/(tabs)/(post)/[id]",
-            params:{
-                id: props.postID
-            }
-          }}
-        asChild>    
-            <Pressable style={styles.postContainer}>
-            
-                <View style={styles.postHeader}>
-                <View style={styles.headerLeft}>
-                    <Image 
-                    source={props.userAvatarUrl}
-                    style={styles.image}
-                    />
-                    <Text style={styles.text1}>{props.user}</Text>
-                </View>
-                <View style={styles.headerRight}>
-                    <Text>6m</Text>
-                    <IconA name='ellipsis1' size={16} style={styles.threeDots}/>
-                </View>  
-                </View>
-                <Text style={styles.postContent}>{props.postContent}</Text>
-                <MusicBarOfPost {...props}/>
-                <View style={{height:8}}/>
-                <View style={styles.Icons}>
-                    <IconA name="hearto" size={20}/>
-                    <IconA name="message1" size={20}/>
-                    <IconA name="retweet" size={20}/>
-                    <IconA name="upload" size={20}/>
-                </View>
-            </Pressable>    
-        </Link>
-    )
-} else if (props.musicUrl != '' && props.ImageUrl != '' ) {
     return(
         <Link 
           href={{
@@ -71,11 +34,11 @@ const PostCard = (props: PostDataType): JSX.Element => {
                 </View>  
                 </View>
                 <Text style={styles.postContent}>{props.postContent}</Text>
-                <Image source={props.ImageUrl} style={styles.postimage}/>
-                <MusicBarOfPost {...props}/>
+                {(props.ImageUrl != '') && (<Image source={props.ImageUrl} style={styles.postimage}/>)}
+                {(props.musicUrl != '') && (<MusicBarOfPost {...props}/>)}
                 <View style={{height:8}}/>
                 <View style={styles.Icons}>
-                    <IconA name="hearto" size={20}/>
+                    <HeartIcon/>
                     <IconA name="message1" size={20}/>
                     <IconA name="retweet" size={20}/>
                     <IconA name="upload" size={20}/>
@@ -83,77 +46,8 @@ const PostCard = (props: PostDataType): JSX.Element => {
             </Pressable>
         </Link>
     )
-} else if (props.musicUrl == '' && props.ImageUrl != '' ) {
-    return(
-        <Link 
-          href={{
-            pathname:'/(tabs)/(post)/[id]',
-            params:{
-                id: props.postID
-            }
-          }}asChild
-        >
-            <Pressable style={styles.postContainer}>
-                <View style={styles.postHeader}>
-                <View style={styles.headerLeft}>
-                    <Image 
-                    source={props.userAvatarUrl}
-                    style={styles.image}
-                    />
-                    <Text style={styles.text1}>{props.user}</Text>
-                </View>
-                <View style={styles.headerRight}>
-                    <Text>6m</Text>
-                    <IconA name='ellipsis1' size={16} style={styles.threeDots}/>
-                </View>  
-                </View>
-                <Text style={styles.postContent}>{props.postContent}</Text>
-                <Image source={props.ImageUrl} style={styles.postimage}/>
-                <View style={styles.Icons}>
-                    <IconA name="hearto" size={20}/>
-                    <IconA name="message1" size={20}/>
-                    <IconA name="retweet" size={20}/>
-                    <IconA name="upload" size={20}/>
-                </View>
-            </Pressable>    
-        </Link>
-    )
-} else {
-    return(
-        <Link 
-        href={{
-          pathname:'/(tabs)/(post)/[id]',
-          params:{
-              id: props.postID
-          }
-        }} asChild
-        >
-            <Pressable style={styles.postContainer}>    
-                <View style={styles.postHeader}>
-                <View style={styles.headerLeft}>
-                    <Image 
-                    source={props.userAvatarUrl}
-                    style={styles.image}
-                    />
-                    <Text style={styles.text1}>{props.user}</Text>
-                </View>
-                <View style={styles.headerRight}>
-                    <Text>6m</Text>
-                    <IconA name='ellipsis1' size={16} style={styles.threeDots}/>
-                </View>  
-                </View>
-                <Text style={styles.postContent}>{props.postContent}</Text>
-                <View style={styles.Icons}>
-                    <IconA name="hearto" size={20}/>
-                    <IconA name="message1" size={20}/>
-                    <IconA name="retweet" size={20}/>
-                    <IconA name="upload" size={20}/>
-                </View>
-            </Pressable>
-        </Link>   
-    )
-}
-}
+} 
+
 
 export default PostCard;
 
