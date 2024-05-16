@@ -4,7 +4,7 @@ import { Image } from 'expo-image';
 
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
-import ButtonOnProfile from './ButtonOnProfile';
+import FollowButton from './FollowButton';
 
 const UserProfileTop = () => {
   const colorScheme = useColorScheme();
@@ -48,7 +48,7 @@ const UserProfileTop = () => {
               </View>
             </View>
           </View>
-          <ButtonOnProfile isMyAccount={isMyAccount} />
+          <FollowButton isMyAccount={isMyAccount} />
         </View>
         <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
       </View>
