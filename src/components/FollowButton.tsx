@@ -3,7 +3,7 @@ import { useColorScheme } from 'react-native';
 
 import Colors from '@/src/constants/Colors';
 
-const ButtonOnProfile = ({ isMyAccount }: { isMyAccount: boolean }) => {
+const FollowButton = ({ isMyAccount }: { isMyAccount: boolean }) => {
   const colorScheme = useColorScheme();
   const backgroundColor = {
     backgroundColor: Colors[colorScheme ?? 'light'].followButtonBg,
@@ -25,7 +25,7 @@ const ButtonOnProfile = ({ isMyAccount }: { isMyAccount: boolean }) => {
   }
 };
 
-export default ButtonOnProfile;
+export default FollowButton;
 
 const styles = StyleSheet.create({
   button: {

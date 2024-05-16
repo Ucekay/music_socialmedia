@@ -1,8 +1,20 @@
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
+import { SymbolView, SymbolViewProps, SFSymbol } from 'expo-symbols';
+
 import Colors from '../constants/Colors';
+import { TagsColors } from '../constants/Colors';
 import type { articleDataType } from '../types';
 
 const ArticleCardSubhead = ({ article }: { article: articleDataType }) => {
+  const colorScheme = useColorScheme();
+  const themeTextColor =
+    colorScheme === 'dark'
+      ? { color: Colors.dark.text }
+      : { color: Colors.light.text };
+  const themeSecondlyTextColor =
+    colorScheme === 'dark'
+      ? { color: Colors.dark.secondlyText }
+      : { color: Colors.light.secondlyText };
   const { articleBody, songName, artistName, songCount, eventName, type } =
     article;
 
@@ -10,28 +22,42 @@ const ArticleCardSubhead = ({ article }: { article: articleDataType }) => {
     case 'review':
       if (songName && artistName) {
         return (
-          <DefaultCardSubhead boldText={songName} lightColorText={artistName} />
+          <ReviewCardSubhead
+            songName={songName}
+            artistName={artistName}
+            themeTextColor={themeTextColor}
+            themeSecondlyTextColor={themeSecondlyTextColor}
+          />
         );
       }
     case 'liveReport':
       if (artistName && eventName) {
         return (
-          <DefaultCardSubhead
-            boldText={artistName}
-            lightColorText={eventName}
+          <LiveReportCardSubhead
+            artistName={artistName}
+            eventName={eventName}
+            themeTextColor={themeTextColor}
+            themeSecondlyTextColor={themeSecondlyTextColor}
           />
         );
       }
     case 'general':
       if (articleBody) {
-        return <GeneralCardSubhead body={articleBody} />;
+        return (
+          <GeneralCardSubhead
+            body={articleBody}
+            themeTextColor={themeSecondlyTextColor}
+          />
+        );
       }
     case 'playlist':
       if (artistName && songCount) {
         return (
-          <DefaultCardSubhead
-            boldText={artistName}
-            lightColorText={songCount}
+          <PlaylistCardSubhead
+            artistName={artistName}
+            songCount={songCount}
+            themeTextColor={themeTextColor}
+            themeSecondlyTextColor={themeSecondlyTextColor}
           />
         );
       }
@@ -43,19 +69,14 @@ const ArticleCardSubhead = ({ article }: { article: articleDataType }) => {
 const DefaultCardSubhead = ({
   boldText,
   lightColorText,
+  themeTextColor,
+  themeSecondlyTextColor,
 }: {
   boldText: string;
   lightColorText: string;
+  themeTextColor: { color: string };
+  themeSecondlyTextColor: { color: string };
 }) => {
-  const colorScheme = useColorScheme();
-  const themeTextColor =
-    colorScheme === 'dark'
-      ? { color: Colors.dark.text }
-      : { color: Colors.light.text };
-  const themeSecondlyTextColor =
-    colorScheme === 'dark'
-      ? { color: Colors.dark.secondlyText }
-      : { color: Colors.light.secondlyText };
   return (
     <View>
       <Text
@@ -65,6 +86,7 @@ const DefaultCardSubhead = ({
       >
         {boldText}
       </Text>
+
       <Text
         style={[styles.lightColorText, themeSecondlyTextColor]}
         numberOfLines={1}
@@ -76,12 +98,13 @@ const DefaultCardSubhead = ({
   );
 };
 
-const GeneralCardSubhead = ({ body }: { body: string }) => {
-  const colorScheme = useColorScheme();
-  const themeTextColor =
-    colorScheme === 'dark'
-      ? { color: Colors.dark.secondlyText }
-      : { color: Colors.light.secondlyText };
+const GeneralCardSubhead = ({
+  body,
+  themeTextColor,
+}: {
+  body: string;
+  themeTextColor: { color: string };
+}) => {
   return (
     <Text
       style={[styles.bodyText, themeTextColor]}
@@ -93,10 +116,157 @@ const GeneralCardSubhead = ({ body }: { body: string }) => {
   );
 };
 
+const ReviewCardSubhead = ({
+  songName,
+  artistName,
+  themeTextColor,
+  themeSecondlyTextColor,
+}: {
+  songName: string;
+  artistName: string;
+  themeTextColor: { color: string };
+  themeSecondlyTextColor: { color: string };
+}) => {
+  const tintColor = TagsColors.review.tint;
+
+  return (
+    <View>
+      <View style={styles.subheadRow}>
+        <SymbolView
+          name='waveform'
+          size={16}
+          tintColor={tintColor}
+          style={styles.symbol}
+        />
+        <Text
+          style={[styles.boldText, themeTextColor]}
+          numberOfLines={1}
+          ellipsizeMode='tail'
+        >
+          {songName}
+        </Text>
+      </View>
+      <View style={styles.subheadRow}>
+        <SymbolView
+          name='music.mic'
+          size={16}
+          tintColor={tintColor}
+          style={styles.symbol}
+        />
+        <Text
+          style={[styles.lightColorText, themeSecondlyTextColor]}
+          numberOfLines={1}
+          ellipsizeMode='tail'
+        >
+          {artistName}
+        </Text>
+      </View>
+    </View>
+  );
+};
+const LiveReportCardSubhead = ({
+  artistName,
+  eventName,
+  themeTextColor,
+  themeSecondlyTextColor,
+}: {
+  artistName: string;
+  eventName: string;
+  themeTextColor: { color: string };
+  themeSecondlyTextColor: { color: string };
+}) => {
+  const tintColor = TagsColors.liveReport.tint;
+
+  return (
+    <View>
+      <View style={styles.subheadRow}>
+        <SymbolView
+          name='music.mic'
+          size={16}
+          tintColor={tintColor}
+          style={styles.symbol}
+        />
+        <Text
+          style={[styles.boldText, themeTextColor]}
+          numberOfLines={1}
+          ellipsizeMode='tail'
+        >
+          {artistName}
+        </Text>
+      </View>
+      <View style={styles.subheadRow}>
+        <SymbolView
+          name='mappin.and.ellipse'
+          size={16}
+          tintColor={tintColor}
+          style={styles.symbol}
+        />
+        <Text
+          style={[styles.lightColorText, themeSecondlyTextColor]}
+          numberOfLines={1}
+          ellipsizeMode='tail'
+        >
+          {eventName}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
+const PlaylistCardSubhead = ({
+  artistName,
+  songCount,
+  themeTextColor,
+  themeSecondlyTextColor,
+}: {
+  artistName: string;
+  songCount: string;
+  themeTextColor: { color: string };
+  themeSecondlyTextColor: { color: string };
+}) => {
+  const tintColor = TagsColors.playlist.tint;
+
+  return (
+    <View>
+      <View style={styles.subheadRow}>
+        <SymbolView
+          name='music.mic'
+          size={16}
+          tintColor={tintColor}
+          style={styles.symbol}
+        />
+        <Text
+          style={[styles.boldText, themeTextColor]}
+          numberOfLines={1}
+          ellipsizeMode='tail'
+        >
+          {artistName}
+        </Text>
+      </View>
+      <View style={styles.subheadRow}>
+        <SymbolView
+          name='list.bullet'
+          size={16}
+          tintColor={tintColor}
+          style={styles.symbol}
+        />
+        <Text
+          style={[styles.lightColorText, themeSecondlyTextColor]}
+          numberOfLines={1}
+          ellipsizeMode='tail'
+        >
+          {songCount}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
 export default ArticleCardSubhead;
 
 const styles = StyleSheet.create({
   boldText: {
+    flex: 1,
     fontSize: 17,
     fontWeight: '500',
   },
@@ -104,6 +274,16 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   bodyText: {
-    fontSize: 17,
+    fontSize: 14,
+    height: 40,
+    lineHeight: 20,
+  },
+  subheadRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  symbol: {
+    marginHorizontal: 6,
   },
 });

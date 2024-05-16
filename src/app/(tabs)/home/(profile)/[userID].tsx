@@ -38,6 +38,7 @@ const ProfileNavigator = () => {
           title: `${userID}`,
         }}
       />
+      <UserProfileTop />
     </View>
   );
 };

@@ -9,6 +9,7 @@ import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import articleData from '@/src/assets/articleData';
 import ArticleContent from '@/src/components/ArticleContent';
+import Drawer from 'expo-router/drawer';
 
 const ArticleDetailScreen = () => {
   const { articleID } = useLocalSearchParams();
