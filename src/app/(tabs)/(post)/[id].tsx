@@ -59,7 +59,7 @@ const PostDatailScreen = (): JSX.Element => {
               </View>
             </Pressable>
           </Modal>
-          {(post.musicUrl != '') && (<MusicBarOfPost {...post} style={{marginLeft:12}}/>)}
+          {post.musicUrl && <MusicBarOfPost {...post} style={{marginLeft:12}}/>}
           <View style={styles.infoContainer}>  
             <Text style={styles.text3}>9:38・2024/03/24</Text>
           </View>
@@ -82,7 +82,7 @@ const PostDatailScreen = (): JSX.Element => {
           userAvatarUrl={post.userAvatarUrl}
           userID={post.userID}/>
           <Text style={[styles.text1, {marginHorizontal:16}, {marginBottom:16}]}>{post.postContent}</Text>
-          {(post.musicUrl != '') && (<MusicBarOfPost {...post} style={{marginLeft:12}}/>)}
+          {post.musicUrl && <MusicBarOfPost {...post} style={{marginLeft:12}}/>}
           <View style={styles.infoContainer}>  
             <Text style={styles.text3}>9:38・2024/03/24</Text>
           </View>
