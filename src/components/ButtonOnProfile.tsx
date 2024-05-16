@@ -18,10 +18,7 @@ const ButtonOnProfile = ({ isMyAccount }: { isMyAccount: boolean }) => {
     );
   } else {
     return (
-      <Pressable
-        onPress={() => console.log('Followed!')}
-        style={[styles.button, backgroundColor]}
-      >
+      <Pressable style={[styles.button, backgroundColor]}>
         <Text style={[styles.text, textColor]}>フォロー</Text>
       </Pressable>
     );

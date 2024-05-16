@@ -16,11 +16,14 @@ import ArticleCardSubhead from './ArticleCardSubhead';
 import type { Palette, articleDataType } from '../types';
 import Colors from '../constants/Colors';
 import { increaseSaturation, rgb2Hex } from './ColorModifier';
+import ArticleCardImage from './ArticleCardImage';
 
 export default function ArticleCard({ article }: { article: articleDataType }) {
   const {
     articleID,
     articleTitle,
+    songName,
+    artistName,
     imageUrl,
     userID,
     user,
@@ -52,6 +55,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
     colorScheme === 'dark'
       ? { color: Colors.dark.secondlyText }
       : { color: Colors.light.secondlyText };
+
   let gradientColors;
   if (hexColors.length === 0) {
     //gradientColors = palette.otto;
@@ -64,14 +68,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
     <Link href={`/(tabs)/home/(article)/${article.articleID}`} asChild>
       <Pressable style={{ flex: 1 }}>
         <View style={[styles.container, themeBackgroundStyle]}>
-          <ArticleGraphic
-            rows={3}
-            cols={3}
-            colors={gradientColors}
-            play={true}
-            articleID={articleID}
-            artworkUrl={imageUrl}
-          />
+          <ArticleCardVisual imageUrl={imageUrl} articleType={type} />
           <View style={styles.summaryContainer}>
             <View>
               <Text style={[styles.articleTitle, themeTextColor]}>
@@ -99,6 +96,33 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
     </Link>
   );
 }
+
+interface ArticleCardVisualProps {
+  imageUrl: string;
+  articleType: string;
+  gradientColors?: string[];
+}
+
+const ArticleCardVisual = ({
+  imageUrl,
+  articleType,
+  gradientColors,
+}: ArticleCardVisualProps) => {
+  if (!gradientColors) gradientColors = palette.otto;
+  if (articleType === 'review' || articleType === 'playlist') {
+    return (
+      <ArticleGraphic
+        rows={3}
+        cols={3}
+        colors={gradientColors}
+        play={true}
+        artworkUrl={imageUrl}
+      />
+    );
+  } else if (articleType === 'liveReport' || articleType === 'general') {
+    return <ArticleCardImage imageUrl={imageUrl} />;
+  }
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -84,7 +84,6 @@ interface ArticleGraphicProps {
   lines?: boolean;
   handles?: boolean;
   play?: boolean;
-  articleID: string;
   artworkUrl: string;
 }
 
@@ -99,7 +98,6 @@ export const ArticleGraphic = ({
   lines,
   handles,
   play,
-  articleID,
   artworkUrl,
 }: ArticleGraphicProps) => {
   const { width, height } = useWindowDimensions();

@@ -35,7 +35,6 @@ const postData = [
 ];
 
 const ProfileNavigator = () => {
-  const { userID } = useLocalSearchParams<{ userID: string }>();
   const tabBarHeight = useBottomTabBarHeight();
 
   return (
