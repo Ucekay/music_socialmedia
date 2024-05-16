@@ -10,7 +10,7 @@ interface Props {
   userID: string
 }
 
-const UserTagPD = (props: Props) :JSX.Element => {
+const UserTagOfProfileDetail = (props: Props) :JSX.Element => {
   return (
     <Link href={{
         pathname: '/(tabs)/home/(profile)/[userID]',
@@ -33,7 +33,7 @@ const UserTagPD = (props: Props) :JSX.Element => {
   )
 }
 
-export default UserTagPD;
+export default UserTagOfProfileDetail;
 
 const styles = StyleSheet.create({
     userAvator:{

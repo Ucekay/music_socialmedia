@@ -9,7 +9,7 @@ import postData from '@/src/assets/postData';
 import IconA from '@/src/components/Icon/AntDesign';
 import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import MusicBarOfPost from '@/src/components/MusicBarOfPost';
-import UserTagPD from '@/src/components/UserTagPD';
+import UserTagOfProfileDetail from '@/src/components/UserTagOfProfileDetail';
 import HeartIcon from '@/src/components/Icon/HeartIcon';
 
 const screen = Dimensions.get("screen")
@@ -33,7 +33,7 @@ const PostDatailScreen = (): JSX.Element => {
     }, []);
       return(
         <View style={styles.container}>
-          <UserTagPD 
+          <UserTagOfProfileDetail
             user={post.user}
             userAvatarUrl={post.userAvatarUrl}
             userID={post.userID}/>
@@ -77,7 +77,7 @@ const PostDatailScreen = (): JSX.Element => {
     } else {
     return(
       <View style={styles.container}>
-          <UserTagPD 
+          <UserTagOfProfileDetail
           user={post.user}
           userAvatarUrl={post.userAvatarUrl}
           userID={post.userID}/>
