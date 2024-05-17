@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -28,13 +28,10 @@ const PostDetailScreen = (): JSX.Element => {
     return <Text>Post not found.</Text>;
   }
   if (post?.ImageUrl) {
-    useEffect(() => {
-      RNImage.getSize(post.ImageUrl, (originalWidth, originalHeight) => {
-        const newHeight =
-          (Number(screen.width) * originalHeight) / originalWidth;
-        setHeight(newHeight);
-      });
-    }, []);
+    RNImage.getSize(post.ImageUrl, (originalWidth, originalHeight) => {
+      const newHeight = (Number(screen.width) * originalHeight) / originalWidth;
+      setHeight(newHeight);
+    });
   }
   return (
     <View style={styles.container}>
