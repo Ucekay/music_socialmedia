@@ -19,21 +19,11 @@ import Colors from '../constants/Colors';
 import { increaseSaturation, rgb2Hex } from './ColorModifier';
 
 export default function ArticleCard({ article }: { article: articleDataType }) {
-  const {
-    articleID,
-    articleTitle,
-    songName,
-    artistName,
-    imageUrl,
-    userID,
-    user,
-    userAvatarUrl,
-    type,
-  } = article;
+  const { articleTitle, imageUrl, userID, user, userAvatarUrl, type } = article;
   const colorScheme = useColorScheme();
   const [hexColors, setHexColors] = useState<string[]>([]);
   useEffect(() => {
-    RNColorThief.getPalette(imageUrl, 17, 2, false)
+    RNColorThief.getPalette(imageUrl, 17, 10, false)
       .then((palette: Palette) => {
         const hexColors: string[] = rgb2Hex(palette);
         setHexColors(hexColors);
@@ -56,9 +46,8 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
       ? { color: Colors.dark.secondlyText }
       : { color: Colors.light.secondlyText };
 
-  let gradientColors;
+  let gradientColors: string[];
   if (hexColors.length === 0) {
-    //gradientColors = palette.otto;
     return null;
   } else {
     gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
@@ -68,7 +57,11 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
     <Link href={`/(tabs)/home/(article)/${article.articleID}`} asChild>
       <Pressable style={{ flex: 1 }}>
         <View style={[styles.container, themeBackgroundStyle]}>
-          <ArticleCardVisual imageUrl={imageUrl} articleType={type} />
+          <ArticleCardVisual
+            imageUrl={imageUrl}
+            articleType={type}
+            gradientColors={gradientColors}
+          />
           <View style={styles.summaryContainer}>
             <View>
               <Text
@@ -104,7 +97,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
 interface ArticleCardVisualProps {
   imageUrl: string;
   articleType: string;
-  gradientColors?: string[];
+  gradientColors: string[];
 }
 
 const ArticleCardVisual = ({
@@ -112,7 +105,7 @@ const ArticleCardVisual = ({
   articleType,
   gradientColors,
 }: ArticleCardVisualProps) => {
-  if (!gradientColors) gradientColors = palette.otto;
+  //if (!gradientColors) gradientColors = palette.otto;
   if (articleType === 'review' || articleType === 'playlist') {
     return (
       <ArticleGraphic

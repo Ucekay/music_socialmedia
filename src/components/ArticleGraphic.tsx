@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Image } from 'expo-image';
+import { BlurView } from 'expo-blur';
 import type { CubicBezierHandle } from '@shopify/react-native-skia';
 import {
   Skia,
@@ -88,7 +89,7 @@ interface ArticleGraphicProps {
 }
 
 const F = 8000;
-const A = 30;
+const A = 60;
 
 export const ArticleGraphic = ({
   rows,
@@ -102,7 +103,7 @@ export const ArticleGraphic = ({
 }: ArticleGraphicProps) => {
   const { width, height } = useWindowDimensions();
 
-  const articleCardWidth = width - 32;
+  const articleCardWidth = width - 40;
   const imageSideLength = 160;
   const window = useMemo(
     () => Skia.XYWHRect(0, 0, articleCardWidth, imageSideLength),
@@ -214,6 +215,7 @@ export const ArticleGraphic = ({
       </Canvas>
 
       <Image source={artworkUrl || defaultImage} style={styles.image} />
+      <BlurView intensity={25} tint='default' style={styles.blur} />
     </View>
   );
 };
@@ -263,5 +265,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 160,
     aspectRatio: 1,
+    zIndex: 1,
+  },
+  blur: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
   },
 });
