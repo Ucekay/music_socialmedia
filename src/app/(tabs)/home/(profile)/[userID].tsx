@@ -1,6 +1,5 @@
 import { Text, View, FlatList, StyleSheet } from 'react-native';
-import { withLayoutContext, useLocalSearchParams, Stack } from 'expo-router';
-import { Tabs } from 'react-native-collapsible-tab-view';
+import { useLocalSearchParams, Stack } from 'expo-router';
 import UserProfileTop from '@/src/components/UserProfileTop';
 import userData from '@/src/assets/userData';
 

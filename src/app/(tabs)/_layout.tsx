@@ -66,7 +66,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
         }}
       />
-      <Tabs.Screen
+
+      {/*<Tabs.Screen
         name='two'
         options={{
           title: 'Tab Two',
@@ -85,6 +86,14 @@ export default function TabLayout() {
               </Pressable>
             </Link>
           ),
+        }}
+      />*/}
+      <Tabs.Screen
+        name='(post)'
+        options={{
+          title: 'Posts',
+          headerShown: false,
+          tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
         }}
       />
       <Tabs.Screen
