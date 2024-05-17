@@ -23,7 +23,6 @@ import { createNoise2D } from './forMeshGradient/SimpleNoise';
 import { symmetric } from './forMeshGradient/Math';
 import { Cubic } from './forMeshGradient/Cubic';
 import { Curves } from './forMeshGradient/Curves';
-import { BlurView } from 'expo-blur';
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],

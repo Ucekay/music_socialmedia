@@ -46,7 +46,7 @@ const PostCard = (props: PostDataType): JSX.Element => {
             <View>
               <Text style={styles.postContent}>{props.postContent}</Text>
               {props.ImageUrl != '' && (
-                <Image source={props.ImageUrl} style={styles.postimage} />
+                <Image source={props.ImageUrl} style={styles.postImage} />
               )}
               {props.musicUrl != '' && (
                 <MusicBarOfPost {...props} style={{ marginLeft: 0 }} />
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   threeDots: {
     marginRight: 12,
   },
-  postimage: {
+  postImage: {
     marginRight: 12,
     width: screen.width - 74,
     height: 150,
