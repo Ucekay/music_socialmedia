@@ -1,15 +1,7 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Pressable,
-  Dimensions,
-  Image as Img,
-} from 'react-native';
+import { View, StyleSheet, Text, Pressable, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
 import MusicBarOfPost from './MusicBarOfPost';
-import IconA from './Icon/AntDesign';
 import { type PostDataType } from '../types';
 import { Link } from 'expo-router';
 import HeartIcon from './Icon/HeartIcon';
