@@ -28,9 +28,11 @@ const PostCard = (props: PostDataType): JSX.Element => {
                   <View style={[{justifyContent: 'space-between'}, {flexDirection: 'row'}, {flex:1}]}>
                     <View style={styles.headerLeft}>
                       <Text style={styles.text1}>{props.user}</Text>
-                      <Text>6m</Text>
                     </View>
-                    <IconA name='ellipsis1' size={16} style={styles.threeDots}/>
+                    <View style={styles.headerLeft}>
+                      <Text>6m</Text>
+                      <IconA name='ellipsis1' size={16} style={styles.threeDots}/>
+                    </View>
                   </View>
                   <View>
                     <Text style={styles.postContent}>{props.postContent}</Text>
@@ -45,6 +47,7 @@ const PostCard = (props: PostDataType): JSX.Element => {
                     <IconA name="retweet" size={16}/>
                     <IconA name="upload" size={16}/>
                 </View>
+                <View style={[{backgroundColor:'rgba(67, 80, 96, 0.3)'}, {marginHorizontal:16},{height:0.2}]} />
             </Pressable>
         </Link>
     )
@@ -57,8 +60,6 @@ const styles = StyleSheet.create({
     postContainer: {
         backgroundColor: "#ffffff",
         flex: 1,
-        borderBottomColor: 'rgba(67, 80, 96, 0.3)',
-        borderBottomWidth: 0.2
       },
       postHeader: {
         flexDirection: "row",
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
         borderRadius: 15,
-        marginLeft: 14,
+        marginLeft: 16,
         marginRight: 12,
         borderWidth: 0.3,
         borderColor: '#000000'

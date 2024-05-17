@@ -3,14 +3,18 @@ import IconA from "./AntDesign";
 
 const HeartIcon = (props: any): JSX.Element => {
   const [color, setColor] = useState<string>('#000000');
-  const [name, setName] = useState<string>('hearto')
+  const [name, setName] = useState<string>('hearto');
+  const [status, setStatus] = useState<boolean>(false)
+  //読み込み時にdetabase参照して管理する
   const HandleClick = () => {
-    if (color == '#000000') {
+    if (status == false) {
         setColor('#D93A49')
         setName('heart')
-    } else if (color == '#D93A49') {
+        setStatus(true)
+    } else if (status == true) {
         setColor('#000000')
         setName('hearto')
+        setStatus(false)
     }
   }
   return (

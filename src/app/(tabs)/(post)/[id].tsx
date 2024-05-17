@@ -67,7 +67,7 @@ const PostDatailScreen = (): JSX.Element => {
             <Text style={styles.text3}>53件のいいね</Text>
           </View>
           <View style={styles.iconContainer}>
-            <HeartIcon style={{marginLeft:16}}/>
+            <HeartIcon style={{marginLeft:16}} size={20}/>
             <IconA name='message1' size={20} />
             <IconA name='retweet' size={20} />
             <IconA name='upload' size={20} style={{marginRight:16}}/>
@@ -90,7 +90,7 @@ const PostDatailScreen = (): JSX.Element => {
             <Text style={styles.text3}>53件のいいね</Text>
           </View>
           <View style={styles.iconContainer}>
-            <HeartIcon style={{marginLeft:16}}/>
+            <HeartIcon style={{marginLeft:16}} size={20}/>
             <IconA name='message1' size={20} />
             <IconA name='retweet' size={20} />
             <IconA name='upload' size={20} style={{marginRight:16}}/>
