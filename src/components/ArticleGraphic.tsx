@@ -22,6 +22,7 @@ import { createNoise2D } from './forMeshGradient/SimpleNoise';
 import { symmetric } from './forMeshGradient/Math';
 import { Cubic } from './forMeshGradient/Cubic';
 import { Curves } from './forMeshGradient/Curves';
+import { BlurView } from 'expo-blur';
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],
@@ -88,7 +89,7 @@ interface ArticleThumbnailProps {
 }
 
 const F = 8000;
-const A = 30;
+const A = 60;
 
 export const ArticleGraphic = ({
   rows,
@@ -178,14 +179,6 @@ export const ArticleGraphic = ({
 
   const defaultImage = require('@/src/assets/images/snsicon.png');
 
-  const rrct = {
-    rect: { x: 0, y: 0, width: articleCardWidth, height: imageSideLength },
-    topLeft: { x: 12, y: 12 },
-    topRight: { x: 12, y: 12 },
-    bottomRight: { x: 0, y: 0 },
-    bottomLeft: { x: 0, y: 0 },
-  };
-
   return (
     <View style={styles.container}>
       <Canvas style={{ width: '100%', height: imageSideLength }}>
@@ -222,6 +215,7 @@ export const ArticleGraphic = ({
       </Canvas>
 
       <Image source={artworkUrl || defaultImage} style={styles.image} />
+      <BlurView intensity={25} style={styles.blur} />
     </View>
   );
 };
@@ -271,5 +265,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 160,
     aspectRatio: 1,
+    zIndex: 1,
+  },
+  blur: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
   },
 });
