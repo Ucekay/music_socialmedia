@@ -15,6 +15,7 @@ import ArticleTag from './ArticleTag';
 import ArticleCardSubhead from './ArticleCardSubhead';
 import type { articleDataType } from '../types';
 import Colors from '../constants/Colors';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 export default function ArticleCard({ article }: { article: articleDataType }) {
   const {
@@ -46,7 +47,10 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
   return (
     <Link href={`/(tabs)/home/(article)/${article.articleID}`} asChild>
       <Pressable style={{ flex: 1 }}>
-        <View style={[styles.container, themeBackgroundStyle]}>
+        <Animated.View
+          entering={FadeIn}
+          style={[styles.container, themeBackgroundStyle]}
+        >
           <ArticleCardVisual imageUrl={imageUrl} articleType={type} />
           <View style={styles.summaryContainer}>
             <View>
@@ -74,7 +78,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
               <ArticleTag type={type} />
             </View>
           </View>
-        </View>
+        </Animated.View>
       </Pressable>
     </Link>
   );

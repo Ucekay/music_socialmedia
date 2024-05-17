@@ -15,7 +15,11 @@ import {
 } from '@shopify/react-native-skia';
 import { View, useWindowDimensions, StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
-import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  useDerivedValue,
+  useSharedValue,
+} from 'react-native-reanimated';
 
 import { createNoise2D } from './forMeshGradient/SimpleNoise';
 
@@ -23,6 +27,8 @@ import { symmetric } from './forMeshGradient/Math';
 import { Cubic } from './forMeshGradient/Cubic';
 import { Curves } from './forMeshGradient/Curves';
 import { BlurView } from 'expo-blur';
+
+const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],
@@ -214,7 +220,11 @@ export const ArticleGraphic = ({
         })}
       </Canvas>
 
-      <Image source={artworkUrl || defaultImage} style={styles.image} />
+      <AnimatedImage
+        source={artworkUrl || defaultImage}
+        entering={FadeIn}
+        style={styles.image}
+      />
       <BlurView intensity={25} style={styles.blur} />
     </View>
   );

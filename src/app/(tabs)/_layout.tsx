@@ -1,14 +1,24 @@
-import React from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import {
+  View,
+  Pressable,
+  StyleSheet,
+  useColorScheme,
+  useWindowDimensions,
+} from 'react-native';
 import { Link, Tabs } from 'expo-router';
-import { Pressable, StyleSheet, useWindowDimensions } from 'react-native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 
 import Colors from '@/src/constants/Colors';
-import { useColorScheme } from '@/src/hooks/useColorScheme';
+import {
+  TabActionProvider,
+  useTabAction,
+} from '@/src/contexts/ActionButtonContext';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -25,49 +35,62 @@ export default function TabLayout() {
       ? Colors['dark'].tabBarGradient
       : Colors['light'].tabBarGradient;
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-        tabBarStyle: {
-          position: 'absolute',
-          borderTopWidth: 0,
-        },
-        tabBarShowLabel: false,
-        tabBarBackground: () => (
-          <>
-            <LinearGradient
-              colors={themeContainerStyle}
-              style={StyleSheet.absoluteFill}
-            />
-            <BlurView
-              tint='regular'
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-              }}
-            />
-          </>
-        ),
-      }}
-    >
-      <Tabs.Screen name='index' options={{ href: null }} />
-      <Tabs.Screen
-        name='home'
-        options={{
-          title: 'Articles',
-          headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
-        }}
-      />
+  const handleDummyPress = (e) => {
+    e.preventDefault();
+  };
 
-      {/*<Tabs.Screen
+  return (
+    <TabActionProvider>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+          // Disable the static render of the header on web
+          // to prevent a hydration error in React Navigation v6.
+          headerShown: useClientOnlyValue(false, true),
+          tabBarStyle: {
+            position: 'absolute',
+            borderTopWidth: 0,
+          },
+          tabBarShowLabel: false,
+          tabBarBackground: () => (
+            <>
+              <LinearGradient
+                colors={themeContainerStyle}
+                style={StyleSheet.absoluteFill}
+              />
+              <BlurView
+                tint='regular'
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                }}
+              />
+            </>
+          ),
+        }}
+        screenListeners={{
+          tabPress: (e) => {
+            const pressedTab = e.target.split('-')[0];
+            if (pressedTab === 'dummy') {
+              handleDummyPress(e);
+            }
+          },
+        }}
+      >
+        <Tabs.Screen name='index' options={{ href: null }} />
+        <Tabs.Screen
+          name='home'
+          options={{
+            title: 'Articles',
+            headerShown: false,
+            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+          }}
+        />
+
+        {/*<Tabs.Screen
         name='two'
         options={{
           title: 'Tab Two',
@@ -88,21 +111,67 @@ export default function TabLayout() {
           ),
         }}
       />*/}
-      <Tabs.Screen
-        name='(post)'
-        options={{
-          title: 'Posts',
-          headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name='profile'
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
-        }}
-      />
-    </Tabs>
+        <Tabs.Screen
+          name='(post)'
+          options={{
+            title: 'Posts',
+            headerShown: false,
+            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name='profile'
+          options={{
+            title: 'Profile',
+            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name='dummy'
+          options={{
+            tabBarIcon: ({ color }) => <TabBarActionButton color={color} />,
+          }}
+        />
+      </Tabs>
+    </TabActionProvider>
   );
 }
+
+const TabBarActionButton = ({ color }: { color: string }) => {
+  const { actionVisible, setActionVisible } = useTabAction();
+
+  const handleActionPress = () => {
+    setActionVisible(!actionVisible);
+    console.log(actionVisible);
+  };
+  return (
+    <View style={[StyleSheet.absoluteFill, styles.container]}>
+      <Pressable
+        onPress={handleActionPress}
+        style={{
+          width: 24,
+          position: 'absolute',
+          bottom: 10,
+          top: 10,
+          backgroundColor: color,
+        }}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  actionContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'red',
+    position: 'absolute',
+  },
+});

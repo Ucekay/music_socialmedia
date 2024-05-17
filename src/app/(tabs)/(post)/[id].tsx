@@ -106,37 +106,6 @@ const PostDetailScreen = (): JSX.Element => {
       </View>
     </View>
   );
-  //else {
-  //  return (
-  //    <View style={styles.container}>
-  //      <UserTagOfProfileDetail
-  //        user={post.user}
-  //        userAvatarUrl={post.userAvatarUrl}
-  //        userID={post.userID}
-  //      />
-  //      <Text
-  //        style={[styles.text1, { marginHorizontal: 16 }, { marginBottom: 16 }]}
-  //      >
-  //        {post.postContent}
-  //      </Text>
-  //      {post.musicUrl && (
-  //        <MusicBarOfPost {...post} style={{ marginLeft: 12 }} />
-  //      )}
-  //      <View style={styles.infoContainer}>
-  //        <Text style={styles.text3}>9:38・2024/03/24</Text>
-  //      </View>
-  //      <View style={styles.infoContainer}>
-  //        <Text style={styles.text3}>53件のいいね</Text>
-  //      </View>
-  //      <View style={styles.iconContainer}>
-  //        <HeartIcon style={{ marginLeft: 16 }} size={20} />
-  //        <IconAntDesign name='message1' size={20} />
-  //        <IconAntDesign name='retweet' size={20} />
-  //        <IconAntDesign name='upload' size={20} style={{ marginRight: 16 }} />
-  //      </View>
-  //    </View>
-  //  );
-  //}
 };
 
 export default PostDetailScreen;
@@ -167,7 +136,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: 'rgba(67, 80, 96, 1)',
   },
-  userAvator: {
+  userAvatar: {
     height: 32,
     width: 32,
     borderRadius: 16,
