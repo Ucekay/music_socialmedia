@@ -49,11 +49,14 @@ export type articleDataType = {
   type: string;
 };
 
-export type ExampleComponentType<P = object> = React.FC<P> & {
-  title: string;
-  tintColor?: string;
-  backgroundColor?: string;
-  statusBarStyle?: 'light-content' | 'dark-content';
-  appbarElevation?: number;
-  platform?: 'ios' | 'android';
+export type PostDataType = {
+  postID: string;
+  postContent: string;
+  songName?: string;
+  artistName?: string;
+  musicUrl?: string;
+  ImageUrl?: string;
+  userID: string;
+  user: string;
+  userAvatarUrl: string;
 };

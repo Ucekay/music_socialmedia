@@ -23,6 +23,7 @@ import { createNoise2D } from './forMeshGradient/SimpleNoise';
 import { symmetric } from './forMeshGradient/Math';
 import { Cubic } from './forMeshGradient/Cubic';
 import { Curves } from './forMeshGradient/Curves';
+import { BlurView } from 'expo-blur';
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],
@@ -215,7 +216,7 @@ export const ArticleGraphic = ({
       </Canvas>
 
       <Image source={artworkUrl || defaultImage} style={styles.image} />
-      <BlurView intensity={25} tint='default' style={styles.blur} />
+      <BlurView intensity={25} style={styles.blur} />
     </View>
   );
 };

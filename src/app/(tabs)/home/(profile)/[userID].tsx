@@ -1,5 +1,5 @@
+import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
@@ -7,7 +7,6 @@ import UserProfileTop from '@/src/components/UserProfileTop';
 import userArticleData from '@/src/assets/userArticleData';
 import ArticleCard from '@/src/components/ArticleCard';
 import { articleDataType } from '@/src/types';
-import React from 'react';
 
 const TEXT_HEIGHT = 65.7;
 const itemSize = 320;
