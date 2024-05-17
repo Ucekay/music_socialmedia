@@ -6,6 +6,7 @@ import IconA from './Icon/AntDesign';
 import { type PostDataType } from '../types';
 import { Link } from 'expo-router';
 import HeartIcon from './Icon/HeartIcon';
+import IconAntDesign from './Icon/AntDesign';
 
 const screen = Dimensions.get("screen")
 
@@ -31,7 +32,7 @@ const PostCard = (props: PostDataType): JSX.Element => {
                     </View>
                     <View style={styles.headerLeft}>
                       <Text>6m</Text>
-                      <IconA name='ellipsis1' size={16} style={styles.threeDots}/>
+                      <IconAntDesign name='ellipsis1' size={16} style={styles.threeDots}/>
                     </View>
                   </View>
                   <View>
@@ -43,9 +44,9 @@ const PostCard = (props: PostDataType): JSX.Element => {
               </View>
                 <View style={styles.Icons}>
                     <HeartIcon size={16}/>
-                    <IconA name="message1" size={16}/>
-                    <IconA name="retweet" size={16}/>
-                    <IconA name="upload" size={16}/>
+                    <IconAntDesign name="message1" size={16}/>
+                    <IconAntDesign name="retweet" size={16}/>
+                    <IconAntDesign name="upload" size={16}/>
                 </View>
                 <View style={[{backgroundColor:'rgba(67, 80, 96, 0.3)'}, {marginHorizontal:16},{height:0.2}]} />
             </Pressable>

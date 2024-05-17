@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, Dimensions, Image, Modal } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Dimensions, Image as RNImage, Modal } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { BlurView } from 'expo-blur';
@@ -11,6 +11,8 @@ import { TouchableOpacity } from '@gorhom/bottom-sheet';
 import MusicBarOfPost from '@/src/components/MusicBarOfPost';
 import UserTagOfProfileDetail from '@/src/components/UserTagOfProfileDetail';
 import HeartIcon from '@/src/components/Icon/HeartIcon';
+import { Image } from 'expo-image';
+import IconAntDesign from '@/src/components/Icon/AntDesign';
 
 const screen = Dimensions.get("screen")
 
@@ -24,7 +26,7 @@ const PostDatailScreen = (): JSX.Element => {
     const [height, setHeight] = useState<number>(0);
     const [modalStatus, setModalStatus] = useState(false);
     useEffect(() => {
-      Image.getSize(post.ImageUrl,
+      RNImage.getSize(post.ImageUrl,
       (originalWidth, originalHeight) => {
         const newHeight = Number(screen.width) * originalHeight / originalWidth
         setHeight(newHeight)
@@ -41,7 +43,7 @@ const PostDatailScreen = (): JSX.Element => {
           <Pressable onPress={() => setModalStatus(true)}>
             <Image
             style={[{width:screen.width*0.9},{height:height*0.9},{marginHorizontal:screen.width*0.05}, {borderRadius:10}]} 
-            src={post.ImageUrl}/>
+            source={post.ImageUrl}/>
           </Pressable>
           <Modal 
           visible={modalStatus}
@@ -52,7 +54,7 @@ const PostDatailScreen = (): JSX.Element => {
               <View style={[{width:screen.width}, {height:screen.height}, {justifyContent:'center'}, {backgroundColor:'#000000'}]}>
                 <Pressable>
                   <GestureHandlerRootView >
-                    <Image src={post.ImageUrl} style={[{width: screen.width}, {height:height}]}
+                    <Image source={post.ImageUrl} style={[{width: screen.width}, {height:height}]}
                         />
                   </GestureHandlerRootView>
                 </Pressable>
@@ -68,9 +70,9 @@ const PostDatailScreen = (): JSX.Element => {
           </View>
           <View style={styles.iconContainer}>
             <HeartIcon style={{marginLeft:16}} size={20}/>
-            <IconA name='message1' size={20} />
-            <IconA name='retweet' size={20} />
-            <IconA name='upload' size={20} style={{marginRight:16}}/>
+            <IconAntDesign name='message1' size={20} />
+            <IconAntDesign name='retweet' size={20} />
+            <IconAntDesign name='upload' size={20} style={{marginRight:16}}/>
           </View>
         </View>
     )
@@ -91,9 +93,9 @@ const PostDatailScreen = (): JSX.Element => {
           </View>
           <View style={styles.iconContainer}>
             <HeartIcon style={{marginLeft:16}} size={20}/>
-            <IconA name='message1' size={20} />
-            <IconA name='retweet' size={20} />
-            <IconA name='upload' size={20} style={{marginRight:16}}/>
+            <IconAntDesign name='message1' size={20} />
+            <IconAntDesign name='retweet' size={20} />
+            <IconAntDesign name='upload' size={20} style={{marginRight:16}}/>
           </View>
         </View>
     )

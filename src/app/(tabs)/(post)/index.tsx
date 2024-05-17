@@ -28,9 +28,10 @@ const PostsScreen = () : JSX.Element => {
       ? { backgroundColor: Colors.dark.background }
       : { backgroundColor: Colors.light.background };
   return (
-    <Animated.View style={[styles.container, themeContainerStyle]}>
+    <View style={[styles.container, themeContainerStyle]}>
     <FlashList
       data={postData}
+      estimatedItemSize={50}
       renderItem={({ item }) => (
         <PostCard {...item} />
       )}
@@ -39,7 +40,7 @@ const PostsScreen = () : JSX.Element => {
         paddingTop: headerHeight,
       }}
     />
-  </Animated.View>
+  </View>
   )
 }
 

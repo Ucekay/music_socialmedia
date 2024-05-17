@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import IconA from "./AntDesign";
+import IconAntDesign from "./AntDesign";
 
 const HeartIcon = (props: any): JSX.Element => {
   const [color, setColor] = useState<string>('#000000');
@@ -18,7 +18,7 @@ const HeartIcon = (props: any): JSX.Element => {
     }
   }
   return (
-    <IconA onPress={HandleClick} name={name} style={[{color: color}, props.style]} size={props.size}/>
+    <IconAntDesign onPress={HandleClick} name={name} style={[{color: color}, props.style]} size={props.size}/>
   )
 }
 

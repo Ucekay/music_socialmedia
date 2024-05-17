@@ -8,7 +8,7 @@ interface Props {
     style?: any
 }
 
-const IconA = (props: Props): JSX.Element => {
+const IconAntDesign = (props: Props): JSX.Element => {
     return(
         <Pressable onPress={props.onPress}>
             <Icon 
@@ -19,4 +19,4 @@ const IconA = (props: Props): JSX.Element => {
     )
 }
 
-export default IconA;
+export default IconAntDesign;
