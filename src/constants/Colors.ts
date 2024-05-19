@@ -21,6 +21,7 @@ const Colors = {
     tabIconSelected: tintColorLight,
     followButtonBg: chroma(palette.slate['900']).hex(),
     followButtonText: 'white',
+    border: chroma(palette.slate['300']).hex(),
   },
   dark: {
     text: '#fff',
@@ -34,6 +35,7 @@ const Colors = {
     tabIconSelected: tintColorDark,
     followButtonBg: chroma(palette.slate['100']).hex(),
     followButtonText: 'black',
+    border: chroma(palette.slate['700']).hex(),
   },
 };
 

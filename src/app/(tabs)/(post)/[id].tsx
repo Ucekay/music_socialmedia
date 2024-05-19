@@ -8,7 +8,7 @@ import {
   Image as RNImage,
   Modal,
 } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import postData from '@/src/assets/postData';
 import MusicBarOfPost from '@/src/components/MusicBarOfPost';
@@ -16,6 +16,10 @@ import UserTagOfProfileDetail from '@/src/components/UserTagOfProfileDetail';
 import HeartIcon from '@/src/components/Icon/HeartIcon';
 import { Image } from 'expo-image';
 import IconAntDesign from '@/src/components/Icon/AntDesign';
+import TabActionMenu from '@/src/components/TabActionMenu';
+import TabActionMenuList from '@/src/components/TabActionMenuList';
+import { useTabAction } from '@/src/contexts/ActionButtonContext';
+import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 
 const screen = Dimensions.get('screen');
 
@@ -23,6 +27,16 @@ const PostDetailScreen = (): JSX.Element => {
   const { id } = useLocalSearchParams();
   const [height, setHeight] = useState<number>(0);
   const [modalStatus, setModalStatus] = useState(false);
+  const { setActionVisible } = useTabAction();
+  const { setProfileDismissed } = useProfileScreen();
+  useFocusEffect(
+    React.useCallback(() => {
+      setProfileDismissed(false);
+      return () => {
+        setActionVisible(false);
+      };
+    }, [])
+  );
   const post = postData.find((item) => item.postID === id);
   if (!post) {
     return <Text>Post not found.</Text>;
@@ -104,6 +118,7 @@ const PostDetailScreen = (): JSX.Element => {
         <IconAntDesign name='retweet' size={20} />
         <IconAntDesign name='upload' size={20} style={{ marginRight: 16 }} />
       </View>
+      <TabActionMenu />
     </View>
   );
 };

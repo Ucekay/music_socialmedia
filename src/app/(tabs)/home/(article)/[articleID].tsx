@@ -2,20 +2,37 @@ import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Stack, useNavigation, useLocalSearchParams } from 'expo-router';
+import {
+  Stack,
+  useNavigation,
+  useLocalSearchParams,
+  useFocusEffect,
+} from 'expo-router';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import articleData from '@/src/assets/articleData';
 import ArticleContent from '@/src/components/ArticleContent';
-import Drawer from 'expo-router/drawer';
+import TabActionMenu from '@/src/components/TabActionMenu';
+import { useTabAction } from '@/src/contexts/ActionButtonContext';
+import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 
 const ArticleDetailScreen = () => {
   const { articleID } = useLocalSearchParams();
   const { top } = useSafeAreaInsets();
   const windowsHeight = useWindowDimensions().height;
+  const { setActionVisible } = useTabAction();
+  const { setProfileDismissed } = useProfileScreen();
   const navigation = useNavigation();
+  useFocusEffect(
+    React.useCallback(() => {
+      setProfileDismissed(false);
+      return () => {
+        setActionVisible(false);
+      };
+    }, [])
+  );
 
   const snapPoint0 = windowsHeight - 375 + 24;
   const snapPoints = useMemo(() => [snapPoint0, '80%'], []);
@@ -71,6 +88,7 @@ const ArticleDetailScreen = () => {
           </BottomSheetScrollView>
         </BottomSheet>
       </View>
+      <TabActionMenu />
     </GestureHandlerRootView>
   );
 };
