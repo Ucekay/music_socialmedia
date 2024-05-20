@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, Text, Pressable} from 'react-native';
 import { Image } from 'expo-image';
-import { PostDataTypeD, type PostDataType } from '../types';
+import {  type PostDataType } from '../types';
 import IconA from './Icon/AntDesign';
 
-const MusicBarOfPost = (props: PostDataTypeD): JSX.Element => {
+const MusicBarOfPost = (props: PostDataType): JSX.Element => {
   return(
     <Image 
     source={require('../assets/images/grad1.png')}

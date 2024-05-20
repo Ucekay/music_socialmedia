@@ -16,6 +16,7 @@ import UserTagOfProfileDetail from '@/src/components/UserTagOfProfileDetail';
 import HeartIcon from '@/src/components/Icon/HeartIcon';
 import { Image } from 'expo-image';
 import IconAntDesign from '@/src/components/Icon/AntDesign';
+import ShareIcon from '@/src/components/Icon/ShareIcon';
 
 const screen = Dimensions.get('screen');
 
@@ -102,7 +103,7 @@ const PostDetailScreen = (): JSX.Element => {
         <HeartIcon style={{ marginLeft: 16 }} size={20} />
         <IconAntDesign name='message1' size={20} />
         <IconAntDesign name='retweet' size={20} />
-        <IconAntDesign name='upload' size={20} style={{ marginRight: 16 }} />
+        <ShareIcon size={20} style={{ marginRight: 16 }} />
       </View>
     </View>
   );

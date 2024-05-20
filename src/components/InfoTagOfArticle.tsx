@@ -1,6 +1,7 @@
 import { Image, StyleSheet, Text, Pressable, View } from 'react-native';
 import { articleDataType } from '../types';
 import { Link } from 'expo-router';
+import { SymbolView } from 'expo-symbols';
 
 const InfoTag = (props: articleDataType): JSX.Element => {
   return (
@@ -14,12 +15,33 @@ const InfoTag = (props: articleDataType): JSX.Element => {
           </View>
         </Pressable>
       </Link>
-      <View style={styles.songInfo}>
-        <Text style={styles.songName}>Song {props.songName}</Text>
+      { props.type == 'review' && (
+      <View style={{gap:4}}>
+        <View style={styles.songInfo}>
+          <Text style={styles.songName}>Song {props.songName}</Text>
+        </View>
+        <View style={styles.artistInfo}>
+          <Text style={styles.artistName}>Artist {props.artistName}</Text>
+        </View>
       </View>
-      <View style={styles.artistInfo}>
-        <Text style={styles.artistName}>Artist {props.artistName}</Text>
+      )}
+      { props.type == 'liveReport' && (
+      <View style={{gap:4}}>
+        <View style={styles.songInfo}>
+          <Text style={styles.artistName}>Artist {props.artistName}</Text>
+        </View>
+        <View style={styles.artistInfo}>
+          <Text style={styles.artistName}>Event {props.eventName}</Text>
+        </View>
       </View>
+      )}
+      { props.type == 'playlist' && (
+      <View>
+        <View style={styles.songInfo}>
+          <Text style={styles.artistName}>Artist {props.artistName}</Text>
+        </View>
+      </View>
+      )}
     </View>
   );
 };
@@ -31,7 +53,7 @@ const styles = StyleSheet.create({
     width: 343,
     height: 28,
     flexDirection: 'row',
-    marginBottom: 6,
+    marginBottom: 8,
   },
   image: {
     width: 28,
