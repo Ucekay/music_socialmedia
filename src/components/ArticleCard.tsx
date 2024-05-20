@@ -50,7 +50,11 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
           <ArticleCardVisual imageUrl={imageUrl} articleType={type} />
           <View style={styles.summaryContainer}>
             <View>
-              <Text style={[styles.articleTitle, themeTextColor]}>
+              <Text
+                style={[styles.articleTitle, themeTextColor]}
+                numberOfLines={2}
+                ellipsizeMode='tail'
+              >
                 {articleTitle}
               </Text>
             </View>
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 8,
-    borderRadius: 12,
+    borderRadius: 16,
     borderCurve: 'continuous',
 
     shadowColor: '#000',
@@ -124,8 +128,7 @@ const styles = StyleSheet.create({
   },
   summaryContainer: {
     width: '100%',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    padding: 12,
     gap: 8,
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
