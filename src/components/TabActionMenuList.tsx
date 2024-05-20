@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { StyleSheet, Pressable, useColorScheme, FlatList } from 'react-native';
 import { SymbolView } from 'expo-symbols';
 import Animated, {
@@ -71,9 +71,15 @@ const ListItem = ({ item, index }: ListItemProps) => {
 
   const animatedFontSize = useSharedValue(0);
 
-  animatedFontSize.value = withTiming(actionVisible ? 20 : 0, {
-    duration: 242,
-  });
+  animatedFontSize.value = useMemo(() => {
+    return withTiming(actionVisible ? 20 : 0, {
+      duration: 252,
+    });
+  }, [actionVisible]);
+
+  // animatedFontSize.value = withTiming(actionVisible ? 20 : 0, {
+  //   duration: 242,
+  // });
 
   const animatedTextStyle = useAnimatedStyle(() => {
     return {
@@ -85,7 +91,7 @@ const ListItem = ({ item, index }: ListItemProps) => {
   useEffect(() => {
     if (actionVisible) {
       setTimeout(() => {
-        animatedContainerSize.value = withTiming(24, {
+        animatedContainerSize.value = withTiming(20, {
           duration: 232,
         });
       }, 10);
@@ -105,10 +111,10 @@ const ListItem = ({ item, index }: ListItemProps) => {
   let itemBorder = {};
   if (index % 2 === 1) {
     itemBorder = {
-      borderTopWidth: 1,
-      borderBottomWidth: 1,
-      borderTopColor: Colors[colorScheme ?? 'light'].border,
-      borderBottomColor: Colors[colorScheme ?? 'light'].border,
+      borderTopWidth: 0.5,
+      borderBottomWidth: 0.5,
+      borderTopColor: Colors[colorScheme ?? 'light'].menuBorder,
+      borderBottomColor: Colors[colorScheme ?? 'light'].menuBorder,
     };
   }
 
@@ -146,7 +152,7 @@ const TabActionMenuList = () => {
       data={actions}
       renderItem={({ item, index }) => <ListItem item={item} index={index} />}
       keyExtractor={(item) => item.id}
-      contentContainerStyle={{ padding: 12 }}
+      contentContainerStyle={{ paddingHorizontal: 12 }}
       scrollEnabled={false}
     />
   );

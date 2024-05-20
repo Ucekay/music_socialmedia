@@ -44,13 +44,13 @@ const TabActionMenu = () => {
   actionBackgroundOpacity.value = withTiming(actionVisible ? 1 : 0, {
     duration: 250,
   });
-  actionContainerHeight.value = withTiming(actionVisible ? 170 : 0, {
+  actionContainerHeight.value = withTiming(actionVisible ? 145 : 0, {
     duration: 250,
   });
   actionContainerWidth.value = withTiming(actionVisible ? 200 : 0, {
     duration: profileDismissed ? 0 : 250,
   });
-  actionContainerIntensity.value = withTiming(actionVisible ? 70 : 0, {
+  actionContainerIntensity.value = withTiming(actionVisible ? 150 : 0, {
     duration: 350,
   });
 
@@ -100,7 +100,11 @@ const TabActionMenu = () => {
       >
         <AnimatedBlurView
           animatedProps={animatedBlurIntensity}
-          tint={colorScheme === 'dark' ? 'dark' : 'extraLight'}
+          tint={
+            colorScheme === 'dark'
+              ? 'systemThinMaterialDark'
+              : 'systemThinMaterialLight'
+          }
           style={styles.actionContainer}
         >
           <TabActionMenuList />
