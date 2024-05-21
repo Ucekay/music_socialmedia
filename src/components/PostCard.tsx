@@ -6,6 +6,7 @@ import { type PostDataType } from '../types';
 import { Link } from 'expo-router';
 import HeartIcon from './Icon/HeartIcon';
 import IconAntDesign from './Icon/AntDesign';
+import ShareIcon from './Icon/ShareIcon';
 
 const screen = Dimensions.get('screen');
 
@@ -58,7 +59,7 @@ const PostCard = (props: PostDataType): JSX.Element => {
           <HeartIcon size={16} />
           <IconAntDesign name='message1' size={16} />
           <IconAntDesign name='retweet' size={16} />
-          <IconAntDesign name='upload' size={16} />
+          <ShareIcon size={16} />
         </View>
         <View
           style={[

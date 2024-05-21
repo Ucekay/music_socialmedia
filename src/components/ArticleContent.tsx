@@ -1,6 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import InfoTag from './InfoTagOfArticle';
 import { articleDataType } from '../types';
+
+const screen = Dimensions.get('screen')
 
 const ArticleContent = (props: articleDataType): JSX.Element => {
   return (
@@ -18,10 +20,10 @@ const ArticleContent = (props: articleDataType): JSX.Element => {
 
 const styles = StyleSheet.create({
   headingContainer: {
-    width: 343,
+    flex:1,
     justifyContent: 'center',
     backgroundColor: 'white',
-    marginBottom: 15,
+    marginBottom: 8,
   },
   title: {
     fontSize: 28,
