@@ -2,8 +2,12 @@ import { Image, StyleSheet, Text, Pressable, View } from 'react-native';
 import { articleDataType } from '../types';
 import { Link } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
+import { TagsColors } from '../constants/Colors';
 
 const InfoTag = (props: articleDataType): JSX.Element => {
+  const tintColorPlaylist = TagsColors.playlist.tint;
+  const tintColorReview = TagsColors.review.tint;
+  const tintColorLiveReport = TagsColors.liveReport.tint
   return (
     <View style={styles.infoTag}>
       <Link href={`/(tabs)/home/(profile)/${props.userID}`} asChild>
@@ -18,27 +22,57 @@ const InfoTag = (props: articleDataType): JSX.Element => {
       { props.type == 'review' && (
       <View style={{gap:4}}>
         <View style={styles.songInfo}>
-          <Text style={styles.songName}>Song {props.songName}</Text>
+        <SymbolView
+          name='waveform'
+          size={16}
+          tintColor={tintColorReview}
+          style={styles.symbol}
+        />
+          <Text style={styles.songName}>{props.songName}</Text>
         </View>
         <View style={styles.artistInfo}>
-          <Text style={styles.artistName}>Artist {props.artistName}</Text>
+        <SymbolView
+          name='music.mic'
+          size={16}
+          tintColor={tintColorReview}
+          style={styles.symbol}
+        />
+          <Text style={styles.artistName}>{props.artistName}</Text>
         </View>
       </View>
       )}
       { props.type == 'liveReport' && (
       <View style={{gap:4}}>
         <View style={styles.songInfo}>
-          <Text style={styles.artistName}>Artist {props.artistName}</Text>
+        <SymbolView
+          name='music.mic'
+          size={16}
+          tintColor={tintColorLiveReport}
+          style={styles.symbol}
+        />
+          <Text style={styles.artistName}>{props.artistName}</Text>
         </View>
         <View style={styles.artistInfo}>
-          <Text style={styles.artistName}>Event {props.eventName}</Text>
+        <SymbolView
+          name='mappin.and.ellipse'
+          size={16}
+          tintColor={tintColorLiveReport}
+          style={styles.symbol}
+        />
+          <Text style={styles.artistName}>{props.eventName}</Text>
         </View>
       </View>
       )}
       { props.type == 'playlist' && (
       <View>
         <View style={styles.songInfo}>
-          <Text style={styles.artistName}>Artist {props.artistName}</Text>
+        <SymbolView
+          name='music.mic'
+          size={16}
+          tintColor={tintColorPlaylist}
+          style={styles.symbol}
+        />
+          <Text style={styles.artistName}>{props.artistName}</Text>
         </View>
       </View>
       )}
@@ -50,16 +84,16 @@ export default InfoTag;
 
 const styles = StyleSheet.create({
   author: {
-    width: 343,
     height: 28,
     flexDirection: 'row',
     marginBottom: 8,
+    alignItems: 'center'
   },
   image: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    marginRight: 20,
+    marginRight: 16,
   },
   authorName: {
     fontSize: 15,
@@ -70,13 +104,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 28,
   },
-  songInfo: {
-    width: 343,
+  songInfo:{
     height: 20,
     flexDirection: 'row',
   },
   artistInfo: {
-    width: 343,
     height: 20,
     flexDirection: 'row',
   },
@@ -90,5 +122,9 @@ const styles = StyleSheet.create({
   },
   infoTag: {
     marginLeft: 32,
+  },
+  symbol: {
+    marginLeft: 6,
+    marginRight:16
   },
 });
