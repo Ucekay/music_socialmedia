@@ -1,7 +1,7 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { Pressable, StyleSheet, Platform } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -9,7 +9,6 @@ import { BlurView } from 'expo-blur';
 
 import Colors from '@/src/constants/Colors';
 import { useColorScheme } from '@/src/hooks/useColorScheme';
-import { VariableBlurView } from '@ucekay/blur-view-fix';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -18,42 +17,6 @@ function TabBarIcon(props: {
 }) {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
-const platform = Platform.OS;
-const tabBar = (style: string[]) => {
-  if (platform === 'ios') {
-    return (
-      <>
-        <LinearGradient colors={style} style={StyleSheet.absoluteFill} />
-        <VariableBlurView
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            transform: [{ rotate: '180deg' }],
-          }}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <LinearGradient colors={style} style={StyleSheet.absoluteFill} />
-        <BlurView
-          tint='regular'
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-          }}
-        />
-      </>
-    );
-  }
-};
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -74,7 +37,24 @@ export default function TabLayout() {
           borderTopWidth: 0,
         },
         tabBarShowLabel: false,
-        tabBarBackground: () => tabBar(themeContainerStyle),
+        tabBarBackground: () => (
+          <>
+            <LinearGradient
+              colors={themeContainerStyle}
+              style={StyleSheet.absoluteFill}
+            />
+            <BlurView
+              tint='regular'
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+              }}
+            />
+          </>
+        ),
       }}
     >
       <Tabs.Screen name='index' options={{ href: null }} />
@@ -86,7 +66,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
         }}
       />
-      <Tabs.Screen
+
+      {/*<Tabs.Screen
         name='two'
         options={{
           title: 'Tab Two',
@@ -105,6 +86,21 @@ export default function TabLayout() {
               </Pressable>
             </Link>
           ),
+        }}
+      />*/}
+      <Tabs.Screen
+        name='(post)'
+        options={{
+          title: 'Posts',
+          headerShown: false,
+          tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name='profile'
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
         }}
       />
     </Tabs>

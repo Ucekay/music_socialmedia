@@ -11,6 +11,7 @@ import { Link } from 'expo-router';
 import RNColorThief from 'react-native-color-thief';
 
 import { ArticleGraphic } from './ArticleGraphic';
+import ArticleCardImage from './ArticleCardImage';
 import ArticleTag from './ArticleTag';
 import ArticleCardSubhead from './ArticleCardSubhead';
 import type { Palette, articleDataType } from '../types';
@@ -18,19 +19,11 @@ import Colors from '../constants/Colors';
 import { increaseSaturation, rgb2Hex } from './ColorModifier';
 
 export default function ArticleCard({ article }: { article: articleDataType }) {
-  const {
-    articleID,
-    articleTitle,
-    imageUrl,
-    userID,
-    user,
-    userAvatarUrl,
-    type,
-  } = article;
+  const { articleTitle, imageUrl, userID, user, userAvatarUrl, type } = article;
   const colorScheme = useColorScheme();
   const [hexColors, setHexColors] = useState<string[]>([]);
   useEffect(() => {
-    RNColorThief.getPalette(imageUrl, 17, 2, false)
+    RNColorThief.getPalette(imageUrl, 17, 10, false)
       .then((palette: Palette) => {
         const hexColors: string[] = rgb2Hex(palette);
         setHexColors(hexColors);
@@ -52,9 +45,9 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
     colorScheme === 'dark'
       ? { color: Colors.dark.secondlyText }
       : { color: Colors.light.secondlyText };
-  let gradientColors;
+
+  let gradientColors: string[];
   if (hexColors.length === 0) {
-    //gradientColors = palette.otto;
     return null;
   } else {
     gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
@@ -64,17 +57,18 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
     <Link href={`/(tabs)/home/(article)/${article.articleID}`} asChild>
       <Pressable style={{ flex: 1 }}>
         <View style={[styles.container, themeBackgroundStyle]}>
-          <ArticleGraphic
-            rows={3}
-            cols={3}
-            colors={gradientColors}
-            play={true}
-            articleID={articleID}
-            artworkUrl={imageUrl}
+          <ArticleCardVisual
+            imageUrl={imageUrl}
+            articleType={type}
+            gradientColors={gradientColors}
           />
           <View style={styles.summaryContainer}>
             <View>
-              <Text style={[styles.articleTitle, themeTextColor]}>
+              <Text
+                style={[styles.articleTitle, themeTextColor]}
+                numberOfLines={2}
+                ellipsizeMode='tail'
+              >
                 {articleTitle}
               </Text>
             </View>
@@ -100,13 +94,40 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
   );
 }
 
+interface ArticleCardVisualProps {
+  imageUrl: string;
+  articleType: string;
+  gradientColors: string[];
+}
+
+const ArticleCardVisual = ({
+  imageUrl,
+  articleType,
+  gradientColors,
+}: ArticleCardVisualProps) => {
+  //if (!gradientColors) gradientColors = palette.otto;
+  if (articleType === 'review' || articleType === 'playlist') {
+    return (
+      <ArticleGraphic
+        rows={3}
+        cols={3}
+        colors={gradientColors}
+        play={true}
+        artworkUrl={imageUrl}
+      />
+    );
+  } else if (articleType === 'liveReport' || articleType === 'general') {
+    return <ArticleCardImage imageUrl={imageUrl} />;
+  }
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 8,
-    borderRadius: 12,
+    borderRadius: 16,
     borderCurve: 'continuous',
 
     shadowColor: '#000',
@@ -121,8 +142,7 @@ const styles = StyleSheet.create({
   },
   summaryContainer: {
     width: '100%',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    padding: 12,
     gap: 8,
     borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,

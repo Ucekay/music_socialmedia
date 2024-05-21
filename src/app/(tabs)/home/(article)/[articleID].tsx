@@ -1,61 +1,21 @@
 import React, { useMemo } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  useWindowDimensions,
-  Platform,
-} from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Stack, useNavigation, useLocalSearchParams } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
-import { VariableBlurView } from '@ucekay/blur-view-fix';
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import articleData from '@/src/assets/articleData';
 import ArticleContent from '@/src/components/ArticleContent';
+import Drawer from 'expo-router/drawer';
 
 const ArticleDetailScreen = () => {
-  const platform = Platform.OS;
   const { articleID } = useLocalSearchParams();
   const { top } = useSafeAreaInsets();
   const windowsHeight = useWindowDimensions().height;
   const navigation = useNavigation();
-
-  const header = () => {
-    if (platform === 'ios') {
-      return (
-        <VariableBlurView
-          style={{
-            height: top,
-          }}
-        />
-      );
-    } else {
-      return (
-        <>
-          <LinearGradient
-            colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0)']}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: top,
-            }}
-          />
-          <BlurView
-            tint='regular'
-            style={{
-              height: top,
-            }}
-          />
-        </>
-      );
-    }
-  };
 
   const snapPoint0 = windowsHeight - 375 + 24;
   const snapPoints = useMemo(() => [snapPoint0, '80%'], []);
@@ -76,7 +36,26 @@ const ArticleDetailScreen = () => {
             title: '',
             headerBackVisible: false,
             headerTransparent: true,
-            header: () => header(),
+            header: () => (
+              <>
+                <LinearGradient
+                  colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0)']}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: top,
+                  }}
+                />
+                <BlurView
+                  tint='regular'
+                  style={{
+                    height: top,
+                  }}
+                />
+              </>
+            ),
           }}
         />
 

@@ -26,15 +26,15 @@ export const Cubic = ({ mesh, index, color }: CubicProps) => {
   const pos = useDerivedValue(() => mesh.value[index].pos, [mesh]);
   return (
     <>
-      <Line strokeWidth={2} color="white" p1={c1} p2={c1S} />
-      <Line strokeWidth={2} color="white" p1={c2} p2={c2S} />
+      <Line strokeWidth={2} color='white' p1={c1} p2={c1S} />
+      <Line strokeWidth={2} color='white' p1={c2} p2={c2S} />
       <Circle c={pos} r={16} color={color}>
-        <Paint style="stroke" strokeWidth={4} color="white" />
+        <Paint style='stroke' strokeWidth={4} color='white' />
       </Circle>
-      <Circle c={c1} r={10} color="white" />
-      <Circle c={c2} r={10} color="white" />
-      <Circle c={c1S} r={10} color="white" />
-      <Circle c={c2S} r={10} color="white" />
+      <Circle c={c1} r={10} color='white' />
+      <Circle c={c2} r={10} color='white' />
+      <Circle c={c1S} r={10} color='white' />
+      <Circle c={c2S} r={10} color='white' />
     </>
   );
 };
