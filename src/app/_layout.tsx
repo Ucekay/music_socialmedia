@@ -49,6 +49,14 @@ function RootLayoutNav() {
         name='modal'
         options={{ presentation: 'fullScreenModal' }}
       />
+      <Stack.Screen
+        name='article-editor-modal'
+        options={{
+          headerShown: false,
+          title: 'Article Editor',
+          presentation: 'modal',
+        }}
+      />
     </Stack>
   );
 }

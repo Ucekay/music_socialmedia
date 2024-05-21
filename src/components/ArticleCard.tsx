@@ -33,16 +33,16 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
 
   const themeBackgroundStyle =
     colorScheme === 'dark'
-      ? { backgroundColor: Colors.dark.secondlyBackground }
-      : { backgroundColor: Colors.light.secondlyBackground };
+      ? { backgroundColor: Colors.dark.secondaryBackground }
+      : { backgroundColor: Colors.light.secondaryBackground };
   const themeTextColor =
     colorScheme === 'dark'
       ? { color: Colors.dark.text }
       : { color: Colors.light.text };
   const themeSecondlyTextColor =
     colorScheme === 'dark'
-      ? { color: Colors.dark.secondlyText }
-      : { color: Colors.light.secondlyText };
+      ? { color: Colors.dark.secondaryText }
+      : { color: Colors.light.secondaryText };
 
   return (
     <Link href={`/(tabs)/home/(article)/${article.articleID}`} asChild>

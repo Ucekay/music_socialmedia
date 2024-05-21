@@ -86,28 +86,6 @@ export default function TabLayout() {
               ),
             }}
           />
-
-          {/*<Tabs.Screen
-        name='two'
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
-          headerRight: () => (
-            <Link href='/modal' asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name='info-circle'
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
-      />*/}
           <Tabs.Screen
             name='(post)'
             options={{
@@ -121,7 +99,9 @@ export default function TabLayout() {
           <Tabs.Screen
             name='profile'
             options={{
-              tabBarIcon: ({ color }) => <TabBarActionButton color={color} />,
+              tabBarIcon: ({ color }) => (
+                <TabBarActionButton name='code' color={color} />
+              ),
             }}
           />
         </Tabs>
@@ -130,25 +110,22 @@ export default function TabLayout() {
   );
 }
 
-const TabBarActionButton = ({ color }: { color: string }) => {
+const TabBarActionButton = (props: {
+  name: React.ComponentProps<typeof FontAwesome>['name'];
+  color: string;
+}) => {
   const { actionVisible, setActionVisible } = useTabAction();
 
   const handleActionPress = () => {
     setActionVisible(!actionVisible);
   };
   return (
-    <View style={[StyleSheet.absoluteFill, styles.container]}>
-      <Pressable
-        onPress={handleActionPress}
-        style={{
-          width: 24,
-          position: 'absolute',
-          bottom: 10,
-          top: 10,
-          backgroundColor: color,
-        }}
-      />
-    </View>
+    <FontAwesome
+      onPress={handleActionPress}
+      size={28}
+      style={{ marginBottom: -3 }}
+      {...props}
+    />
   );
 };
 

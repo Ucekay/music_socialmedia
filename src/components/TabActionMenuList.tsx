@@ -36,7 +36,7 @@ const actions = [
         <SymbolView name='newspaper' tintColor={theme} style={styles.symbol} />
       );
     },
-    href: '/(tabs)/home',
+    href: '/article-editor-modal',
   },
   {
     id: 'profile',
@@ -71,15 +71,9 @@ const ListItem = ({ item, index }: ListItemProps) => {
 
   const animatedFontSize = useSharedValue(0);
 
-  animatedFontSize.value = useMemo(() => {
-    return withTiming(actionVisible ? 20 : 0, {
-      duration: 252,
-    });
-  }, [actionVisible]);
-
-  // animatedFontSize.value = withTiming(actionVisible ? 20 : 0, {
-  //   duration: 242,
-  // });
+  animatedFontSize.value = withTiming(actionVisible ? 20 : 0, {
+    duration: 242,
+  });
 
   const animatedTextStyle = useAnimatedStyle(() => {
     return {
@@ -88,19 +82,12 @@ const ListItem = ({ item, index }: ListItemProps) => {
   });
 
   const animatedContainerSize = useSharedValue(0);
-  useEffect(() => {
-    if (actionVisible) {
-      setTimeout(() => {
-        animatedContainerSize.value = withTiming(20, {
-          duration: 232,
-        });
-      }, 10);
-    } else {
-      animatedContainerSize.value = withTiming(0, {
-        duration: 100,
-      });
-    }
+  animatedContainerSize.value = useMemo(() => {
+    return withTiming(actionVisible ? 20 : 0, {
+      duration: 242,
+    });
   }, [actionVisible]);
+
   const animatedContainerStyle = useAnimatedStyle(() => {
     return {
       width: animatedContainerSize.value,

@@ -8,7 +8,6 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import Colors from '@/src/constants/Colors';
 import ArticleCard from '@/src/components/ArticleCard';
 import TabActionMenu from '@/src/components/TabActionMenu';
-import TabActionMenuList from '@/src/components/TabActionMenuList';
 import articleData from '@/src/assets/articleData';
 import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import type { articleDataType } from '@/src/types';
@@ -58,5 +57,12 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  button: {
+    position: 'absolute',
+    bottom: 100,
+    left: 0,
+    zIndex: 100,
+    backgroundColor: 'red',
   },
 });
