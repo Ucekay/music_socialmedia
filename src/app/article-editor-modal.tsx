@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigation } from 'expo-router';
 import {
   View,
@@ -11,13 +11,6 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import Animated, {
-  FadeIn,
-  FadeInLeft,
-  FadeInRight,
-  FadeOut,
-  FadeOutLeft,
-  FadeOutRight,
-  SharedTransition,
   SharedValue,
   useAnimatedStyle,
   useSharedValue,
@@ -31,7 +24,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BgView from '@/src/components/ThemedSecondaryBgView';
 import Text from '@/src/components/ThemedText';
 import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
+import TrackSearchField from '@/src/components/TrackSearchField';
 import Colors from '@/src/constants/Colors';
+
+import { preview } from 'react-native-ide';
+
+preview(<TrackSearchField />);
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -82,29 +80,32 @@ const ArticleEditorModal = () => {
           { color: textColor, borderBottomColor: secondaryTextColor },
         ]}
       />
-      <View style={styles.articleTagWrapper}>
-        <Text style={styles.articlePickerText}>Article Type</Text>
-        <View style={styles.articleTagContainer}>
-          {articleTypes.map((type) => {
-            const animatedStyle = useAnimatedStyle(() => {
-              return {
-                opacity: opacityValues[type].value,
-              };
-            });
+      <View style={styles.articleMetadataContainer}>
+        <View style={styles.articleTagWrapper}>
+          <Text style={styles.articlePickerText}>Articleの種類</Text>
+          <View style={styles.articleTagContainer}>
+            {articleTypes.map((type) => {
+              const animatedStyle = useAnimatedStyle(() => {
+                return {
+                  opacity: opacityValues[type].value,
+                };
+              });
 
-            return (
-              <Pressable
-                key={type}
-                onPress={() => handleTagPress(type)}
-                style={styles.articleTag}
-              >
-                <Animated.View style={animatedStyle}>
-                  <ArticleTag type={type} size={17} />
-                </Animated.View>
-              </Pressable>
-            );
-          })}
+              return (
+                <Pressable
+                  key={type}
+                  onPress={() => handleTagPress(type)}
+                  style={styles.articleTag}
+                >
+                  <Animated.View style={animatedStyle}>
+                    <ArticleTag type={type} size={17} />
+                  </Animated.View>
+                </Pressable>
+              );
+            })}
+          </View>
         </View>
+        <TrackSearchField />
       </View>
 
       <View
@@ -157,6 +158,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     borderBottomWidth: 1,
   },
+  articleMetadataContainer: {
+    paddingHorizontal: 16,
+    gap: 12,
+  },
   articlePickerText: {
     fontSize: 17,
   },
@@ -164,12 +169,13 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   articleTagContainer: {
+    paddingHorizontal: 12,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
   },
   articleTag: {
-    width: '40%',
+    width: '45%',
     marginBottom: 20,
   },
   bottomButtonWrapper: {

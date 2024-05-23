@@ -23,6 +23,8 @@ const Colors = {
     followButtonText: 'white',
     menuBorder: chroma(palette.slate['100']).hex(),
     placeholder: chroma(palette.zinc['400']).hex(),
+    appleMusicText: chroma(palette.rose['700']).hex(),
+    appleMusicBg: chroma(palette.rose['200']).hex(),
   },
   dark: {
     text: '#fff',
@@ -38,6 +40,8 @@ const Colors = {
     followButtonText: 'black',
     menuBorder: chroma(palette.zinc['700']).hex(),
     placeholder: chroma(palette.zinc['600']).hex(),
+    appleMusicText: chroma(palette.rose['300']).hex(),
+    appleMusicBg: chroma(palette.rose['800']).hex(),
   },
 };
 
