@@ -8,8 +8,12 @@ export default function ArticleStack() {
   const colorScheme = useColorScheme();
   const themeContainerStyle =
     colorScheme === 'dark'
-      ? { backgroundColor: Colors['dark'].headerBackground }
-      : { backgroundColor: Colors['light'].headerBackground };
+      ? {
+          backgroundColor: Colors['dark'].headerBackground,
+        }
+      : {
+          backgroundColor: Colors['light'].headerBackground,
+        };
   return (
     <Stack>
       <Stack.Screen

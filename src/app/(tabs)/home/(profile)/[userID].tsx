@@ -6,6 +6,7 @@ import userData from '@/src/assets/userData';
 import TabActionMenu from '@/src/components/TabActionMenu';
 import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
+import BgView from '@/src/components/ThemedBgView';
 
 const TEXT_HEIGHT = 65.7;
 
@@ -45,7 +46,7 @@ const ProfileNavigator = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <BgView style={styles.container}>
       <Stack.Screen
         options={{
           title: `${userID}`,
@@ -53,7 +54,7 @@ const ProfileNavigator = () => {
       />
       <UserProfileTop />
       <TabActionMenu />
-    </View>
+    </BgView>
   );
 };
 
@@ -62,6 +63,5 @@ export default ProfileNavigator;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
 });

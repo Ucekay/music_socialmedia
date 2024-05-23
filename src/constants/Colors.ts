@@ -11,7 +11,7 @@ const headerDark = 'rgba(0, 0, 0, 0.7)';
 const Colors = {
   light: {
     text: '#000',
-    secondaryText: chroma(palette.zinc['600']).hex(),
+    secondaryText: chroma(palette.zinc['900']).hex(),
     background: '#fff',
     secondaryBackground: chroma(palette.zinc['100']).hex(),
     tabBarGradient: tabBarGradientLight,
@@ -22,10 +22,11 @@ const Colors = {
     followButtonBg: chroma(palette.zinc['900']).hex(),
     followButtonText: 'white',
     menuBorder: chroma(palette.slate['100']).hex(),
+    placeholder: chroma(palette.zinc['400']).hex(),
   },
   dark: {
     text: '#fff',
-    secondaryText: chroma(palette.zinc['400']).hex(),
+    secondaryText: chroma(palette.zinc['100']).hex(),
     background: '#000',
     secondaryBackground: chroma(palette.zinc['900']).hex(),
     tabBarGradient: tabBarGradientDark,
@@ -36,6 +37,7 @@ const Colors = {
     followButtonBg: chroma(palette.zinc['100']).hex(),
     followButtonText: 'black',
     menuBorder: chroma(palette.zinc['700']).hex(),
+    placeholder: chroma(palette.zinc['600']).hex(),
   },
 };
 

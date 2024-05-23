@@ -1,20 +1,22 @@
-import { Stack, useNavigation } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import {
   View,
   TextInput,
   Button,
   StyleSheet,
-  Text,
   Platform,
   useColorScheme,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import Animated from 'react-native-reanimated';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 import ArticleTag from '@/src/components/ArticleTag';
 import Color from '@/src/constants/Colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BgView from '../components/SecondaryBgView';
+import BgView from '@/src/components/ThemedSecondaryBgView';
+import Text from '@/src/components/ThemedText';
+import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 
 const articleTypes = ['general', 'review', 'liveReport', 'playlist'];
 
@@ -28,9 +30,14 @@ const ArticleEditorModal = () => {
 
   return (
     <BgView style={[styles.container, { paddingTop: insets.top }]}>
-      <TextInput
-        placeholder='Article Title'
-        style={[styles.title, { borderBottomColor: secondaryTextColor }]}
+      <AnimatedTextInput
+        label='Article Title'
+        focusedLabelTop={28}
+        focusedLabelSize={16}
+        style={[
+          styles.title,
+          { color: textColor, borderBottomColor: secondaryTextColor },
+        ]}
       />
       <View style={styles.articleTagWrapper}>
         <Text>Article Type</Text>
@@ -86,10 +93,8 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   title: {
-    flexShrink: 1,
     fontSize: 28,
     fontWeight: '700',
-    borderBottomColor: 'black',
     borderBottomWidth: 1,
   },
   articleTagWrapper: {
