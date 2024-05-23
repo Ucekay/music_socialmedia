@@ -1,22 +1,34 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, useColorScheme } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 import { FlashList } from '@shopify/flash-list';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { Stack } from 'expo-router';
-import { useColorScheme } from 'react-native';
-import Colors from '@/src/constants/Colors';
-import Animated from 'react-native-reanimated';
 
+import Colors from '@/src/constants/Colors';
 import ArticleCard from '@/src/components/ArticleCard';
+import TabActionMenu from '@/src/components/TabActionMenu';
 import articleData from '@/src/assets/articleData';
+import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import type { articleDataType } from '@/src/types';
+import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 
 const itemSize = 308;
 
 export default function TabOneScreen() {
+  useFocusEffect(
+    React.useCallback(() => {
+      setProfileDismissed(false);
+      return () => {
+        setActionVisible(false);
+      };
+    }, [])
+  );
+
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
+  const { actionVisible, setActionVisible } = useTabAction();
+  const { setProfileDismissed } = useProfileScreen();
   const colorScheme = useColorScheme();
   const themeContainerStyle =
     colorScheme === 'dark'
@@ -37,6 +49,7 @@ export default function TabOneScreen() {
           paddingHorizontal: 20,
         }}
       />
+      <TabActionMenu />
     </View>
   );
 }
@@ -44,5 +57,12 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  button: {
+    position: 'absolute',
+    bottom: 100,
+    left: 0,
+    zIndex: 100,
+    backgroundColor: 'red',
   },
 });

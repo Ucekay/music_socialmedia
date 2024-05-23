@@ -1,12 +1,27 @@
-import { Text, View, FlatList, StyleSheet } from 'react-native';
-import { useLocalSearchParams, Stack } from 'expo-router';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { useLocalSearchParams, Stack, useFocusEffect } from 'expo-router';
 import UserProfileTop from '@/src/components/UserProfileTop';
 import userData from '@/src/assets/userData';
+import TabActionMenu from '@/src/components/TabActionMenu';
+import { useTabAction } from '@/src/contexts/ActionButtonContext';
+import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
+import BgView from '@/src/components/ThemedBgView';
 
 const TEXT_HEIGHT = 65.7;
 
 const ProfileNavigator = () => {
   const { userID } = useLocalSearchParams<{ userID: string }>();
+  const { setActionVisible } = useTabAction();
+  const { setProfileDismissed } = useProfileScreen();
+  useFocusEffect(
+    React.useCallback(() => {
+      setProfileDismissed(true);
+      return () => {
+        setActionVisible(false);
+      };
+    }, [])
+  );
   const postData = [
     '今日はいい天気ですね！ #天気 #晴れ',
     '新しい映画が公開されました！みなさん見てみてください！ #映画 #公開',
@@ -31,14 +46,15 @@ const ProfileNavigator = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <BgView style={styles.container}>
       <Stack.Screen
         options={{
           title: `${userID}`,
         }}
       />
       <UserProfileTop />
-    </View>
+      <TabActionMenu />
+    </BgView>
   );
 };
 
@@ -47,6 +63,5 @@ export default ProfileNavigator;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
 });

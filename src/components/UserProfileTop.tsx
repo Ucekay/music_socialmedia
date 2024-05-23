@@ -1,9 +1,10 @@
-import { Text, View, StyleSheet, useColorScheme } from 'react-native';
+import { View, StyleSheet, useColorScheme } from 'react-native';
 import { Image } from 'expo-image';
 
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
 import FollowButton from './FollowButton';
+import Text from './ThemedText';
 import { useLocalSearchParams } from 'expo-router';
 
 const UserProfileTop = () => {
