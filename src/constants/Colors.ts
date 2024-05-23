@@ -11,7 +11,7 @@ const headerDark = 'rgba(0, 0, 0, 0.7)';
 const Colors = {
   light: {
     text: '#000',
-    secondaryText: chroma(palette.zinc['900']).hex(),
+    secondaryText: chroma(palette.zinc['800']).hex(),
     background: '#fff',
     secondaryBackground: chroma(palette.zinc['100']).hex(),
     tabBarGradient: tabBarGradientLight,
@@ -26,7 +26,7 @@ const Colors = {
   },
   dark: {
     text: '#fff',
-    secondaryText: chroma(palette.zinc['100']).hex(),
+    secondaryText: chroma(palette.zinc['200']).hex(),
     background: '#000',
     secondaryBackground: chroma(palette.zinc['900']).hex(),
     tabBarGradient: tabBarGradientDark,

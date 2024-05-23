@@ -55,6 +55,7 @@ function RootLayoutNav() {
           headerShown: false,
           title: 'Article Editor',
           presentation: 'modal',
+          gestureEnabled: false,
         }}
       />
     </Stack>
