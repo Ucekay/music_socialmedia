@@ -11,7 +11,7 @@ const headerDark = 'rgba(0, 0, 0, 0.7)';
 const Colors = {
   light: {
     text: '#000',
-    secondaryText: chroma(palette.zinc['900']).hex(),
+    secondaryText: chroma(palette.zinc['800']).hex(),
     background: '#fff',
     secondaryBackground: chroma(palette.zinc['100']).hex(),
     tabBarGradient: tabBarGradientLight,
@@ -23,10 +23,14 @@ const Colors = {
     followButtonText: 'white',
     menuBorder: chroma(palette.slate['100']).hex(),
     placeholder: chroma(palette.zinc['400']).hex(),
+    appleMusicText: chroma(palette.rose['700']).hex(),
+    appleMusicBg: chroma(palette.rose['200']).hex(),
+    cancelBg: chroma(palette.red['200']).hex(),
+    cancelText: chroma(palette.red['700']).hex(),
   },
   dark: {
     text: '#fff',
-    secondaryText: chroma(palette.zinc['100']).hex(),
+    secondaryText: chroma(palette.zinc['200']).hex(),
     background: '#000',
     secondaryBackground: chroma(palette.zinc['900']).hex(),
     tabBarGradient: tabBarGradientDark,
@@ -38,6 +42,10 @@ const Colors = {
     followButtonText: 'black',
     menuBorder: chroma(palette.zinc['700']).hex(),
     placeholder: chroma(palette.zinc['600']).hex(),
+    appleMusicText: chroma(palette.rose['300']).hex(),
+    appleMusicBg: chroma(palette.rose['800']).hex(),
+    cancelBg: chroma(palette.red['800']).hex(),
+    cancelText: chroma(palette.red['300']).hex(),
   },
 };
 
