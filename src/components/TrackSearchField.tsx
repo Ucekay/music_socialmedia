@@ -5,8 +5,6 @@ import {
   useColorScheme,
   TextInput,
   Pressable,
-  KeyboardAvoidingView,
-  Platform,
   NativeSyntheticEvent,
   TextInputChangeEventData,
 } from 'react-native';
