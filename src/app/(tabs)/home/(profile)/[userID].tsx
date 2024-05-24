@@ -7,6 +7,12 @@ import UserProfileTop from '@/src/components/UserProfileTop';
 import userArticleData from '@/src/assets/userArticleData';
 import ArticleCard from '@/src/components/ArticleCard';
 import { articleDataType } from '@/src/types';
+import { useLocalSearchParams, Stack, useFocusEffect } from 'expo-router';
+import userData from '@/src/assets/userData';
+import TabActionMenu from '@/src/components/TabActionMenu';
+import { useTabAction } from '@/src/contexts/ActionButtonContext';
+import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
+import BgView from '@/src/components/ThemedBgView';
 
 const TEXT_HEIGHT = 65.7;
 const itemSize = 320;
@@ -38,7 +44,7 @@ const ProfileNavigator = () => {
 
   return (
     <Tabs.Container renderHeader={() => <UserProfileTop />}>
-      <Tabs.Tab name='post' label='Post'>
+      <Tabs.Tab name="post" label="Post">
         <Tabs.FlashList
           data={postData}
           renderItem={({ item }) => (
@@ -54,7 +60,7 @@ const ProfileNavigator = () => {
           }}
         />
       </Tabs.Tab>
-      <Tabs.Tab name='article' label='Article'>
+      <Tabs.Tab name="article" label="Article">
         <Tabs.FlashList
           data={userArticleData}
           renderItem={({ item }) => (
@@ -76,6 +82,5 @@ export default ProfileNavigator;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
 });

@@ -17,6 +17,7 @@ import ArticleCardSubhead from './ArticleCardSubhead';
 import type { Palette, articleDataType } from '../types';
 import Colors from '../constants/Colors';
 import { increaseSaturation, rgb2Hex } from './ColorModifier';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 export default function ArticleCard({ article }: { article: articleDataType }) {
   const { articleTitle, imageUrl, userID, user, userAvatarUrl, type } = article;
@@ -35,16 +36,16 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
 
   const themeBackgroundStyle =
     colorScheme === 'dark'
-      ? { backgroundColor: Colors.dark.secondlyBackground }
-      : { backgroundColor: Colors.light.secondlyBackground };
+      ? { backgroundColor: Colors.dark.secondaryBackground }
+      : { backgroundColor: Colors.light.secondaryBackground };
   const themeTextColor =
     colorScheme === 'dark'
       ? { color: Colors.dark.text }
       : { color: Colors.light.text };
   const themeSecondlyTextColor =
     colorScheme === 'dark'
-      ? { color: Colors.dark.secondlyText }
-      : { color: Colors.light.secondlyText };
+      ? { color: Colors.dark.secondaryText }
+      : { color: Colors.light.secondaryText };
 
   let gradientColors: string[];
   if (hexColors.length === 0) {
@@ -56,7 +57,10 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
   return (
     <Link href={`/(tabs)/home/(article)/${article.articleID}`} asChild>
       <Pressable style={{ flex: 1 }}>
-        <View style={[styles.container, themeBackgroundStyle]}>
+        <Animated.View
+          entering={FadeIn}
+          style={[styles.container, themeBackgroundStyle]}
+        >
           <ArticleCardVisual
             imageUrl={imageUrl}
             articleType={type}
@@ -67,7 +71,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
               <Text
                 style={[styles.articleTitle, themeTextColor]}
                 numberOfLines={2}
-                ellipsizeMode='tail'
+                ellipsizeMode="tail"
               >
                 {articleTitle}
               </Text>
@@ -88,7 +92,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
               <ArticleTag type={type} />
             </View>
           </View>
-        </View>
+        </Animated.View>
       </Pressable>
     </Link>
   );

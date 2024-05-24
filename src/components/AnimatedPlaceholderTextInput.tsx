@@ -1,0 +1,141 @@
+import { useState, useCallback, useMemo, useRef } from 'react';
+import {
+  NativeSyntheticEvent,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputChangeEventData,
+  TextInputProps,
+  TextStyle,
+  View,
+  useColorScheme,
+} from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolate,
+} from 'react-native-reanimated';
+import Colors from '../constants/Colors';
+
+interface AnimatedTextInputProps extends TextInputProps {
+  focusedLabelTop: number;
+  focusedLabelSize: number;
+  label: string;
+}
+
+const AnimatedTextInput = (props: AnimatedTextInputProps) => {
+  const { label, style, focusedLabelTop, focusedLabelSize, ...otherProps } =
+    props;
+
+  const colorScheme = useColorScheme();
+  const placeholderColor = Colors[colorScheme ?? 'light'].placeholder;
+
+  const [value, setValue] = useState('');
+  const inputRef = useRef<TextInput>(null);
+
+  const inputFocused = useSharedValue(0);
+
+  const { defaultLabelSize, defaultLabelWeight } = useMemo(() => {
+    let fontSize: number | undefined;
+    let fontWeight: TextStyle['fontWeight'] | undefined;
+
+    if (Array.isArray(style)) {
+      style.forEach((s) => {
+        if (s && 'fontSize' in s) {
+          fontSize = (s as TextStyle).fontSize;
+        }
+        if (s && 'fontWeight' in s) {
+          fontWeight = (s as TextStyle).fontWeight;
+        }
+      });
+    } else if (style && typeof style === 'object') {
+      if ('fontSize' in style) {
+        fontSize = (style as TextStyle).fontSize;
+      }
+      if ('fontWeight' in style) {
+        fontWeight = (style as TextStyle).fontWeight;
+      }
+    }
+
+    return {
+      defaultLabelSize: fontSize !== undefined ? fontSize : 16,
+      defaultLabelWeight: fontWeight !== undefined ? fontWeight : '700',
+    };
+  }, [style]);
+
+  const animatedLabelStyle = useAnimatedStyle(
+    () => ({
+      top: withTiming(
+        interpolate(inputFocused.value, [0, 1], [0, -focusedLabelTop])
+      ),
+      fontSize: withTiming(
+        interpolate(
+          inputFocused.value,
+          [0, 1],
+          [defaultLabelSize, focusedLabelSize]
+        )
+      ),
+      fontWeight: inputFocused.value === 1 ? '500' : defaultLabelWeight,
+    }),
+    [defaultLabelSize, focusedLabelTop, focusedLabelSize]
+  );
+
+  const handleChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+    setValue(e.nativeEvent.text);
+  };
+
+  const handleFocus = useCallback(() => {
+    inputFocused.value = 1;
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    const trimmedValue = (value || '').trim();
+    if (trimmedValue === '') {
+      inputFocused.value = 0;
+    }
+  }, [value]);
+
+  const labelHandler = () => {
+    inputFocused.value = 1;
+    inputRef?.current?.focus();
+  };
+
+  return (
+    <View>
+      <TextInput
+        ref={inputRef}
+        style={style}
+        onChange={handleChange}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        value={value}
+        {...otherProps}
+      />
+      <Animated.View style={styles.textInputLabelWrapper}>
+        <Pressable onPress={labelHandler}>
+          <Animated.Text
+            style={[animatedLabelStyle, { color: placeholderColor }]}
+          >
+            {label}
+          </Animated.Text>
+        </Pressable>
+      </Animated.View>
+    </View>
+  );
+};
+
+export default AnimatedTextInput;
+
+const styles = StyleSheet.create({
+  textInputLabelWrapper: {
+    position: 'absolute',
+    left: 10,
+    zIndex: 10,
+    bottom: 0,
+    top: 0,
+    justifyContent: 'center',
+    padding: 0,
+  },
+});
