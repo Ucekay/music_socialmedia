@@ -7,13 +7,15 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
+  NativeSyntheticEvent,
+  TextInputChangeEventData,
 } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-import { preview } from 'react-native-ide';
 import Colors from '../constants/Colors';
 import Text from '@/src/components/ThemedText';
+import EditorMetadataInput from '@/src/components/EditorMetadataInput';
 
 const TrackSearchField = () => {
   const colorScheme = useColorScheme();
@@ -21,10 +23,32 @@ const TrackSearchField = () => {
   const searchFieldBgColor = Colors[colorScheme ?? 'light'].appleMusicBg;
   const secondaryTextColor = Colors[colorScheme ?? 'light'].secondaryText;
 
-  const [dialogVisible, setDialogVisible] = useState(false);
+  const [manualInput, setManualInput] = useState(false);
+  const [trackName, setTrackName] = useState('');
+  const [artistName, setArtistName] = useState('');
 
-  const handlePress = () => {
-    setDialogVisible(true);
+  const showTrackInput = () => {
+    setManualInput(true);
+  };
+
+  const handleCancel = () => {
+    setManualInput(false);
+  };
+
+  const handleTrackChange = (
+    e: NativeSyntheticEvent<TextInputChangeEventData>
+  ) => {
+    setTrackName(e.nativeEvent.text);
+  };
+
+  const handleArtistChange = (
+    e: NativeSyntheticEvent<TextInputChangeEventData>
+  ) => {
+    setArtistName(e.nativeEvent.text);
+  };
+
+  const handleSubmit = () => {
+    setManualInput(false);
   };
 
   let trackData: any = [];
@@ -35,43 +59,79 @@ const TrackSearchField = () => {
       style={styles.searchFieldWrapper}
     >
       <Text style={styles.label}>レビューする楽曲</Text>
-      <View style={styles.searchFieldContainer}>
-        <View
-          style={[
-            styles.searchFieldInner,
-            { backgroundColor: searchFieldBgColor },
-          ]}
+      {!manualInput && (
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut}
+          style={styles.inputContainer}
         >
-          <TextInput
-            placeholder='楽曲を検索'
-            placeholderTextColor={searchFieldTextColor}
-            style={[styles.searchFieldText, { color: searchFieldTextColor }]}
-          />
-        </View>
-        <Pressable onPress={handlePress}>
-          <Animated.View
-            style={[styles.option, { borderColor: searchFieldTextColor }]}
+          <View
+            style={[
+              styles.inputInner,
+              {
+                backgroundColor: searchFieldBgColor,
+                borderColor: searchFieldBgColor,
+              },
+            ]}
           >
-            <Text style={[styles.optionText, { color: secondaryTextColor }]}>
-              自分で入力する
-            </Text>
-            <FontAwesome6 name='plus' size={15} color={secondaryTextColor} />
-          </Animated.View>
-        </Pressable>
-        {dialogVisible && (
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.keyboardAvoidingView}
-          >
-            <Animated.View>
-              <Animated.View>
-                <TextInput style={{ backgroundColor: 'red' }} />
-                <TextInput />
-              </Animated.View>
+            <TextInput
+              placeholder='楽曲を検索'
+              placeholderTextColor={searchFieldTextColor}
+              style={[styles.inputText, { color: searchFieldTextColor }]}
+            />
+          </View>
+          <Pressable onPress={showTrackInput}>
+            <Animated.View
+              style={[styles.option, { borderColor: searchFieldTextColor }]}
+            >
+              <Text style={[styles.optionText, { color: secondaryTextColor }]}>
+                自分で入力する
+              </Text>
+              <FontAwesome6 name='plus' size={15} color={secondaryTextColor} />
             </Animated.View>
-          </KeyboardAvoidingView>
-        )}
-      </View>
+          </Pressable>
+        </Animated.View>
+      )}
+      {manualInput && (
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut}
+          style={styles.inputContainer}
+        >
+          <EditorMetadataInput
+            borderColor={searchFieldTextColor}
+            placeholder='楽曲名'
+            placeholderTextColor={secondaryTextColor}
+            onChange={handleTrackChange}
+            style={{ color: secondaryTextColor }}
+          />
+          <EditorMetadataInput
+            borderColor={searchFieldTextColor}
+            placeholder='アーティスト名'
+            placeholderTextColor={secondaryTextColor}
+            onChange={handleTrackChange}
+            style={{ color: secondaryTextColor }}
+          />
+          <View style={styles.buttonContainer}>
+            <Pressable onPress={handleCancel} style={styles.button}>
+              <Text
+                style={{ color: Colors[colorScheme ?? 'light'].cancelText }}
+              >
+                キャンセル
+              </Text>
+            </Pressable>
+            <View
+              style={[
+                styles.separator,
+                { backgroundColor: secondaryTextColor },
+              ]}
+            />
+            <Pressable onPress={handleSubmit} style={styles.button}>
+              <Text>追加</Text>
+            </Pressable>
+          </View>
+        </Animated.View>
+      )}
     </Animated.View>
   );
 };
@@ -85,17 +145,18 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 17,
   },
-  searchFieldContainer: {
+  inputContainer: {
     width: '100%',
     paddingHorizontal: 12,
-    gap: 16,
+    gap: 12,
   },
-  searchFieldInner: {
+  inputInner: {
     padding: 12,
     borderRadius: 12,
     borderCurve: 'continuous',
+    borderWidth: 1,
   },
-  searchFieldText: {
+  inputText: {
     fontSize: 16,
     fontWeight: '500',
   },
@@ -115,9 +176,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 100,
   },
-  keyboardAvoidingView: {
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
+  buttonContainer: {
+    flexDirection: 'row',
+    gap: 24,
+    justifyContent: 'space-evenly',
+    paddingHorizontal: 6,
+  },
+  button: {
+    width: '50%',
+    alignItems: 'center',
+    borderRadius: 12,
+    padding: 8,
+  },
+  separator: {
+    width: 1,
   },
 });

@@ -67,82 +67,80 @@ const ArticleEditorModal = () => {
   };
 
   return (
-    <GestureHandlerRootView>
-      <BgView style={[styles.container, { paddingTop: insets.top }]}>
-        <AnimatedTextInput
-          label='Article Title'
-          focusedLabelTop={16}
-          focusedLabelSize={16}
-          multiline={true}
-          blurOnSubmit={true}
-          style={[
-            styles.title,
-            { color: textColor, borderBottomColor: secondaryTextColor },
-          ]}
-        />
-        <View style={styles.articleMetadataContainer}>
-          <View style={styles.articleTagWrapper}>
-            <Text style={styles.articlePickerText}>Articleの種類</Text>
-            <View style={styles.articleTagContainer}>
-              {articleTypes.map((type) => {
-                const animatedStyle = useAnimatedStyle(() => {
-                  return {
-                    opacity: opacityValues[type].value,
-                  };
-                });
+    <BgView style={[styles.container, { paddingTop: insets.top }]}>
+      <AnimatedTextInput
+        label='Article Title'
+        focusedLabelTop={16}
+        focusedLabelSize={16}
+        multiline={true}
+        blurOnSubmit={true}
+        style={[
+          styles.title,
+          { color: textColor, borderBottomColor: secondaryTextColor },
+        ]}
+      />
+      <View style={styles.articleMetadataContainer}>
+        <View style={styles.articleTagWrapper}>
+          <Text style={styles.articlePickerText}>Articleの種類</Text>
+          <View style={styles.articleTagContainer}>
+            {articleTypes.map((type) => {
+              const animatedStyle = useAnimatedStyle(() => {
+                return {
+                  opacity: opacityValues[type].value,
+                };
+              });
 
-                return (
-                  <Pressable
-                    key={type}
-                    onPress={() => handleTagPress(type)}
-                    style={styles.articleTag}
-                  >
-                    <Animated.View style={animatedStyle}>
-                      <ArticleTag type={type} size={17} />
-                    </Animated.View>
-                  </Pressable>
-                );
-              })}
-            </View>
+              return (
+                <Pressable
+                  key={type}
+                  onPress={() => handleTagPress(type)}
+                  style={styles.articleTag}
+                >
+                  <Animated.View style={animatedStyle}>
+                    <ArticleTag type={type} size={17} />
+                  </Animated.View>
+                </Pressable>
+              );
+            })}
           </View>
-          {selectedType === 'review' && <TrackSearchField />}
         </View>
+        {selectedType === 'review' && <TrackSearchField />}
+      </View>
 
+      <View
+        style={[
+          styles.bottomButtonWrapper,
+          {
+            paddingBottom: insets.bottom,
+            paddingTop: 12,
+          },
+        ]}
+      >
         <View
           style={[
-            styles.bottomButtonWrapper,
-            {
-              paddingBottom: insets.bottom,
-              paddingTop: 12,
-            },
+            styles.bottomButtonContainer,
+            { borderTopColor: secondaryTextColor },
           ]}
         >
-          <View
-            style={[
-              styles.bottomButtonContainer,
-              { borderTopColor: secondaryTextColor },
-            ]}
-          >
-            <View style={[styles.buttonContainer]}>
-              <FontAwesome6 name='xmark' size={16} color={textColor} />
-              <Button
-                title='Close'
-                onPress={() => {
-                  navigation.goBack();
-                }}
-                color={textColor}
-              />
-            </View>
-            <View style={styles.buttonContainer}>
-              <FontAwesome6 name='check' size={16} color={textColor} />
-              <Button title='Publish' onPress={() => {}} color={textColor} />
-            </View>
+          <View style={[styles.buttonContainer]}>
+            <FontAwesome6 name='xmark' size={16} color={textColor} />
+            <Button
+              title='Close'
+              onPress={() => {
+                navigation.goBack();
+              }}
+              color={textColor}
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <FontAwesome6 name='check' size={16} color={textColor} />
+            <Button title='Publish' onPress={() => {}} color={textColor} />
           </View>
         </View>
-        {/* Use a light status bar on iOS to account for the black space above the modal */}
-        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-      </BgView>
-    </GestureHandlerRootView>
+      </View>
+      {/* Use a light status bar on iOS to account for the black space above the modal */}
+      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+    </BgView>
   );
 };
 
@@ -167,7 +165,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
   },
   articleTagWrapper: {
-    gap: 12,
+    gap: 4,
   },
   articleTagContainer: {
     paddingHorizontal: 12,
@@ -177,7 +175,7 @@ const styles = StyleSheet.create({
   },
   articleTag: {
     width: '45%',
-    marginBottom: 20,
+    marginVertical: 8,
   },
   bottomButtonWrapper: {
     position: 'absolute',
