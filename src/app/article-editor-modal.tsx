@@ -28,6 +28,7 @@ import TrackSearchField from '@/src/components/TrackSearchField';
 import Colors from '@/src/constants/Colors';
 
 import { preview } from 'react-native-ide';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 preview(<TrackSearchField />);
 
@@ -38,7 +39,7 @@ const ArticleEditorModal = () => {
   const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
 
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
 
   const articleTypes = ['general', 'review', 'liveReport', 'playlist'];
 
@@ -52,96 +53,96 @@ const ArticleEditorModal = () => {
     }, {} as { [key: string]: SharedValue<number> });
 
   const handleTagPress = (type: string) => {
-    if (selectedTag === type) {
-      setSelectedTag(null);
+    if (selectedType === type) {
+      setSelectedType(null);
       articleTypes.forEach((t) => {
-        opacityValues[t].value = withTiming(1, { duration: 300 });
+        opacityValues[t].value = withTiming(1);
       });
     } else {
-      setSelectedTag(type);
+      setSelectedType(type);
       articleTypes.forEach((t) => {
-        opacityValues[t].value = withTiming(t === type ? 1 : 0.3, {
-          duration: 300,
-        });
+        opacityValues[t].value = withTiming(t === type ? 1 : 0.3);
       });
     }
   };
 
   return (
-    <BgView style={[styles.container, { paddingTop: insets.top }]}>
-      <AnimatedTextInput
-        label='Article Title'
-        focusedLabelTop={16}
-        focusedLabelSize={16}
-        multiline={true}
-        blurOnSubmit={true}
-        style={[
-          styles.title,
-          { color: textColor, borderBottomColor: secondaryTextColor },
-        ]}
-      />
-      <View style={styles.articleMetadataContainer}>
-        <View style={styles.articleTagWrapper}>
-          <Text style={styles.articlePickerText}>Articleの種類</Text>
-          <View style={styles.articleTagContainer}>
-            {articleTypes.map((type) => {
-              const animatedStyle = useAnimatedStyle(() => {
-                return {
-                  opacity: opacityValues[type].value,
-                };
-              });
+    <GestureHandlerRootView>
+      <BgView style={[styles.container, { paddingTop: insets.top }]}>
+        <AnimatedTextInput
+          label='Article Title'
+          focusedLabelTop={16}
+          focusedLabelSize={16}
+          multiline={true}
+          blurOnSubmit={true}
+          style={[
+            styles.title,
+            { color: textColor, borderBottomColor: secondaryTextColor },
+          ]}
+        />
+        <View style={styles.articleMetadataContainer}>
+          <View style={styles.articleTagWrapper}>
+            <Text style={styles.articlePickerText}>Articleの種類</Text>
+            <View style={styles.articleTagContainer}>
+              {articleTypes.map((type) => {
+                const animatedStyle = useAnimatedStyle(() => {
+                  return {
+                    opacity: opacityValues[type].value,
+                  };
+                });
 
-              return (
-                <Pressable
-                  key={type}
-                  onPress={() => handleTagPress(type)}
-                  style={styles.articleTag}
-                >
-                  <Animated.View style={animatedStyle}>
-                    <ArticleTag type={type} size={17} />
-                  </Animated.View>
-                </Pressable>
-              );
-            })}
+                return (
+                  <Pressable
+                    key={type}
+                    onPress={() => handleTagPress(type)}
+                    style={styles.articleTag}
+                  >
+                    <Animated.View style={animatedStyle}>
+                      <ArticleTag type={type} size={17} />
+                    </Animated.View>
+                  </Pressable>
+                );
+              })}
+            </View>
           </View>
+          {selectedType === 'review' && <TrackSearchField />}
         </View>
-        <TrackSearchField />
-      </View>
 
-      <View
-        style={[
-          styles.bottomButtonWrapper,
-          {
-            paddingBottom: insets.bottom,
-            paddingTop: 12,
-          },
-        ]}
-      >
         <View
           style={[
-            styles.bottomButtonContainer,
-            { borderTopColor: secondaryTextColor },
+            styles.bottomButtonWrapper,
+            {
+              paddingBottom: insets.bottom,
+              paddingTop: 12,
+            },
           ]}
         >
-          <View style={[styles.buttonContainer]}>
-            <FontAwesome6 name='xmark' size={16} color={textColor} />
-            <Button
-              title='Close'
-              onPress={() => {
-                navigation.goBack();
-              }}
-              color={textColor}
-            />
-          </View>
-          <View style={styles.buttonContainer}>
-            <FontAwesome6 name='check' size={16} color={textColor} />
-            <Button title='Publish' onPress={() => {}} color={textColor} />
+          <View
+            style={[
+              styles.bottomButtonContainer,
+              { borderTopColor: secondaryTextColor },
+            ]}
+          >
+            <View style={[styles.buttonContainer]}>
+              <FontAwesome6 name='xmark' size={16} color={textColor} />
+              <Button
+                title='Close'
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                color={textColor}
+              />
+            </View>
+            <View style={styles.buttonContainer}>
+              <FontAwesome6 name='check' size={16} color={textColor} />
+              <Button title='Publish' onPress={() => {}} color={textColor} />
+            </View>
           </View>
         </View>
-      </View>
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-    </BgView>
+        {/* Use a light status bar on iOS to account for the black space above the modal */}
+        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      </BgView>
+    </GestureHandlerRootView>
   );
 };
 
