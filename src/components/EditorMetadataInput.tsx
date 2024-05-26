@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
   inputText: {
     width: '100%',
     fontSize: 16,
-    fontWeight: '500',
   },
   option: {
     flexDirection: 'row',

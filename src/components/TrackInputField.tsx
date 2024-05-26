@@ -17,7 +17,7 @@ import Colors from '../constants/Colors';
 import Text from '@/src/components/ThemedText';
 import EditorMetadataInput from '@/src/components/EditorMetadataInput';
 
-const TrackSearchField = () => {
+const TrackInputField = () => {
   const colorScheme = useColorScheme();
   const searchFieldTextColor = Colors[colorScheme ?? 'light'].appleMusicText;
   const searchFieldBgColor = Colors[colorScheme ?? 'light'].appleMusicBg;
@@ -136,7 +136,7 @@ const TrackSearchField = () => {
   );
 };
 
-export default TrackSearchField;
+export default TrackInputField;
 
 const styles = StyleSheet.create({
   searchFieldWrapper: {

@@ -112,7 +112,6 @@ const AnimatedTextInput = (props: AnimatedTextInputProps) => {
               animatedLabelStyle,
               {
                 color: placeholderColor,
-                fontWeight: '700',
               },
             ]}
           >

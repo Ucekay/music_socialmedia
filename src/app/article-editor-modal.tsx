@@ -24,15 +24,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BgView from '@/src/components/ThemedSecondaryBgView';
 import Text from '@/src/components/ThemedText';
 import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
-import TrackSearchField from '@/src/components/TrackSearchField';
+import TrackInputField from '@/src/components/TrackInputField';
+import LiveInputField from '../components/LiveInputField';
 import Colors from '@/src/constants/Colors';
-
-import { preview } from 'react-native-ide';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-
-preview(<TrackSearchField />);
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
@@ -104,7 +98,8 @@ const ArticleEditorModal = () => {
             })}
           </View>
         </View>
-        {selectedType === 'review' && <TrackSearchField />}
+        {selectedType === 'review' && <TrackInputField />}
+        {selectedType === 'liveReport' && <LiveInputField />}
       </View>
 
       <View
