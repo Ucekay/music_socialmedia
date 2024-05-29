@@ -54,7 +54,7 @@ export default function TabLayout() {
                   style={StyleSheet.absoluteFill}
                 />
                 <BlurView
-                  tint="regular"
+                  tint='regular'
                   style={{
                     position: 'absolute',
                     top: 0,
@@ -75,32 +75,41 @@ export default function TabLayout() {
             },
           }}
         >
-          <Tabs.Screen name="index" options={{ href: null }} />
+          <Tabs.Screen name='index' options={{ href: null }} />
           <Tabs.Screen
-            name="home"
+            name='home'
             options={{
               title: 'Articles',
               headerShown: false,
               tabBarIcon: ({ color }) => (
-                <TabBarIcon name="code" color={color} />
+                <TabBarIcon name='code' color={color} />
               ),
             }}
           />
           <Tabs.Screen
-            name="(post)"
+            name='(post)'
             options={{
               title: 'Posts',
               headerShown: false,
               tabBarIcon: ({ color }) => (
-                <TabBarIcon name="code" color={color} />
+                <TabBarIcon name='code' color={color} />
               ),
             }}
           />
           <Tabs.Screen
-            name="profile"
+            name='editorDemo'
+            options={{
+              title: 'editor',
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name='profile'
             options={{
               tabBarIcon: ({ color }) => (
-                <TabBarActionButton name="code" color={color} />
+                <TabBarActionButton name='code' color={color} />
               ),
             }}
           />
