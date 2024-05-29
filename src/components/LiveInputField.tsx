@@ -100,7 +100,7 @@ const LiveInputField = () => {
           </View>
           <Pressable onPress={showArtistInput}>
             <Animated.View
-              style={[styles.option, { borderColor: artistInputTextColor }]}
+              style={[styles.option, { borderColor: secondaryTextColor }]}
             >
               <Text style={[styles.optionText, { color: secondaryTextColor }]}>
                 自分で入力する

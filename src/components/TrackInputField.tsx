@@ -21,6 +21,7 @@ const TrackInputField = () => {
   const colorScheme = useColorScheme();
   const searchFieldTextColor = Colors[colorScheme ?? 'light'].appleMusicText;
   const searchFieldBgColor = Colors[colorScheme ?? 'light'].appleMusicBg;
+  const textColor = Colors[colorScheme ?? 'light'].text;
   const secondaryTextColor = Colors[colorScheme ?? 'light'].secondaryText;
 
   const [manualInput, setManualInput] = useState(false);
@@ -82,7 +83,7 @@ const TrackInputField = () => {
           </View>
           <Pressable onPress={showTrackInput}>
             <Animated.View
-              style={[styles.option, { borderColor: searchFieldTextColor }]}
+              style={[styles.option, { borderColor: secondaryTextColor }]}
             >
               <Text style={[styles.optionText, { color: secondaryTextColor }]}>
                 自分で入力する
@@ -165,9 +166,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 12,
-    borderWidth: 1,
     borderRadius: 12,
     borderCurve: 'continuous',
+    borderWidth: 1,
   },
   optionText: {
     fontSize: 16,
