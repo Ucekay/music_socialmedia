@@ -12,6 +12,8 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
+  FadeIn,
+  FadeOut,
   SharedValue,
   useAnimatedStyle,
   useSharedValue,
@@ -28,12 +30,12 @@ import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import TrackInputField from '@/src/components/TrackInputField';
 import LiveInputField from '../components/LiveInputField';
 import { useHeaderHeight } from '@react-navigation/elements';
+import EditorImagePicker from '../components/EditorImagePicker';
 
 const BOTTOM_TAB_HEIGHT = 96.7;
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
-  const headerHeight = useHeaderHeight();
   const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
 
@@ -65,12 +67,14 @@ const ArticleEditorModal = () => {
   };
 
   return (
-    <BgView style={[styles.container, { paddingTop: insets.top }]}>
+    <BgView style={{ flex: 1, paddingTop: insets.top }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
+        style={{
+          marginBottom: BOTTOM_TAB_HEIGHT - 16,
+        }}
       >
-        <View style={styles.container}>
+        <BgView style={styles.container}>
           <AnimatedTextInput
             label='Article Title'
             focusedLabelTop={16}
@@ -107,10 +111,46 @@ const ArticleEditorModal = () => {
                 })}
               </View>
             </View>
+            {selectedType === 'general' && (
+              <>
+                <Animated.Text
+                  entering={FadeIn}
+                  exiting={FadeOut}
+                  style={[styles.imagePickerText, { color: textColor }]}
+                >
+                  見出し画像
+                </Animated.Text>
+                <Animated.View
+                  entering={FadeIn}
+                  exiting={FadeOut}
+                  style={styles.imagePickerContainer}
+                >
+                  <EditorImagePicker />
+                </Animated.View>
+              </>
+            )}
             {selectedType === 'review' && <TrackInputField />}
-            {selectedType === 'liveReport' && <LiveInputField />}
+            {selectedType === 'liveReport' && (
+              <>
+                <LiveInputField />
+                <Animated.Text
+                  entering={FadeIn}
+                  exiting={FadeOut}
+                  style={[styles.imagePickerText, { color: textColor }]}
+                >
+                  見出し画像
+                </Animated.Text>
+                <Animated.View
+                  entering={FadeIn}
+                  exiting={FadeOut}
+                  style={styles.imagePickerContainer}
+                >
+                  <EditorImagePicker />
+                </Animated.View>
+              </>
+            )}
           </View>
-        </View>
+        </BgView>
       </ScrollView>
 
       <BgView
@@ -124,33 +164,23 @@ const ArticleEditorModal = () => {
       >
         <View
           style={[
-            styles.bottomButtonWrapper,
-            {
-              paddingBottom: insets.bottom,
-              paddingTop: 12,
-            },
+            styles.bottomButtonContainer,
+            { borderTopColor: secondaryTextColor },
           ]}
         >
-          <View
-            style={[
-              styles.bottomButtonContainer,
-              { borderTopColor: secondaryTextColor },
-            ]}
-          >
-            <View style={[styles.buttonContainer]}>
-              <FontAwesome6 name='xmark' size={16} color={textColor} />
-              <Button
-                title='Close'
-                onPress={() => {
-                  navigation.goBack();
-                }}
-                color={textColor}
-              />
-            </View>
-            <View style={styles.buttonContainer}>
-              <FontAwesome6 name='check' size={16} color={textColor} />
-              <Button title='Publish' onPress={() => {}} color={textColor} />
-            </View>
+          <View style={[styles.buttonContainer]}>
+            <FontAwesome6 name='xmark' size={16} color={textColor} />
+            <Button
+              title='Close'
+              onPress={() => {
+                navigation.goBack();
+              }}
+              color={textColor}
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <FontAwesome6 name='check' size={16} color={textColor} />
+            <Button title='Publish' onPress={() => {}} color={textColor} />
           </View>
         </View>
       </BgView>
@@ -192,6 +222,15 @@ const styles = StyleSheet.create({
   articleTag: {
     width: '45%',
     marginVertical: 8,
+  },
+  imagePickerText: {
+    marginTop: 8,
+    fontSize: 17,
+  },
+  imagePickerContainer: {
+    width: '100%',
+    paddingHorizontal: 12,
+    gap: 12,
   },
   bottomButtonWrapper: {
     position: 'absolute',
