@@ -16,6 +16,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Colors from '../constants/Colors';
 import Text from '@/src/components/ThemedText';
 import EditorMetadataInput from '@/src/components/EditorMetadataInput';
+import AddOrCancelButtons from './AddOrCancelButtons';
 
 const TrackInputField = () => {
   const colorScheme = useColorScheme();
@@ -48,7 +49,7 @@ const TrackInputField = () => {
     setArtistName(e.nativeEvent.text);
   };
 
-  const handleSubmit = () => {
+  const handleAdd = () => {
     setManualInput(false);
   };
 
@@ -110,27 +111,13 @@ const TrackInputField = () => {
             borderColor={searchFieldTextColor}
             placeholder='アーティスト名'
             placeholderTextColor={secondaryTextColor}
-            onChange={handleTrackChange}
+            onChange={handleArtistChange}
             style={{ color: secondaryTextColor }}
           />
-          <View style={styles.buttonContainer}>
-            <Pressable onPress={handleCancel} style={styles.button}>
-              <Text
-                style={{ color: Colors[colorScheme ?? 'light'].cancelText }}
-              >
-                キャンセル
-              </Text>
-            </Pressable>
-            <View
-              style={[
-                styles.separator,
-                { backgroundColor: secondaryTextColor },
-              ]}
-            />
-            <Pressable onPress={handleSubmit} style={styles.button}>
-              <Text>追加</Text>
-            </Pressable>
-          </View>
+          <AddOrCancelButtons
+            handleCancel={handleCancel}
+            handleAdd={handleAdd}
+          />
         </Animated.View>
       )}
     </Animated.View>

@@ -13,7 +13,10 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 import { Text } from './Themed';
 import EditorMetadataInput from './EditorMetadataInput';
+import EditorOptionButton from './EditorOptionButton';
 import Colors, { TagsColors } from '../constants/Colors';
+import AddOrCancelButtons from './AddOrCancelButtons';
+import EditorImagePicker from './EditorImagePicker';
 
 const LiveInputField = () => {
   const [liveName, setLiveName] = useState('');
@@ -49,7 +52,7 @@ const LiveInputField = () => {
     setManualInput(false);
   };
 
-  const handleSubmit = () => {
+  const handleAdd = () => {
     setManualInput(false);
   };
 
@@ -98,16 +101,10 @@ const LiveInputField = () => {
               style={[styles.inputText, { color: artistInputTextColor }]}
             />
           </View>
-          <Pressable onPress={showArtistInput}>
-            <Animated.View
-              style={[styles.option, { borderColor: secondaryTextColor }]}
-            >
-              <Text style={[styles.optionText, { color: secondaryTextColor }]}>
-                自分で入力する
-              </Text>
-              <FontAwesome6 name='plus' size={15} color={secondaryTextColor} />
-            </Animated.View>
-          </Pressable>
+          <EditorOptionButton
+            title='自分で入力する'
+            onPress={showArtistInput}
+          />
         </Animated.View>
       )}
       {manualInput && (
@@ -123,26 +120,16 @@ const LiveInputField = () => {
             onChange={handleArtistNameChange}
             style={{ color: secondaryTextColor }}
           />
-          <View style={styles.buttonContainer}>
-            <Pressable onPress={handleCancel} style={styles.button}>
-              <Text
-                style={{ color: Colors[colorScheme ?? 'light'].cancelText }}
-              >
-                キャンセル
-              </Text>
-            </Pressable>
-            <View
-              style={[
-                styles.separator,
-                { backgroundColor: secondaryTextColor },
-              ]}
-            />
-            <Pressable onPress={handleSubmit} style={styles.button}>
-              <Text>追加</Text>
-            </Pressable>
-          </View>
+          <AddOrCancelButtons
+            handleCancel={handleCancel}
+            handleAdd={handleAdd}
+          />
         </Animated.View>
       )}
+      <Text style={styles.label}>見出し画像</Text>
+      <View style={styles.inputContainer}>
+        <EditorImagePicker />
+      </View>
     </Animated.View>
   );
 };
@@ -171,35 +158,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
   },
-  option: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 12,
-    borderWidth: 1,
-    borderRadius: 12,
-    borderCurve: 'continuous',
-  },
-  optionText: {
-    fontSize: 16,
-  },
   icon: {
     borderWidth: 1,
     borderRadius: 100,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 24,
-    justifyContent: 'space-evenly',
-    paddingHorizontal: 6,
-  },
-  button: {
-    width: '50%',
-    alignItems: 'center',
-    borderRadius: 12,
-    padding: 8,
-  },
-  separator: {
-    width: 1,
   },
 });

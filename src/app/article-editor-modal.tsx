@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { useNavigation } from 'expo-router';
 import {
   View,
-  TextInput,
   Button,
   StyleSheet,
   Platform,
   useColorScheme,
   Pressable,
+  ScrollView,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   SharedValue,
   useAnimatedStyle,
@@ -20,16 +21,19 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 import ArticleTag from '@/src/components/ArticleTag';
 import Color from '@/src/constants/Colors';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import BgView from '@/src/components/ThemedSecondaryBgView';
 import Text from '@/src/components/ThemedText';
 import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import TrackInputField from '@/src/components/TrackInputField';
 import LiveInputField from '../components/LiveInputField';
-import Colors from '@/src/constants/Colors';
+import { useHeaderHeight } from '@react-navigation/elements';
+
+const BOTTOM_TAB_HEIGHT = 96.7;
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
+  const headerHeight = useHeaderHeight();
   const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
 
@@ -62,47 +66,54 @@ const ArticleEditorModal = () => {
 
   return (
     <BgView style={[styles.container, { paddingTop: insets.top }]}>
-      <AnimatedTextInput
-        label='Article Title'
-        focusedLabelTop={16}
-        focusedLabelSize={16}
-        multiline={true}
-        blurOnSubmit={true}
-        style={[
-          styles.title,
-          { color: textColor, borderBottomColor: secondaryTextColor },
-        ]}
-      />
-      <View style={styles.articleMetadataContainer}>
-        <View style={styles.articleTagWrapper}>
-          <Text style={styles.articlePickerText}>Articleの種類</Text>
-          <View style={styles.articleTagContainer}>
-            {articleTypes.map((type) => {
-              const animatedStyle = useAnimatedStyle(() => {
-                return {
-                  opacity: opacityValues[type].value,
-                };
-              });
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
+      >
+        <View style={styles.container}>
+          <AnimatedTextInput
+            label='Article Title'
+            focusedLabelTop={16}
+            focusedLabelSize={16}
+            multiline={true}
+            blurOnSubmit={true}
+            style={[
+              styles.title,
+              { color: textColor, borderBottomColor: secondaryTextColor },
+            ]}
+          />
+          <View style={styles.articleMetadataContainer}>
+            <View style={styles.articleTagWrapper}>
+              <Text style={styles.articlePickerText}>Articleの種類</Text>
+              <View style={styles.articleTagContainer}>
+                {articleTypes.map((type) => {
+                  const animatedStyle = useAnimatedStyle(() => {
+                    return {
+                      opacity: opacityValues[type].value,
+                    };
+                  });
 
-              return (
-                <Pressable
-                  key={type}
-                  onPress={() => handleTagPress(type)}
-                  style={styles.articleTag}
-                >
-                  <Animated.View style={animatedStyle}>
-                    <ArticleTag type={type} size={17} />
-                  </Animated.View>
-                </Pressable>
-              );
-            })}
+                  return (
+                    <Pressable
+                      key={type}
+                      onPress={() => handleTagPress(type)}
+                      style={styles.articleTag}
+                    >
+                      <Animated.View style={animatedStyle}>
+                        <ArticleTag type={type} size={17} />
+                      </Animated.View>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </View>
+            {selectedType === 'review' && <TrackInputField />}
+            {selectedType === 'liveReport' && <LiveInputField />}
           </View>
         </View>
-        {selectedType === 'review' && <TrackInputField />}
-        {selectedType === 'liveReport' && <LiveInputField />}
-      </View>
+      </ScrollView>
 
-      <View
+      <BgView
         style={[
           styles.bottomButtonWrapper,
           {
@@ -142,7 +153,7 @@ const ArticleEditorModal = () => {
             </View>
           </View>
         </View>
-      </View>
+      </BgView>
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
