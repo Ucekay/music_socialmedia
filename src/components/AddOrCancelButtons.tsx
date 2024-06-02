@@ -21,7 +21,7 @@ const AddOrCancelButtons = ({
   return (
     <View style={styles.buttonContainer}>
       <Pressable onPress={handleCancel} style={styles.button}>
-        <Text style={{ color: Colors[colorScheme ?? 'light'].cancelText }}>
+        <Text style={{ color: Colors[colorScheme ?? 'light'].warnText }}>
           キャンセル
         </Text>
       </Pressable>

@@ -11,15 +11,18 @@ import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
 import ImageCropPicker from 'react-native-image-crop-picker';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import EditorOptionButton from './EditorOptionButton';
 import Text from './ThemedText';
+import Color from '../constants/Colors';
 
 const EditorImagePicker = () => {
   const { width } = useWindowDimensions();
   const [image, setImage] = useState<string | undefined>(undefined);
   const [imageEdited, setImageEdited] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const colorScheme = useColorScheme();
   const cropperWidth = width - 40;
   const cropperHeight = ((width - 40) / 21) * 9;
@@ -27,30 +30,43 @@ const EditorImagePicker = () => {
   const imageHeight = (imageWidth / 21) * 9;
 
   const pickImage = async () => {
+    setErrorMessage('');
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
 
     if (!result.canceled) {
+      setLoading(true);
       const selectedImage = result.assets[0].uri;
       setImageEdited(false);
-      setLoading(true);
       openCropEditor(selectedImage);
+    } else {
+      setLoading(false);
     }
   };
 
   const openCropEditor = async (selectedImage: string) => {
-    const cropped = await ImageCropPicker.openCropper({
-      path: selectedImage,
-      width: cropperWidth,
-      height: cropperHeight,
-      cropperToolbarTitle: '画像を編集',
-      mediaType: 'photo',
-    });
-    setImage(cropped.path);
-    setImageEdited(true);
-    setLoading(false);
+    try {
+      const cropped = await ImageCropPicker.openCropper({
+        path: selectedImage,
+        width: cropperWidth,
+        height: cropperHeight,
+        cropperToolbarTitle: '画像を編集',
+        mediaType: 'photo',
+      });
+      setImage(cropped.path);
+      setImageEdited(true);
+    } catch (e: any) {
+      console.log(e.message);
+      if (e.message === 'User cancelled image selection') {
+        setErrorMessage(
+          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。'
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -68,8 +84,15 @@ const EditorImagePicker = () => {
           </BlurView>
         </View>
       </Modal>
+      {errorMessage !== '' && (
+        <Text style={{ color: Color[colorScheme ?? 'light'].warnText }}>
+          {errorMessage}
+        </Text>
+      )}
       {imageEdited && (
-        <View
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut}
           style={{
             borderRadius: 12,
             borderCurve: 'continuous',
@@ -85,7 +108,7 @@ const EditorImagePicker = () => {
               borderRadius: 12,
             }}
           />
-        </View>
+        </Animated.View>
       )}
     </View>
   );

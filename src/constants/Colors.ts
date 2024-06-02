@@ -25,8 +25,8 @@ const Colors = {
     placeholder: chroma(palette.zinc['400']).hex(),
     appleMusicText: chroma(palette.rose['700']).hex(),
     appleMusicBg: chroma(palette.rose['200']).hex(),
-    cancelBg: chroma(palette.red['200']).hex(),
-    cancelText: chroma(palette.red['700']).hex(),
+    warnBg: chroma(palette.red['200']).hex(),
+    warnText: chroma(palette.red['700']).hex(),
   },
   dark: {
     text: '#fff',
@@ -44,8 +44,8 @@ const Colors = {
     placeholder: chroma(palette.zinc['600']).hex(),
     appleMusicText: chroma(palette.rose['300']).hex(),
     appleMusicBg: chroma(palette.rose['800']).hex(),
-    cancelBg: chroma(palette.red['800']).hex(),
-    cancelText: chroma(palette.red['300']).hex(),
+    warnBg: chroma(palette.red['800']).hex(),
+    warnText: chroma(palette.red['300']).hex(),
   },
 };
 
