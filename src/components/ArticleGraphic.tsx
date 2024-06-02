@@ -109,8 +109,8 @@ export const ArticleGraphic = ({
 }: ArticleThumbnailProps) => {
   const { width, height } = useWindowDimensions();
 
-  const articleCardWidth = width - 32;
-  const imageSideLength = 160;
+  const articleCardWidth = width - 40;
+  const imageSideLength = ((width - 40) / 21) * 9;
   const window = useMemo(
     () => Skia.XYWHRect(0, 0, articleCardWidth, imageSideLength),
     [imageSideLength, articleCardWidth]
@@ -272,8 +272,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   image: {
+    height: '100%',
     position: 'absolute',
-    width: 160,
     aspectRatio: 1,
     zIndex: 1,
   },
