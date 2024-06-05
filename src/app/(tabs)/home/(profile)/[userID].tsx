@@ -5,6 +5,7 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import UserProfileTop from '@/src/components/UserProfileTop';
 import userArticleData from '@/src/assets/userArticleData';
+import articleData from '@/src/assets/articleData';
 import ArticleCard from '@/src/components/ArticleCard';
 import { articleDataType } from '@/src/types';
 import { useLocalSearchParams, Stack, useFocusEffect } from 'expo-router';
@@ -44,7 +45,7 @@ const ProfileNavigator = () => {
 
   return (
     <Tabs.Container renderHeader={() => <UserProfileTop />}>
-      <Tabs.Tab name="post" label="Post">
+      <Tabs.Tab name='post' label='Post'>
         <Tabs.FlashList
           data={postData}
           renderItem={({ item }) => (
@@ -60,7 +61,7 @@ const ProfileNavigator = () => {
           }}
         />
       </Tabs.Tab>
-      <Tabs.Tab name="article" label="Article">
+      <Tabs.Tab name='article' label='Article'>
         <Tabs.FlashList
           data={userArticleData}
           renderItem={({ item }) => (

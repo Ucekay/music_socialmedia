@@ -16,10 +16,11 @@ const userArticleData = [
     articleBody: 'このプレイリストで一日をスタートしよう！',
     artistName:
       'UNISON SQUARE GARDEN / ポルカドットスティングレイ / フレデリック / 04 Limited Sazabys / マカロニえんぴつ / フジファブリック / ファンキー加藤 / フレデリック / マカロニえんぴつ / フジファブリック',
+    songCount: 50,
     imageUrl:
-      'https://imgc.eximg.jp/i=https%253A%252F%252Fs.eximg.jp%252Fexnews%252Ffeed%252FExnewsRoomclip%252FExnewsRoomclip_71184_c8d6_5.jpg,quality=70,type=jpg',
+      'https://www.toysfactory.co.jp/disco_images/004780_kXOOemntHKVbWiB4aMjyAZuRaHHba9.jpg',
     userAvatarUrl: 'https://api.dicebear.com/8.x/pixel-art/png',
-    type: 'playList',
+    type: 'playlist',
   },
   {
     articleID: 'art102',

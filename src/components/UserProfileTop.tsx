@@ -53,7 +53,9 @@ const UserProfileTop = () => {
         </View>
         <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
       </View>
-      <Text style={[styles.userBio, themeTextColor]}>{userInfo.bio}</Text>
+      <Text numberOfLines={5} style={[styles.userBio, themeTextColor]}>
+        {userInfo.bio}
+      </Text>
     </View>
   );
 };

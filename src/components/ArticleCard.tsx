@@ -71,7 +71,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
               <Text
                 style={[styles.articleTitle, themeTextColor]}
                 numberOfLines={2}
-                ellipsizeMode="tail"
+                ellipsizeMode='tail'
               >
                 {articleTitle}
               </Text>
