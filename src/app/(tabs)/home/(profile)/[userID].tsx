@@ -15,6 +15,7 @@ import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 import BgView from '@/src/components/ThemedBgView';
 
 const TEXT_HEIGHT = 65.7;
+const HEADER_HEIGHT = 199;
 const itemSize = 320;
 const postData = [
   '今日はいい天気ですね！ #天気 #晴れ',
@@ -43,8 +44,11 @@ const ProfileNavigator = () => {
   const tabBarHeight = useBottomTabBarHeight();
 
   return (
-    <Tabs.Container renderHeader={() => <UserProfileTop />}>
-      <Tabs.Tab name="post" label="Post">
+    <Tabs.Container
+      headerHeight={HEADER_HEIGHT}
+      renderHeader={() => <UserProfileTop />}
+    >
+      <Tabs.Tab name='post' label='Post'>
         <Tabs.FlashList
           data={postData}
           renderItem={({ item }) => (
@@ -60,7 +64,7 @@ const ProfileNavigator = () => {
           }}
         />
       </Tabs.Tab>
-      <Tabs.Tab name="article" label="Article">
+      <Tabs.Tab name='article' label='Article'>
         <Tabs.FlashList
           data={userArticleData}
           renderItem={({ item }) => (
