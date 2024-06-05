@@ -97,6 +97,16 @@ export default function TabLayout() {
             }}
           />
           <Tabs.Screen
+            name='today'
+            options={{
+              title: 'Today',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
             name='profile'
             options={{
               tabBarIcon: ({ color }) => (

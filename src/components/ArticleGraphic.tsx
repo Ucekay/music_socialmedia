@@ -21,11 +21,11 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
-import { createNoise2D } from './forMeshGradient/SimpleNoise';
+import { createNoise2D } from './MeshGradient/SimpleNoise';
 
-import { symmetric } from './forMeshGradient/Math';
-import { Cubic } from './forMeshGradient/Cubic';
-import { Curves } from './forMeshGradient/Curves';
+import { symmetric } from './MeshGradient/Math';
+import { Cubic } from './MeshGradient/Cubic';
+import { Curves } from './MeshGradient/Curves';
 import { BlurView } from 'expo-blur';
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);

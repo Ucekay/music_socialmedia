@@ -4,7 +4,7 @@ import type { SharedValue } from 'react-native-reanimated';
 import { useSharedValue } from 'react-native-reanimated';
 import { Gesture } from 'react-native-gesture-handler';
 
-import { inRadius, symmetric } from '../components/forMeshGradient/Math';
+import { inRadius, symmetric } from '../components/MeshGradient/Math';
 
 type TouchSelection = null | {
   index: number;
