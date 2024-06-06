@@ -1,18 +1,21 @@
-import { Button, View } from 'react-native';
-
-import TodaySongModal from '@/src/components/TodaySongModal';
+import { Button, Pressable, View } from 'react-native';
 import { useState } from 'react';
 
+import Text from '@/src/components/ThemedText';
+import BgView from '@/src/components/ThemedBgView';
+import { Link } from 'expo-router';
+
 const TodayScreen = () => {
-  const [modalVisible, setModalVisible] = useState(false);
   return (
-    <View style={{ flex: 1, justifyContent: 'center' }}>
-      <Button onPress={() => setModalVisible(true)} title='Open Modal' />
-      <TodaySongModal
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      />
-    </View>
+    <BgView
+      style={{ flex: 1, justifyContent: 'center', alignContent: 'center' }}
+    >
+      <Pressable>
+        <Link href='/today-song-modal'>
+          <Text>open modal</Text>
+        </Link>
+      </Pressable>
+    </BgView>
   );
 };
 

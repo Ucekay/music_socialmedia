@@ -58,6 +58,13 @@ function RootLayoutNav() {
           gestureEnabled: false,
         }}
       />
+      <Stack.Screen
+        name='today-song-modal'
+        options={{
+          headerShown: false,
+          gestureDirection: 'vertical',
+        }}
+      />
     </Stack>
   );
 }

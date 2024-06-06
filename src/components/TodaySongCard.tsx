@@ -1,20 +1,36 @@
+import { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import RNColorThief from 'react-native-color-thief';
 
 import BgView from './ThemedBgView';
+import Text from './ThemedText';
 import SecondaryBgView from './ThemedSecondaryBgView';
 
 import todaySongData from '../assets/todaySongData';
-import { Text } from './Themed';
+import { rgbObjectToRgbaString } from './ColorModifier';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 const TodaySongCard = () => {
   const { top, bottom } = useSafeAreaInsets();
-  const bottomTabBarHeight = useBottomTabBarHeight() + 20;
 
   const todaySong = todaySongData[0];
+
+  const [startColor, setStartColor] = useState('');
+  const [endColor, setEndColor] = useState('');
+
+  useEffect(() => {
+    RNColorThief.getColor(todaySong.artworkUrl, 20, false).then(
+      (color: { r: number; g: number; b: number }) => {
+        setStartColor(rgbObjectToRgbaString(color, 40));
+        setEndColor(rgbObjectToRgbaString(color, 0));
+      }
+    );
+  }, [todaySong.artworkUrl]);
 
   return (
     <SecondaryBgView
@@ -22,6 +38,14 @@ const TodaySongCard = () => {
     >
       <View style={styles.cardContainer}>
         <BgView style={styles.card}>
+          {startColor && endColor && (
+            <Animated.View entering={FadeIn} style={StyleSheet.absoluteFill}>
+              <LinearGradient
+                colors={[startColor, endColor, 'transparent']}
+                style={[styles.gradient, StyleSheet.absoluteFill]}
+              />
+            </Animated.View>
+          )}
           <View style={styles.userInfo}>
             <Image
               source={{ uri: todaySong.userAvatarUrl }}
@@ -31,12 +55,12 @@ const TodaySongCard = () => {
           </View>
           <View style={styles.todaySongInner}>
             <View style={styles.song}>
-              <View style={styles.imageContainer}>
+              <BgView style={styles.imageContainer}>
                 <Image
                   source={{ uri: todaySong.artworkUrl }}
                   style={styles.image}
                 />
-              </View>
+              </BgView>
               <View style={styles.songInfo}>
                 <Text style={styles.songName}>{todaySong.songName}</Text>
                 <Text style={styles.artistName}>{todaySong.artistName}</Text>
@@ -69,8 +93,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   card: {
-    alignItems: 'center',
     borderRadius: 16,
+    borderCurve: 'continuous',
     padding: 16,
     gap: 44,
     shadowColor: '#000',
@@ -82,6 +106,10 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
+  },
+  gradient: {
+    borderRadius: 16,
+    borderCurve: 'continuous',
   },
   userInfo: {
     flexDirection: 'row',
@@ -104,6 +132,8 @@ const styles = StyleSheet.create({
     gap: 28,
   },
   imageContainer: {
+    borderRadius: 16,
+    borderCurve: 'continuous',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
