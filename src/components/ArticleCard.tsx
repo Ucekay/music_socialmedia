@@ -24,15 +24,22 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
   const colorScheme = useColorScheme();
   const [hexColors, setHexColors] = useState<string[]>([]);
   useEffect(() => {
-    RNColorThief.getPalette(imageUrl, 17, 10, false)
-      .then((palette: Palette) => {
+    const fetchPalette = async () => {
+      try {
+        const palette: Palette = await RNColorThief.getPalette(
+          imageUrl,
+          17,
+          10,
+          false
+        );
         const hexColors: string[] = rgb2Hex(palette);
         setHexColors(hexColors);
-      })
-      .catch((error: Error) => {
+      } catch (error) {
         console.log(error);
-      });
-  }, []);
+      }
+    };
+    fetchPalette();
+  }, [imageUrl]);
 
   const themeBackgroundStyle =
     colorScheme === 'dark'
@@ -71,7 +78,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
               <Text
                 style={[styles.articleTitle, themeTextColor]}
                 numberOfLines={2}
-                ellipsizeMode="tail"
+                ellipsizeMode='tail'
               >
                 {articleTitle}
               </Text>
