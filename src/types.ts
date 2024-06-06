@@ -50,14 +50,24 @@ export type articleDataType = {
 };
 
 export type PostDataType = {
-  style: any,
-  postID: string,
-  postContent: string,
-  songName?: string,
-  artistName?: string,
-  musicUrl?: string,
-  ImageUrl?: string,
-  userID: string,
-  user: string,
-  userAvatarUrl: string,
+  style: any;
+  postID: string;
+  postContent: string;
+  songName?: string;
+  artistName?: string;
+  musicUrl?: string;
+  ImageUrl?: string;
+  userID: string;
+  user: string;
+  userAvatarUrl: string;
+};
+
+export type SongData = {
+  userID: string;
+  userAvatarUrl: string;
+  songName: string;
+  artistName: string;
+  artworkUrl: string;
+  body: string;
+  todaySongID: number;
 };
