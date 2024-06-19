@@ -29,7 +29,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
         const palette: Palette = await RNColorThief.getPalette(
           imageUrl,
           17,
-          10,
+          20,
           false
         );
         const hexColors: string[] = rgb2Hex(palette);

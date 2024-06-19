@@ -88,7 +88,7 @@ const articleData = [
     articleBody:
       '音楽界の魔術師とも称される米津玄師が、新たなシングル「地球儀」を世に送り出した。この曲は、宮﨑駿監督の最新作「君たちはどう生きるか」の主題歌として制作され、世代を超えて心を揺さぶるメッセージが込められている。今回のインタビューでは、米津玄師自身がこの曲に込めた深い思いや、宮﨑監督との特別な関係について語ってくれた。彼の言葉からは、音楽と映画、そして人生に対する熱い情熱が伝わってくる。',
     imageUrl:
-      'https://s3-reissue.s3.ap-northeast-1.amazonaws.com/rr/wp-content/uploads/d177804f28bc0c4d33d98910731501e8.jpg',
+      'https://upload.wikimedia.org/wikipedia/zh/7/76/Spinning_Globe%28Kenshi_Yonezu%29.jpg',
     userID: '@MochiMochi',
     user: 'もちもち大福',
     userAvatarUrl: 'https://api.dicebear.com/8.x/croodles/png',

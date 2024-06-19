@@ -44,7 +44,6 @@ export default function TabLayout() {
             headerShown: useClientOnlyValue(false, true),
             tabBarStyle: {
               position: 'absolute',
-              borderTopWidth: 0,
             },
             tabBarShowLabel: false,
             tabBarBackground: () => (
@@ -75,7 +74,10 @@ export default function TabLayout() {
             },
           }}
         >
-          <Tabs.Screen name='index' options={{ href: null }} />
+          <Tabs.Screen
+            name='index'
+            options={{ title: 'Articles', href: null }}
+          />
           <Tabs.Screen
             name='home'
             options={{

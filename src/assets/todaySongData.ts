@@ -14,6 +14,8 @@ const todaySongData = [
     userAvatarUrl: 'https://api.dicebear.com/8.x/pixel-art/png',
     songName: 'じゃあな',
     artistName: 'ReoNa',
+    artworkUrl:
+      'https://pimg.awa.io/v2/jacket/beb025b544fee0db2700.w630.h630.v1718149492.jpg',
     body: 'あの捨て台詞「じゃあな」がこんなかっこいい曲になるとは、、、。やっぱりLIVE LAB.はアーティストRoNaの物語の文脈を取り込むのが異常にうまいよね！「そんなわけないじゃん「また明日」が怖いのに」と書けるのがReoNaの強さだよねー',
     todaySongID: 2,
   },

@@ -19,7 +19,7 @@ const userArticleData = [
     imageUrl:
       'https://imgc.eximg.jp/i=https%253A%252F%252Fs.eximg.jp%252Fexnews%252Ffeed%252FExnewsRoomclip%252FExnewsRoomclip_71184_c8d6_5.jpg,quality=70,type=jpg',
     userAvatarUrl: 'https://api.dicebear.com/8.x/pixel-art/png',
-    type: 'playList',
+    type: 'playlist',
   },
   {
     articleID: 'art102',

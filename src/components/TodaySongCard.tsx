@@ -1,24 +1,25 @@
 import { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, StyleSheet, useColorScheme, Easing } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import RNColorThief from 'react-native-color-thief';
 
 import BgView from './ThemedBgView';
 import Text from './ThemedText';
-import SecondaryBgView from './ThemedSecondaryBgView';
 
 import todaySongData from '../assets/todaySongData';
 import { rgbObjectToRgbaString } from './ColorModifier';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import Colors from '../constants/Colors';
 
 const TodaySongCard = () => {
-  const { top, bottom } = useSafeAreaInsets();
+  const todaySong = todaySongData[1];
 
-  const todaySong = todaySongData[0];
+  const colorScheme = useColorScheme();
+  const backgroundColor =
+    colorScheme === 'dark'
+      ? Colors.dark.secondaryBackground
+      : Colors.light.background;
 
   const [startColor, setStartColor] = useState('');
   const [endColor, setEndColor] = useState('');
@@ -32,62 +33,51 @@ const TodaySongCard = () => {
     );
   }, [todaySong.artworkUrl]);
 
+  const shadowColor = colorScheme === 'dark' ? '#fff' : '#000';
+
   return (
-    <SecondaryBgView
-      style={[styles.cardWrapper, { paddingTop: top, paddingBottom: bottom }]}
-    >
-      <View style={styles.cardContainer}>
-        <BgView style={styles.card}>
-          {startColor && endColor && (
-            <Animated.View entering={FadeIn} style={StyleSheet.absoluteFill}>
-              <LinearGradient
-                colors={[startColor, endColor, 'transparent']}
-                style={[styles.gradient, StyleSheet.absoluteFill]}
-              />
-            </Animated.View>
-          )}
-          <View style={styles.userInfo}>
-            <Image
-              source={{ uri: todaySong.userAvatarUrl }}
-              style={styles.avatar}
+    <View style={styles.cardContainer}>
+      <View style={[styles.card, { backgroundColor, shadowColor }]}>
+        {startColor && endColor && (
+          <Animated.View entering={FadeIn} style={StyleSheet.absoluteFill}>
+            <LinearGradient
+              colors={[startColor, endColor, 'transparent']}
+              style={[styles.gradient, StyleSheet.absoluteFill]}
             />
-            <Text>{todaySong.userID}</Text>
-          </View>
-          <View style={styles.todaySongInner}>
-            <View style={styles.song}>
-              <BgView style={styles.imageContainer}>
-                <Image
-                  source={{ uri: todaySong.artworkUrl }}
-                  style={styles.image}
-                />
-              </BgView>
-              <View style={styles.songInfo}>
-                <Text style={styles.songName}>{todaySong.songName}</Text>
-                <Text style={styles.artistName}>{todaySong.artistName}</Text>
-              </View>
+          </Animated.View>
+        )}
+        <View style={styles.userInfo}>
+          <Image
+            source={{ uri: todaySong.userAvatarUrl }}
+            style={styles.avatar}
+          />
+          <Text>{todaySong.userID}</Text>
+        </View>
+        <View style={styles.todaySongInner}>
+          <View style={styles.song}>
+            <BgView style={styles.imageContainer}>
+              <Image
+                source={{ uri: todaySong.artworkUrl }}
+                style={styles.image}
+              />
+            </BgView>
+            <View style={styles.songInfo}>
+              <Text style={styles.songName}>{todaySong.songName}</Text>
+              <Text style={styles.artistName}>{todaySong.artistName}</Text>
             </View>
-            <View style={styles.body}>
-              <Text>{todaySong.body}</Text>
-            </View>
           </View>
-        </BgView>
-      </View>
-      <View style={styles.buttonContainer}>
-        <View style={styles.playButtonContainer}>
-          <FontAwesome6 name='play' size={20} color='black' />
+          <View style={styles.body}>
+            <Text>{todaySong.body}</Text>
+          </View>
         </View>
       </View>
-    </SecondaryBgView>
+    </View>
   );
 };
 
 export default TodaySongCard;
 
 const styles = StyleSheet.create({
-  cardWrapper: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
   cardContainer: {
     flexGrow: 1,
     justifyContent: 'center',
@@ -96,8 +86,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderCurve: 'continuous',
     padding: 16,
-    gap: 44,
-    shadowColor: '#000',
+    paddingBottom: 20,
+    gap: 40,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -161,9 +151,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  body: {
-    paddingBottom: 28,
-  },
+  body: {},
   buttonContainer: {
     justifyContent: 'flex-end',
     paddingTop: 16,
