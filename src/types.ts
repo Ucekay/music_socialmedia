@@ -50,7 +50,7 @@ export type articleDataType = {
 };
 
 export type PostDataType = {
-  style: any;
+  style?: any;
   postID: string;
   postContent: string;
   songName?: string;
