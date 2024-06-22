@@ -1,9 +1,14 @@
 import React from 'react';
 import { View, StyleSheet, useColorScheme } from 'react-native';
-import { useFocusEffect } from 'expo-router';
+import { Link, useFocusEffect } from 'expo-router';
 import { FlashList } from '@shopify/flash-list';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 import Colors from '@/src/constants/Colors';
 import ArticleCard from '@/src/components/ArticleCard';
@@ -36,7 +41,7 @@ export default function TabOneScreen() {
       : { backgroundColor: Colors.light.background };
 
   return (
-    <View style={[styles.container, themeContainerStyle]}>
+    <Animated.View style={[styles.container, themeContainerStyle]}>
       <FlashList
         data={articleData}
         renderItem={({ item }) => (
@@ -50,13 +55,14 @@ export default function TabOneScreen() {
         }}
       />
       <TabActionMenu />
-    </View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
   },
   button: {
     position: 'absolute',
