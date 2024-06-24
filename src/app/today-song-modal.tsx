@@ -1,30 +1,21 @@
-import { Pressable, StyleSheet, View, useColorScheme } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  useColorScheme,
+  useWindowDimensions,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import Animated, {
-  FadeIn,
-  FadeInDown,
-  FadeInUp,
-  FadeOutDown,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
+import { Heart, ShareIos, PlaySolid, Message } from 'iconoir-react-native';
 
 import Colors from '../constants/Colors';
-import SecondaryBgView from '@/src/components/ThemedSecondaryBgView';
 
 import TodaySongCard from '@/src/components/TodaySongCard';
-import { useState } from 'react';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const AnimatedFontAwesome6 = Animated.createAnimatedComponent(FontAwesome6);
 
 const TodaySongModal = () => {
   const { top, bottom } = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
   const colorScheme = useColorScheme();
   const backgroundColor =
     colorScheme === 'dark'
@@ -35,16 +26,6 @@ const TodaySongModal = () => {
       ? Colors.dark.secondaryBackground
       : Colors.light.background;
   const iconsColor = colorScheme === 'dark' ? 'white' : 'black';
-
-  const [isToggled, setToggled] = useState(false);
-
-  const flip = useSharedValue(0);
-  flip.value = withTiming(isToggled ? 180 : 0);
-  const animatedToggleButtonStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ rotateX: `${flip.value}deg` }],
-    };
-  });
 
   return (
     <View
@@ -58,27 +39,28 @@ const TodaySongModal = () => {
         <View
           style={[styles.button, { backgroundColor: secondaryBackgroundColor }]}
         >
-          <FontAwesome6 name='heart' size={20} color={iconsColor} />
+          <Message color={iconsColor} width={20} height={20} />
         </View>
         <View
           style={[
             styles.playButtonContainer,
-            { backgroundColor: secondaryBackgroundColor },
+            {
+              backgroundColor: secondaryBackgroundColor,
+              position: 'absolute',
+              right: width / 2 - 66,
+              bottom: 0,
+            },
           ]}
         >
-          <FontAwesome6 name='play' size={20} color={iconsColor} />
+          <PlaySolid color={iconsColor} width={20} height={20} />
         </View>
-        <AnimatedPressable
-          onPress={() => setToggled(!isToggled)}
+        <View
           style={[styles.button, { backgroundColor: secondaryBackgroundColor }]}
         >
-          <AnimatedFontAwesome6
-            name='chevron-up'
-            size={20}
-            color={iconsColor}
-            style={animatedToggleButtonStyle}
-          />
-        </AnimatedPressable>
+          <ShareIos color={iconsColor} width={20} height={20} />
+          <View style={[styles.separator, { borderColor: iconsColor }]} />
+          <Heart color={iconsColor} width={20} height={20} />
+        </View>
       </View>
     </View>
   );
@@ -104,9 +86,16 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   button: {
+    flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
     alignSelf: 'center',
     borderRadius: 100,
     padding: 10,
+    gap: 10,
+  },
+  separator: {
+    height: 16,
+    borderWidth: 0.5,
   },
 });
