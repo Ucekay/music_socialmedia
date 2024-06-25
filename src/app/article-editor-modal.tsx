@@ -1,53 +1,119 @@
+import { useState } from 'react';
 import { useNavigation } from 'expo-router';
 import {
   View,
-  TextInput,
   Button,
   StyleSheet,
   Platform,
   useColorScheme,
+  Pressable,
+  ScrollView,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import Animated from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 import ArticleTag from '@/src/components/ArticleTag';
 import Color from '@/src/constants/Colors';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import BgView from '@/src/components/ThemedSecondaryBgView';
 import Text from '@/src/components/ThemedText';
 import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
+import TrackInputField from '@/src/components/TrackInputField';
+import LiveInputField from '../components/LiveInputField';
+import { useHeaderHeight } from '@react-navigation/elements';
 
-const articleTypes = ['general', 'review', 'liveReport', 'playlist'];
+const BOTTOM_TAB_HEIGHT = 96.7;
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
+  const headerHeight = useHeaderHeight();
   const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
+
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+
+  const articleTypes = ['general', 'review', 'liveReport', 'playlist'];
 
   const textColor = Color[colorScheme ?? 'light'].text;
   const secondaryTextColor = Color[colorScheme ?? 'light'].secondaryText;
 
+  const opacityValues: { [key: string]: SharedValue<number> } =
+    articleTypes.reduce((acc, type) => {
+      acc[type] = useSharedValue(1);
+      return acc;
+    }, {} as { [key: string]: SharedValue<number> });
+
+  const handleTagPress = (type: string) => {
+    if (selectedType === type) {
+      setSelectedType(null);
+      articleTypes.forEach((t) => {
+        opacityValues[t].value = withTiming(1);
+      });
+    } else {
+      setSelectedType(type);
+      articleTypes.forEach((t) => {
+        opacityValues[t].value = withTiming(t === type ? 1 : 0.3);
+      });
+    }
+  };
+
   return (
     <BgView style={[styles.container, { paddingTop: insets.top }]}>
-      <AnimatedTextInput
-        label='Article Title'
-        focusedLabelTop={28}
-        focusedLabelSize={16}
-        style={[
-          styles.title,
-          { color: textColor, borderBottomColor: secondaryTextColor },
-        ]}
-      />
-      <View style={styles.articleTagWrapper}>
-        <Text>Article Type</Text>
-        <View style={styles.articleTagContainer}>
-          {articleTypes.map((type) => {
-            return <ArticleTag type={type} key={type} />;
-          })}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
+      >
+        <View style={styles.container}>
+          <AnimatedTextInput
+            label='Article Title'
+            focusedLabelTop={16}
+            focusedLabelSize={16}
+            multiline={true}
+            blurOnSubmit={true}
+            style={[
+              styles.title,
+              { color: textColor, borderBottomColor: secondaryTextColor },
+            ]}
+          />
+          <View style={styles.articleMetadataContainer}>
+            <View style={styles.articleTagWrapper}>
+              <Text style={styles.articlePickerText}>Articleの種類</Text>
+              <View style={styles.articleTagContainer}>
+                {articleTypes.map((type) => {
+                  const animatedStyle = useAnimatedStyle(() => {
+                    return {
+                      opacity: opacityValues[type].value,
+                    };
+                  });
+
+                  return (
+                    <Pressable
+                      key={type}
+                      onPress={() => handleTagPress(type)}
+                      style={styles.articleTag}
+                    >
+                      <Animated.View style={animatedStyle}>
+                        <ArticleTag type={type} size={17} />
+                      </Animated.View>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            </View>
+            {selectedType === 'review' && <TrackInputField />}
+            {selectedType === 'liveReport' && <LiveInputField />}
+          </View>
         </View>
-      </View>
-      <View
+      </ScrollView>
+
+      <BgView
         style={[
           styles.bottomButtonWrapper,
           {
@@ -77,7 +143,7 @@ const ArticleEditorModal = () => {
             <Button title='Publish' onPress={() => {}} color={textColor} />
           </View>
         </View>
-      </View>
+      </BgView>
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
@@ -90,20 +156,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    gap: 16,
+    gap: 36,
   },
   title: {
     fontSize: 28,
     fontWeight: '700',
     borderBottomWidth: 1,
   },
+  articleMetadataContainer: {
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  articlePickerText: {
+    fontSize: 17,
+  },
   articleTagWrapper: {
-    gap: 8,
+    gap: 4,
   },
   articleTagContainer: {
+    paddingHorizontal: 12,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    justifyContent: 'space-between',
+  },
+  articleTag: {
+    width: '45%',
+    marginVertical: 8,
   },
   bottomButtonWrapper: {
     position: 'absolute',

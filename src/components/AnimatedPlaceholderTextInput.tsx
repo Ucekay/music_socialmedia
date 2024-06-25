@@ -37,7 +37,7 @@ const AnimatedTextInput = (props: AnimatedTextInputProps) => {
 
   const inputFocused = useSharedValue(0);
 
-  const { defaultLabelSize, defaultLabelWeight } = useMemo(() => {
+  const { defaultLabelSize } = useMemo(() => {
     let fontSize: number | undefined;
     let fontWeight: TextStyle['fontWeight'] | undefined;
 
@@ -46,22 +46,15 @@ const AnimatedTextInput = (props: AnimatedTextInputProps) => {
         if (s && 'fontSize' in s) {
           fontSize = (s as TextStyle).fontSize;
         }
-        if (s && 'fontWeight' in s) {
-          fontWeight = (s as TextStyle).fontWeight;
-        }
       });
     } else if (style && typeof style === 'object') {
       if ('fontSize' in style) {
         fontSize = (style as TextStyle).fontSize;
       }
-      if ('fontWeight' in style) {
-        fontWeight = (style as TextStyle).fontWeight;
-      }
     }
 
     return {
       defaultLabelSize: fontSize !== undefined ? fontSize : 16,
-      defaultLabelWeight: fontWeight !== undefined ? fontWeight : '700',
     };
   }, [style]);
 
@@ -77,7 +70,6 @@ const AnimatedTextInput = (props: AnimatedTextInputProps) => {
           [defaultLabelSize, focusedLabelSize]
         )
       ),
-      fontWeight: inputFocused.value === 1 ? '500' : defaultLabelWeight,
     }),
     [defaultLabelSize, focusedLabelTop, focusedLabelSize]
   );
@@ -114,9 +106,14 @@ const AnimatedTextInput = (props: AnimatedTextInputProps) => {
         {...otherProps}
       />
       <Animated.View style={styles.textInputLabelWrapper}>
-        <Pressable onPress={labelHandler}>
+        <Pressable style={{ flex: 1 }} onPress={labelHandler}>
           <Animated.Text
-            style={[animatedLabelStyle, { color: placeholderColor }]}
+            style={[
+              animatedLabelStyle,
+              {
+                color: placeholderColor,
+              },
+            ]}
           >
             {label}
           </Animated.Text>
