@@ -13,8 +13,8 @@ const ArticleCardSubhead = ({ article }: { article: articleDataType }) => {
       : { color: Colors.light.text };
   const themeSecondlyTextColor =
     colorScheme === 'dark'
-      ? { color: Colors.dark.secondlyText }
-      : { color: Colors.light.secondlyText };
+      ? { color: Colors.dark.secondaryText }
+      : { color: Colors.light.secondaryText };
   const { articleBody, songName, artistName, songCount, eventName, type } =
     article;
 

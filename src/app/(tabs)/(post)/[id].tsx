@@ -8,7 +8,7 @@ import {
   Image as RNImage,
   Modal,
 } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import postData from '@/src/assets/postData';
 import MusicBarOfPost from '@/src/components/MusicBarOfPost';
@@ -16,6 +16,12 @@ import UserTagOfProfileDetail from '@/src/components/UserTagOfProfileDetail';
 import HeartIcon from '@/src/components/Icon/HeartIcon';
 import { Image } from 'expo-image';
 import IconAntDesign from '@/src/components/Icon/AntDesign';
+import TabActionMenu from '@/src/components/TabActionMenu';
+import TabActionMenuList from '@/src/components/TabActionMenuList';
+import { useTabAction } from '@/src/contexts/ActionButtonContext';
+import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
+import ShareIcon from '@/src/components/Icon/ShareIcon';
+
 
 const screen = Dimensions.get('screen');
 
@@ -23,6 +29,16 @@ const PostDetailScreen = (): JSX.Element => {
   const { id } = useLocalSearchParams();
   const [height, setHeight] = useState<number>(0);
   const [modalStatus, setModalStatus] = useState(false);
+  const { setActionVisible } = useTabAction();
+  const { setProfileDismissed } = useProfileScreen();
+  useFocusEffect(
+    React.useCallback(() => {
+      setProfileDismissed(false);
+      return () => {
+        setActionVisible(false);
+      };
+    }, [])
+  );
   const post = postData.find((item) => item.postID === id);
   if (!post) {
     return <Text>Post not found.</Text>;
@@ -102,41 +118,11 @@ const PostDetailScreen = (): JSX.Element => {
         <HeartIcon style={{ marginLeft: 16 }} size={20} />
         <IconAntDesign name='message1' size={20} />
         <IconAntDesign name='retweet' size={20} />
-        <IconAntDesign name='upload' size={20} style={{ marginRight: 16 }} />
+        <ShareIcon size={20} style={{ marginRight: 16 }} />
       </View>
+      <TabActionMenu />
     </View>
   );
-  //else {
-  //  return (
-  //    <View style={styles.container}>
-  //      <UserTagOfProfileDetail
-  //        user={post.user}
-  //        userAvatarUrl={post.userAvatarUrl}
-  //        userID={post.userID}
-  //      />
-  //      <Text
-  //        style={[styles.text1, { marginHorizontal: 16 }, { marginBottom: 16 }]}
-  //      >
-  //        {post.postContent}
-  //      </Text>
-  //      {post.musicUrl && (
-  //        <MusicBarOfPost {...post} style={{ marginLeft: 12 }} />
-  //      )}
-  //      <View style={styles.infoContainer}>
-  //        <Text style={styles.text3}>9:38・2024/03/24</Text>
-  //      </View>
-  //      <View style={styles.infoContainer}>
-  //        <Text style={styles.text3}>53件のいいね</Text>
-  //      </View>
-  //      <View style={styles.iconContainer}>
-  //        <HeartIcon style={{ marginLeft: 16 }} size={20} />
-  //        <IconAntDesign name='message1' size={20} />
-  //        <IconAntDesign name='retweet' size={20} />
-  //        <IconAntDesign name='upload' size={20} style={{ marginRight: 16 }} />
-  //      </View>
-  //    </View>
-  //  );
-  //}
 };
 
 export default PostDetailScreen;
@@ -167,7 +153,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: 'rgba(67, 80, 96, 1)',
   },
-  userAvator: {
+  userAvatar: {
     height: 32,
     width: 32,
     borderRadius: 16,

@@ -16,13 +16,19 @@ import {
 } from '@shopify/react-native-skia';
 import { View, useWindowDimensions, StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
-import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  useDerivedValue,
+  useSharedValue,
+} from 'react-native-reanimated';
 
 import { createNoise2D } from './forMeshGradient/SimpleNoise';
 
 import { symmetric } from './forMeshGradient/Math';
 import { Cubic } from './forMeshGradient/Cubic';
 import { Curves } from './forMeshGradient/Curves';
+
+const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],
@@ -104,7 +110,7 @@ export const ArticleGraphic = ({
   const { width, height } = useWindowDimensions();
 
   const articleCardWidth = width - 40;
-  const imageSideLength = 160;
+  const imageSideLength = ((width - 40) / 21) * 9;
   const window = useMemo(
     () => Skia.XYWHRect(0, 0, articleCardWidth, imageSideLength),
     [imageSideLength, articleCardWidth]
@@ -214,7 +220,11 @@ export const ArticleGraphic = ({
         })}
       </Canvas>
 
-      <Image source={artworkUrl || defaultImage} style={styles.image} />
+      <AnimatedImage
+        source={artworkUrl || defaultImage}
+        entering={FadeIn}
+        style={styles.image}
+      />
       <BlurView intensity={25} style={styles.blur} />
     </View>
   );
@@ -262,8 +272,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   image: {
+    height: '100%',
     position: 'absolute',
-    width: 160,
     aspectRatio: 1,
     zIndex: 1,
   },

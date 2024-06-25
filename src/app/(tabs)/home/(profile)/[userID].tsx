@@ -7,8 +7,15 @@ import UserProfileTop from '@/src/components/UserProfileTop';
 import userArticleData from '@/src/assets/userArticleData';
 import ArticleCard from '@/src/components/ArticleCard';
 import { articleDataType } from '@/src/types';
+import { useLocalSearchParams, Stack, useFocusEffect } from 'expo-router';
+import userData from '@/src/assets/userData';
+import TabActionMenu from '@/src/components/TabActionMenu';
+import { useTabAction } from '@/src/contexts/ActionButtonContext';
+import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
+import BgView from '@/src/components/ThemedBgView';
 
 const TEXT_HEIGHT = 65.7;
+const HEADER_HEIGHT = 199;
 const itemSize = 320;
 const postData = [
   '今日はいい天気ですね！ #天気 #晴れ',
@@ -37,7 +44,10 @@ const ProfileNavigator = () => {
   const tabBarHeight = useBottomTabBarHeight();
 
   return (
-    <Tabs.Container renderHeader={() => <UserProfileTop />}>
+    <Tabs.Container
+      headerHeight={HEADER_HEIGHT}
+      renderHeader={() => <UserProfileTop />}
+    >
       <Tabs.Tab name='post' label='Post'>
         <Tabs.FlashList
           data={postData}
@@ -76,6 +86,5 @@ export default ProfileNavigator;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
 });

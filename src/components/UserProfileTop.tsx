@@ -1,10 +1,11 @@
-import { Text, View, StyleSheet, useColorScheme } from 'react-native';
+import { View, StyleSheet, useColorScheme } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
 
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
 import FollowButton from './FollowButton';
+import Text from './ThemedText';
 
 const UserProfileTop = () => {
   const colorScheme = useColorScheme();
@@ -52,7 +53,9 @@ const UserProfileTop = () => {
         </View>
         <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
       </View>
-      <Text style={[styles.userBio, themeTextColor]}>{userInfo.bio}</Text>
+      <Text numberOfLines={4} style={[styles.userBio, themeTextColor]}>
+        {userInfo.bio}
+      </Text>
     </View>
   );
 };

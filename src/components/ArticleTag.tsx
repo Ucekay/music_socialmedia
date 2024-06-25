@@ -4,9 +4,10 @@ import { TagsColors } from '../constants/Colors';
 
 type ArticleTagProps = {
   type: string;
+  size?: number;
 };
 
-const ArticleTag = ({ type }: ArticleTagProps) => {
+const ArticleTag = ({ type, size }: ArticleTagProps) => {
   const colorScheme = useColorScheme();
   let Color;
   switch (type) {
@@ -38,7 +39,9 @@ const ArticleTag = ({ type }: ArticleTagProps) => {
       ]}
     >
       {/*<View style={[styles.dot, { backgroundColor: bgColor }]}></View>*/}
-      <Text style={{ color: Color[colorScheme ?? 'light'].text }}>
+      <Text
+        style={{ color: Color[colorScheme ?? 'light'].text, fontSize: size }}
+      >
         {titleCase(type)}
       </Text>
     </View>
@@ -50,6 +53,7 @@ export default ArticleTag;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
     gap: 8,
     paddingHorizontal: 8,
