@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, useColorScheme, Easing } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  useColorScheme,
+  Easing,
+  useWindowDimensions,
+} from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import RNColorThief from 'react-native-color-thief';
@@ -7,20 +13,19 @@ import RNColorThief from 'react-native-color-thief';
 import BgView from './ThemedBgView';
 import Text from './ThemedText';
 
-import todaySongData from '../assets/todaySongData';
 import { rgbObjectToRgbaString } from './ColorModifier';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import Colors from '../constants/Colors';
+import type { TodaySongDataType } from '../types';
 
-const TodaySongCard = () => {
-  const todaySong = todaySongData[1];
-
+const TodaySongCard = ({ todaySong }: { todaySong: TodaySongDataType }) => {
+  const { width } = useWindowDimensions();
   const colorScheme = useColorScheme();
   const backgroundColor =
     colorScheme === 'dark'
       ? Colors.dark.secondaryBackground
       : Colors.light.background;
-
+  const containerWidth = width - 32;
   const [startColor, setStartColor] = useState('');
   const [endColor, setEndColor] = useState('');
 
@@ -36,7 +41,7 @@ const TodaySongCard = () => {
   const shadowColor = colorScheme === 'dark' ? '#fff' : '#000';
 
   return (
-    <View style={styles.cardContainer}>
+    <View style={[styles.cardContainer, { width }]}>
       <View style={[styles.card, { backgroundColor, shadowColor }]}>
         {startColor && endColor && (
           <Animated.View entering={FadeIn} style={StyleSheet.absoluteFill}>
@@ -66,7 +71,7 @@ const TodaySongCard = () => {
               <Text style={styles.artistName}>{todaySong.artistName}</Text>
             </View>
           </View>
-          <View style={styles.body}>
+          <View>
             <Text>{todaySong.body}</Text>
           </View>
         </View>
@@ -81,6 +86,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     flexGrow: 1,
     justifyContent: 'center',
+    paddingHorizontal: 16,
   },
   card: {
     borderRadius: 16,
@@ -151,7 +157,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  body: {},
   buttonContainer: {
     justifyContent: 'flex-end',
     paddingTop: 16,

@@ -1,4 +1,5 @@
 import {
+  FlatList,
   Pressable,
   StyleSheet,
   View,
@@ -6,11 +7,12 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FlashList } from '@shopify/flash-list';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Heart, ShareIos, PlaySolid, Message } from 'iconoir-react-native';
 
 import Colors from '../constants/Colors';
-
+import todaySongData from '@/src/assets/todaySongData';
 import TodaySongCard from '@/src/components/TodaySongCard';
 
 const TodaySongModal = () => {
@@ -34,7 +36,16 @@ const TodaySongModal = () => {
         { paddingTop: top, paddingBottom: bottom, backgroundColor },
       ]}
     >
-      <TodaySongCard />
+      <View style={{ flex: 1 }}>
+        <FlatList
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          data={todaySongData}
+          keyExtractor={(item) => item.todaySongID.toString()}
+          renderItem={({ item }) => <TodaySongCard todaySong={item} />}
+        />
+      </View>
       <View style={styles.buttonContainer}>
         <View
           style={[styles.button, { backgroundColor: secondaryBackgroundColor }]}
@@ -47,7 +58,7 @@ const TodaySongModal = () => {
             {
               backgroundColor: secondaryBackgroundColor,
               position: 'absolute',
-              right: width / 2 - 66,
+              right: width / 2 - 50,
               bottom: 0,
             },
           ]}
@@ -71,11 +82,11 @@ export default TodaySongModal;
 const styles = StyleSheet.create({
   cardWrapper: {
     flex: 1,
-    paddingHorizontal: 16,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingHorizontal: 16,
     paddingTop: 16,
   },
   playButtonContainer: {
