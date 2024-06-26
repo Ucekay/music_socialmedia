@@ -76,7 +76,7 @@ const PostEditorModal = () => {
               source={{ uri: 'https://assets.st-note.com/production/uploads/images/118769644/rectangle_large_type_2_dfac95fd8fb3ca429c798b9656b2c54d.png?width=2000&height=2000&fit=bounds&format=jpg&quality=85' }}
               style={styles.image}
               />) : (
-              <Text style={[styles.status, {color: secondaryTextColor}]}>写真が選択されていません</Text>
+              null
               )}
             <IconAntDesign name='paperclip' size={20} style={styles.Icon} onPress={() => setImagelayout(!imagelayout)}/>
             </View>
