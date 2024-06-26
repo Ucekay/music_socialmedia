@@ -26,7 +26,7 @@ const actions = [
         />
       );
     },
-    href: '/(tabs)/(post)',
+    href: '/post-editor-modal',
   },
   {
     id: 'article',
