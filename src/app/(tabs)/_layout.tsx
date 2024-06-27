@@ -104,6 +104,16 @@ export default function TabLayout() {
               ),
             }}
           />
+          <Tabs.Screen
+            name='todays-song'
+            options={{
+              title: '今日の一曲',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
         </Tabs>
       </ProfileScreenProvider>
     </TabActionProvider>
