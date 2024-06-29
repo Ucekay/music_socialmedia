@@ -3,6 +3,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -43,29 +44,31 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <Stack>
-      <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-      <Stack.Screen
-        name='modal'
-        options={{ presentation: 'fullScreenModal' }}
-      />
-      <Stack.Screen
-        name='article-editor-modal'
-        options={{
-          headerShown: true,
-          headerTransparent: true,
-          title: '',
-          presentation: 'modal',
-          gestureEnabled: false,
-        }}
-      />
-      <Stack.Screen
-        name='today-song-modal'
-        options={{
-          headerShown: false,
-          gestureDirection: 'vertical',
-        }}
-      />
-    </Stack>
+    <ActionSheetProvider>
+      <Stack>
+        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+        <Stack.Screen
+          name='modal'
+          options={{ presentation: 'fullScreenModal' }}
+        />
+        <Stack.Screen
+          name='article-editor-modal'
+          options={{
+            headerShown: true,
+            headerTransparent: true,
+            title: '',
+            presentation: 'modal',
+            gestureEnabled: false,
+          }}
+        />
+        <Stack.Screen
+          name='today-song-modal'
+          options={{
+            headerShown: false,
+            gestureDirection: 'vertical',
+          }}
+        />
+      </Stack>
+    </ActionSheetProvider>
   );
 }

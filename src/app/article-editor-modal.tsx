@@ -8,6 +8,9 @@ import {
   useColorScheme,
   Pressable,
   ScrollView,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  useWindowDimensions,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -19,7 +22,18 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import PagerView from 'react-native-pager-view';
+import {
+  RichText,
+  Toolbar,
+  useEditorBridge,
+  darkEditorTheme,
+  CoreBridge,
+  darkEditorCss,
+  TenTapStartKit,
+} from '@10play/tentap-editor';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 import ArticleTag from '@/src/components/ArticleTag';
 import Color from '@/src/constants/Colors';
@@ -29,7 +43,6 @@ import Text from '@/src/components/ThemedText';
 import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import TrackInputField from '@/src/components/TrackInputField';
 import LiveInputField from '../components/LiveInputField';
-import { useHeaderHeight } from '@react-navigation/elements';
 import EditorImagePicker from '../components/EditorImagePicker';
 
 const BOTTOM_TAB_HEIGHT = 96.7;
@@ -37,17 +50,73 @@ const BOTTOM_TAB_HEIGHT = 96.7;
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
+  const { showActionSheetWithOptions } = useActionSheet();
+  const textColor = Color[colorScheme ?? 'light'].text;
+
+  const onClose = () => {
+    const title = '下書きに保存しまますか？';
+    const options = ['内容を削除する', '内容を保存する', '編集を続行する'];
+    const destructiveButtonIndex = 0;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        title,
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex: number) => {
+        switch (selectedIndex) {
+          case 0:
+            navigation.goBack();
+            break;
+          case 1:
+            navigation.goBack();
+            break;
+          case 2:
+            break;
+        }
+      }
+    );
+  };
+
+  const onPublish = () => {
+    const options = ['公開する', '編集を続行する'];
+    const cancelButtonIndex = 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      (selectedIndex: number) => {
+        if (selectedIndex === 0) {
+          navigation.goBack();
+        }
+      }
+    );
+  };
 
   return (
     <BgView style={{ flex: 1, paddingTop: insets.top }}>
       <Stack.Screen
         options={{
-          headerRight: () => (
-            <Button title='公開する' onPress={() => navigation.goBack()} />
+          headerLeft: () => (
+            <Button title='閉じる' color={textColor} onPress={onClose} />
           ),
+          headerRight: () => <Button title='公開する' onPress={onPublish} />,
         }}
       />
-      <ArticleConfigScreen />
+      <PagerView style={{ flex: 1 }} initialPage={0}>
+        <View key={1}>
+          <ArticleConfigScreen />
+        </View>
+        <View key={2}>
+          <EditorScreen />
+        </View>
+      </PagerView>
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
@@ -166,6 +235,42 @@ const ArticleConfigScreen = () => {
   );
 };
 
+const EditorScreen = () => {
+  const colorScheme = useColorScheme();
+  const backgroundColor = Color[colorScheme ?? 'light'].secondaryBackground;
+  const textColor = Color[colorScheme ?? 'light'].text;
+
+  const { top } = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
+  const keyboardVerticalOffset = headerHeight + top;
+
+  const editorStyle = `
+  *{
+    color: ${textColor};
+    }`;
+
+  const editor = useEditorBridge({
+    autofocus: true,
+    avoidIosKeyboard: true,
+    bridgeExtensions: [...TenTapStartKit, CoreBridge.configureCSS(editorStyle)],
+  });
+
+  editor.injectCSS(editorStyle, '*');
+
+  return (
+    <View style={styles.editorContainer}>
+      <RichText editor={editor} style={styles.editor} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardAvoidingView}
+        keyboardVerticalOffset={keyboardVerticalOffset}
+      >
+        <Toolbar editor={editor} />
+      </KeyboardAvoidingView>
+    </View>
+  );
+};
+
 export default ArticleEditorModal;
 
 const styles = StyleSheet.create({
@@ -228,5 +333,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     paddingHorizontal: 16,
+  },
+  editorContainer: {
+    flex: 1,
+  },
+  editor: {
+    marginHorizontal: 16,
+    backgroundColor: 'transparent',
+  },
+  keyboardAvoidingView: {
+    position: 'absolute',
+    width: '100%',
+    bottom: 0,
   },
 });

@@ -61,3 +61,13 @@ export type PostDataType = {
   user: string;
   userAvatarUrl: string;
 };
+
+export type TodaySongDataType = {
+  todaySongID: number;
+  userID: string;
+  userAvatarUrl: string;
+  songName: string;
+  artistName: string;
+  artworkUrl: string;
+  body: string;
+};
