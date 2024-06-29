@@ -52,8 +52,9 @@ function RootLayoutNav() {
       <Stack.Screen
         name='article-editor-modal'
         options={{
-          headerShown: false,
-          title: 'Article Editor',
+          headerShown: true,
+          headerTransparent: true,
+          title: '',
           presentation: 'modal',
           gestureEnabled: false,
         }}

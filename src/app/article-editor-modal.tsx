@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigation } from 'expo-router';
+import { Stack, useNavigation } from 'expo-router';
 import {
   View,
   Button,
@@ -36,8 +36,26 @@ const BOTTOM_TAB_HEIGHT = 96.7;
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
-  const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
+
+  return (
+    <BgView style={{ flex: 1, paddingTop: insets.top }}>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <Button title='公開する' onPress={() => navigation.goBack()} />
+          ),
+        }}
+      />
+      <ArticleConfigScreen />
+      {/* Use a light status bar on iOS to account for the black space above the modal */}
+      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+    </BgView>
+  );
+};
+
+const ArticleConfigScreen = () => {
+  const colorScheme = useColorScheme();
 
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
@@ -65,128 +83,86 @@ const ArticleEditorModal = () => {
       });
     }
   };
-
   return (
-    <BgView style={{ flex: 1, paddingTop: insets.top }}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{
-          marginBottom: BOTTOM_TAB_HEIGHT - 16,
-        }}
-      >
-        <BgView style={styles.container}>
-          <AnimatedTextInput
-            label='Article Title'
-            focusedLabelTop={16}
-            focusedLabelSize={16}
-            multiline={true}
-            blurOnSubmit={true}
-            style={[
-              styles.title,
-              { color: textColor, borderBottomColor: secondaryTextColor },
-            ]}
-          />
-          <View style={styles.articleMetadataContainer}>
-            <View style={styles.articleTagWrapper}>
-              <Text style={styles.articlePickerText}>Articleの種類</Text>
-              <View style={styles.articleTagContainer}>
-                {articleTypes.map((type) => {
-                  const animatedStyle = useAnimatedStyle(() => {
-                    return {
-                      opacity: opacityValues[type].value,
-                    };
-                  });
-
-                  return (
-                    <Pressable
-                      key={type}
-                      onPress={() => handleTagPress(type)}
-                      style={styles.articleTag}
-                    >
-                      <Animated.View style={animatedStyle}>
-                        <ArticleTag type={type} size={17} />
-                      </Animated.View>
-                    </Pressable>
-                  );
-                })}
-              </View>
-            </View>
-            {selectedType === 'general' && (
-              <>
-                <Animated.Text
-                  entering={FadeIn}
-                  exiting={FadeOut}
-                  style={[styles.imagePickerText, { color: textColor }]}
-                >
-                  見出し画像
-                </Animated.Text>
-                <Animated.View
-                  entering={FadeIn}
-                  exiting={FadeOut}
-                  style={styles.imagePickerContainer}
-                >
-                  <EditorImagePicker />
-                </Animated.View>
-              </>
-            )}
-            {selectedType === 'review' && <TrackInputField />}
-            {selectedType === 'liveReport' && (
-              <>
-                <LiveInputField />
-                <Animated.Text
-                  entering={FadeIn}
-                  exiting={FadeOut}
-                  style={[styles.imagePickerText, { color: textColor }]}
-                >
-                  見出し画像
-                </Animated.Text>
-                <Animated.View
-                  entering={FadeIn}
-                  exiting={FadeOut}
-                  style={styles.imagePickerContainer}
-                >
-                  <EditorImagePicker />
-                </Animated.View>
-              </>
-            )}
-          </View>
-        </BgView>
-      </ScrollView>
-
-      <BgView
-        style={[
-          styles.bottomButtonWrapper,
-          {
-            paddingBottom: insets.bottom,
-            paddingTop: 12,
-          },
-        ]}
-      >
-        <View
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <BgView style={styles.container}>
+        <AnimatedTextInput
+          label='Article Title'
+          focusedLabelTop={16}
+          focusedLabelSize={16}
+          multiline={true}
+          blurOnSubmit={true}
           style={[
-            styles.bottomButtonContainer,
-            { borderTopColor: secondaryTextColor },
+            styles.title,
+            { color: textColor, borderBottomColor: secondaryTextColor },
           ]}
-        >
-          <View style={[styles.buttonContainer]}>
-            <FontAwesome6 name='xmark' size={16} color={textColor} />
-            <Button
-              title='Close'
-              onPress={() => {
-                navigation.goBack();
-              }}
-              color={textColor}
-            />
+        />
+        <View style={styles.articleMetadataContainer}>
+          <View style={styles.articleTagWrapper}>
+            <Text style={styles.articlePickerText}>Articleの種類</Text>
+            <View style={styles.articleTagContainer}>
+              {articleTypes.map((type) => {
+                const animatedStyle = useAnimatedStyle(() => {
+                  return {
+                    opacity: opacityValues[type].value,
+                  };
+                });
+
+                return (
+                  <Pressable
+                    key={type}
+                    onPress={() => handleTagPress(type)}
+                    style={styles.articleTag}
+                  >
+                    <Animated.View style={animatedStyle}>
+                      <ArticleTag type={type} size={17} />
+                    </Animated.View>
+                  </Pressable>
+                );
+              })}
+            </View>
           </View>
-          <View style={styles.buttonContainer}>
-            <FontAwesome6 name='check' size={16} color={textColor} />
-            <Button title='Publish' onPress={() => {}} color={textColor} />
-          </View>
+          {selectedType === 'general' && (
+            <>
+              <Animated.Text
+                entering={FadeIn}
+                exiting={FadeOut}
+                style={[styles.imagePickerText, { color: textColor }]}
+              >
+                見出し画像
+              </Animated.Text>
+              <Animated.View
+                entering={FadeIn}
+                exiting={FadeOut}
+                style={styles.imagePickerContainer}
+              >
+                <EditorImagePicker />
+              </Animated.View>
+            </>
+          )}
+          {selectedType === 'review' && <TrackInputField />}
+          {selectedType === 'liveReport' && (
+            <>
+              <LiveInputField />
+              <Animated.Text
+                entering={FadeIn}
+                exiting={FadeOut}
+                style={[styles.imagePickerText, { color: textColor }]}
+              >
+                見出し画像
+              </Animated.Text>
+              <Animated.View
+                entering={FadeIn}
+                exiting={FadeOut}
+                style={styles.imagePickerContainer}
+              >
+                <EditorImagePicker />
+              </Animated.View>
+            </>
+          )}
         </View>
       </BgView>
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-    </BgView>
+    </ScrollView>
   );
 };
 
