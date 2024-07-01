@@ -56,7 +56,7 @@ export type PostDataType = {
   songName?: string;
   artistName?: string;
   musicUrl?: string;
-  ImageUrl?: string;
+  ImageUrl: string[];
   userID: string;
   user: string;
   userAvatarUrl: string;

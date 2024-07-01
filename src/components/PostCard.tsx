@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet, Text, Pressable, Dimensions } from 'react-native';
+import React, {useState } from 'react';
+import { View, StyleSheet, Text, Pressable, Dimensions, Modal } from 'react-native';
 import { Image } from 'expo-image';
 import MusicBarOfPost from './MusicBarOfPost';
 import { type PostDataType } from '../types';
@@ -7,10 +7,28 @@ import { Link } from 'expo-router';
 import HeartIcon from './Icon/HeartIcon';
 import IconAntDesign from './Icon/AntDesign';
 import ShareIcon from './Icon/ShareIcon';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 const screen = Dimensions.get('screen');
 
 const PostCard = (props: PostDataType): JSX.Element => {
+  
+  const [modalStatus, setModalStatus] = useState(false);
+  const [imageUrl, setImageUrl] = useState([{url: ""}])
+  const [initialIndex, setInitialIndex] = useState(0);
+
+  const onClose = () => {
+    setModalStatus(false)
+  }
+
+  const HandleImage = (n : number) => {
+    if (props?.ImageUrl) {
+      setImageUrl(props.ImageUrl.map((url) => ({ url })))
+    }
+    setInitialIndex(n)
+    setModalStatus(true);
+  }
+  
   return (
     <Link
       href={{
@@ -46,9 +64,73 @@ const PostCard = (props: PostDataType): JSX.Element => {
             </View>
             <View>
               <Text style={styles.postContent}>{props.postContent}</Text>
-              {props.ImageUrl != '' && (
-                <Image source={props.ImageUrl} style={styles.postImage} />
+              {props.ImageUrl.length === 0 && ( null )}
+              {props.ImageUrl.length === 1 && ( 
+                <Pressable onPress={(e) => HandleImage(0)}>
+                  <Image source={props.ImageUrl[0]} style={styles.postImage} />
+                </Pressable>
               )}
+              {props.ImageUrl.length === 2 && (
+              <View style={styles.imageContainer}> 
+                <Pressable onPress={(e) => HandleImage(0)}>
+                  <Image source={props.ImageUrl[0]} style={styles.Image2}/>
+                </Pressable>
+                <Pressable onPress={(e) => HandleImage(1)}>
+                  <Image source={props.ImageUrl[1]} style={styles.Image2}/>
+                </Pressable>
+              </View>)}
+              {props.ImageUrl.length === 3 && (
+              <View style={styles.imageContainer}> 
+                <Pressable onPress={(e) => HandleImage(0)}>
+                  <Image source={props.ImageUrl[0]} style={styles.Image2}/>
+                </Pressable>
+                <View style={styles.imageContainer2}>
+                  <Pressable onPress={(e) => HandleImage(1)}>  
+                    <Image source={props.ImageUrl[1]} style={styles.Image3}/>
+                  </Pressable>
+                  <Pressable onPress={(e) => HandleImage(2)}> 
+                    <Image source={props.ImageUrl[2]} style={styles.Image3}/>
+                  </Pressable>
+                </View>
+              </View>)}
+              {props.ImageUrl.length === 4 && (
+              <View style={styles.imageContainer}> 
+                <View style={styles.imageContainer2}>
+                  <Pressable onPress={(e) => HandleImage(0)}>  
+                    <Image source={props.ImageUrl[0]} style={styles.Image3}/>
+                  </Pressable>
+                  <Pressable onPress={(e) => HandleImage(1)}> 
+                    <Image source={props.ImageUrl[1]} style={styles.Image3}/>
+                  </Pressable>
+                </View>
+                <View style={styles.imageContainer2}>
+                  <Pressable onPress={(e) => HandleImage(2)}>
+                    <Image source={props.ImageUrl[2]} style={styles.Image3}/>
+                  </Pressable>
+                  <Pressable onPress={(e) => HandleImage(2)}>
+                    <Image source={props.ImageUrl[3]} style={styles.Image3}/>
+                  </Pressable> 
+                </View>
+              </View>)}
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalStatus}
+                onRequestClose={onClose}
+                style={styles.modalOverlay}
+              >
+                <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>X</Text>
+                </Pressable>
+                <View style={{flex:1, paddingTop: 30, backgroundColor: '#000000'}}>
+                <ImageViewer 
+                imageUrls={imageUrl}
+                enableSwipeDown
+                onSwipeDown={onClose}
+                index={initialIndex}
+                renderImage={(props) => <Image {...props} style={styles.imageModal} contentFit='contain'/>}/>
+                </View>
+          </Modal>
               {props.musicUrl != '' && (
                 <MusicBarOfPost {...props} style={{ marginLeft: 0 }} />
               )}
@@ -58,7 +140,6 @@ const PostCard = (props: PostDataType): JSX.Element => {
         <View style={styles.Icons}>
           <HeartIcon size={16} />
           <IconAntDesign name='message1' size={16} />
-          <IconAntDesign name='retweet' size={16} />
           <ShareIcon size={16} />
         </View>
         <View
@@ -135,7 +216,53 @@ const styles = StyleSheet.create({
     width: screen.width - 74,
     height: 150,
     borderRadius: 10,
-    maxHeight: screen.width - 74,
     marginBottom: 16,
+  },
+  imageContainer: {
+    height: 150,
+    width: screen.width - 74,
+    borderRadius: 12,
+    marginRight: 12,
+    marginBottom: 16,
+    flexDirection: 'row',
+    objectFit: 'cover',
+    overflow: 'hidden',
+    flexWrap: 'wrap',
+    gap: 2
+  },
+  Image2: {
+    height: 150,
+    width: screen.width/2 - 38
+  },
+  imageContainer2:{
+    height: 150,
+    width: screen.width/2 - 38,
+    gap: 2
+  },
+  Image3: {
+    height: 78,
+    width: '100%'
+  },
+  imageModal: {
+    flex: 1,
+    resizeMode: 'contain', // 画像のリサイズモード
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 1,
+    padding: 10,
+    backgroundColor: 'black',
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: '#ffffff',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
 });
