@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   View,
   useWindowDimensions,
@@ -11,6 +11,7 @@ import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
 import ImageCropPicker from 'react-native-image-crop-picker';
+import { SaveFormat, manipulateAsync } from 'expo-image-manipulator';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import EditorOptionButton from './EditorOptionButton';
@@ -18,8 +19,9 @@ import Text from './ThemedText';
 import Color from '../constants/Colors';
 
 const EditorImagePicker = () => {
+  const defaultImage = require('@/src/assets/images/snsicon.png');
   const { width } = useWindowDimensions();
-  const [image, setImage] = useState<string | undefined>(undefined);
+  const [image, setImage] = useState<string>(defaultImage);
   const [imageEdited, setImageEdited] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -40,7 +42,7 @@ const EditorImagePicker = () => {
       setLoading(true);
       const selectedImage = result.assets[0].uri;
       setImageEdited(false);
-      openCropEditor(selectedImage);
+      return selectedImage;
     } else {
       setLoading(false);
     }
@@ -55,19 +57,38 @@ const EditorImagePicker = () => {
         cropperToolbarTitle: '画像を編集',
         mediaType: 'photo',
       });
-      setImage(cropped.path);
+      const croppedImageUri = cropped.path;
+      setImage(croppedImageUri);
       setImageEdited(true);
+      return croppedImageUri;
     } catch (e: any) {
-      console.log(e.message);
       if (e.message === 'User cancelled image selection') {
         setErrorMessage(
           '画像のクロップがキャンセルされたので、画像を読み込めませんでした。'
         );
+      } else {
+        setErrorMessage('画像のクロップに失敗しました。');
       }
     } finally {
       setLoading(false);
     }
   };
+
+  const processImage = async () => {
+    const selectedImage = await pickImage();
+    if (!selectedImage) return;
+
+    const croppedImage = await openCropEditor(selectedImage);
+    if (!croppedImage) return;
+
+    const result = await manipulateAsync(croppedImage, [], {
+      compress: 1,
+      format: SaveFormat.WEBP,
+    });
+    setImage(result.uri);
+  };
+
+  console.log(image);
 
   return (
     <View
@@ -75,7 +96,10 @@ const EditorImagePicker = () => {
         gap: 12,
       }}
     >
-      <EditorOptionButton onPress={pickImage} title='写真ライブラリから選ぶ' />
+      <EditorOptionButton
+        onPress={processImage}
+        title='写真ライブラリから選ぶ'
+      />
       <Modal animationType='fade' transparent={true} visible={loading}>
         <View style={styles.dialog}>
           <BlurView tint={'systemMaterial'} style={styles.dialogInner}>
