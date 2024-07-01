@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, useColorScheme } from 'react-native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
@@ -7,6 +7,8 @@ import BgView from './ThemedBgView';
 import SecondaryBgView from './ThemedSecondaryBgView';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
+import Animated, {FadeIn} from 'react-native-reanimated';
+import Colors from '../constants/Colors';
 
 import todaySongData from '../assets/todaySongData';
 import { Text } from './Themed';
@@ -17,13 +19,20 @@ interface Props {
         artworkUrl?: string,
         songName: string,
         artistName: string,
-        body: string
+        body: string,
+        userID: string
     }
 }
 
 const TodaySongCardForList = (props: Props) : JSX.Element => {
   const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
   const [screenHeight, setScreenHeight] = useState(Dimensions.get('window').height);
+  
+  const colorScheme = useColorScheme();
+  const backgroundColor =
+    colorScheme === 'dark'
+      ? Colors.dark.secondaryBackground
+      : Colors.light.background;
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -39,29 +48,27 @@ const TodaySongCardForList = (props: Props) : JSX.Element => {
     };
   }, []);
 
+  const shadowColor = colorScheme === 'dark' ? '#fff' : '#000';
+
   const { top, bottom } = useSafeAreaInsets();
 
   return (
-      <BgView style={[styles.cardContainer, {width: (screenWidth-30)/2}]}>
-        <BgView style={styles.card}>
-          <View style={styles.todaySongInner}>
-            <View style={styles.song}>
-              <View style={styles.imageContainer}>
-                <Image
-                  source={{ uri: props.todaySong.artworkUrl }}
-                  style={[styles.image, {width:(screenWidth-30)/2-20, height:(screenWidth-30)/2-20}]}
-                />
-              </View>
-              <View style={styles.songInfo}>
-                <Text style={styles.songName}>{props.todaySong.songName}</Text>
-                <Text style={styles.artistName}>{props.todaySong.artistName}</Text>
-              </View>
+      <BgView style={styles.cardContainer}>
+        <View style={styles.card}>
+          <Image
+          source={{ uri: props.todaySong.artworkUrl }}
+          style={styles.image}
+          />
+          <View style={styles.infoContainer}>
+            <View style={styles.songInfo}>
+              <Text style={styles.songName}>{props.todaySong.songName}</Text>
+              <Text style={styles.artistName}>{props.todaySong.artistName}</Text>
             </View>
-            <View style={styles.body}>
-              <Text  numberOfLines={2} ellipsizeMode="tail">{props.todaySong.body}</Text>
+            <View style={styles.userInfo}>
+              <Text>{props.todaySong.userID}</Text>
             </View>
           </View>
-        </BgView>
+        </View>
       </BgView>
   );
 };
@@ -71,57 +78,23 @@ export default TodaySongCardForList;
 const styles = StyleSheet.create({
   cardContainer: {
     justifyContent: 'center',
+    paddingHorizontal: 16,
+    marginBottom: 12
   },
-  card: {
-    alignItems: 'center',
-    borderRadius: 12,
-    padding: 10,
-    gap: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
+  card:{
+    flexDirection: 'row'
   },
-  userInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    gap: 8,
-  },
-  todaySongInner: {
-    width: '100%',
-    gap: 16,
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 20,
-    backgroundColor: 'blue',
+  infoContainer:{
+    justifyContent: 'space-between'
   },
   song: {
     alignItems: 'center',
-    gap: 16,
-  },
-  imageContainer: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
+    gap: 8,
   },
   image: {
-    width: 220,
-    height: 220,
-    borderRadius: 12,
+    width: 100,
+    height: 100,
+    borderRadius:12,
     borderCurve: 'continuous',
   },
   songName: {
@@ -130,33 +103,16 @@ const styles = StyleSheet.create({
   },
   artistName: {
     fontSize: 16,
+    color: '#808080'
   },
   songInfo: {
-    alignItems: 'center',
+    marginLeft: 8,
     gap: 4,
+    paddingTop: 4
   },
-  body: {
-    paddingBottom: 5,
-  },
-  buttonContainer: {
-    justifyContent: 'flex-end',
-    paddingTop: 16,
-  },
-  playButtonContainer: {
-    justifyContent: 'center',
-    alignSelf: 'center',
-    borderRadius: 100,
-    paddingHorizontal: 36,
-    paddingVertical: 8,
-    backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
-  },
+  userInfo: {
+    marginLeft: 8,
+    gap: 4,
+    paddingBottom: 4
+  }
 });
