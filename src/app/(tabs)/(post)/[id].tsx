@@ -7,6 +7,7 @@ import {
   Dimensions,
   Image as RNImage,
   Modal,
+  GestureResponderEvent
 } from 'react-native';
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -21,16 +22,31 @@ import TabActionMenuList from '@/src/components/TabActionMenuList';
 import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 import ShareIcon from '@/src/components/Icon/ShareIcon';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 
 const screen = Dimensions.get('screen');
 
 const PostDetailScreen = (): JSX.Element => {
   const { id } = useLocalSearchParams();
-  const [height, setHeight] = useState<number>(0);
+  const post = postData.find((item) => item.postID === id);
   const [modalStatus, setModalStatus] = useState(false);
+  const [imageUrl, setImageUrl] = useState([{url: ""}])
+  const [initialIndex, setInitialIndex] = useState(0);
   const { setActionVisible } = useTabAction();
   const { setProfileDismissed } = useProfileScreen();
+
+  const HandleImage = (n : number) => {
+    if (post?.ImageUrl) {
+      setImageUrl(post.ImageUrl.map((url) => ({ url })))
+    }
+    setInitialIndex(n)
+    setModalStatus(true);
+  }
+
+  const onClose = () => {
+    setModalStatus(false)
+  }
   useFocusEffect(
     React.useCallback(() => {
       setProfileDismissed(false);
@@ -39,15 +55,8 @@ const PostDetailScreen = (): JSX.Element => {
       };
     }, [])
   );
-  const post = postData.find((item) => item.postID === id);
   if (!post) {
     return <Text>Post not found.</Text>;
-  }
-  if (post?.ImageUrl) {
-    RNImage.getSize(post.ImageUrl, (originalWidth, originalHeight) => {
-      const newHeight = (Number(screen.width) * originalHeight) / originalWidth;
-      setHeight(newHeight);
-    });
   }
   return (
     <View style={styles.container}>
@@ -61,51 +70,77 @@ const PostDetailScreen = (): JSX.Element => {
       >
         {post.postContent}
       </Text>
-      {post.ImageUrl && (
-        <>
-          <Pressable onPress={() => setModalStatus(true)}>
-            <Image
-              style={[
-                { width: screen.width * 0.9 },
-                { height: height * 0.9 },
-                { marginHorizontal: screen.width * 0.05 },
-                { borderRadius: 10 },
-              ]}
-              source={post.ImageUrl}
-            />
-          </Pressable>
-          <Modal
-            visible={modalStatus}
-            animationType='fade'
-            onRequestClose={() => setModalStatus(false)}
-            style={[
-              { width: screen.width },
-              { height: screen.height },
-              { justifyContent: 'center' },
-              { backgroundColor: '#000000' },
-            ]}
-          >
-            <Pressable onPress={() => setModalStatus(false)}>
-              <View
-                style={[
-                  { width: screen.width },
-                  { height: screen.height },
-                  { justifyContent: 'center' },
-                  { backgroundColor: '#000000' },
-                ]}
-              >
-                <Pressable>
-                  <GestureHandlerRootView>
-                    <Image
-                      source={post.ImageUrl}
-                      style={[{ width: screen.width }, { height: height }]}
-                    />
-                  </GestureHandlerRootView>
+      {post.ImageUrl.length !== 0 && (
+        <View>
+            <View>
+              {post.ImageUrl.length === 1 && ( 
+                <Pressable onPress={(e) => HandleImage(0)}>
+                  <Image source={post.ImageUrl[0]} style={styles.postImage} />
                 </Pressable>
-              </View>
-            </Pressable>
+              )}
+              {post.ImageUrl.length === 2 && (
+              <View style={styles.imageContainer}> 
+                <Pressable onPress={(e) => HandleImage(0)}>
+                  <Image source={post.ImageUrl[0]} style={styles.Image2}/>
+                </Pressable>
+                <Pressable onPress={(e) => HandleImage(1)}>
+                  <Image source={post.ImageUrl[1]} style={styles.Image2}/>
+                </Pressable>
+              </View>)}
+              {post.ImageUrl.length === 3 && (
+              <View style={styles.imageContainer}> 
+                <Pressable onPress={(e) => HandleImage(0)}>
+                  <Image source={post.ImageUrl[0]} style={styles.Image2}/>
+                </Pressable>
+                <View style={styles.imageContainer2}>
+                  <Pressable onPress={(e) => HandleImage(1)}>  
+                    <Image source={post.ImageUrl[1]} style={styles.Image3}/>
+                  </Pressable>
+                  <Pressable onPress={(e) => HandleImage(2)}> 
+                    <Image source={post.ImageUrl[2]} style={styles.Image3}/>
+                  </Pressable>
+                </View>
+              </View>)}
+              {post.ImageUrl.length === 4 && (
+              <View style={styles.imageContainer}> 
+                <View style={styles.imageContainer2}>
+                  <Pressable onPress={(e) => HandleImage(0)}>  
+                    <Image source={post.ImageUrl[0]} style={styles.Image3}/>
+                  </Pressable>
+                  <Pressable onPress={(e) => HandleImage(1)}> 
+                    <Image source={post.ImageUrl[1]} style={styles.Image3}/>
+                  </Pressable>
+                </View>
+                <View style={styles.imageContainer2}>
+                  <Pressable onPress={(e) => HandleImage(2)}>
+                    <Image source={post.ImageUrl[2]} style={styles.Image3}/>
+                  </Pressable>
+                  <Pressable onPress={(e) => HandleImage(2)}>
+                    <Image source={post.ImageUrl[3]} style={styles.Image3}/>
+                  </Pressable> 
+                </View>
+              </View>)}
+            </View>
+          <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalStatus}
+                onRequestClose={onClose}
+                style={styles.modalOverlay}
+              >
+                <Pressable style={styles.closeButton} onPress={onClose}>
+                <Text style={styles.closeButtonText}>閉じる</Text>
+                </Pressable>
+                <View style={{flex:1, paddingTop: 30, backgroundColor: '#000000'}}>
+                <ImageViewer 
+                imageUrls={imageUrl}
+                enableSwipeDown
+                onSwipeDown={onClose}
+                index={initialIndex}
+                renderImage={(props) => <Image {...props} style={styles.image} contentFit='contain'/>}/>
+                </View>
           </Modal>
-        </>
+        </View>
       )}
       {post.musicUrl && <MusicBarOfPost {...post} style={{ marginLeft: 12 }} />}
       <View style={styles.infoContainer}>
@@ -204,5 +239,60 @@ const styles = StyleSheet.create({
   playIcon: {
     color: '#ffffff',
     opacity: 0.8,
+  },
+  postImage: {
+    marginRight: 12,
+    width: screen.width - 32,
+    height: 150,
+    borderRadius: 10,
+    marginBottom: 16,
+  },
+  imageContainer: {
+    height: 150,
+    width: screen.width - 32,
+    borderRadius: 12,
+    marginRight: 12,
+    marginBottom: 16,
+    flexDirection: 'row',
+    objectFit: 'cover',
+    overflow: 'hidden',
+    flexWrap: 'wrap',
+    gap: 2,
+    marginHorizontal:16
+  },
+  Image2: {
+    height: 150,
+    width: screen.width/2 - 17
+  },
+  imageContainer2:{
+    height: 150,
+    width: screen.width/2 - 17,
+    gap: 2
+  },
+  Image3: {
+    height: 78,
+    width: '100%'
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  },
+  image: {
+    flex: 1,
+    resizeMode: 'contain', // 画像のリサイズモード
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 1,
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'black',
   },
 });
