@@ -67,6 +67,15 @@ function RootLayoutNav() {
           gestureEnabled: false,
         }}
       />
+      <Stack.Screen
+        name='reply-editor-modal'
+        options={{
+          headerShown: false,
+          title: 'reply Editor',
+          presentation: 'modal',
+          gestureEnabled: false,
+        }}
+      />
     </Stack>
   );
 }

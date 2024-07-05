@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, Pressable, Dimensions, Modal } from 'react-nati
 import { Image } from 'expo-image';
 import MusicBarOfPost from './MusicBarOfPost';
 import { type PostDataType } from '../types';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import HeartIcon from './Icon/HeartIcon';
 import IconAntDesign from './Icon/AntDesign';
 import ShareIcon from './Icon/ShareIcon';
@@ -12,7 +12,7 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 const screen = Dimensions.get('screen');
 
 const PostCard = (props: PostDataType): JSX.Element => {
-  
+  const router = useRouter();
   const [modalStatus, setModalStatus] = useState(false);
   const [imageUrl, setImageUrl] = useState([{url: ""}])
   const [initialIndex, setInitialIndex] = useState(0);
@@ -29,6 +29,10 @@ const PostCard = (props: PostDataType): JSX.Element => {
     setModalStatus(true);
   }
   
+  const HandleReply = () => {
+    router.push('/reply-editor-modal');
+  }
+
   return (
     <Link
       href={{
@@ -139,7 +143,7 @@ const PostCard = (props: PostDataType): JSX.Element => {
         </View>
         <View style={styles.Icons}>
           <HeartIcon size={16} />
-          <IconAntDesign name='message1' size={16} />
+          <IconAntDesign name='message1' size={16} onPress={HandleReply}/>
           <ShareIcon size={16} />
         </View>
         <View
