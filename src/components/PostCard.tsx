@@ -8,6 +8,7 @@ import HeartIcon from './Icon/HeartIcon';
 import IconAntDesign from './Icon/AntDesign';
 import ShareIcon from './Icon/ShareIcon';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import { Message } from 'iconoir-react-native'
 
 const screen = Dimensions.get('screen');
 
@@ -28,7 +29,8 @@ const PostCard = (props: PostDataType): JSX.Element => {
     setInitialIndex(n)
     setModalStatus(true);
   }
-  
+
+
   return (
     <Link
       href={{
@@ -139,7 +141,9 @@ const PostCard = (props: PostDataType): JSX.Element => {
         </View>
         <View style={styles.Icons}>
           <HeartIcon size={16} />
-          <IconAntDesign name='message1' size={16} />
+          <Link href='/reply-editor-modal' style={{marginTop: 4}}>
+          <Message width={16} height={16} color={'#000000'}/>
+          </Link>
           <ShareIcon size={16} />
         </View>
         <View

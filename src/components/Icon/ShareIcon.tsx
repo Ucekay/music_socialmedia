@@ -1,5 +1,5 @@
 import React from "react";
-import IconAntDesign from "./AntDesign";
+import { ShareIos } from "iconoir-react-native";
 import { Share, Alert } from 'react-native';
 
 const ShareIcon = (props: any): JSX.Element => {
@@ -23,7 +23,7 @@ const ShareIcon = (props: any): JSX.Element => {
         }
       };
     return (
-      <IconAntDesign name='upload' size={props.size} onPress={onShare} style={props.style}/>
+      <ShareIos width={props.size} height={props.size} onPress={onShare} style={props.style} color={'#000000'}/>
     );
 };
 
