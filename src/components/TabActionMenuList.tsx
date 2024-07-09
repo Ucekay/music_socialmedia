@@ -39,6 +39,16 @@ const actions = [
     href: '/article-editor-modal',
   },
   {
+    id: 'profileeditor',
+    title: 'profileを編集',
+    icon: ({ theme }: { theme: string }) => {
+      return (
+        <SymbolView name='newspaper' tintColor={theme} style={styles.symbol} />
+      );
+    },
+    href: '/profile-editor-modal',
+  },
+  {
     id: 'profile',
     title: 'プロフィール',
     icon: ({ theme }: { theme: string }) => {

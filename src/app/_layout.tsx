@@ -44,6 +44,15 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <Stack>
+      <Stack.Screen 
+        name='index'
+        options={{
+          headerShown: false,
+          title: 'Login Screen',
+          gestureEnabled: false,
+          gestureDirection: 'vertical', // 下から現れるように設定
+        }}
+      />
       <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
       <Stack.Screen
         name='modal'
@@ -63,6 +72,15 @@ function RootLayoutNav() {
         options={{
           headerShown: false,
           title: 'Post Editor',
+          presentation: 'modal',
+          gestureEnabled: false,
+        }}
+      />
+      <Stack.Screen
+        name='profile-editor-modal'
+        options={{
+          headerShown: false,
+          title: 'Profile Editor',
           presentation: 'modal',
           gestureEnabled: false,
         }}
