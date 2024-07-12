@@ -79,6 +79,38 @@ const userData = [
     followers: 1200,
     following: 1100,
   },
+  {
+    userID: '@MorningFan',
+    user: '朝ごはん好き',
+    userAvatarUrl: 'https://api.dicebear.com/8.x/adventurer/png',
+    bio: '朝ごはんが大好きな私です。毎朝の食事に情熱を注ぎ、栄養たっぷりでおいしい朝食を作るのが日課です。おいしい朝ごはんのレシピや写真をシェアしています。',
+    followers: 245,
+    following: 190,
+  },
+  {
+    userID: '@MovieBuff',
+    user: '映画マニア',
+    userAvatarUrl: 'https://api.dicebear.com/8.x/identicon/png',
+    bio: '映画が私の人生の一部です。新作映画のレビューやクラシック映画の紹介など、映画に関することなら何でも発信しています。映画好きの皆さんと映画の魅力を語り合いたいです。',
+    followers: 398,
+    following: 320,
+  },
+  {
+    userID: '@Camper123',
+    user: 'キャンプ好き',
+    userAvatarUrl: 'https://api.dicebear.com/8.x/bottts/png',
+    bio: '自然の中で過ごすのが大好きなキャンプ好きです。週末はキャンプを楽しみ、自然の美しさを満喫しています。キャンプのアイデアやアウトドアの楽しみ方をシェアしています。',
+    followers: 180,
+    following: 160,
+  },
+  {
+    userID: '@ChefMaster',
+    user: 'シェフマスター',
+    userAvatarUrl: 'https://api.dicebear.com/8.x/micah/png',
+    bio: '料理を愛するシェフマスターです。特に新しいレシピを試すのが好きで、美味しい料理を作ることが生きがいです。レシピや料理のコツを皆さんと共有しています。',
+    followers: 325,
+    following: 280,
+  }
 ];
 
 export default userData;

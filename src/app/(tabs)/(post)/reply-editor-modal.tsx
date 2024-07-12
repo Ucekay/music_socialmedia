@@ -1,4 +1,3 @@
-// ReplyScreen.js
 import React, { useState, useRef, useEffect} from 'react';
 import { View,
          TextInput, 
@@ -23,7 +22,7 @@ import BgView from '../../../components/ThemedBgView';
 import IconAntDesign from '../../../components/Icon/AntDesign';
 import Color from '@/src/constants/Colors';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { useNavigation } from 'expo-router';
+import { useNavigation, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import Icon from "react-native-vector-icons/AntDesign"
 import ImageAspectKept from '../../../components/ImageAspectKept';
@@ -42,6 +41,23 @@ const ReplyEditorModal = () => {
   const colorScheme = useColorScheme();
   const navigation = useNavigation();
   const animatedHeight = useRef(new Animated1.Value(0)).current; 
+
+  const params = useLocalSearchParams();
+  const post = params;
+
+  let ImageUrl: string[] = [];
+  
+  if (typeof params.ImageUrlRow === 'string') {
+    try {
+      ImageUrl = JSON.parse(params.ImageUrlRow);
+    } catch (error) {
+      console.error('Error parsing image URLs:', error);
+    }
+  } else if (Array.isArray(params.ImageUrlRow)) {
+    ImageUrl = params.ImageUrlRow;
+  } else {
+    console.error('Invalid image URLs:', params.ImageUrlRow);
+  }
 
   const [postHeight2, setPostHeight2] = useState<number>(0);
   const postComponentRef = useRef(null);
@@ -175,10 +191,6 @@ const ReplyEditorModal = () => {
   return (
     
     <BgView style={[styles.container]}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
-      >
       <View style={styles.header}>
         <Text style={[styles.headertitle, {color: textColor}]}>返信を作成</Text>
       </View>
@@ -190,11 +202,15 @@ const ReplyEditorModal = () => {
           </BlurView>
         </View>
       </Modal>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
+      >
       <View style={styles.editorHeader}>
           <View style={{flexDirection: 'column'}}>
-            <Image source={userData[0].userAvatarUrl} style={styles.avatorimage} />
+            <Image source={post.userAvatarUrl} style={styles.avatorimage} />
             <View 
-            style={[styles.line, {height: postHeight2}]}
+            style={[styles.line, {height: postHeight2-10}]}
             />
           </View>
             <View
@@ -205,11 +221,30 @@ const ReplyEditorModal = () => {
               ref={postComponentRef}
             >
               <View style={styles.headerLeft}>
-                <Text style={styles.text1}>{userData[0].user}</Text>
+                <Text style={styles.text1}>{post.user}</Text>
               </View>
                 <Text
                     style={[styles.input, {color: textColor, borderBottomColor: secondaryTextColor, marginBottom: 16}]}
-                >test</Text>
+                >{post.postContent}</Text>
+                {ImageUrl && ImageUrl.length > 0 ? (
+                <Animated.View 
+                entering={FadeIn}
+                exiting={FadeOut}>
+                <FlatList
+                horizontal
+                data={ImageUrl}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item, index }) => (
+                  <Animated.View 
+                  entering={FadeIn}
+                  exiting={FadeOut}>
+                      <ImageAspectKept style={styles.image} url={item} height={200} src='url'></ImageAspectKept>
+                  </Animated.View>
+                )}
+                />
+                </Animated.View>) : (
+                null
+                )}
             </View>
         </View>
       <View style={styles.editorHeader2}>
@@ -253,7 +288,7 @@ const ReplyEditorModal = () => {
                 entering={FadeIn}
                 exiting={FadeOut}>
                   <Pressable onPress={(e) => {handleCropEditor(index, item)}}>
-                    <ImageAspectKept style={styles.image} uri={item} height={200}>
+                    <ImageAspectKept style={styles.image} uri={item} height={200} src='uri'>
                       <Pressable
                         style={styles.deleteButton}
                         onPress={() => handleDeleteImage(index)}
@@ -264,8 +299,8 @@ const ReplyEditorModal = () => {
                   </Pressable>
                 </Animated.View>
               )}
-            />
-            </Animated.View>) : (
+              />
+              </Animated.View>) : (
               null
               )}
             {images.length !== 4 ? (

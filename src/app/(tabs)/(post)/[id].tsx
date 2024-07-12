@@ -9,11 +9,8 @@ import {
   Modal,
   GestureResponderEvent
 } from 'react-native';
-import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, Link } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import postData from '@/src/assets/postData';
-import MusicBarOfPost from '@/src/components/MusicBarOfPost';
-import UserTagOfProfileDetail from '@/src/components/UserTagOfProfileDetail';
 import HeartIcon from '@/src/components/Icon/HeartIcon';
 import { Image } from 'expo-image';
 import IconAntDesign from '@/src/components/Icon/AntDesign';
@@ -23,22 +20,37 @@ import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 import ShareIcon from '@/src/components/Icon/ShareIcon';
 import ImageViewer from 'react-native-image-zoom-viewer';
-
+import { Message } from 'iconoir-react-native';
 
 const screen = Dimensions.get('screen');
 
 const PostDetailScreen = (): JSX.Element => {
-  const { id } = useLocalSearchParams();
-  const post = postData.find((item) => item.postID === id);
+  const params = useLocalSearchParams();
+  const post= params;
   const [modalStatus, setModalStatus] = useState(false);
   const [imageUrl, setImageUrl] = useState([{url: ""}])
   const [initialIndex, setInitialIndex] = useState(0);
   const { setActionVisible } = useTabAction();
   const { setProfileDismissed } = useProfileScreen();
 
+  let ImageUrl: string[] = [];
+  
+  if (typeof params.ImageUrlRow === 'string') {
+    try {
+      ImageUrl = JSON.parse(params.ImageUrlRow);
+    } catch (error) {
+      console.error('Error parsing image URLs:', error);
+    }
+  } else if (Array.isArray(params.ImageUrlRow)) {
+    ImageUrl = params.ImageUrlRow;
+  } else {
+    console.error('Invalid image URLs:', params.ImageUrlRow);
+  }
+
+
   const HandleImage = (n : number) => {
-    if (post?.ImageUrl) {
-      setImageUrl(post.ImageUrl.map((url) => ({ url })))
+    if (ImageUrl) {
+      setImageUrl(ImageUrl.map((url) => ({ url })))
     }
     setInitialIndex(n)
     setModalStatus(true);
@@ -60,63 +72,76 @@ const PostDetailScreen = (): JSX.Element => {
   }
   return (
     <View style={styles.container}>
-      <UserTagOfProfileDetail
-        user={post.user}
-        userAvatarUrl={post.userAvatarUrl}
-        userID={post.userID}
-      />
+        <Link href={{
+        pathname: '/(tabs)/home/(profile)/[userID]',
+        params:{
+          userID: post.userID
+        }
+      }}>
+        <View>
+          <View style={styles.userContainer}>
+            <Image 
+            style={styles.userAvator}
+            source={post.userAvatarUrl}/>
+            <View>
+                <Text style={styles.text1}>{post.user}</Text>
+                <Text style={styles.text2}>{post.userID}</Text>
+            </View>
+          </View>
+        </View>
+      </Link>
       <Text
         style={[styles.text1, { marginHorizontal: 16 }, { marginBottom: 16 }]}
       >
         {post.postContent}
       </Text>
-      {post.ImageUrl.length !== 0 && (
+      {ImageUrl.length !== 0 && (
         <View>
             <View>
-              {post.ImageUrl.length === 1 && ( 
+              {ImageUrl.length === 1 && ( 
                 <Pressable onPress={(e) => HandleImage(0)}>
-                  <Image source={post.ImageUrl[0]} style={styles.postImage} />
+                  <Image source={ImageUrl[0]} style={styles.postImage} />
                 </Pressable>
               )}
-              {post.ImageUrl.length === 2 && (
+              {ImageUrl.length === 2 && (
               <View style={styles.imageContainer}> 
                 <Pressable onPress={(e) => HandleImage(0)}>
-                  <Image source={post.ImageUrl[0]} style={styles.Image2}/>
+                  <Image source={ImageUrl[0]} style={styles.Image2}/>
                 </Pressable>
                 <Pressable onPress={(e) => HandleImage(1)}>
-                  <Image source={post.ImageUrl[1]} style={styles.Image2}/>
+                  <Image source={ImageUrl[1]} style={styles.Image2}/>
                 </Pressable>
               </View>)}
-              {post.ImageUrl.length === 3 && (
+              {ImageUrl.length === 3 && (
               <View style={styles.imageContainer}> 
                 <Pressable onPress={(e) => HandleImage(0)}>
-                  <Image source={post.ImageUrl[0]} style={styles.Image2}/>
+                  <Image source={ImageUrl[0]} style={styles.Image2}/>
                 </Pressable>
                 <View style={styles.imageContainer2}>
                   <Pressable onPress={(e) => HandleImage(1)}>  
-                    <Image source={post.ImageUrl[1]} style={styles.Image3}/>
+                    <Image source={ImageUrl[1]} style={styles.Image3}/>
                   </Pressable>
                   <Pressable onPress={(e) => HandleImage(2)}> 
-                    <Image source={post.ImageUrl[2]} style={styles.Image3}/>
+                    <Image source={ImageUrl[2]} style={styles.Image3}/>
                   </Pressable>
                 </View>
               </View>)}
-              {post.ImageUrl.length === 4 && (
+              {ImageUrl.length === 4 && (
               <View style={styles.imageContainer}> 
                 <View style={styles.imageContainer2}>
                   <Pressable onPress={(e) => HandleImage(0)}>  
-                    <Image source={post.ImageUrl[0]} style={styles.Image3}/>
+                    <Image source={ImageUrl[0]} style={styles.Image3}/>
                   </Pressable>
                   <Pressable onPress={(e) => HandleImage(1)}> 
-                    <Image source={post.ImageUrl[1]} style={styles.Image3}/>
+                    <Image source={ImageUrl[1]} style={styles.Image3}/>
                   </Pressable>
                 </View>
                 <View style={styles.imageContainer2}>
                   <Pressable onPress={(e) => HandleImage(2)}>
-                    <Image source={post.ImageUrl[2]} style={styles.Image3}/>
+                    <Image source={ImageUrl[2]} style={styles.Image3}/>
                   </Pressable>
                   <Pressable onPress={(e) => HandleImage(2)}>
-                    <Image source={post.ImageUrl[3]} style={styles.Image3}/>
+                    <Image source={ImageUrl[3]} style={styles.Image3}/>
                   </Pressable> 
                 </View>
               </View>)}
@@ -142,18 +167,31 @@ const PostDetailScreen = (): JSX.Element => {
           </Modal>
         </View>
       )}
-      {post.musicUrl && <MusicBarOfPost {...post} style={{ marginLeft: 12 }} />}
       <View style={styles.infoContainer}>
-        <Text style={styles.text3}>9:38・2024/03/24</Text>
+        <Text style={styles.text3}>{post.createAt}</Text>
       </View>
       <View style={styles.infoContainer}>
-        <Text style={styles.text3}>53件のいいね</Text>
+        <Text style={styles.text3}>{post.view}件のいいね</Text>
       </View>
       <View style={styles.iconContainer}>
-        <HeartIcon style={{ marginLeft: 16 }} size={20} />
-        <IconAntDesign name='message1' size={20} />
-        <IconAntDesign name='retweet' size={20} />
-        <ShareIcon size={20} style={{ marginRight: 16 }} />
+          <HeartIcon size={20} />
+          <Link href={{
+          pathname: '/reply-editor-modal',
+          params: {
+            postID: post.postID,
+            postContent: post.postContent,
+            ImageUrlRow: post.ImageUrlRow,
+            userID: post.userID,
+            user: post.user,
+            userAvatarUrl: post.userAvatarUrl,
+            createAt: post.createAt,
+            view: post.view
+          },
+          }}
+          asChild >
+          <Message width={20} height={20} color={'#000000'}/>
+          </Link>
+          <ShareIcon size={20} />
       </View>
       <TabActionMenu />
     </View>
@@ -194,6 +232,12 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginHorizontal: 16,
   },
+  userAvator:{
+    height:32,
+    width:32,
+    borderRadius:16,
+    marginHorizontal:16
+  },
   infoContainer: {
     marginHorizontal: 16,
     height: 34,
@@ -202,33 +246,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   iconContainer: {
-    marginHorizontal: 16,
+    marginHorizontal: 32,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 24,
     marginVertical: 16,
-  },
-  musicBar: {
-    height: 48,
-    marginLeft: 12,
-    marginRight: 12,
-    marginBottom: 12,
-    borderRadius: 10,
-  },
-  musicContainer: {
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  musicImage: {
-    height: 40,
-    width: 40,
-    borderRadius: 4,
-    marginHorizontal: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   text4: {
     fontSize: 16,
@@ -281,7 +304,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    resizeMode: 'contain', // 画像のリサイズモード
+    resizeMode: 'contain'
   },
   closeButton: {
     position: 'absolute',
