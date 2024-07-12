@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, {useState} from 'react';
 import { View, StyleSheet, Text, Pressable, Dimensions, Modal } from 'react-native';
 import { Image } from 'expo-image';
 import MusicBarOfPost from './MusicBarOfPost';
@@ -8,6 +8,7 @@ import HeartIcon from './Icon/HeartIcon';
 import IconAntDesign from './Icon/AntDesign';
 import ShareIcon from './Icon/ShareIcon';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import { Message } from 'iconoir-react-native';
 
 const screen = Dimensions.get('screen');
 
@@ -16,6 +17,8 @@ const PostCard = (props: PostDataType): JSX.Element => {
   const [modalStatus, setModalStatus] = useState(false);
   const [imageUrl, setImageUrl] = useState([{url: ""}])
   const [initialIndex, setInitialIndex] = useState(0);
+
+  const ImageUrlRow = JSON.stringify(props.ImageUrl);
 
   const onClose = () => {
     setModalStatus(false)
@@ -28,14 +31,21 @@ const PostCard = (props: PostDataType): JSX.Element => {
     setInitialIndex(n)
     setModalStatus(true);
   }
-  
+
   return (
     <Link
-      href={{
-        pathname: '/(tabs)/(post)/[id]',
-        params: {
-          id: props.postID,
-        },
+    href={{
+      pathname: '/[id]',
+      params: {
+        postID: props.postID,
+        postContent: props.postContent,
+        ImageUrlRow: ImageUrlRow,
+        userID: props.userID,
+        user: props.user,
+        userAvatarUrl: props.userAvatarUrl,
+        createAt: props.createAt,
+        view: props.view
+      },
       }}
       asChild
     >
@@ -131,15 +141,27 @@ const PostCard = (props: PostDataType): JSX.Element => {
                 renderImage={(props) => <Image {...props} style={styles.imageModal} contentFit='contain'/>}/>
                 </View>
           </Modal>
-              {props.musicUrl != '' && (
-                <MusicBarOfPost {...props} style={{ marginLeft: 0 }} />
-              )}
             </View>
           </View>
         </View>
         <View style={styles.Icons}>
           <HeartIcon size={16} />
-          <IconAntDesign name='message1' size={16} />
+          <Link href={{
+          pathname: '/reply-editor-modal',
+          params: {
+            postID: props.postID,
+            postContent: props.postContent,
+            ImageUrlRow: ImageUrlRow,
+            userID: props.userID,
+            user: props.user,
+            userAvatarUrl: props.userAvatarUrl,
+            createAt: props.createAt,
+            view: props.view
+          },
+          }}
+          asChild >
+          <Message width={16} height={16} color={'#000000'}/>
+          </Link>
           <ShareIcon size={16} />
         </View>
         <View
