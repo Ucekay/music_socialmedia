@@ -1,24 +1,31 @@
-import React from "react";
-import { View, StyleSheet, Pressable, Text, useWindowDimensions, useColorScheme } from 'react-native'
+import React, {useState} from "react";
+import { View, StyleSheet, Pressable, Text, useWindowDimensions, useColorScheme, TextInput, Button } from 'react-native'
 import { GoogleCircle, AppleMac } from 'iconoir-react-native'
 import BgView from "../components/ThemedBgView";
-import Colors from '../constants/Colors';
 import { router } from "expo-router";
 import Animated, { FadeIn } from "react-native-reanimated";
 
 export default function TabIndex() {
-  const { width } = useWindowDimensions();
-  const colorScheme = useColorScheme();
-  const backgroundColor =
-    colorScheme === 'dark'
-      ? Colors.dark.secondaryBackground
-      : Colors.light.background;
-  const containerWidth = width - 32;
-  const shadowColor = colorScheme === 'dark' ? '#fff' : '#000';
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+
 
 
   const HandleGoogle = () => {
     router.replace('/(tabs)')
+  }
+
+  const HandleApple = () => {
+    router.replace('/(tabs)')
+  }
+
+  const HandleSignUp = () => {
+
+  }
+
+  const HandleLogIn = () => {
+
   }
 
   return (
@@ -82,14 +89,29 @@ export default function TabIndex() {
                 </View>
               </View>
            </View>
+           <View>
+             <Text>Email:</Text>
+              <TextInput
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              />
+              <Text>Password:</Text>
+              <TextInput
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                secureTextEntry
+              />
+              <Button title="SignUp" onPress={HandleSignUp} />
+              <Button title="Login" onPress={HandleLogIn} />
+           </View>
            <Pressable onPress={HandleGoogle}>
              <View style={styles.button}>
                 <GoogleCircle style={styles.Icon} width={30} height={30} />
                 <Animated.Text
                 style={styles.text}>Googleでサインインする</Animated.Text>
              </View>
-           </Pressable>
-           <Pressable>
+           </Pressable >
+           <Pressable onPress={HandleApple}>
              <View style={styles.button}>
                 <AppleMac style={styles.Icon} width={30} height={30} />
                 <Animated.Text style={styles.text}>Appleでサインインする</Animated.Text>
@@ -103,7 +125,7 @@ export default function TabIndex() {
 const styles = StyleSheet.create({
   screenContainer: {
       flex:1,
-      paddingTop: 200,
+      justifyContent: 'center',
       alignItems: 'center',
   }, 
   container: {
