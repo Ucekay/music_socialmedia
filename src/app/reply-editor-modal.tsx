@@ -26,7 +26,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useNavigation, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import Icon from 'react-native-vector-icons/AntDesign';
-import ImageAspectKept from '../components/OriginalAspectImage';
+import OriginalAspectImage from '../components/OriginalAspectImage';
 import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
 import ImageCropPicker from 'react-native-image-crop-picker';
@@ -162,6 +162,34 @@ const ReplyEditorModal = () => {
     }).start();
   };
 
+  const openCropEditor = async (num: number, uri: string) => {
+    try {
+      setLoading(true);
+      const cropped = await ImageCropPicker.openCropper({
+        path: uri,
+        cropperToolbarTitle: '画像を編集',
+        mediaType: 'photo',
+        freeStyleCropEnabled: true,
+      });
+      setImages(
+        images.map((images, index) => (index === num ? cropped.path : images))
+      );
+    } catch (e: any) {
+      console.log(e.message);
+      if (e.message === 'User cancelled image selection') {
+        setErrorMessage(
+          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。'
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCropEditor = (num: number, uri: string) => {
+    openCropEditor(num, uri);
+  };
+
   return (
     <BgView style={[styles.container]}>
       <View style={styles.header}>
@@ -213,12 +241,18 @@ const ReplyEditorModal = () => {
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item, index }) => (
                     <Animated.View entering={FadeIn} exiting={FadeOut}>
-                      <ImageAspectKept
+                      <OriginalAspectImage
                         style={styles.image}
-                        url={item}
+                        uri={item}
                         height={200}
-                        src='url'
-                      ></ImageAspectKept>
+                      >
+                        <Pressable
+                          style={styles.deleteButton}
+                          onPress={() => handleDeleteImage(index)}
+                        >
+                          <Icon name='delete' size={24} color='#fff' />
+                        </Pressable>
+                      </OriginalAspectImage>
                     </Animated.View>
                   )}
                 />
@@ -270,12 +304,15 @@ const ReplyEditorModal = () => {
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item, index }) => (
                     <Animated.View entering={FadeIn} exiting={FadeOut}>
-                      <Pressable onPress={(e) => {}}>
-                        <ImageAspectKept
+                      <Pressable
+                        onPress={(e) => {
+                          handleCropEditor(index, item);
+                        }}
+                      >
+                        <OriginalAspectImage
                           style={styles.image}
                           uri={item}
                           height={200}
-                          src='uri'
                         >
                           <Pressable
                             style={styles.deleteButton}
@@ -283,7 +320,7 @@ const ReplyEditorModal = () => {
                           >
                             <Icon name='delete' size={24} color='#fff' />
                           </Pressable>
-                        </ImageAspectKept>
+                        </OriginalAspectImage>
                       </Pressable>
                     </Animated.View>
                   )}
