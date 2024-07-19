@@ -130,33 +130,56 @@ export default function TabLayout() {
             headerShown: false,
             tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
           }}
-        />
-        <Tabs.Screen
-          name='(profile)'
-          options={{
-            title: 'Profile',
-            headerShown: false,
-            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+          screenListeners={{
+            tabPress: (e) => {
+              const pressedTab = e.target.split('-')[0];
+            },
           }}
-        />
-      </Tabs>
-      <BottomSheetModal
-        ref={bottomSheetModalRef}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}
-        enablePanDownToClose
-        backdropComponent={renderBackdrop}
-        backgroundStyle={themedContentStyle}
-        handleIndicatorStyle={{ backgroundColor: colors.border }}
-        maxDynamicContentSize={220 + insets.bottom}
-      >
-        <BottomSheetView style={styles.contentContainer}>
-          <View style={[styles.content, { marginBottom: 16 + insets.bottom }]}>
-            <CreateContentList colors={colors} />
-          </View>
-        </BottomSheetView>
-      </BottomSheetModal>
-    </View>
+        >
+          <Tabs.Screen name='index' options={{ href: null }} />
+          <Tabs.Screen
+            name='home'
+            options={{
+              title: 'Articles',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name='(post)'
+            options={{
+              title: 'Posts',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name='profile'
+            options={{
+              title: 'Profile',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name='create'
+            options={{
+              title: 'Create',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarActionButton name='code' color={color} />
+              ),
+            }}
+          />
+        </Tabs>
+      </ProfileScreenProvider>
+    </TabActionProvider>
   );
 }
 

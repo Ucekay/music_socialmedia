@@ -22,6 +22,11 @@ interface LoginUserProps {
 
 const { width } = Dimensions.get('window');
 
+
+interface LoginUserProps {
+    id: string
+}
+
 const LoginUserProfileTop = (props: LoginUserProps) => {
   const colorScheme = useColorScheme();
   const backgroundColor = {
@@ -126,9 +131,9 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
             </View>
           </View>
           <Link href={'/(tabs)/profile/(profile-editor)'}>
-            <View style={[styles.button, backgroundColor]}>
-              <Text style={[styles.text, textColor]}>Edit</Text>
-            </View>
+          <View style={[styles.button, backgroundColor]}>
+            <Text style={[styles.text, textColor]}>Edit</Text>
+          </View>
           </Link>
         </View>
         <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>

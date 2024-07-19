@@ -13,9 +13,7 @@ const FollowButton = ({ isMyAccount }: { isMyAccount: boolean }) => {
 
   if (isMyAccount) {
     return (
-      <Pressable style={styles.button}>
-        <Text style={styles.text}>編集</Text>
-      </Pressable>
+      null
     );
   } else {
     return (
