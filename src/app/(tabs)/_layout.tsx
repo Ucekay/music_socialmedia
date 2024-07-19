@@ -69,9 +69,6 @@ export default function TabLayout() {
           screenListeners={{
             tabPress: (e) => {
               const pressedTab = e.target.split('-')[0];
-              if (pressedTab === 'profile') {
-                handleDummyPress(e);
-              }
             },
           }}
         >
@@ -99,6 +96,18 @@ export default function TabLayout() {
           <Tabs.Screen
             name='profile'
             options={{
+              title: 'Profile',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name='create'
+            options={{
+              title: 'Create',
+              headerShown: false,
               tabBarIcon: ({ color }) => (
                 <TabBarActionButton name='code' color={color} />
               ),
