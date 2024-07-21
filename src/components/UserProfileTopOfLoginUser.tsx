@@ -1,4 +1,4 @@
-import { View, StyleSheet, useColorScheme, Pressable } from 'react-native';
+import { View, StyleSheet, useColorScheme, Pressable, FlatList } from 'react-native';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
 
@@ -63,6 +63,10 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
         </View>
         <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
       </View>
+      <FlatList 
+        data={userInfo.tag}
+        renderItem={({ item }) => <Text>#{item}</Text>}
+      />
       <Text numberOfLines={4} style={[styles.userBio, themeTextColor]}>
         {userInfo.bio}
       </Text>

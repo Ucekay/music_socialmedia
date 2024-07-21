@@ -15,17 +15,17 @@ import { View,
          findNodeHandle, 
          UIManager
         } from 'react-native';
-import userData from '../../../assets/userData';
+import userData from '../assets/userData';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BgView from '../../../components/ThemedBgView';
-import IconAntDesign from '../../../components/Icon/AntDesign';
+import BgView from '../components/ThemedBgView';
+import IconAntDesign from '../components/Icon/AntDesign';
 import Color from '@/src/constants/Colors';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useNavigation, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import Icon from "react-native-vector-icons/AntDesign"
-import ImageAspectKept from '../../../components/ImageAspectKept';
+import ImageAspectKept from '../components/ImageAspectKept';
 import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker'
 import ImageCropPicker from 'react-native-image-crop-picker';
