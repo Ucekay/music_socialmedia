@@ -31,6 +31,7 @@ import {
   CoreBridge,
   darkEditorCss,
   TenTapStartKit,
+  useEditorContent,
 } from '@10play/tentap-editor';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useActionSheet } from '@expo/react-native-action-sheet';
@@ -50,9 +51,27 @@ const BOTTOM_TAB_HEIGHT = 96.7;
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
+  const keyboardVerticalOffset = headerHeight + top;
   const colorScheme = useColorScheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const textColor = Color[colorScheme ?? 'light'].text;
+
+  const editorStyle = `
+  *{
+    color: ${textColor};
+    }`;
+
+  const editor = useEditorBridge({
+    autofocus: true,
+    avoidIosKeyboard: true,
+    bridgeExtensions: [...TenTapStartKit, CoreBridge.configureCSS(editorStyle)],
+  });
+
+  editor.injectCSS(editorStyle, '*');
+
+  const content = useEditorContent(editor, { type: 'html' });
 
   const onClose = () => {
     const title = '下書きに保存しまますか？';
@@ -93,7 +112,7 @@ const ArticleEditorModal = () => {
       },
       (selectedIndex: number) => {
         if (selectedIndex === 0) {
-          navigation.goBack();
+          console.log(content);
         }
       }
     );
@@ -114,7 +133,16 @@ const ArticleEditorModal = () => {
           <ArticleConfigScreen />
         </View>
         <View key={2}>
-          <EditorScreen />
+          <View style={styles.editorContainer}>
+            <RichText editor={editor} style={styles.editor} />
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              style={styles.keyboardAvoidingView}
+              keyboardVerticalOffset={keyboardVerticalOffset}
+            >
+              <Toolbar editor={editor} />
+            </KeyboardAvoidingView>
+          </View>
         </View>
       </PagerView>
       {/* Use a light status bar on iOS to account for the black space above the modal */}
@@ -232,42 +260,6 @@ const ArticleConfigScreen = () => {
         </View>
       </BgView>
     </ScrollView>
-  );
-};
-
-const EditorScreen = () => {
-  const colorScheme = useColorScheme();
-  const backgroundColor = Color[colorScheme ?? 'light'].secondaryBackground;
-  const textColor = Color[colorScheme ?? 'light'].text;
-
-  const { top } = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
-  const keyboardVerticalOffset = headerHeight + top;
-
-  const editorStyle = `
-  *{
-    color: ${textColor};
-    }`;
-
-  const editor = useEditorBridge({
-    autofocus: true,
-    avoidIosKeyboard: true,
-    bridgeExtensions: [...TenTapStartKit, CoreBridge.configureCSS(editorStyle)],
-  });
-
-  editor.injectCSS(editorStyle, '*');
-
-  return (
-    <View style={styles.editorContainer}>
-      <RichText editor={editor} style={styles.editor} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.keyboardAvoidingView}
-        keyboardVerticalOffset={keyboardVerticalOffset}
-      >
-        <Toolbar editor={editor} />
-      </KeyboardAvoidingView>
-    </View>
   );
 };
 

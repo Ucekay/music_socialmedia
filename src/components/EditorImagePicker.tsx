@@ -88,8 +88,6 @@ const EditorImagePicker = () => {
     setImage(result.uri);
   };
 
-  console.log(image);
-
   return (
     <View
       style={{

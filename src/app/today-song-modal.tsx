@@ -1,14 +1,11 @@
 import {
   FlatList,
-  Pressable,
   StyleSheet,
   View,
   useColorScheme,
   useWindowDimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { FlashList } from '@shopify/flash-list';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Heart, ShareIos, PlaySolid, Message } from 'iconoir-react-native';
 
 import Colors from '../constants/Colors';
