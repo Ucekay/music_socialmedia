@@ -1,26 +1,25 @@
-import React, { useState, useRef, useEffect } from 'react';
-import {
-  View,
-  TextInput,
-  Button,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  ScrollView,
-  Platform,
-  Animated as Animated1,
-  Pressable,
-  FlatList,
-  Modal,
-  ActivityIndicator,
-  findNodeHandle,
-  UIManager,
-} from 'react-native';
+import React, { useState, useRef, useEffect} from 'react';
+import { View,
+         TextInput, 
+         Button,
+         StyleSheet, 
+         Text, 
+         useColorScheme, 
+         ScrollView, 
+         Platform, 
+         Animated as Animated1, 
+         Pressable, 
+         FlatList, 
+         Modal,
+         ActivityIndicator,
+         findNodeHandle, 
+         UIManager
+        } from 'react-native';
 import userData from '../assets/userData';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BgView from '../components/ThemedBgView';
-import IconAntDesign from '../components/Icons/AntDesign';
+import IconAntDesign from '../components/Icon/AntDesign';
 import Color from '@/src/constants/Colors';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useNavigation, useLocalSearchParams } from 'expo-router';

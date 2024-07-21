@@ -286,6 +286,7 @@ const userData = [
     bio: '朝ごはんが大好きな私です。毎朝の食事に情熱を注ぎ、栄養たっぷりでおいしい朝食を作るのが日課です。おいしい朝ごはんのレシピや写真をシェアしています。',
     followers: 245,
     following: 190,
+    tag: ['Kana Nishino', 'Ikimono Gakari', 'AI', 'GReeeeN', 'Daichi Miura', 'Miwa', 'Fujifabric', 'Little Glee Monster', 'Sakanaction', 'Shota Shimizu']
   },
   {
     userID: '@MovieBuff',
@@ -294,6 +295,7 @@ const userData = [
     bio: '映画が私の人生の一部です。新作映画のレビューやクラシック映画の紹介など、映画に関することなら何でも発信しています。映画好きの皆さんと映画の魅力を語り合いたいです。',
     followers: 398,
     following: 320,
+    tag: ['John Williams', 'Hans Zimmer', 'Ennio Morricone', 'Joe Hisaishi', 'Howard Shore', 'James Horner', 'Danny Elfman', 'Alexandre Desplat', 'Ramin Djawadi', 'Alan Silvestri']
   },
   {
     userID: '@Camper123',
@@ -302,6 +304,7 @@ const userData = [
     bio: '自然の中で過ごすのが大好きなキャンプ好きです。週末はキャンプを楽しみ、自然の美しさを満喫しています。キャンプのアイデアやアウトドアの楽しみ方をシェアしています。',
     followers: 180,
     following: 160,
+    tag: ['Kyu Sakamoto', 'Yumi Matsutoya', 'Tatsuro Yamashita', 'Eiichi Ohtaki', 'Haruomi Hosono', 'Ryuichi Sakamoto', 'Mariya Takeuchi', 'Akiko Yano', 'Masayoshi Takanaka', 'Shigeru Suzuki']
   },
   {
     userID: '@ChefMaster',
@@ -310,6 +313,7 @@ const userData = [
     bio: '料理を愛するシェフマスターです。特に新しいレシピを試すのが好きで、美味しい料理を作ることが生きがいです。レシピや料理のコツを皆さんと共有しています。',
     followers: 325,
     following: 280,
+    tag: ['Gordon Ramsay', 'Jamie Oliver', 'Nigella Lawson', 'Thomas Keller', 'Heston Blumenthal', 'Rene Redzepi', 'Ferran Adria', 'Alain Ducasse', 'Yotam Ottolenghi', 'Massimo Bottura']
   }
 ];
 
