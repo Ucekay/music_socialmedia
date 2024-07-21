@@ -58,6 +58,15 @@ function RootLayoutNav() {
           gestureEnabled: false,
         }}
       />
+      <Stack.Screen
+        name='post-editor-modal'
+        options={{
+          headerShown: false,
+          title: 'Post Editor',
+          presentation: 'modal',
+          gestureEnabled: false,
+        }}
+      />
     </Stack>
   );
 }
