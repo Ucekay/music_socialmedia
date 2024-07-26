@@ -38,7 +38,7 @@ const LoginProfileScreen = () => {
             data={postData}
             renderItem={({ item }) => (
               <View>
-                <PostCard {...item}/>
+                <PostCard {...item} path='/(tabs)/profile/(post)/[postId]'/>
               </View>
             )}
             estimatedItemSize={TEXT_HEIGHT}

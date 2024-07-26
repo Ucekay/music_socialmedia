@@ -4,6 +4,7 @@ import { ProfileStateProvider } from '@/src/contexts/ProfileEditor';
 
 const App = () => {
   return (
+    <ProfileStateProvider>
       <Stack>
         <Stack.Screen
           name='index'
@@ -38,6 +39,7 @@ const App = () => {
             gestureEnabled: true,
         }}/>
       </Stack>
+    </ProfileStateProvider>
   );
 };
 

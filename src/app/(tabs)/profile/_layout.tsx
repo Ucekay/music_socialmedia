@@ -3,7 +3,6 @@ import { Stack } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import React from 'react';
 import Colors from '@/src/constants/Colors';
-import { ProfileStateProvider } from '@/src/contexts/ProfileEditor';
 
 export default function ArticleStack() {
   const colorScheme = useColorScheme();
@@ -16,7 +15,6 @@ export default function ArticleStack() {
           backgroundColor: Colors['light'].headerBackground,
         };
   return (
-    <ProfileStateProvider>
     <Stack>
       <Stack.Screen
         name='index'
@@ -38,6 +36,5 @@ export default function ArticleStack() {
         }}
       />
     </Stack>
-    </ProfileStateProvider>
   );
 }
