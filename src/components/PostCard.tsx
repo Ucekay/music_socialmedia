@@ -35,7 +35,7 @@ const PostCard = (props: PostDataType): JSX.Element => {
   return (
     <Link
     href={{
-      pathname: '/[postId]',
+      pathname: props.path,
       params: {
         postID: props.postID,
         postContent: props.postContent,

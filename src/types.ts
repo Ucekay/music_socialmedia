@@ -59,4 +59,5 @@ export type PostDataType = {
   userAvatarUrl: string;
   view: number;
   createAt: string;
+  path: string
 };

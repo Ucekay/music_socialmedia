@@ -37,7 +37,7 @@ const PostsScreen = (): JSX.Element => {
       <FlashList
         data={postData}
         estimatedItemSize={50}
-        renderItem={({ item }) => <PostCard {...item} />}
+        renderItem={({ item }) => <PostCard {...item} path='/[postId]' />}
         contentContainerStyle={{
           paddingBottom: tabBarHeight,
           paddingTop: headerHeight,

@@ -27,6 +27,30 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
   if (!userInfo) {
     return <Text>User not found</Text>;
   }
+
+  const maxCharsPerRow = 30
+
+  let currentRow: any[] = [];
+  let currentRowLength = 0;
+  const rows = [];
+
+    userInfo.tag.forEach((item, index) => {
+      if (currentRowLength + item.length <= maxCharsPerRow) {
+        currentRow.push(item);
+        currentRowLength += item.length;
+      } else {
+        rows.push(currentRow);
+        currentRow = [item];
+        currentRowLength = item.length;
+      }
+    });
+    
+
+  if (currentRow.length > 0) {
+    rows.push(currentRow);
+  }
+
+
   return (
     <View style={styles.container}>
       <View style={styles.profile}>
@@ -63,16 +87,23 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
         </View>
         <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
       </View>
-      <FlatList 
-        data={userInfo.tag}
-        renderItem={({ item }) => <Text>#{item}</Text>}
-      />
+      {rows.map((row, rowIndex) => (
+        <View style={styles.row} key={rowIndex}>
+          {row.map((item, index) => (
+            <View style={styles.item} key={index}>
+              <Text>{item}</Text>
+            </View>
+          ))}
+        </View>
+      ))}
       <Text numberOfLines={4} style={[styles.userBio, themeTextColor]}>
         {userInfo.bio}
       </Text>
     </View>
   );
 };
+
+export default LoginUserProfileTop;
 
 const styles = StyleSheet.create({
   container: {
@@ -136,6 +167,14 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: 'bold',
   },
-});
-
-export default LoginUserProfileTop;
+  row: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  item: {
+    padding: 5,
+    marginRight: 10,
+    backgroundColor: '#f9c2ff',
+    borderRadius: 5,
+  },
+})
