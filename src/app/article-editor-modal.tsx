@@ -28,6 +28,8 @@ import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import TrackInputField from '@/src/components/TrackInputField';
 import LiveInputField from '../components/LiveInputField';
 import { useHeaderHeight } from '@react-navigation/elements';
+import { InsertArticle } from '../backend/components/Front_connection/Article';
+import { uploadImageToStorage, GetImageData } from '../backend/components/DB_Access/Image';
 
 const BOTTOM_TAB_HEIGHT = 96.7;
 
@@ -63,6 +65,35 @@ const ArticleEditorModal = () => {
       });
     }
   };
+
+  const handleArticleInsert = async() =>{
+    try {
+
+      const type = selectedType || 'null';
+      let Thumbnailurl: string | null = null;
+      let PlaylistID: string | null = null;
+      let ArtistName: string | null = null;
+      let uri: string | null = 
+      'src/assets/images/author1.jpeg';
+      let file: File | null = null;
+
+      if(uri){file = await GetImageData(uri) || null;}
+      if(file){ Thumbnailurl = await uploadImageToStorage(file, 'Article-Thumbnail');}
+
+      const result = await InsertArticle(
+        type, articleTypes, 'cat', 'neko', PlaylistID, ArtistName, Thumbnailurl); 
+
+      if (typeof result === 'boolean' && result) {
+        // 記事の挿入に成功した場合の処理
+        console.log('記事が正常に挿入されました');
+      } else {
+        // 記事の挿入に失敗した場合の処理
+        console.error('記事の挿入に失敗しました:', result);
+      }
+    } catch (error) {
+      console.error('記事の挿入中にエラーが発生しました:', error);
+    }
+  }
 
   return (
     <BgView style={[styles.container, { paddingTop: insets.top }]}>
@@ -140,7 +171,8 @@ const ArticleEditorModal = () => {
           </View>
           <View style={styles.buttonContainer}>
             <FontAwesome6 name='check' size={16} color={textColor} />
-            <Button title='Publish' onPress={() => {}} color={textColor} />
+            <Button title='Publish' 
+            onPress={handleArticleInsert} color={textColor} />
           </View>
         </View>
       </BgView>
