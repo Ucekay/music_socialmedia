@@ -50,6 +50,7 @@ export type articleDataType = {
 };
 
 export type PostDataType = {
+  style?: any;
   postID: string;
   postContent: string;
   ImageUrl: string[];
@@ -60,6 +61,17 @@ export type PostDataType = {
   createAt: string;
   path: string
 };
+
+export type PostType = {
+  postID: string;
+  postContent: string;
+  ImageUrl: string[];
+  userID: string;
+  user: string;
+  userAvatarUrl: string;
+  view: number;
+  createAt: string;
+}
 
 export type UserListType = {
   userID: string;
