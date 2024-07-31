@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, TextInput, FlatList, Text, Image, StyleSheet, TouchableOpacity, Keyboard, SafeAreaView, Pressable, Dimensions, KeyboardAvoidingView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import { Search, Xmark } from 'iconoir-react-native';
+import { FlashList } from '@shopify/flash-list';
+import todaySongData from '@/src/assets/todaySongData';
+import MusicListCard from '@/src/components/MusicListCrad';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 const SearchScreen = () => {
   const [query, setQuery] = useState('');
@@ -12,6 +17,8 @@ const SearchScreen = () => {
 
   const router = useRouter();
   const {width} = Dimensions.get('screen')
+
+  const tabBarHeight = useBottomTabBarHeight();
 
   useEffect(() => {
     const loadHistory = async () => {
@@ -33,6 +40,8 @@ const SearchScreen = () => {
         params: {key: text}
     })
     setFocused(false)
+    saveHistory(text)
+    setQuery('')
   };
 
   const handleCancel = () => {
@@ -61,18 +70,22 @@ const SearchScreen = () => {
   };
 
   const renderHistoryItem = ({ item }) => (
-    <Pressable onPress={() => handleSearch(item)}>
-      <Text style={styles.historyItem}>{item}</Text>
+    <Pressable onPress={() => handleSearch(item)} style={{flexDirection: 'row', justifyContent:'space-between', alignItems:'center', marginBottom: 8}}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Search height={20} width={20} color={'#000000'}/>
+        <Text style={styles.historyItem}>{item}</Text>
+      </View>
+      <Xmark height={20} width={20} color={'#000000'}/>
     </Pressable>
   );
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Pressable onPress={handleFocus}>
+        <Pressable onPress={handleFocus} style={[styles.searchBar, {width: width-32, flexDirection:'row', alignItems:'center', gap:12}, focused &&  {width: width-100}]}>
+            <Search height={16} width={16} color={'#000000'}/>
             <TextInput
             ref={inputRef}
-            style={[styles.searchBar, {width: width-32}, focused &&  {width: width-100}]}
             placeholder="検索"
             value={query}
             onChangeText={setQuery}
@@ -99,6 +112,14 @@ const SearchScreen = () => {
         </KeyboardAvoidingView>
       )}
       </View>
+      {!focused && 
+      <FlashList
+      data={todaySongData}
+      renderItem={({item}) => (<MusicListCard artistName={item.artistName} musicName={item.songName} artworkUrl={item.artworkUrl}/>)}
+      numColumns={1}
+      estimatedItemSize={70}
+      contentContainerStyle={{
+        paddingBottom: tabBarHeight}}/>}
     </SafeAreaView>
   );
 };
