@@ -84,6 +84,26 @@ export default function TabLayout() {
             }}
           />
           <Tabs.Screen
+            name='explore'
+            options={{
+              title: 'Explore',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name='create'
+            options={{
+              title: 'Create',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarActionButton name='code' color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
             name='(post)'
             options={{
               title: 'Posts',
@@ -100,16 +120,6 @@ export default function TabLayout() {
               headerShown: false,
               tabBarIcon: ({ color }) => (
                 <TabBarIcon name='code' color={color} />
-              ),
-            }}
-          />
-          <Tabs.Screen
-            name='create'
-            options={{
-              title: 'Create',
-              headerShown: false,
-              tabBarIcon: ({ color }) => (
-                <TabBarActionButton name='code' color={color} />
               ),
             }}
           />

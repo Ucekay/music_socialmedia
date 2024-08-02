@@ -61,3 +61,26 @@ export type PostDataType = {
   createAt: string;
   path: string
 };
+
+export type PostType = {
+  postID: string;
+  postContent: string;
+  ImageUrl: string[];
+  userID: string;
+  user: string;
+  userAvatarUrl: string;
+  view: number;
+  createAt: string;
+}
+
+export type UserListType = {
+  userID: string;
+  userName: string;
+  userAvatarUrl: string;
+}
+
+export type MusicListType = {
+  musicName: string;
+  artistName: string;
+  artworkUrl: string;
+}
