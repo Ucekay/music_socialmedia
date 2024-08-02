@@ -38,6 +38,14 @@ const App = () => {
             title: 'Bio Editor',
             gestureEnabled: true,
         }}/>
+        <Stack.Screen
+          name='favoriteArtists-editor-modal'
+          options={{
+            headerShown: false,
+            presentation: 'modal',
+            title: 'Favorite Artists Editor',
+            gestureEnabled: true,
+        }}/>
       </Stack>
     </ProfileStateProvider>
   );

@@ -1,10 +1,12 @@
 import BgView from "@/src/components/ThemedBgView";
 import React, {useContext, useState}from "react";
-import {View, Text, TextInput, Pressable, StyleSheet, Dimensions} from 'react-native'
+import {View, Text, TextInput, Pressable, StyleSheet, Dimensions, useColorScheme} from 'react-native'
 import { ProfileEditorContext } from "@/src/contexts/ProfileEditor";
 import { useNavigation, useRouter } from "expo-router";
+import Color from '@/src/constants/Colors';
+import Colors from "@/src/constants/Colors";
 
-const NameEditor = (): JSX.Element => {
+const BioEditor = (): JSX.Element => {
     
     const context = useContext(ProfileEditorContext);
     
@@ -14,26 +16,36 @@ const NameEditor = (): JSX.Element => {
       throw new Error('NameEditorModal must be used within a ProfileEditorProvider');
     }
 
+    const colorScheme = useColorScheme();
+    const textColor = Color[colorScheme ?? 'light'].text;
+    const backgroundColor =
+        colorScheme === 'dark'
+        ? Colors.dark.secondaryBackground
+        : Colors.light.background;
+
     const { bio, setBio } = context
     const [ bioEditing, setBioEditing] = useState(bio)
     const [inputHeight, setInputHeight] = useState(60)
 
   return (
-    <BgView style={styles.container}>
+    <BgView style={[styles.container, {backgroundColor}]}>
         <View style={[styles.header]}>
             <Pressable onPress={() => router.back()} style={[styles.headerItem, {alignItems: 'flex-start'}]}>
-              <Text style={styles.text1}>キャンセル</Text>
+              <Text style={[styles.text1, {color:textColor}]}>キャンセル</Text>
             </Pressable>
             <View style={[styles.headerItem]}>
-              <Text style={styles.text2}>自己紹介を編集</Text>
+              <Text style={[styles.text2, {color: textColor}]}>commentを編集</Text>
             </View>
             <Pressable onPress={() => {setBio(bioEditing); router.back()}} style={[styles.headerItem, {alignItems: 'flex-end'}]}>
               <Text style={[styles.text2, {color: '#2f95dc'}]}>完了</Text>
             </Pressable>
         </View>
-        <View style={[styles.Editor, {height: Math.max(100, inputHeight+50)}]}>
-            <Text style={{fontSize: 14, fontWeight:'600'}}>自己紹介</Text>
+        <View style={[styles.Editor, {height: Math.max(100, inputHeight+50), borderColor: textColor}]}>
+            <View>
+            <Text style={{fontSize: 14, fontWeight:'600', color: textColor}}>comment</Text>
+            </View>
             <TextInput 
+            style={{color: textColor}}
             value={bioEditing}
             onChangeText={setBioEditing}
             placeholder="自己紹介を入力"
@@ -48,7 +60,7 @@ const NameEditor = (): JSX.Element => {
   )
 }
 
-export default NameEditor
+export default BioEditor
 
 const styles = StyleSheet.create({
     container: {

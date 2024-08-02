@@ -117,7 +117,7 @@ const ArticleEditorModal = () => {
           marginBottom: BOTTOM_TAB_HEIGHT - 16,
         }}
       >
-        <BgView style={styles.container}>
+        <View style={styles.container}>
           <AnimatedTextInput
             label='Article Title'
             focusedLabelTop={16}
@@ -193,10 +193,10 @@ const ArticleEditorModal = () => {
               </>
             )}
           </View>
-        </BgView>
+        </View>
       </ScrollView>
 
-      <BgView
+      <View
         style={[
           styles.bottomButtonWrapper,
           {
@@ -230,7 +230,7 @@ const ArticleEditorModal = () => {
             />
           </View>
         </View>
-      </BgView>
+      </View>
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
