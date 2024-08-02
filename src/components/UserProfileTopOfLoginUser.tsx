@@ -1,11 +1,13 @@
-import { View, StyleSheet, useColorScheme, Pressable, FlatList } from 'react-native';
+import { View, StyleSheet, useColorScheme, Pressable, FlatList, Dimensions } from 'react-native';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
+import React, {useState, useEffect} from 'react';
 
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
 import FollowButton from './FollowButton';
 import Text from './ThemedText';
+import BgView from './ThemedBgView';
 
 interface LoginUserProps {
     id: string
@@ -28,31 +30,22 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
     return <Text>User not found</Text>;
   }
 
-  const maxCharsPerRow = 30
-
-  let currentRow: any[] = [];
-  let currentRowLength = 0;
-  const rows = [];
-
-    userInfo.tag.forEach((item, index) => {
-      if (currentRowLength + item.length <= maxCharsPerRow) {
-        currentRow.push(item);
-        currentRowLength += item.length;
-      } else {
-        rows.push(currentRow);
-        currentRow = [item];
-        currentRowLength = item.length;
-      }
-    });
-    
-
-  if (currentRow.length > 0) {
-    rows.push(currentRow);
-  }
-
+  const colorData = 
+  [
+    ["#FFCDD2", "#B71C1C"],
+    ["#C8E6C9", "#1B5E20"],
+    ["#BBDEFB", "#0D47A1"],
+    ["#FFE0B2", "#E65100"],
+    ["#D1C4E9", "#4A148C"],
+    ["#FFEBEE", "#D32F2F"],
+    ["#C5CAE9", "#1A237E"],
+    ["#E1BEE7", "#880E4F"],
+    ["#FFF9C4", "#F57F17"],
+    ["#B3E5FC", "#01579B"]
+  ]
 
   return (
-    <View style={styles.container}>
+    <BgView style={styles.container}>
       <View style={styles.profile}>
         <View style={styles.profileHeader}>
           <Image
@@ -87,19 +80,21 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
         </View>
         <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
       </View>
-      {rows.map((row, rowIndex) => (
-        <View style={styles.row} key={rowIndex}>
-          {row.map((item, index) => (
-            <View style={styles.item} key={index}>
+      <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
+      {userInfo.tag.map((item, index) => (
+            <View
+              style={[styles.item, {backgroundColor: colorData[0][0], marginBottom: 8}]}
+              key={index}
+            >
               <Text>{item}</Text>
             </View>
-          ))}
-        </View>
-      ))}
+          ))
+        }
+          </View>
       <Text numberOfLines={4} style={[styles.userBio, themeTextColor]}>
         {userInfo.bio}
       </Text>
-    </View>
+    </BgView>
   );
 };
 
@@ -107,17 +102,14 @@ export default LoginUserProfileTop;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
     padding: 16,
     gap: 16,
     pointerEvents: 'box-none',
   },
   profile: {
-    backgroundColor: '#ffffff',
     gap: 12,
   },
   profileHeader: {
-    backgroundColor: '#ffffff',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 24,
@@ -130,12 +122,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
   },
   socialStateContainer: {
-    backgroundColor: '#ffffff',
     flexDirection: 'row',
     gap: 16,
   },
   socialState: {
-    backgroundColor: '#ffffff',
     alignItems: 'center',
   },
   socialStateText: {

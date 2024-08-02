@@ -64,7 +64,7 @@ const PostCard = (props: PostDataType): JSX.Element => {
                 <Text style={styles.text1}>{props.user}</Text>
               </View>
               <View style={styles.headerLeft}>
-                <Text>6m</Text>
+                <Text style={{fontSize: 14}}>6m</Text>
                 <IconAntDesign
                   name='ellipsis1'
                   size={16}

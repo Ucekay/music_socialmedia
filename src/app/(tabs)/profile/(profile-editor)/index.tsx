@@ -11,7 +11,7 @@ import { View,
          Pressable, 
          Modal,
          ActivityIndicator,
-         GestureResponderEvent
+         Dimensions
         } from 'react-native';
 import userData from '../../../../assets/userData';
 import { Image } from 'expo-image';
@@ -36,8 +36,7 @@ const ProfileEditorModal = () => {
     throw new Error('ProfileEditorModal must be used within a ProfileEditorProvider');
   }
 
-  const {name, id, bio} = context
-  const [inputHeight, setInputHeight] = useState(30); // 初期の高さを設定
+  const {name, id, bio, tag} = context
 
   const handleSave = () => {
     // Implement save logic here
@@ -47,7 +46,6 @@ const ProfileEditorModal = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState(false)
   const navigation1 = useNavigation();
-  const animatedHeight = useRef(new Animated1.Value(0)).current; 
   
   const [images, setImages] = useState<string[]>([]);
 
@@ -135,10 +133,6 @@ const ProfileEditorModal = () => {
     }
   };
 
-  const handleCropEditor = (num: number, uri: string) => {
-    openCropEditor(num, uri);
-  }
-
   return (
     
     <BgView style={[styles.container]}>
@@ -168,20 +162,36 @@ const ProfileEditorModal = () => {
             <View style={styles.profileContent}>
                 <Pressable onPress={() => {router.push('/(tabs)/profile/(profile-editor)/name-editor-modal')}}>
                   <View style={{borderBottomColor: '#ddd', borderBottomWidth: 1, marginHorizontal: 10}}>
-                      <Text style={styles.label}>名前</Text>
-                      <Text style={styles.text1}>{name}</Text>
+                      <Text style={[styles.label, {color: textColor}]}>name</Text>
+                      <Text style={[styles.text1, {color: textColor}]}>{name}</Text>
                   </View>
                 </Pressable>
                 <Pressable onPress={() => {router.push('/(tabs)/profile/(profile-editor)/id-editor-modal')}}>
                 <View style={{borderBottomColor: '#ddd', borderBottomWidth: 1, marginHorizontal: 10, paddingTop: 16}}>
-                    <Text style={styles.label}>id</Text>
-                    <Text style={styles.text1}>{id}</Text>
+                    <Text style={[styles.label, {color: textColor}]}>id</Text>
+                    <Text style={[styles.text1, {color: textColor}]}>{id}</Text>
                 </View>
                 </Pressable>
                 <Pressable onPress={() => {router.push('/(tabs)/profile/(profile-editor)/bio-editor-modal')}}>
-                <View style={{ marginHorizontal: 10, paddingTop: 16}}>
-                    <Text style={styles.label}>自己紹介</Text>
-                    <Text style={styles.text1}>{bio}</Text>
+                <View style={{borderBottomColor: '#ddd', borderBottomWidth: 1, marginHorizontal: 10, paddingTop: 16}}>
+                    <Text style={[styles.label, {color: textColor}]}>comment</Text>
+                    <Text style={[styles.text1, {color: textColor}]}>{bio}</Text>
+                </View>
+                </Pressable>
+                <Pressable onPress={() => {router.push('/(tabs)/profile/(profile-editor)/favoriteArtists-editor-modal')}}>
+                <View style={{ marginHorizontal: 10, paddingTop: 16, gap: 8}}>
+                <Text style={[styles.label, {color: textColor}]}>favarite artists</Text>
+                <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
+                {tag.map((item, index) => (
+                    <View
+                      style={[styles.item, {marginBottom:4}]}
+                      key={index}
+                    >
+                      <Text>{item}</Text>
+                    </View>
+                  ))
+                }
+                  </View>
                 </View>
                 </Pressable>
             </View>
@@ -383,5 +393,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     height: 16, 
-  }
+  },
+  row: {
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  item: {
+    paddingRight: 12
+  },
 });
