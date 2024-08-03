@@ -28,16 +28,16 @@ const styles = StyleSheet.create({
     },
     userAvatar:{
         marginRight: 16,
-        height: 50,
-        width: 50,
+        height: 45,
+        width: 45,
         borderRadius: 25,
     },
     userId:{
-        fontSize:16,
+        fontSize:14,
         fontWeight: '500'
     },
     userName:{
-        fontSize:14,
+        fontSize:13,
         color:'#696969'
     }
 })
