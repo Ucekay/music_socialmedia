@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { View, StyleSheet, Text, Pressable, Dimensions, Modal } from 'react-native';
 import { Image } from 'expo-image';
-import MusicBarOfPost from './MusicBarOfPost';
 import { type PostDataType } from '../types';
 import { Link } from 'expo-router';
 import HeartIcon from './Icon/HeartIcon';
@@ -60,16 +59,17 @@ const PostCard = (props: PostDataType): JSX.Element => {
                 { flex: 1 },
               ]}
             >
-              <View style={styles.headerLeft}>
+              <View style={{justifyContent: 'space-between', flexDirection:'row', flex:1}}>
+              <View>
                 <Text style={styles.text1}>{props.user}</Text>
               </View>
-              <View style={styles.headerLeft}>
+              <View style={styles.headerRight}>
                 <Text style={{fontSize: 14}}>6m</Text>
                 <IconAntDesign
                   name='ellipsis1'
                   size={16}
-                  style={styles.threeDots}
                 />
+              </View>
               </View>
             </View>
             <View>
@@ -164,13 +164,6 @@ const PostCard = (props: PostDataType): JSX.Element => {
           </Link>
           <ShareIcon size={16} />
         </View>
-        <View
-          style={[
-            { backgroundColor: 'rgba(67, 80, 96, 0.3)' },
-            { marginHorizontal: 16 },
-            { height: 0.2 },
-          ]}
-        />
       </Pressable>
     </Link>
   );
@@ -182,6 +175,9 @@ const styles = StyleSheet.create({
   postContainer: {
     backgroundColor: '#ffffff',
     flex: 1,
+    marginHorizontal: 16,
+    borderBottomWidth: 0.3,
+    borderBottomColor: 'rgba(67, 80, 96, 0.3)',
   },
   postHeader: {
     flexDirection: 'row',
@@ -198,10 +194,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    marginLeft: 16,
     marginRight: 12,
-    borderWidth: 0.3,
-    borderColor: '#000000',
   },
   postContent: {
     fontSize: 14,
@@ -218,20 +211,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   headerRight: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-end',
     flexDirection: 'row',
-    width: 'auto',
-    gap: 12,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    marginRight: 8,
     alignItems: 'baseline',
     gap: 8,
-  },
-  threeDots: {
-    marginRight: 12,
   },
   postImage: {
     marginRight: 12,
@@ -267,7 +249,7 @@ const styles = StyleSheet.create({
   },
   imageModal: {
     flex: 1,
-    resizeMode: 'contain', // 画像のリサイズモード
+    resizeMode: 'contain', 
   },
   closeButton: {
     position: 'absolute',
