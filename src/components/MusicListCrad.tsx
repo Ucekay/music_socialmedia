@@ -35,10 +35,11 @@ const styles = StyleSheet.create({
     },
     text1:{
         fontSize:16,
-        fontWeight:'500'
+        fontWeight:'400'
     },
     text2:{
         fontSize:16,
-        color:'#696969'
+        color:'#696969',
+        fontWeight: '300'
     }
 })
