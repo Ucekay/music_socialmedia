@@ -370,7 +370,7 @@ export type Database = {
           Body: string
           created_at: string
           EntryID: number
-          ImageUrl: Json | null
+          ImageUrl: Json 
           likes: number
           UserID: string
           view: number
@@ -379,7 +379,7 @@ export type Database = {
           Body: string
           created_at?: string
           EntryID?: number
-          ImageUrl?: Json | null
+          ImageUrl?: Json 
           likes?: number
           UserID?: string
           view?: number
@@ -388,7 +388,7 @@ export type Database = {
           Body?: string
           created_at?: string
           EntryID?: number
-          ImageUrl?: Json | null
+          ImageUrl?: Json 
           likes?: number
           UserID?: string
           view?: number
@@ -403,26 +403,23 @@ export type Database = {
           },
         ]
       }
-      PostLikes: {
+      Postlikes: {
         Row: {
-          created_at: string
-          EntryID: number
+          PostID: number
           UserID: string
         }
         Insert: {
-          created_at?: string
-          EntryID?: number
+          PostID?: number
           UserID?: string
         }
         Update: {
-          created_at?: string
-          EntryID?: number
+          PostID?: number
           UserID?: string
         }
         Relationships: [
           {
             foreignKeyName: "PostLikes_EntryID_fkey"
-            columns: ["EntryID"]
+            columns: ["PostID"]
             isOneToOne: true
             referencedRelation: "Post"
             referencedColumns: ["EntryID"]

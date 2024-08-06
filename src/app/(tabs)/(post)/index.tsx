@@ -15,7 +15,8 @@ import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 
 import { useState, useEffect } from 'react';
-import { GetPost, getInitialPosts, getMorePosts } from '@/src/backend/components/DB_Access/post';
+import { createPostDataset } from '@/src/backend/components/Front_connection/Post_Timeline';
+import { PostData } from '@/src/types';
 
 const PostsScreen = (): JSX.Element => {
   const headerHeight = useHeaderHeight();
@@ -36,28 +37,33 @@ const PostsScreen = (): JSX.Element => {
       ? { backgroundColor: Colors.dark.background }
       : { backgroundColor: Colors.light.background };
 
-  const [posts, setPosts] = useState<GetPost[]>([]);
-  const [cursor, setCursor] = useState<string | null>(null);
+  const [posts, setPosts] = useState<PostData[]>([]);
+  const [cursor, setCursor] = useState<string | null>(null)
+  const [latestcursor, setLatestcursor] = useState<string|null>(null)
   const [loading, setLoading] = useState(false);
+  
+  const fetchPosts = async() => {
+    const fetchPosts = await createPostDataset(cursor, null);
+    setPosts([...posts, ...fetchPosts.postData])
+    setCursor(fetchPosts.cursor)
+    setLatestcursor(fetchPosts.latestcursor)
+  }
+
+  const fetchOlderPosts = async() => {
+    const fetchPosts = await createPostDataset(cursor, false);
+    setPosts([...posts, ...fetchPosts.postData])
+    setCursor(fetchPosts.cursor)
+  }
+
+  const fetchNewPosts = async() => {
+    const fetchPosts = await createPostDataset(latestcursor, true);
+    setPosts([...posts, ...fetchPosts.postData])
+    setLatestcursor(fetchPosts.latestcursor)
+  }
 
   useEffect(() => {
-    const initializePosts = async () => {
-      const { posts, cursor } = await getInitialPosts();
-      setPosts(posts);
-      setCursor(cursor);
-    };
-    initializePosts();
+    fetchPosts()
   }, []);
-
-  const handleLoadMore = async () => {
-    if (loading || !cursor) return;
-
-    setLoading(true);
-    const { posts: newPosts, cursor: newCursor } = await getMorePosts(cursor);
-    setPosts([...posts, ...newPosts]);
-    setCursor(newCursor);
-    setLoading(false);
-  };
 
 
   return (
@@ -65,12 +71,12 @@ const PostsScreen = (): JSX.Element => {
       <FlashList
         data={posts}
         estimatedItemSize={50}
-        renderItem={({ item }) => <PostCard {...item} />}
+        renderItem={({ item }) => <PostCard {...item} path='/[postId]'/>}
         contentContainerStyle={{
           paddingBottom: tabBarHeight,
           paddingTop: headerHeight,
         }}
-        onEndReached={handleLoadMore}
+        onEndReached={fetchOlderPosts}
         onEndReachedThreshold={0.5}
         ListFooterComponent={loading ? <Text>Loading...</Text>:null}
       />

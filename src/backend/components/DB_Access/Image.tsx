@@ -1,29 +1,20 @@
 import { supabase } from '../../lib/supabase'
 import * as FileSystem from 'react-native-fs';
 import { checkAuth } from './checkAuth';
+import * as ImageManipulator from 'expo-image-manipulator'
+import { decode } from 'base64-arraybuffer'
 
 export const uploadImage = async (imageUri: string, storageName: string) => {
   try {
     // 1. 画像データを base64 エンコードされた文字列として読み込む 
 
-    const getBase64 = async (uri: string) => {
-      try {
-        const response = await fetch(uri);
-        const blob = await response.blob();
-    
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        });
-      } catch (error) {
-        console.error('画像のbase64エンコード中にエラーが発生しました', error);
-        throw error;
-      }
-    };
-
-    const base64Data = await getBase64(imageUri);
+    const actions:any[] = [];
+    const saveOptions ={
+      base64: true,};
+    const base64Data = await ImageManipulator.manipulateAsync(
+      imageUri, actions, saveOptions
+    )
+    //console.log(base64Data.base64)
 
     // 2. ファイル名を生成
     const fileName = `${new Date().getTime()}-${Math.random().toString(36).substring(2, 15)}.jpg`; // ファイル名
@@ -32,17 +23,23 @@ export const uploadImage = async (imageUri: string, storageName: string) => {
     const userId = checkAuth();
 
     // 4. ファイルをストレージにアップロード
-    const { error: uploadError } = await supabase.storage
+    if(base64Data.base64){
+    const { data: uploadData, error: uploadError } = await supabase.storage
       .from(storageName)
-      .upload(fileName, base64Data, { // base64Data をアップロード
-        cacheControl: '3600',
+      .upload(fileName, decode(base64Data.base64), { // base64Data をアップロード
+        cacheControl: 'no-cache',
         upsert: true,
-        contentType: 'image/jpeg', // ファイルタイプを明示的に指定
+        contentType: 'image/jpeg;base64', // ファイルタイプを明示的に指定
       });
+      
+    if(uploadData){
+      console.log('アップロードされた画像データ:', uploadData);
+    }
 
     if (uploadError) {
       console.error('画像アップロードエラー:', uploadError, fileName, storageName);
       throw uploadError;
+     }
     }
 
     // 5. アップロードされた画像のURLを取得

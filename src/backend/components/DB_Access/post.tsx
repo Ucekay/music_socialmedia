@@ -3,8 +3,7 @@ import { supabase } from "../../lib/supabase";
 import { checkAuth } from "./checkAuth";
 
 export type Post = Database['public']['Tables']['Post']['Insert'];
-export type GetPost = 
-Omit<Database['public']['Tables']['Post']['Row'], 'ArticleID'| 'UserID'>
+export type GetPost = Database['public']['Tables']['Post']['Row']
 
 //データ挿入関数
 export const insertPost = async (
@@ -28,7 +27,7 @@ export const insertPost = async (
     }
 
 //データ取得関数
-export const getInitialPosts = async (): Promise<{posts: GetPost[], cursor:string | null}> => {
+export const getInitialPosts = async (): Promise<{posts: GetPost[], cursor:string|null ,latestcursor:string| null}> => {
   try {
 
     const LIMIT = 10
@@ -42,33 +41,63 @@ export const getInitialPosts = async (): Promise<{posts: GetPost[], cursor:strin
       throw new Error('データの取得エラー: ' + error.message);
     }
     const cursor = posts.length > 0 ? posts[posts.length - 1].created_at : null;
+    const latestcursor = posts.length> 0? posts[0].created_at: null;
 
-    return { posts, cursor}; 
+    return { posts, cursor, latestcursor}; 
   } catch (error) {
     console.error('データの取得中にエラーが発生しました:', error);
     throw error;
   }
 };
 
-export const getMorePosts =  async (cursor: string): Promise<{ posts: Post[]; cursor: string | null }> => {
+export const getOlderPosts =  async (cursor: string): Promise<{ posts: GetPost[], cursor: string | null }> => {
   try{
   
   const LIMIT = 10
   const { data: nextPosts, error } = await supabase
-    .from('posts')
+    .from('Post')
     .select('*')
     .order('created_at', { ascending: false })
     .lt('created_at', cursor)
     .limit(LIMIT);
 
+  //console.log(nextPosts)
+
   if (error) {
     console.error('Error fetching more posts:', error);
-    return { posts: [], cursor: null };
+    return { posts: [], cursor: cursor };
   }
 
-  const nextCursor = nextPosts.length > 0 ? nextPosts[nextPosts.length - 1].created_at : null;
+  const nextCursor = nextPosts.length > 0 ? nextPosts[nextPosts.length - 1].created_at : cursor;
 
   return { posts: nextPosts, cursor: nextCursor };
+}catch (error) {
+  console.error('データの取得中にエラーが発生しました:', error);
+  throw error;
+}
+};
+
+export const getNewerPosts = async (latestcursor: string): Promise<{ posts: GetPost[], latestcursor:string| null }> => {
+  try{
+  
+  const LIMIT = 10
+  const { data: nextPosts, error } = await supabase
+    .from('Post')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .gt('created_at', latestcursor)
+    .limit(LIMIT);
+
+  //console.log(nextPosts)
+
+  if (error) {
+    console.error('Error fetching more posts:', error);
+    return { posts: [], latestcursor: latestcursor};
+  }
+
+  const nextCursor = nextPosts.length > 0 ? nextPosts[0].created_at : latestcursor;
+
+  return { posts: nextPosts, latestcursor: nextCursor };
 }catch (error) {
   console.error('データの取得中にエラーが発生しました:', error);
   throw error;

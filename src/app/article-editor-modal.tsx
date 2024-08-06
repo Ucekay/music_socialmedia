@@ -28,7 +28,7 @@ import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import TrackInputField from '@/src/components/TrackInputField';
 import LiveInputField from '../components/LiveInputField';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { InsertArticle } from '../backend/components/Front_connection/Article';
+import { InsertArticle } from '../backend/components/Front_connection/Article_Insert';
 import { uploadImageToStorage, GetImageData } from '../backend/components/DB_Access/Image';
 
 const BOTTOM_TAB_HEIGHT = 96.7;

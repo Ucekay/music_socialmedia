@@ -269,6 +269,7 @@ const PostEditorModal = () => {
       </BgView>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
+    
   );
 };
 
