@@ -1,8 +1,8 @@
 import { View, StyleSheet, useColorScheme, Pressable, FlatList, Dimensions } from 'react-native';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
-import React, {useState, useEffect} from 'react';
-
+import React, {useState, useEffect, useRef} from 'react';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
 import FollowButton from './FollowButton';
@@ -12,6 +12,9 @@ import BgView from './ThemedBgView';
 interface LoginUserProps {
     id: string
 }
+
+const { width } = Dimensions.get('window');
+
 
 const LoginUserProfileTop = (props: LoginUserProps) => {
   const colorScheme = useColorScheme();
@@ -24,11 +27,45 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
     color: Colors[colorScheme ?? 'light'].text,
   };
 
+  const DATA = [
+    { id: '1', type: 'bio' },
+    { id: '2', type: 'tags' },
+  ]; 
+
+  const backgroundColors = ["#F0F0F0", "#D3D3D3", "#FFE4B5", "#ADD8E6", "#FFF0F5"];
+
   const userInfo = userData.find((item) => item.userID === userID);
   const defaultImage = require('../assets/images/snsicon.png');
   if (!userInfo) {
     return <Text>User not found</Text>;
   }
+
+
+  const renderItem = ({ item }) => {
+    if (item.type === 'bio') {
+      return (
+        <View style={[styles.swipeContainer, { flexWrap: 'wrap', flexDirection: 'row' }]}>
+          <Text numberOfLines={4} style={[styles.userBio, { marginBottom: 16 }]}>
+            {userInfo.bio}
+          </Text>
+        </View>
+      );
+    } else if (item.type === 'tags') {
+      return (
+          <View style={[styles.swipeContainer, { flexWrap: 'wrap', flexDirection: 'row' }]}>
+            {userInfo.tag.map((item, index) => (
+              <View
+                style={[styles.item, { backgroundColor: backgroundColors[1], marginBottom: 8 }]}
+                key={index}
+              >
+                <Text style={{ fontWeight: '500', fontSize: 12 }}>{item}</Text>
+              </View>
+            ))}
+          </View>
+      );
+    }
+    return null;
+  };
 
   const colorData = 
   [
@@ -80,20 +117,14 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
         </View>
         <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
       </View>
-      <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
-      {userInfo.tag.map((item, index) => (
-            <View
-              style={[styles.item, {backgroundColor: colorData[0][0], marginBottom: 8}]}
-              key={index}
-            >
-              <Text>{item}</Text>
-            </View>
-          ))
-        }
-          </View>
-      <Text numberOfLines={4} style={[styles.userBio, themeTextColor]}>
-        {userInfo.bio}
-      </Text>
+      <FlatList
+      horizontal
+      pagingEnabled
+      data={DATA}
+      keyExtractor={(item) => item.id}
+      renderItem={renderItem}
+      showsHorizontalScrollIndicator={false}
+    />
     </BgView>
   );
 };
@@ -114,6 +145,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 24,
     justifyContent: 'space-between'
+  },
+  swipeContainer:{
+    width: width-32,
   },
   avatar: {
     height: 64,
@@ -158,13 +192,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   row: {
-    flexDirection: 'row',
-    marginBottom: 10,
+    flexDirection: 'row'
   },
   item: {
-    padding: 5,
+    paddingVertical: 5,
+    paddingHorizontal:10,
     marginRight: 10,
     backgroundColor: '#f9c2ff',
-    borderRadius: 5,
+    borderRadius: 12,
   },
 })

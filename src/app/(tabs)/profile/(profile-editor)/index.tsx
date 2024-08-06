@@ -184,10 +184,11 @@ const ProfileEditorModal = () => {
                 <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
                 {tag.map((item, index) => (
                     <View
-                      style={[styles.item, {marginBottom:4}]}
+                      style={[styles.item, {marginBottom:4, flexDirection:'row'}]}
                       key={index}
                     >
-                      <Text>{item}</Text>
+                      <Text style={{color: '#c0c0c0'}}>#</Text>
+                      <Text style={{color: textColor}}> {item}</Text>
                     </View>
                   ))
                 }
