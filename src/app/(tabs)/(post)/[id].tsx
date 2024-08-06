@@ -7,12 +7,10 @@ import {
   Dimensions,
   Image as RNImage,
   Modal,
+  GestureResponderEvent
 } from 'react-native';
-import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, Link } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import postData from '@/src/assets/postData';
-import MusicBarOfPost from '@/src/components/MusicBarOfPost';
-import UserTagOfProfileDetail from '@/src/components/UserTagOfProfileDetail';
 import HeartIcon from '@/src/components/Icon/HeartIcon';
 import { Image } from 'expo-image';
 import IconAntDesign from '@/src/components/Icon/AntDesign';
@@ -21,16 +19,46 @@ import TabActionMenuList from '@/src/components/TabActionMenuList';
 import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 import ShareIcon from '@/src/components/Icon/ShareIcon';
-
+import ImageViewer from 'react-native-image-zoom-viewer';
+import { Message } from 'iconoir-react-native';
 
 const screen = Dimensions.get('screen');
 
 const PostDetailScreen = (): JSX.Element => {
-  const { id } = useLocalSearchParams();
-  const [height, setHeight] = useState<number>(0);
+  const params = useLocalSearchParams();
+  const post = params;
   const [modalStatus, setModalStatus] = useState(false);
+  const [imageUrl, setImageUrl] = useState([{ url: "" }])
+  const [initialIndex, setInitialIndex] = useState(0);
   const { setActionVisible } = useTabAction();
   const { setProfileDismissed } = useProfileScreen();
+
+  let ImageUrl: string[] = [];
+
+  if (typeof params.ImageUrlRow === 'string') {
+    try {
+      ImageUrl = JSON.parse(params.ImageUrlRow);
+    } catch (error) {
+      console.error('Error parsing image URLs:', error);
+    }
+  } else if (Array.isArray(params.ImageUrlRow)) {
+    ImageUrl = params.ImageUrlRow;
+  } else {
+    console.error('Invalid image URLs:', params.ImageUrlRow);
+  }
+
+
+  const HandleImage = (n: number) => {
+    if (ImageUrl) {
+      setImageUrl(ImageUrl.map((url) => ({ url })))
+    }
+    setInitialIndex(n)
+    setModalStatus(true);
+  }
+
+  const onClose = () => {
+    setModalStatus(false)
+  }
   useFocusEffect(
     React.useCallback(() => {
       setProfileDismissed(false);
@@ -39,86 +67,131 @@ const PostDetailScreen = (): JSX.Element => {
       };
     }, [])
   );
-  const post = postData.find((item) => item.postID === id);
   if (!post) {
     return <Text>Post not found.</Text>;
   }
-  if (post?.ImageUrl) {
-    RNImage.getSize(post.ImageUrl, (originalWidth, originalHeight) => {
-      const newHeight = (Number(screen.width) * originalHeight) / originalWidth;
-      setHeight(newHeight);
-    });
-  }
   return (
     <View style={styles.container}>
-      <UserTagOfProfileDetail
-        user={post.user}
-        userAvatarUrl={post.userAvatarUrl}
-        userID={post.userID}
-      />
+      <Link href={{
+        pathname: '/(tabs)/home/(profile)/[userID]',
+        params: {
+          userID: post.userID
+        }
+      }}>
+        <View>
+          <View style={styles.userContainer}>
+            <Image
+              style={styles.userAvatar}
+              source={post.userAvatarUrl} />
+            <View>
+              <Text style={styles.text1}>{post.user}</Text>
+              <Text style={styles.text2}>{post.userID}</Text>
+            </View>
+          </View>
+        </View>
+      </Link>
       <Text
-        style={[styles.text1, { marginHorizontal: 16 }, { marginBottom: 16 }]}
+        style={[styles.text1, { marginBottom: 16 }]}
       >
         {post.postContent}
       </Text>
-      {post.ImageUrl && (
-        <>
-          <Pressable onPress={() => setModalStatus(true)}>
-            <Image
-              style={[
-                { width: screen.width * 0.9 },
-                { height: height * 0.9 },
-                { marginHorizontal: screen.width * 0.05 },
-                { borderRadius: 10 },
-              ]}
-              source={post.ImageUrl}
-            />
-          </Pressable>
-          <Modal
-            visible={modalStatus}
-            animationType='fade'
-            onRequestClose={() => setModalStatus(false)}
-            style={[
-              { width: screen.width },
-              { height: screen.height },
-              { justifyContent: 'center' },
-              { backgroundColor: '#000000' },
-            ]}
-          >
-            <Pressable onPress={() => setModalStatus(false)}>
-              <View
-                style={[
-                  { width: screen.width },
-                  { height: screen.height },
-                  { justifyContent: 'center' },
-                  { backgroundColor: '#000000' },
-                ]}
-              >
-                <Pressable>
-                  <GestureHandlerRootView>
-                    <Image
-                      source={post.ImageUrl}
-                      style={[{ width: screen.width }, { height: height }]}
-                    />
-                  </GestureHandlerRootView>
+      {ImageUrl.length !== 0 && (
+        <View>
+          <View>
+            {ImageUrl.length === 1 && (
+              <Pressable onPress={(e) => HandleImage(0)}>
+                <Image source={ImageUrl[0]} style={styles.postImage} />
+              </Pressable>
+            )}
+            {ImageUrl.length === 2 && (
+              <View style={styles.imageContainer}>
+                <Pressable onPress={(e) => HandleImage(0)}>
+                  <Image source={ImageUrl[0]} style={styles.Image2} />
                 </Pressable>
-              </View>
+                <Pressable onPress={(e) => HandleImage(1)}>
+                  <Image source={ImageUrl[1]} style={styles.Image2} />
+                </Pressable>
+              </View>)}
+            {ImageUrl.length === 3 && (
+              <View style={styles.imageContainer}>
+                <Pressable onPress={(e) => HandleImage(0)}>
+                  <Image source={ImageUrl[0]} style={styles.Image2} />
+                </Pressable>
+                <View style={styles.imageContainer2}>
+                  <Pressable onPress={(e) => HandleImage(1)}>
+                    <Image source={ImageUrl[1]} style={styles.Image3} />
+                  </Pressable>
+                  <Pressable onPress={(e) => HandleImage(2)}>
+                    <Image source={ImageUrl[2]} style={styles.Image3} />
+                  </Pressable>
+                </View>
+              </View>)}
+            {ImageUrl.length === 4 && (
+              <View style={styles.imageContainer}>
+                <View style={styles.imageContainer2}>
+                  <Pressable onPress={(e) => HandleImage(0)}>
+                    <Image source={ImageUrl[0]} style={styles.Image3} />
+                  </Pressable>
+                  <Pressable onPress={(e) => HandleImage(1)}>
+                    <Image source={ImageUrl[1]} style={styles.Image3} />
+                  </Pressable>
+                </View>
+                <View style={styles.imageContainer2}>
+                  <Pressable onPress={(e) => HandleImage(2)}>
+                    <Image source={ImageUrl[2]} style={styles.Image3} />
+                  </Pressable>
+                  <Pressable onPress={(e) => HandleImage(2)}>
+                    <Image source={ImageUrl[3]} style={styles.Image3} />
+                  </Pressable>
+                </View>
+              </View>)}
+          </View>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalStatus}
+            onRequestClose={onClose}
+            style={styles.modalOverlay}
+          >
+            <Pressable style={styles.closeButton} onPress={onClose}>
+              <Text style={styles.closeButtonText}>閉じる</Text>
             </Pressable>
+            <View style={{ flex: 1, paddingTop: 30, backgroundColor: '#000000' }}>
+              <ImageViewer
+                imageUrls={imageUrl}
+                enableSwipeDown
+                onSwipeDown={onClose}
+                index={initialIndex}
+                renderImage={(props) => <Image {...props} style={styles.image} contentFit='contain' />} />
+            </View>
           </Modal>
-        </>
+        </View>
       )}
-      {post.musicUrl && <MusicBarOfPost {...post} style={{ marginLeft: 12 }} />}
       <View style={styles.infoContainer}>
-        <Text style={styles.text3}>9:38・2024/03/24</Text>
+        <Text style={styles.text3}>{post.createAt}</Text>
       </View>
       <View style={styles.infoContainer}>
-        <Text style={styles.text3}>53件のいいね</Text>
+        <Text style={styles.text3}>{post.view}件のいいね</Text>
       </View>
       <View style={styles.iconContainer}>
-        <HeartIcon style={{ marginLeft: 16 }} size={20} />
-        <IconAntDesign name='message1' size={20} />
-        <IconAntDesign name='retweet' size={20} />
-        <ShareIcon size={20} style={{ marginRight: 16 }} />
+        <HeartIcon size={20} />
+        <Link href={{
+          pathname: '/reply-editor-modal',
+          params: {
+            postID: post.postID,
+            postContent: post.postContent,
+            ImageUrlRow: post.ImageUrlRow,
+            userID: post.userID,
+            user: post.user,
+            userAvatarUrl: post.userAvatarUrl,
+            createAt: post.createAt,
+            view: post.view
+          },
+        }}
+          asChild >
+          <Message width={20} height={20} color={'#000000'} />
+        </Link>
+        <ShareIcon size={20} />
       </View>
       <TabActionMenu />
     </View>
@@ -131,6 +204,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
+    paddingHorizontal: 16
   },
   userContainer: {
     flexDirection: 'row',
@@ -157,10 +231,9 @@ const styles = StyleSheet.create({
     height: 32,
     width: 32,
     borderRadius: 16,
-    marginHorizontal: 16,
+    marginRight: 16
   },
   infoContainer: {
-    marginHorizontal: 16,
     height: 34,
     justifyContent: 'center',
     borderBottomColor: 'rgba(67, 80, 96, 0.3)',
@@ -174,27 +247,6 @@ const styles = StyleSheet.create({
     height: 24,
     marginVertical: 16,
   },
-  musicBar: {
-    height: 48,
-    marginLeft: 12,
-    marginRight: 12,
-    marginBottom: 12,
-    borderRadius: 10,
-  },
-  musicContainer: {
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  musicImage: {
-    height: 40,
-    width: 40,
-    borderRadius: 4,
-    marginHorizontal: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   text4: {
     fontSize: 16,
     fontWeight: '700',
@@ -205,4 +257,60 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     opacity: 0.8,
   },
+  postImage: {
+    marginRight: 12,
+    width: screen.width - 32,
+    height: 150,
+    borderRadius: 10,
+    marginBottom: 16,
+  },
+  imageContainer: {
+    height: 150,
+    width: screen.width - 32,
+    borderRadius: 12,
+    marginRight: 12,
+    marginBottom: 16,
+    flexDirection: 'row',
+    objectFit: 'cover',
+    overflow: 'hidden',
+    flexWrap: 'wrap',
+    gap: 2,
+  },
+  Image2: {
+    height: 150,
+    width: screen.width / 2 - 17
+  },
+  imageContainer2: {
+    height: 150,
+    width: screen.width / 2 - 17,
+    gap: 2
+  },
+  Image3: {
+    height: 78,
+    width: '100%'
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+  },
+  image: {
+    flex: 1,
+    resizeMode: 'contain'
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 1,
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'black',
+  },
 });
+
+
