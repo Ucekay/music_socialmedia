@@ -27,12 +27,23 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
     color: Colors[colorScheme ?? 'light'].text,
   };
 
+  const backgroundColors = [
+    ["#F0F0F0", "#2E2E2E"],
+    ["#D3D3D3", "#444444"],
+    ["#FFE4B5", "#555555"],
+    ["#ADD8E6", "#3B3B3B"],
+    ["#FFF0F5", "#4A4A4A"]
+  ];
+
+  const TagColor =
+  colorScheme === 'light'
+  ? backgroundColors[0][0]
+  : backgroundColors[0][1]
+
   const DATA = [
     { id: '1', type: 'bio' },
     { id: '2', type: 'tags' },
   ]; 
-
-  const backgroundColors = ["#F0F0F0", "#D3D3D3", "#FFE4B5", "#ADD8E6", "#FFF0F5"];
 
   const userInfo = userData.find((item) => item.userID === userID);
   const defaultImage = require('../assets/images/snsicon.png');
@@ -55,7 +66,7 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
           <View style={[styles.swipeContainer, { flexWrap: 'wrap', flexDirection: 'row' }]}>
             {userInfo.tag.map((item, index) => (
               <View
-                style={[styles.item, { backgroundColor: backgroundColors[1], marginBottom: 8 }]}
+                style={[styles.item, { backgroundColor: TagColor, marginBottom: 8 }]}
                 key={index}
               >
                 <Text style={{ fontWeight: '500', fontSize: 12 }}>{item}</Text>
@@ -66,20 +77,6 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
     }
     return null;
   };
-
-  const colorData = 
-  [
-    ["#FFCDD2", "#B71C1C"],
-    ["#C8E6C9", "#1B5E20"],
-    ["#BBDEFB", "#0D47A1"],
-    ["#FFE0B2", "#E65100"],
-    ["#D1C4E9", "#4A148C"],
-    ["#FFEBEE", "#D32F2F"],
-    ["#C5CAE9", "#1A237E"],
-    ["#E1BEE7", "#880E4F"],
-    ["#FFF9C4", "#F57F17"],
-    ["#B3E5FC", "#01579B"]
-  ]
 
   return (
     <BgView style={styles.container}>
