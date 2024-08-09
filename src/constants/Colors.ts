@@ -1,5 +1,6 @@
 import palette from '@evilmartians/harmony/dist/base';
 import chroma from 'chroma-js';
+import type { ColorScheme } from '@/src/types';
 
 const tintColorLight = '#2f95dc';
 const tintColorDark = '#fff';
@@ -8,7 +9,10 @@ const tabBarGradientDark = ['rgba(0,0,0,0)', 'rgba(0,0,0,1)'];
 const headerLight = 'rgba(250, 251, 254, 0.7)';
 const headerDark = 'rgba(0, 0, 0, 0.7)';
 
-const Colors = {
+const Colors: {
+  light: ColorScheme;
+  dark: ColorScheme;
+} = {
   light: {
     text: '#000',
     secondaryText: chroma(palette.zinc['800']).hex(),

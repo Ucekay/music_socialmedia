@@ -38,47 +38,46 @@ const PostsScreen = (): JSX.Element => {
       : { backgroundColor: Colors.light.background };
 
   const [posts, setPosts] = useState<PostData[]>([]);
-  const [cursor, setCursor] = useState<string | null>(null)
-  const [latestcursor, setLatestcursor] = useState<string|null>(null)
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [latestcursor, setLatestcursor] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  
-  const fetchPosts = async() => {
+
+  const fetchPosts = async () => {
     const fetchPosts = await createPostDataset(cursor, null);
-    setPosts([...posts, ...fetchPosts.postData])
-    setCursor(fetchPosts.cursor)
-    setLatestcursor(fetchPosts.latestcursor)
-  }
+    setPosts([...posts, ...fetchPosts.postData]);
+    setCursor(fetchPosts.cursor);
+    setLatestcursor(fetchPosts.latestcursor);
+  };
 
-  const fetchOlderPosts = async() => {
+  const fetchOlderPosts = async () => {
     const fetchPosts = await createPostDataset(cursor, false);
-    setPosts([...posts, ...fetchPosts.postData])
-    setCursor(fetchPosts.cursor)
-  }
+    setPosts([...posts, ...fetchPosts.postData]);
+    setCursor(fetchPosts.cursor);
+  };
 
-  const fetchNewPosts = async() => {
+  const fetchNewPosts = async () => {
     const fetchPosts = await createPostDataset(latestcursor, true);
-    setPosts([...posts, ...fetchPosts.postData])
-    setLatestcursor(fetchPosts.latestcursor)
-  }
+    setPosts([...posts, ...fetchPosts.postData]);
+    setLatestcursor(fetchPosts.latestcursor);
+  };
 
   useEffect(() => {
-    fetchPosts()
+    fetchPosts();
   }, []);
-
 
   return (
     <View style={[styles.container, themeContainerStyle]}>
       <FlashList
         data={posts}
         estimatedItemSize={50}
-        renderItem={({ item }) => <PostCard {...item} path='/[postId]'/>}
+        renderItem={({ item }) => <PostCard {...item} path='/[postId]' />}
         contentContainerStyle={{
           paddingBottom: tabBarHeight,
           paddingTop: headerHeight,
         }}
         onEndReached={fetchOlderPosts}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={loading ? <Text>Loading...</Text>:null}
+        ListFooterComponent={loading ? <Text>Loading...</Text> : null}
       />
       <TabActionMenu />
     </View>

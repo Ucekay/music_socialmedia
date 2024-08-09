@@ -1,23 +1,23 @@
 import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Pressable,
-  useColorScheme,
-} from 'react-native';
+import { Text, View, StyleSheet, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 
+import { useTheme } from '../contexts/ColorThemeContext';
 import { ArticleGraphic } from './ArticleGraphic';
 import ArticleCardImage from './ArticleCardImage';
 import ArticleTag from './ArticleTag';
 import ArticleCardSubhead from './ArticleCardSubhead';
 import type { articleDataType } from '../types';
-import Colors from '../constants/Colors';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-export default function ArticleCard({ article }: { article: articleDataType }) {
+export default function ArticleCard({
+  article,
+  parentSegment,
+}: {
+  article: articleDataType;
+  parentSegment: string;
+}) {
   const {
     articleID,
     articleTitle,
@@ -29,23 +29,17 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
     userAvatarUrl,
     type,
   } = article;
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
 
-  const themeBackgroundStyle =
-    colorScheme === 'dark'
-      ? { backgroundColor: Colors.dark.secondaryBackground }
-      : { backgroundColor: Colors.light.secondaryBackground };
-  const themeTextColor =
-    colorScheme === 'dark'
-      ? { color: Colors.dark.text }
-      : { color: Colors.light.text };
-  const themeSecondlyTextColor =
-    colorScheme === 'dark'
-      ? { color: Colors.dark.secondaryText }
-      : { color: Colors.light.secondaryText };
+  const themeBackgroundStyle = { backgroundColor: colors.secondaryBackground };
+  const themeTextColor = { color: colors.text };
+  const themeSecondlyTextColor = { color: colors.secondaryText };
 
   return (
-    <Link href={`/(tabs)/home/(article)/${article.articleID}`} asChild>
+    <Link
+      href={`/(tabs)/${parentSegment}/articlesScreen/${article.articleID}`}
+      asChild
+    >
       <Pressable style={{ flex: 1 }}>
         <Animated.View
           entering={FadeIn}

@@ -59,7 +59,7 @@ export type PostDataType = {
   userAvatarUrl: string;
   likes: number;
   createdAt: string;
-  path: string
+  path: string;
 };
 
 export type PostData = {
@@ -71,5 +71,25 @@ export type PostData = {
   userAvatarUrl: string;
   likes: number;
   createdAt: string;
-  LiketoPost: boolean
-}
+  LiketoPost: boolean;
+};
+
+export type ColorScheme = {
+  text: string;
+  secondaryText: string;
+  background: string;
+  secondaryBackground: string;
+  tabBarGradient: string[];
+  headerBackground: string;
+  tint: string;
+  tabIconDefault: string;
+  tabIconSelected: string;
+  followButtonBg: string;
+  followButtonText: string;
+  menuBorder: string;
+  placeholder: string;
+  appleMusicText: string;
+  appleMusicBg: string;
+  cancelBg: string;
+  cancelText: string;
+};

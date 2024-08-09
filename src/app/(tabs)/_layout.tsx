@@ -103,6 +103,16 @@ export default function TabLayout() {
               ),
             }}
           />
+          <Tabs.Screen
+            name='(feed)'
+            options={{
+              title: 'Article',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
         </Tabs>
       </ProfileScreenProvider>
     </TabActionProvider>

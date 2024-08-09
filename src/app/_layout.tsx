@@ -3,6 +3,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import { ThemeProvider } from '@/src/contexts/ColorThemeContext';
+
+const client = new QueryClient();
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -43,39 +48,43 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <Stack>
-      <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-      <Stack.Screen
-        name='modal'
-        options={{ presentation: 'fullScreenModal' }}
-      />
-      <Stack.Screen
-        name='article-editor-modal'
-        options={{
-          headerShown: false,
-          title: 'Article Editor',
-          presentation: 'modal',
-          gestureEnabled: false,
-        }}
-      />
-       <Stack.Screen
-        name='post-editor-modal'
-        options={{
-          headerShown: false,
-          title: 'Post Editor',
-          presentation: 'modal',
-          gestureEnabled: false,
-        }}
-      />
-      <Stack.Screen
-        name='reply-editor-modal'
-        options={{
-          headerShown: false,
-          title: 'Reply Editor',
-          presentation: 'modal',
-          gestureEnabled: false,
-        }}
-      />
-    </Stack>
+    <QueryClientProvider client={client}>
+      <ThemeProvider>
+        <Stack>
+          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+          <Stack.Screen
+            name='modal'
+            options={{ presentation: 'fullScreenModal' }}
+          />
+          <Stack.Screen
+            name='article-editor-modal'
+            options={{
+              headerShown: false,
+              title: 'Article Editor',
+              presentation: 'modal',
+              gestureEnabled: false,
+            }}
+          />
+          <Stack.Screen
+            name='post-editor-modal'
+            options={{
+              headerShown: false,
+              title: 'Post Editor',
+              presentation: 'modal',
+              gestureEnabled: false,
+            }}
+          />
+          <Stack.Screen
+            name='reply-editor-modal'
+            options={{
+              headerShown: false,
+              title: 'Reply Editor',
+              presentation: 'modal',
+              gestureEnabled: false,
+            }}
+          />
+        </Stack>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

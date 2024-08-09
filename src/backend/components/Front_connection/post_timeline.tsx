@@ -1,75 +1,79 @@
-import { useState, useEffect } from "react";
-import { supabase } from "../../lib/supabase";
-import { GetPost } from "../DB_Access/post";
-import { getInitialPosts, getOlderPosts, getNewerPosts} from "../DB_Access/post";
-import { PostDataType } from "@/src/types";
-import { PostData } from "@/src/types";
+import { supabase } from '../../lib/supabase';
+import {
+  getInitialPosts,
+  getOlderPosts,
+  getNewerPosts,
+} from '../DB_Access/post';
+import { PostData } from '@/src/types';
 
+interface FetchPostsParams {
+  cursor: string | null;
+  isForward: boolean | null;
+}
 
-//最初に表示するポストデータを作成する関数
-export const createPostDataset = async (prevcursor:string |null, latest:boolean|null) :
-Promise<{postData: PostData[], cursor:string | null, latestcursor:string|null}>=> {
-    let posts;
-    let cursor: string| null = null;
-    let latestcursor: string| null = null;
-    if(prevcursor==null){
-        const result = await getInitialPosts();
-        posts = result.posts
-        cursor = result.cursor
-        latestcursor = result.latestcursor
-    }else if(latest==false){
-        const result = await getOlderPosts(prevcursor);
-        posts = result.posts
-        cursor = result.cursor
-        latestcursor = latestcursor
-    }else{
-        const result = await getNewerPosts(prevcursor);
-        posts = result.posts
-        cursor = cursor
-        latestcursor = result.latestcursor
-    }
+interface PostsResult {
+  postData: PostData[];
+  cursor: string | null;
+  latestcursor: string | null;
+}
 
-    
-    try{
-        const postData: PostData[]= await Promise.all(posts.map(async(post)=>{
-            const {data, error} = await supabase
-            .from('Users')
-            .select('IconImageUrl, UserName, ProfileID')
-            .eq('UserID', post.UserID)
-            .single()
+export const createPostDataset = async ({
+  cursor,
+  isForward,
+}: FetchPostsParams): Promise<PostsResult> => {
+  let posts;
+  let newCursor: string | null = null;
+  let newLatestcursor: string | null = null;
 
-            let liketopost = true;
-            try{
-            const {data:Like, error:likeerror} = await supabase
-            .from('PostLikes')
-            .select('PostID')
-            .eq('UserID', post.UserID)
-            .eq('PostID', post.EntryID)
-            .single();
-            }catch(likeerror){
-                liketopost = false;
-            }
-            if(error){
-                throw error;
-            }
-            return{
-                postID: post.EntryID,
-                postContent: post.Body,
-                ImageUrl: post.ImageUrl as string[],
-                userID: data.ProfileID,
-                user: data.UserName,
-                userAvatarUrl: data.IconImageUrl,
-                likes: post.likes,
-                createdAt: post.created_at,
-                LiketoPost: liketopost
-            };
-        }));
-        
-            return {postData, cursor, latestcursor}
-        }catch(error){
-            console.error(error)
-            return { postData: [], cursor, latestcursor}; 
-        }
-    }
+  if (cursor === null) {
+    const result = await getInitialPosts();
+    posts = result.posts;
+    newCursor = result.cursor;
+    newLatestcursor = result.latestcursor;
+  } else if (isForward === false) {
+    const result = await getOlderPosts(cursor);
+    posts = result.posts;
+    newCursor = result.cursor;
+  } else if (isForward === true) {
+    const result = await getNewerPosts(cursor);
+    posts = result.posts;
+    newLatestcursor = result.latestcursor;
+  } else {
+    throw new Error('Invalid parameters');
+  }
 
+  const postData: PostData[] = await Promise.all(
+    posts.map(async (post) => {
+      const { data: userData, error: userError } = await supabase
+        .from('Users')
+        .select('IconImageUrl, UserName, ProfileID')
+        .eq('UserID', post.UserID)
+        .single();
 
+      if (userError) throw userError;
+
+      const { data: likeData, error: likeError } = await supabase
+        .from('PostLikes')
+        .select('PostID')
+        .eq('UserID', post.UserID)
+        .eq('PostID', post.EntryID)
+        .single();
+
+      const liketopost = !likeError;
+
+      return {
+        postID: post.EntryID,
+        postContent: post.Body,
+        ImageUrl: post.ImageUrl as string[],
+        userID: userData.ProfileID,
+        user: userData.UserName,
+        userAvatarUrl: userData.IconImageUrl,
+        likes: post.likes,
+        createdAt: post.created_at,
+        LiketoPost: liketopost,
+      };
+    })
+  );
+
+  return { postData, cursor: newCursor, latestcursor: newLatestcursor };
+};
