@@ -2,7 +2,6 @@ import { View, StyleSheet, useColorScheme, Pressable, FlatList, Dimensions } fro
 import { Link, useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
 import React, {useState, useEffect, useRef} from 'react';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
 import FollowButton from './FollowButton';
@@ -21,7 +20,16 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
   const backgroundColor = {
     backgroundColor: Colors[colorScheme ?? 'light'].followButtonBg,
   };
-  const textColor = { color: Colors[colorScheme ?? 'light'].followButtonText };
+  const textColor = 
+  colorScheme === 'light'
+  ? '#000000'
+  : '#ffffff'
+
+  const labelColor =
+  colorScheme === 'light'
+  ? "gray"
+  : "#F0F0F0"
+  
   const userID  = props.id
   const themeTextColor = {
     color: Colors[colorScheme ?? 'light'].text,
@@ -55,8 +63,8 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
   const renderItem = ({ item }) => {
     if (item.type === 'bio') {
       return (
-        <View style={[styles.swipeContainer, { flexWrap: 'wrap', flexDirection: 'row' }]}>
-          <Text numberOfLines={4} style={[styles.userBio, { marginBottom: 16 }]}>
+        <View style={[styles.swipeContainer, { flexWrap: 'wrap', flexDirection: 'row'}]}>
+          <Text style={[styles.userBio]}>
             {userInfo.bio}
           </Text>
         </View>
@@ -82,37 +90,36 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
     <BgView style={styles.container}>
       <View style={styles.profile}>
         <View style={styles.profileHeader}>
-          <Image
-            source={userInfo.userAvatarUrl || defaultImage}
-            style={styles.avatar}
-          />
-          <View>
-            <View style={styles.socialStateContainer}>
-              <View style={styles.socialState}>
-                <Text style={[styles.socialStateText, themeTextColor]}>
-                  {userInfo.followers}
-                </Text>
-                <Text style={[styles.socialStateLabel, themeTextColor]}>
-                  Followers
-                </Text>
+            <Image
+              source={userInfo.userAvatarUrl || defaultImage}
+              style={styles.avatar}
+            />
+            <View style={{gap: 8}}>
+              <View style={{alignItems: 'baseline',flexDirection: 'row',gap: 16,}}>
+                <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
+                <Text>{userInfo.userID}</Text>
               </View>
-              <View style={styles.socialState}>
-                <Text style={[styles.socialStateText, themeTextColor]}>
-                  {userInfo.following}
-                </Text>
-                <Text style={[styles.socialStateLabel, themeTextColor]}>
-                  Following
-                </Text>
+              <View style={styles.socialStateContainer}>
+                <View style={styles.socialState}>
+                  <Text style={[styles.socialStateText, themeTextColor]}>
+                    {userInfo.followers}
+                  </Text>
+                  <Text style={[styles.socialStateLabel,  {color: labelColor}]}>
+                    Followers
+                  </Text>
+                </View>
+                <Text>|</Text>
+                <View style={styles.socialState}>
+                  <Text style={[styles.socialStateText, themeTextColor]}>
+                    {userInfo.following}
+                  </Text>
+                  <Text style={[styles.socialStateLabel, {color: labelColor}]}>
+                    Following
+                  </Text>
+                </View>
               </View>
-            </View>
           </View>
-          <Link href={'/(tabs)/profile/(profile-editor)'}>
-          <View style={[styles.button, backgroundColor]}>
-            <Text style={[styles.text, textColor]}>Edit</Text>
-          </View>
-          </Link>
         </View>
-        <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
       </View>
       <FlatList
       horizontal
@@ -122,6 +129,18 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
       renderItem={renderItem}
       showsHorizontalScrollIndicator={false}
     />
+    <View style={{flexDirection: 'row', gap:10, width: width-32}}>
+    <Link href={'/(tabs)/profile/(profile-editor)'} style={{flex:1}}>
+          <View style={[styles.button, {backgroundColor: TagColor, width: width/2-24}]}>
+            <Text style={[styles.text, {color: textColor}]}>プロフィールを編集</Text>
+          </View>
+    </Link>
+    <Link href={'/(tabs)/profile/(profile-editor)'} style={{flex:1}}>
+      <View style={[styles.button, {backgroundColor: TagColor, width: width/2-24}]}>
+        <Text style={[styles.text, {color: textColor}]}>プレイリストを参照</Text>
+      </View>
+    </Link>
+    </View>
     </BgView>
   );
 };
@@ -130,8 +149,9 @@ export default LoginUserProfileTop;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    gap: 16,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    gap: 20,
     pointerEvents: 'box-none',
   },
   profile: {
@@ -139,9 +159,8 @@ const styles = StyleSheet.create({
   },
   profileHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 24,
-    justifyContent: 'space-between'
+    alignItems: 'flex-end',
+    gap: 16,
   },
   swipeContainer:{
     width: width-32,
@@ -154,14 +173,17 @@ const styles = StyleSheet.create({
   },
   socialStateContainer: {
     flexDirection: 'row',
-    gap: 16,
+    gap: 4,
+    marginRight: 8
   },
   socialState: {
-    alignItems: 'center',
+    alignItems: 'baseline',
+    flexDirection: 'row',
+    gap: 4,
   },
   socialStateText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: '400',
   },
   socialStateLabel: {
     fontSize: 12,
@@ -173,7 +195,7 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   userBio: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '400',
   },
   button: {
@@ -182,11 +204,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 8,
     paddingHorizontal: 16,
-    borderRadius: 100,
+    borderRadius: 8,
   },
   text: {
-    fontSize: 17,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: '500',
   },
   row: {
     flexDirection: 'row'

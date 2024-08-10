@@ -23,7 +23,6 @@ import { useNavigation, useRouter, Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker'
-import ImageCropPicker from 'react-native-image-crop-picker';
 import Colors from '@/src/constants/Colors';
 import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
 
@@ -36,10 +35,15 @@ const ProfileEditorModal = () => {
     throw new Error('ProfileEditorModal must be used within a ProfileEditorProvider');
   }
 
-  const {name, id, bio, tag} = context
+  const {name, id, bio, tag, userAvatar, setName, setId, setBio, setTag, setUserAvatar} = context
+
+  const preName = name
+  const preId = id
+  const preBio = bio
+  const preTag = tag
+  const preUserAvatar = userAvatar
 
   const handleSave = () => {
-    // Implement save logic here
     console.log('Saving profile changes...');
   };
   const insets = useSafeAreaInsets();
@@ -53,15 +57,14 @@ const ProfileEditorModal = () => {
     setErrorMessage('');
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      selectionLimit: 4 - images.length,
+      allowsEditing: true,
+      aspect: [1,1],
       quality: 1,
     });
 
     if (!result.canceled) {
       setLoading(true);
-      for (let i = 0; i < result.assets.length; i++) 
-      setImages(images => [...images, result.assets[i].uri])
+      setUserAvatar(result.assets[0].uri)
       setLoading(false);
     } else {
       setLoading(false);
@@ -86,52 +89,10 @@ const ProfileEditorModal = () => {
     })();
   }, []);
 
-  const takePhoto = async () => {
-    try {
-      const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        quality: 1,
-      });
-
-      if (!result.canceled) {
-        setLoading(true);
-        setImages(images => [...images, result.assets[i].uri])
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error('Error taking picture:', error);
-      setLoading(false);
-    }
-  };
-
   const textColor = Color[colorScheme ?? 'light'].text;
   const secondaryTextColor = Color[colorScheme ?? 'light'].secondaryText;
 
   const BOTTOM_TAB_HEIGHT = 96.7;
-
-   
-  const openCropEditor = async (num: number, uri: string) => {
-    try {
-      setLoading(true)
-      const cropped = await ImageCropPicker.openCropper({
-        path: uri,
-        cropperToolbarTitle: '画像を編集',
-        mediaType: 'photo',
-        freeStyleCropEnabled: true
-      });
-      setImages(images.map((images, index) => (index === num ? cropped.path : images )));
-    } catch (e: any) {
-      console.log(e.message);
-      if (e.message === 'User cancelled image selection') {
-        setErrorMessage(
-          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。'
-        );
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     
@@ -152,12 +113,14 @@ const ProfileEditorModal = () => {
         </View>
       </Modal>
       <View style={{marginHorizontal: 16 , marginTop: 50}}>
+        <Pressable onPress={(pickImage)}>
         <View style={styles.profileHeader}>
             <Image
-            source={{ uri: 'https://api.dicebear.com/8.x/bottts/png' }}
+            source={{ uri: userAvatar }}
             style={styles.avatar}
             />
         </View>
+        </Pressable>
         <View style={[styles.card, { backgroundColor, shadowColor }]}>
             <View style={styles.profileContent}>
                 <Pressable onPress={() => {router.push('/(tabs)/profile/(profile-editor)/name-editor-modal')}}>

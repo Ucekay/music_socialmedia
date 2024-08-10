@@ -28,10 +28,11 @@ const LoginProfileScreen = () => {
       };
     }, [])
   );
+
   return (
       <Tabs.Container
         headerHeight={HEADER_HEIGHT}
-        renderHeader={() => <LoginUserProfileTop id='@Taro1234'/>}
+        renderHeader={() => <LoginUserProfileTop id='@RamenKing88'/>}
       >
         <Tabs.Tab name='post' label='Post'>
           <Tabs.FlashList
