@@ -59,7 +59,6 @@ export type PostDataType = {
   userAvatarUrl: string;
   likes: number;
   createdAt: string;
-  path: string;
 };
 
 export type PostData = {

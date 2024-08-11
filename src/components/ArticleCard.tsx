@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet, Pressable } from 'react-native';
 import { Image } from 'expo-image';
-import { Link } from 'expo-router';
+import { Link, useSegments } from 'expo-router';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 import { ArticleGraphic } from './ArticleGraphic';
@@ -11,13 +11,7 @@ import ArticleCardSubhead from './ArticleCardSubhead';
 import type { articleDataType } from '../types';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-export default function ArticleCard({
-  article,
-  parentSegment,
-}: {
-  article: articleDataType;
-  parentSegment: string;
-}) {
+export default function ArticleCard({ article }: { article: articleDataType }) {
   const {
     articleID,
     articleTitle,
@@ -29,6 +23,10 @@ export default function ArticleCard({
     userAvatarUrl,
     type,
   } = article;
+
+  const segments = useSegments();
+  const parentSegment = segments[segments.length - 2];
+
   const { colors } = useTheme();
 
   const themeBackgroundStyle = { backgroundColor: colors.secondaryBackground };
@@ -36,10 +34,7 @@ export default function ArticleCard({
   const themeSecondlyTextColor = { color: colors.secondaryText };
 
   return (
-    <Link
-      href={`/(tabs)/${parentSegment}/articlesScreen/${article.articleID}`}
-      asChild
-    >
+    <Link href={`/articlesScreen/${article.articleID}`} asChild>
       <Pressable style={{ flex: 1 }}>
         <Animated.View
           entering={FadeIn}

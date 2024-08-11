@@ -15,7 +15,7 @@ import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 
 import { useState, useEffect } from 'react';
-import { createPostDataset } from '@/src/backend/components/Front_connection/Post_Timeline';
+import { createPostDataset } from '@/src/backend/components/Front_connection/post_timeline';
 import { PostData } from '@/src/types';
 
 const PostsScreen = (): JSX.Element => {

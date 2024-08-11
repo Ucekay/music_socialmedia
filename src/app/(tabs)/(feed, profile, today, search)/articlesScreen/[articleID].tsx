@@ -1,7 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import { View, Text } from 'react-native';
 
-const articleDetailsScreen = () => {
+const ArticleDetailsScreen = () => {
   const { articleID } = useLocalSearchParams();
   return (
     <View>
@@ -10,4 +10,4 @@ const articleDetailsScreen = () => {
   );
 };
 
-export default articleDetailsScreen;
+export default ArticleDetailsScreen;

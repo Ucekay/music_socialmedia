@@ -4,10 +4,16 @@ import { useEffect } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
+import { useReactQueryDevTools } from '@dev-plugins/react-query';
 import { ThemeProvider } from '@/src/contexts/ColorThemeContext';
 
-const client = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+    },
+  },
+});
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,8 +53,9 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  useReactQueryDevTools(queryClient);
   return (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <Stack>
           <Stack.Screen name='(tabs)' options={{ headerShown: false }} />

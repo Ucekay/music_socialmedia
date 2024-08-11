@@ -11,6 +11,7 @@ import { PostData } from '@/src/types';
 import { useMemo } from 'react';
 import { FlashList } from '@shopify/flash-list';
 import PostCard from '@/src/components/PostCard';
+import { useSegments } from 'expo-router';
 
 interface FetchPostsParams {
   cursor: string | null;
@@ -70,7 +71,8 @@ const postsScreen = () => {
     <BgView style={styles.container}>
       <FlashList
         data={flattenedData}
-        renderItem={({ item }) => <PostCard {...item} path='/[postId]' />}
+        renderItem={({ item }) => <PostCard post={item} />}
+        estimatedItemSize={100}
         contentContainerStyle={{
           paddingBottom: tabBarHeight,
           paddingTop: headerHeight,

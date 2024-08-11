@@ -74,16 +74,6 @@ export default function TabLayout() {
         >
           <Tabs.Screen name='index' options={{ href: null }} />
           <Tabs.Screen
-            name='home'
-            options={{
-              title: 'Articles',
-              headerShown: false,
-              tabBarIcon: ({ color }) => (
-                <TabBarIcon name='code' color={color} />
-              ),
-            }}
-          />
-          <Tabs.Screen
             name='(post)'
             options={{
               title: 'Posts',

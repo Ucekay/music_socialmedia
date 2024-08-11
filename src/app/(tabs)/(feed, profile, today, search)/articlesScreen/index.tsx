@@ -7,26 +7,19 @@ import BgView from '@/src/components/ThemedBgView';
 import articleData from '@/src/assets/articleData';
 import ArticleCard from '@/src/components/ArticleCard';
 import { articleDataType } from '@/src/types';
-import { useSegments } from 'expo-router';
 
 const ITEM_SIZE = 308;
 
 const articlesScreen = () => {
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
-  const segments = useSegments();
-
-  const parentSegment = segments[segments.length - 2];
 
   return (
     <BgView style={styles.container}>
       <FlashList
         data={articleData}
         renderItem={({ item }) => (
-          <ArticleCard
-            article={item as articleDataType}
-            parentSegment={parentSegment}
-          />
+          <ArticleCard article={item as articleDataType} />
         )}
         estimatedItemSize={ITEM_SIZE}
         contentContainerStyle={{

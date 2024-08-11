@@ -1,9 +1,16 @@
-import React, {useState} from 'react';
-import { View, StyleSheet, Text, Pressable, Dimensions, Modal } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Pressable,
+  Dimensions,
+  Modal,
+} from 'react-native';
 import { Image } from 'expo-image';
 import MusicBarOfPost from './MusicBarOfPost';
 import { type PostDataType } from '../types';
-import { Link } from 'expo-router';
+import { Link, useSegments } from 'expo-router';
 import HeartIcon from './Icon/HeartIcon';
 import IconAntDesign from './Icon/AntDesign';
 import ShareIcon from './Icon/ShareIcon';
@@ -12,48 +19,34 @@ import { Message } from 'iconoir-react-native';
 
 const screen = Dimensions.get('screen');
 
-const PostCard = (props: PostDataType): JSX.Element => {
-  
+const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
   const [modalStatus, setModalStatus] = useState(false);
-  const [imageUrl, setImageUrl] = useState([{url: ""}])
+  const [imageUrl, setImageUrl] = useState([{ url: '' }]);
   const [initialIndex, setInitialIndex] = useState(0);
+  const segments = useSegments();
+  const parentSegment = segments[segments.length - 2];
 
-  const ImageUrlRow = JSON.stringify(props.ImageUrl);
+  const ImageUrlRow = JSON.stringify(post.ImageUrl);
 
   const onClose = () => {
-    setModalStatus(false)
-  }
+    setModalStatus(false);
+  };
 
-  const HandleImage = (n : number) => {
-    if (props?.ImageUrl) {
-      setImageUrl(props.ImageUrl.map((url) => ({ url })))
+  const HandleImage = (n: number) => {
+    if (post?.ImageUrl) {
+      setImageUrl(post.ImageUrl.map((url) => ({ url })));
     }
-    console.log(props.userAvatarUrl)
-    console.log(props.ImageUrl)
-    setInitialIndex(n)
+    console.log(post.userAvatarUrl);
+    console.log(post.ImageUrl);
+    setInitialIndex(n);
     setModalStatus(true);
-  }
+  };
 
   return (
-    <Link
-    href={{
-      pathname: props.path,
-      params: {
-        postID: props.postID,
-        postContent: props.postContent,
-        ImageUrlRow: ImageUrlRow,
-        userID: props.userID,
-        user: props.user,
-        userAvatarUrl: props.userAvatarUrl,
-        createAt: props.createdAt,
-        likes: props.likes
-      },
-      }}
-      asChild
-    >
+    <Link href={`/postsScreen/${post.postID}`} asChild>
       <Pressable style={styles.postContainer}>
         <View style={styles.postHeader}>
-          <Image source={props.userAvatarUrl} style={styles.image} />
+          <Image source={post.userAvatarUrl} style={styles.image} />
           <View style={{ flex: 1 }}>
             <View
               style={[
@@ -63,7 +56,7 @@ const PostCard = (props: PostDataType): JSX.Element => {
               ]}
             >
               <View style={styles.headerLeft}>
-                <Text style={styles.text1}>{props.user}</Text>
+                <Text style={styles.text1}>{post.user}</Text>
               </View>
               <View style={styles.headerLeft}>
                 <Text>6m</Text>
@@ -75,94 +68,112 @@ const PostCard = (props: PostDataType): JSX.Element => {
               </View>
             </View>
             <View>
-              <Text style={styles.postContent}>{props.postContent}</Text>
-              {props.ImageUrl.length === 0 && ( null )}
-              {props.ImageUrl.length === 1 && ( 
+              <Text style={styles.postContent}>{post.postContent}</Text>
+              {post.ImageUrl.length === 0 && null}
+              {post.ImageUrl.length === 1 && (
                 <Pressable onPress={(e) => HandleImage(0)}>
-                  <Image source={props.ImageUrl[0]} style={styles.postImage} />
+                  <Image source={post.ImageUrl[0]} style={styles.postImage} />
                 </Pressable>
               )}
-              {props.ImageUrl.length === 2 && (
-              <View style={styles.imageContainer}> 
-                <Pressable onPress={(e) => HandleImage(0)}>
-                  <Image source={props.ImageUrl[0]} style={styles.Image2}/>
-                </Pressable>
-                <Pressable onPress={(e) => HandleImage(1)}>
-                  <Image source={props.ImageUrl[1]} style={styles.Image2}/>
-                </Pressable>
-              </View>)}
-              {props.ImageUrl.length === 3 && (
-              <View style={styles.imageContainer}> 
-                <Pressable onPress={(e) => HandleImage(0)}>
-                  <Image source={props.ImageUrl[0]} style={styles.Image2}/>
-                </Pressable>
-                <View style={styles.imageContainer2}>
-                  <Pressable onPress={(e) => HandleImage(1)}>  
-                    <Image source={props.ImageUrl[1]} style={styles.Image3}/>
+              {post.ImageUrl.length === 2 && (
+                <View style={styles.imageContainer}>
+                  <Pressable onPress={(e) => HandleImage(0)}>
+                    <Image source={post.ImageUrl[0]} style={styles.Image2} />
                   </Pressable>
-                  <Pressable onPress={(e) => HandleImage(2)}> 
-                    <Image source={props.ImageUrl[2]} style={styles.Image3}/>
+                  <Pressable onPress={(e) => HandleImage(1)}>
+                    <Image source={post.ImageUrl[1]} style={styles.Image2} />
                   </Pressable>
                 </View>
-              </View>)}
-              {props.ImageUrl.length === 4 && (
-              <View style={styles.imageContainer}> 
-                <View style={styles.imageContainer2}>
-                  <Pressable onPress={(e) => HandleImage(0)}>  
-                    <Image source={props.ImageUrl[0]} style={styles.Image3}/>
+              )}
+              {post.ImageUrl.length === 3 && (
+                <View style={styles.imageContainer}>
+                  <Pressable onPress={(e) => HandleImage(0)}>
+                    <Image source={post.ImageUrl[0]} style={styles.Image2} />
                   </Pressable>
-                  <Pressable onPress={(e) => HandleImage(1)}> 
-                    <Image source={props.ImageUrl[1]} style={styles.Image3}/>
-                  </Pressable>
+                  <View style={styles.imageContainer2}>
+                    <Pressable onPress={(e) => HandleImage(1)}>
+                      <Image source={post.ImageUrl[1]} style={styles.Image3} />
+                    </Pressable>
+                    <Pressable onPress={(e) => HandleImage(2)}>
+                      <Image source={post.ImageUrl[2]} style={styles.Image3} />
+                    </Pressable>
+                  </View>
                 </View>
-                <View style={styles.imageContainer2}>
-                  <Pressable onPress={(e) => HandleImage(2)}>
-                    <Image source={props.ImageUrl[2]} style={styles.Image3}/>
-                  </Pressable>
-                  <Pressable onPress={(e) => HandleImage(2)}>
-                    <Image source={props.ImageUrl[3]} style={styles.Image3}/>
-                  </Pressable> 
+              )}
+              {post.ImageUrl.length === 4 && (
+                <View style={styles.imageContainer}>
+                  <View style={styles.imageContainer2}>
+                    <Pressable onPress={(e) => HandleImage(0)}>
+                      <Image source={post.ImageUrl[0]} style={styles.Image3} />
+                    </Pressable>
+                    <Pressable onPress={(e) => HandleImage(1)}>
+                      <Image source={post.ImageUrl[1]} style={styles.Image3} />
+                    </Pressable>
+                  </View>
+                  <View style={styles.imageContainer2}>
+                    <Pressable onPress={(e) => HandleImage(2)}>
+                      <Image source={post.ImageUrl[2]} style={styles.Image3} />
+                    </Pressable>
+                    <Pressable onPress={(e) => HandleImage(2)}>
+                      <Image source={post.ImageUrl[3]} style={styles.Image3} />
+                    </Pressable>
+                  </View>
                 </View>
-              </View>)}
+              )}
               <Modal
-                animationType="fade"
+                animationType='fade'
                 transparent={true}
                 visible={modalStatus}
                 onRequestClose={onClose}
                 style={styles.modalOverlay}
               >
                 <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>X</Text>
+                  <Text style={styles.closeButtonText}>X</Text>
                 </Pressable>
-                <View style={{flex:1, paddingTop: 30, backgroundColor: '#000000'}}>
-                <ImageViewer 
-                imageUrls={imageUrl}
-                enableSwipeDown
-                onSwipeDown={onClose}
-                index={initialIndex}
-                renderImage={(props) => <Image {...props} style={styles.imageModal} contentFit='contain'/>}/>
+                <View
+                  style={{
+                    flex: 1,
+                    paddingTop: 30,
+                    backgroundColor: '#000000',
+                  }}
+                >
+                  <ImageViewer
+                    imageUrls={imageUrl}
+                    enableSwipeDown
+                    onSwipeDown={onClose}
+                    index={initialIndex}
+                    renderImage={(props) => (
+                      <Image
+                        {...props}
+                        style={styles.imageModal}
+                        contentFit='contain'
+                      />
+                    )}
+                  />
                 </View>
-          </Modal>
+              </Modal>
             </View>
           </View>
         </View>
         <View style={styles.Icons}>
           <HeartIcon size={16} />
-          <Link href={{
-          pathname: '/reply-editor-modal',
-          params: {
-            postID: props.postID,
-            postContent: props.postContent,
-            ImageUrlRow: ImageUrlRow,
-            userID: props.userID,
-            user: props.user,
-            userAvatarUrl: props.userAvatarUrl,
-            createAt: props.createdAt,
-            view: props.likes
-          },
-          }}
-          asChild >
-          <Message width={16} height={16} color={'#000000'}/>
+          <Link
+            href={{
+              pathname: '/reply-editor-modal',
+              params: {
+                postID: post.postID,
+                postContent: post.postContent,
+                ImageUrlRow: ImageUrlRow,
+                userID: post.userID,
+                user: post.user,
+                userAvatarUrl: post.userAvatarUrl,
+                createAt: post.createdAt,
+                view: post.likes,
+              },
+            }}
+            asChild
+          >
+            <Message width={16} height={16} color={'#000000'} />
           </Link>
           <ShareIcon size={16} />
         </View>
@@ -252,20 +263,20 @@ const styles = StyleSheet.create({
     objectFit: 'cover',
     overflow: 'hidden',
     flexWrap: 'wrap',
-    gap: 2
+    gap: 2,
   },
   Image2: {
     height: 150,
-    width: screen.width/2 - 38
+    width: screen.width / 2 - 38,
   },
-  imageContainer2:{
+  imageContainer2: {
     height: 150,
-    width: screen.width/2 - 38,
-    gap: 2
+    width: screen.width / 2 - 38,
+    gap: 2,
   },
   Image3: {
     height: 78,
-    width: '100%'
+    width: '100%',
   },
   imageModal: {
     flex: 1,
@@ -290,5 +301,3 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
 });
-
-
