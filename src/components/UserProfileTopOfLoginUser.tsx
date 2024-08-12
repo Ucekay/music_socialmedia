@@ -100,6 +100,7 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
                 <Text>{userInfo.userID}</Text>
               </View>
               <View style={styles.socialStateContainer}>
+                <Link href={{pathname: '/(tabs)/profile/(userList)/[userList]', params: {initialTab: 'follower'}}}>
                 <View style={styles.socialState}>
                   <Text style={[styles.socialStateText, themeTextColor]}>
                     {userInfo.followers}
@@ -108,7 +109,9 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
                     Followers
                   </Text>
                 </View>
+                </Link>
                 <Text>|</Text>
+                <Link href={{pathname: '/(tabs)/profile/(userList)/[userList]', params: {initialTab: 'following'}}}>
                 <View style={styles.socialState}>
                   <Text style={[styles.socialStateText, themeTextColor]}>
                     {userInfo.following}
@@ -117,6 +120,7 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
                     Following
                   </Text>
                 </View>
+                </Link>
               </View>
           </View>
         </View>

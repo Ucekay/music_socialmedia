@@ -10,6 +10,11 @@ import {
     Pressable
  } from "react-native";
 import { Image } from "expo-image";
+import { Tabs } from "react-native-collapsible-tab-view";
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import userData from "@/src/assets/userData";
+import { useLocalSearchParams } from "expo-router";
+import { MaterialTabBar } from "react-native-collapsible-tab-view";
 
 const width = Dimensions.get('window').width
 const backgroundColors = [
@@ -20,7 +25,7 @@ const backgroundColors = [
     ["#FFF0F5", "#4A4A4A"]
   ];
 
-const FollowiongUserCard = (props: UserListType): JSX.Element => {
+const FollowingUserCard = (props: UserListType): JSX.Element => {
   const [followingStatus, setFollowingStatus] = useState(true) //初期値は毎度検証したものを入力してください
   const colorScheme = useColorScheme();
   const TagColor =
@@ -52,14 +57,14 @@ const FollowiongUserCard = (props: UserListType): JSX.Element => {
             </View>
             {followingStatus 
             ? (
-            <Pressable onPress={HandleUnfollow}>
-                <View style={[styles.button, {backgroundColor: TagColor, width: 200}]}>
+            <Pressable onPress={HandleUnfollow} style={{ height: 30 }}>
+                <View style={[styles.button, {backgroundColor: TagColor}]}>
                     <Text style={[styles.text, {color: textColor}]}>フォロー中</Text>
                 </View>
             </Pressable>
             ):(
-            <Pressable onPress={HandleFollow}>
-                <View style={[styles.button, {backgroundColor: '#2f95dc', width: 200}]}>
+            <Pressable onPress={HandleFollow} style={{ height: 30 }}>
+                <View style={[styles.button, {backgroundColor: '#2f95dc'}]}>
                     <Text style={[styles.text, {color: '#ffffff'}]}>フォロー</Text>
                 </View>
             </Pressable>
@@ -97,9 +102,9 @@ const FollowerUserCard = (props: UserListType): JSX.Element => {
               </View>
               {followedStatus 
               ? (
-              <Pressable onPress={HandleDelete}>
-                  <View style={[styles.button, {backgroundColor: TagColor, width: 200}]}>
-                      <Text style={[styles.text, {color: textColor}]}>フォロー中</Text>
+              <Pressable onPress={HandleDelete} style={{ height: 30 }}>
+                  <View style={[styles.button, {backgroundColor: TagColor}]}>
+                      <Text style={[styles.text, {color: textColor}]}>削除</Text>
                   </View>
               </Pressable>
               ):(
@@ -111,10 +116,72 @@ const FollowerUserCard = (props: UserListType): JSX.Element => {
   }
 
 const UserListScreen = () : JSX.Element => {
+    const { initialTab } = useLocalSearchParams()
+    let initialTabName: string
+    if (typeof initialTab === 'string'){
+      initialTabName = initialTab
+    } else {
+      initialTabName = 'follower'
+    }
+    const tabBarHeight = useBottomTabBarHeight();
+
+    const renderTabBar = props => (
+      <MaterialTabBar
+        {...props}
+        indicatorStyle={{ backgroundColor: '#000000'}}
+        style={{
+          backgroundColor: 'white',
+          shadowColor: 'transparent',
+          shadowOffset: { width: 0, height: 0 }, 
+          shadowOpacity: 0, 
+          shadowRadius: 0, 
+          elevation: 0,
+          height: 30,
+        }}
+      />
+    )
+
     return(
-        <BgView></BgView>
+        <BgView style={{flex: 1}}>
+        <Tabs.Container initialTabName={initialTabName} renderTabBar={renderTabBar}>
+        <Tabs.Tab name='follower' label='follower'>
+          <Tabs.FlashList
+            data={userData}
+            renderItem={({ item }) => (
+              <View>
+                <FollowerUserCard {...item} userName={item.user}/>
+              </View>
+            )}
+            estimatedItemSize={70}
+            contentContainerStyle={{
+              backgroundColor: 'white',
+              paddingBottom: tabBarHeight,
+              paddingVertical: 16
+            }}
+          />
+        </Tabs.Tab>
+        <Tabs.Tab name='following' label='following'>
+          <Tabs.FlashList
+            data={userData}
+            renderItem={({ item }) => (
+              <View>
+                <FollowingUserCard {...item} userName={item.user}/>
+              </View>
+            )}
+            estimatedItemSize={70}
+            contentContainerStyle={{
+              backgroundColor: 'white',
+              paddingBottom: tabBarHeight,
+              paddingVertical: 16
+            }}
+          />
+        </Tabs.Tab>
+      </Tabs.Container>
+      </BgView>
     )
 }
+
+export default UserListScreen;
 
 const styles = StyleSheet.create({
     container: {
@@ -150,9 +217,18 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 16,
         borderRadius: 8,
+        width: 100,
+        height: 40
       },
       text: {
         fontSize: 14,
         fontWeight: '500',
+      },
+      tabBar: {
+        backgroundColor: '#ffffff',
+        height: 50,
+      },
+      indicator: {
+        backgroundColor: '#000000'
       },
 })

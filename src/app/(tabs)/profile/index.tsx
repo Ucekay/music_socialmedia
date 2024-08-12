@@ -4,7 +4,7 @@ import {View, StyleSheet} from 'react-native'
 import LoginUserProfileTop from '@/src/components/UserProfileTopOfLoginUser';
 import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 import { useTabAction } from '@/src/contexts/ActionButtonContext';
-import { Tabs } from 'react-native-collapsible-tab-view';
+import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import PostCard from '@/src/components/PostCard';
 import ArticleCard from '@/src/components/ArticleCard';
@@ -29,10 +29,26 @@ const LoginProfileScreen = () => {
     }, [])
   );
 
+  const renderTabBar = props => (
+    <MaterialTabBar
+      {...props}
+      indicatorStyle={{ backgroundColor: '#000000'}}
+      style={{
+        backgroundColor: 'white',
+        shadowColor: 'transparent', // iOS
+        shadowOffset: { width: 0, height: 0 }, // iOS
+        shadowOpacity: 0, // iOS
+        shadowRadius: 0, // iOS
+        elevation: 0, // Android
+      }}
+    />
+  )
+
   return (
       <Tabs.Container
         headerHeight={HEADER_HEIGHT}
         renderHeader={() => <LoginUserProfileTop id='@RamenKing88'/>}
+        renderTabBar={renderTabBar}
       >
         <Tabs.Tab name='post' label='Post'>
           <Tabs.FlashList
