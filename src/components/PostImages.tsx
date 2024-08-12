@@ -52,14 +52,16 @@ interface PostImagesProps {
 
 const PostImages = ({ imageUrls }: PostImagesProps) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(-1);
-  const [imageDimensions, setImageDimensions] = useState<
-    Record<string, ImageDimensions>
-  >({});
+  const [imageDimensions, setImageDimensions] =
+    useState<ImageDimensions | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const loadImageDimension = useCallback(
-    async (url: string) => {
-      if (imageDimensions[url]) return;
-
+  useEffect(() => {
+    const loadImageDimensions = async () => {
+      if (imageUrls.length !== 1) {
+        return;
+      }
+      const url = imageUrls[0];
       try {
         const dimensions = await new Promise<ImageDimensions>(
           (resolve, reject) => {
@@ -76,19 +78,15 @@ const PostImages = ({ imageUrls }: PostImagesProps) => {
             );
           }
         );
-        setImageDimensions((prev) => ({ ...prev, [url]: dimensions }));
+        setImageDimensions(dimensions);
       } catch (error) {
         console.error('Error loading image dimensions:', error);
+        setImageDimensions(null);
       }
-    },
-    [imageDimensions]
-  );
+    };
 
-  useEffect(() => {
-    if (imageUrls.length > 0) {
-      loadImageDimension(imageUrls[0]);
-    }
-  }, [imageUrls, loadImageDimension]);
+    loadImageDimensions();
+  }, [imageUrls]);
 
   if (imageUrls.length === 0) {
     return null;
@@ -97,25 +95,26 @@ const PostImages = ({ imageUrls }: PostImagesProps) => {
   return (
     <View>
       {imageUrls.length === 1 ? (
-        Object.keys(imageDimensions).length !== 0 && (
+        imageDimensions && (
           <SingleImage
             imageUrl={imageUrls[0]}
             dimensions={imageDimensions}
             setSelectedIndex={setSelectedImageIndex}
+            setModalVisible={setModalVisible}
           />
         )
       ) : (
         <MultipleImages
           imageUrls={imageUrls}
           setSelectedIndex={setSelectedImageIndex}
+          setModalVisible={setModalVisible}
         />
       )}
       <ImageModal
-        visible={selectedImageIndex !== -1}
+        visible={modalVisible}
         imageUrls={imageUrls}
-        imageDimensions={imageDimensions}
         initialIndex={selectedImageIndex}
-        onClose={() => setSelectedImageIndex(-1)}
+        onClose={() => setModalVisible(false)}
       />
     </View>
   );
@@ -127,16 +126,21 @@ const SingleImage = ({
   imageUrl,
   dimensions,
   setSelectedIndex,
+  setModalVisible,
 }: {
   imageUrl: string;
-  dimensions: Record<string, ImageDimensions>;
+  dimensions: ImageDimensions;
   setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const aspectRatio = dimensions[imageUrl].width / dimensions[imageUrl].height;
+  const aspectRatio = dimensions.width / dimensions.height;
 
   return (
     <Pressable
-      onPress={() => setSelectedIndex(0)}
+      onPress={() => {
+        setSelectedIndex(0);
+        setModalVisible(true);
+      }}
       style={styles.imageContainer}
     >
       <Image
@@ -153,18 +157,32 @@ const SingleImage = ({
 const MultipleImages = ({
   imageUrls,
   setSelectedIndex,
+  setModalVisible,
 }: {
   imageUrls: string[];
   setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   switch (imageUrls.length) {
     case 2:
       return (
         <View style={[styles.multiImageContainer, styles.row, { gap: 4 }]}>
-          <Pressable style={{ flex: 1 }}>
+          <Pressable
+            onPress={() => {
+              setSelectedIndex(0);
+              setModalVisible(true);
+            }}
+            style={{ flex: 1 }}
+          >
             <Image source={{ uri: imageUrls[0] }} contentFit='cover' />
           </Pressable>
-          <Pressable style={{ flex: 1 }}>
+          <Pressable
+            onPress={() => {
+              setSelectedIndex(1);
+              setModalVisible(true);
+            }}
+            style={{ flex: 1 }}
+          >
             <Image source={{ uri: imageUrls[1] }} contentFit='cover' />
           </Pressable>
         </View>
@@ -172,7 +190,13 @@ const MultipleImages = ({
     case 3:
       return (
         <View style={[styles.multiImageContainer, styles.row, { gap: 4 }]}>
-          <Pressable style={{ width: '50%' }}>
+          <Pressable
+            onPress={() => {
+              setSelectedIndex(0);
+              setModalVisible(true);
+            }}
+            style={{ width: '50%' }}
+          >
             <Image
               source={{ uri: imageUrls[0] }}
               contentFit='cover'
@@ -180,14 +204,26 @@ const MultipleImages = ({
             />
           </Pressable>
           <View style={[styles.column, { gap: 4, width: '50%' }]}>
-            <Pressable style={{ flex: 1 }}>
+            <Pressable
+              onPress={() => {
+                setSelectedIndex(1);
+                setModalVisible(true);
+              }}
+              style={{ flex: 1 }}
+            >
               <Image
                 source={{ uri: imageUrls[1] }}
                 contentFit='cover'
                 style={styles.image}
               />
             </Pressable>
-            <Pressable style={{ flex: 1 }}>
+            <Pressable
+              onPress={() => {
+                setSelectedIndex(2);
+                setModalVisible(true);
+              }}
+              style={{ flex: 1 }}
+            >
               <Image
                 source={{ uri: imageUrls[2] }}
                 contentFit='cover'
@@ -201,14 +237,26 @@ const MultipleImages = ({
       return (
         <View style={[styles.multiImageContainer, { gap: 4 }]}>
           <View style={[styles.row, { gap: 4, height: '50%' }]}>
-            <Pressable onPress={() => setSelectedIndex(0)} style={{ flex: 1 }}>
+            <Pressable
+              onPress={() => {
+                setSelectedIndex(0);
+                setModalVisible(true);
+              }}
+              style={{ flex: 1 }}
+            >
               <Image
                 source={{ uri: imageUrls[0] }}
                 contentFit='cover'
                 style={styles.image}
               />
             </Pressable>
-            <Pressable onPress={() => setSelectedIndex(1)} style={{ flex: 1 }}>
+            <Pressable
+              onPress={() => {
+                setSelectedIndex(1);
+                setModalVisible(true);
+              }}
+              style={{ flex: 1 }}
+            >
               <Image
                 source={{ uri: imageUrls[1] }}
                 contentFit='cover'
@@ -217,14 +265,25 @@ const MultipleImages = ({
             </Pressable>
           </View>
           <View style={[styles.row, { gap: 4, height: '50%' }]}>
-            <Pressable onPress={() => setSelectedIndex(2)} style={{ flex: 1 }}>
+            <Pressable
+              onPress={() => {
+                setSelectedIndex(2), setModalVisible(true);
+              }}
+              style={{ flex: 1 }}
+            >
               <Image
                 source={{ uri: imageUrls[2] }}
                 contentFit='cover'
                 style={styles.image}
               />
             </Pressable>
-            <Pressable onPress={() => setSelectedIndex(3)} style={{ flex: 1 }}>
+            <Pressable
+              onPress={() => {
+                setSelectedIndex(3);
+                setModalVisible(true);
+              }}
+              style={{ flex: 1 }}
+            >
               <Image
                 source={{ uri: imageUrls[3] }}
                 contentFit='cover'
@@ -242,13 +301,11 @@ const MultipleImages = ({
 const ImageModal = ({
   visible,
   imageUrls,
-  imageDimensions,
   initialIndex,
   onClose,
 }: {
   visible: boolean;
   imageUrls: string[];
-  imageDimensions: Record<string, ImageDimensions>;
   initialIndex: number;
   onClose: () => void;
 }) => {
@@ -262,29 +319,25 @@ const ImageModal = ({
   const savedTranslateY = imageUrls.map(() => useSharedValue(0));
   const currentIndex = useSharedValue(initialIndex);
 
-  const resetImagePosition = useCallback(
-    (index: number) => {
-      scales[index].value = 1;
-      savedScales[index].value = 1;
-      translateX[index].value = 0;
-      translateY[index].value = 0;
-      savedTranslateX[index].value = 0;
-      savedTranslateY[index].value = 0;
-    },
-    [
-      scales,
-      savedScales,
-      translateX,
-      translateY,
-      savedTranslateX,
-      savedTranslateY,
-    ]
-  );
+  const resetImagePosition = useCallback((index: number) => {
+    scales[index].value = 1;
+    savedScales[index].value = 1;
+    translateX[index].value = 0;
+    translateY[index].value = 0;
+    savedTranslateX[index].value = 0;
+    savedTranslateY[index].value = 0;
+  }, []);
+
+  const resetAllImagePositions = useCallback(() => {
+    imageUrls.forEach((_, index) => {
+      resetImagePosition(index);
+    });
+  }, [imageUrls, resetImagePosition]);
 
   useLayoutEffect(() => {
     if (visible) {
       currentIndex.value = initialIndex;
-      resetImagePosition(initialIndex);
+      resetAllImagePositions();
       if (flatListRef.current) {
         flatListRef.current.scrollToIndex({
           index: initialIndex,
@@ -292,7 +345,7 @@ const ImageModal = ({
         });
       }
     }
-  }, [visible, initialIndex, resetImagePosition]);
+  }, [visible, initialIndex, resetAllImagePositions]);
 
   const renderItem = useCallback(
     ({ item, index }: { item: string; index: number }) => (
@@ -395,6 +448,18 @@ const ImageItem = React.memo(
     savedTranslateY: SharedValue<number>;
     onClose: () => void;
   }) => {
+    useEffect(() => {
+      if (index === 0) {
+        return () => {
+          scale.value = 1;
+          savedScale.value = 1;
+          translateX.value = 0;
+          translateY.value = 0;
+          savedTranslateX.value = 0;
+          savedTranslateY.value = 0;
+        };
+      }
+    }, []);
     const pinch = Gesture.Pinch()
       .onUpdate((e) => {
         scale.value = Math.abs(savedScale.value) * e.scale;
@@ -408,6 +473,7 @@ const ImageItem = React.memo(
       });
 
     const pan = Gesture.Pan()
+      .activeOffsetY([-10, 10])
       .onUpdate((e) => {
         if (scale.value > 1) {
           translateX.value = savedTranslateX.value + e.translationX;
