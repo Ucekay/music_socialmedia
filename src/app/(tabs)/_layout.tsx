@@ -44,7 +44,6 @@ export default function TabLayout() {
             headerShown: useClientOnlyValue(false, true),
             tabBarStyle: {
               position: 'absolute',
-              borderTopWidth: 0,
             },
             tabBarShowLabel: false,
             tabBarBackground: () => (

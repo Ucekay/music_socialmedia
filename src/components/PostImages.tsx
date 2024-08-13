@@ -6,13 +6,11 @@ import React, {
 } from 'react';
 import {
   View,
-  Text,
   Pressable,
   Image as RNImage,
   StyleSheet,
   Dimensions,
   Modal,
-  Button,
 } from 'react-native';
 import { Image } from 'expo-image';
 import Animated, {
@@ -24,7 +22,6 @@ import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withTiming,
 } from 'react-native-reanimated';
 import {
@@ -34,7 +31,6 @@ import {
 } from 'react-native-gesture-handler';
 
 const AnimatedFlatList = Animated.FlatList;
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 const SCREEN_HEIGHT = Dimensions.get('screen').height;

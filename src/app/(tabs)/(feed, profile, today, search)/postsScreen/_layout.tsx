@@ -6,10 +6,16 @@ import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 const PostStack = () => {
   const { colors } = useTheme();
-  const themeContainerStyle = { backgroundColor: colors.headerBackground };
+  const themeContainerStyle = {
+    backgroundColor: colors.headerBackground,
+  };
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerTintColor: colors.text,
+      }}
+    >
       <Stack.Screen
         name='index'
         options={{
