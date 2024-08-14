@@ -103,3 +103,84 @@ export const getNewerPosts = async (latestcursor: string): Promise<{ posts: GetP
   throw error;
 }
 };
+
+//自分のポストを取得
+export const getInitialUsersPosts = async (userId:string): Promise<{posts: GetPost[], cursor:string|null ,latestcursor:string| null}> => {
+  try {
+
+    const LIMIT = 10
+    const { data: posts, error } = await supabase // UserIDによる絞り込みを削除
+      .from('Post') // テーブル名を修正
+      .select('*')
+      .eq('UserID', userId)
+      .order('created_at', {ascending: false})
+      .limit(LIMIT);
+
+    if (error) {
+      throw new Error('データの取得エラー: ' + error.message);
+    }
+    const cursor = posts.length > 0 ? posts[posts.length - 1].created_at : null;
+    const latestcursor = posts.length> 0? posts[0].created_at: null;
+
+    return { posts, cursor, latestcursor}; 
+  } catch (error) {
+    console.error('データの取得中にエラーが発生しました:', error);
+    throw error;
+  }
+};
+
+export const getOlderUsersPosts =  async (userId: string, cursor: string): Promise<{ posts: GetPost[], cursor: string | null }> => {
+  try{
+  
+  const LIMIT = 10
+  const { data: nextPosts, error } = await supabase
+    .from('Post')
+    .select('*')
+    .eq("UserID", userId)
+    .order('created_at', { ascending: false })
+    .lt('created_at', cursor)
+    .limit(LIMIT);
+
+  //console.log(nextPosts)
+
+  if (error) {
+    console.error('Error fetching more posts:', error);
+    return { posts: [], cursor: cursor };
+  }
+
+  const nextCursor = nextPosts.length > 0 ? nextPosts[nextPosts.length - 1].created_at : cursor;
+
+  return { posts: nextPosts, cursor: nextCursor };
+}catch (error) {
+  console.error('データの取得中にエラーが発生しました:', error);
+  throw error;
+}
+};
+
+export const getNewerUsersPosts = async (userId:string, latestcursor: string): Promise<{ posts: GetPost[], latestcursor:string| null }> => {
+  try{
+  
+  const LIMIT = 10
+  const { data: nextPosts, error } = await supabase
+    .from('Post')
+    .select('*')
+    .eq("UserID", userId)
+    .order('created_at', { ascending: false })
+    .gt('created_at', latestcursor)
+    .limit(LIMIT);
+
+  //console.log(nextPosts)
+
+  if (error) {
+    console.error('Error fetching more posts:', error);
+    return { posts: [], latestcursor: latestcursor};
+  }
+
+  const nextCursor = nextPosts.length > 0 ? nextPosts[0].created_at : latestcursor;
+
+  return { posts: nextPosts, latestcursor: nextCursor };
+}catch (error) {
+  console.error('データの取得中にエラーが発生しました:', error);
+  throw error;
+}
+};

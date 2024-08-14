@@ -9,6 +9,8 @@ import FollowButton from './FollowButton';
 import Text from './ThemedText';
 import BgView from './ThemedBgView';
 
+import { getUserProfile } from '../backend/components/DB_Access/profile';
+
 interface LoginUserProps {
     id: string
 }

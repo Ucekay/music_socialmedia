@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFocusEffect } from 'expo-router';
 import {View, StyleSheet} from 'react-native'
 import LoginUserProfileTop from '@/src/components/UserProfileTopOfLoginUser';
@@ -11,6 +11,10 @@ import ArticleCard from '@/src/components/ArticleCard';
 import { articleDataType } from '@/src/types';
 import postData from '@/src/assets/postData';
 import userArticleData from '@/src/assets/userArtickeData';
+
+import { useState } from 'react';
+import { getUserId } from '@/src/backend/components/DB_Access/profile';
+
 
 const TEXT_HEIGHT = 65.7;
 const HEADER_HEIGHT = 199;
@@ -28,10 +32,17 @@ const LoginProfileScreen = () => {
       };
     }, [])
   );
+  const [userId, setUserId] = useState<string>('');
+  useEffect(() => {
+      async() =>{
+      const id =  await getUserId() 
+      setUserId(id);
+    };
+  }, []);
   return (
       <Tabs.Container
         headerHeight={HEADER_HEIGHT}
-        renderHeader={() => <LoginUserProfileTop id='@Taro1234'/>}
+        renderHeader={() => <LoginUserProfileTop id="@Taro1234"/>}
       >
         <Tabs.Tab name='post' label='Post'>
           <Tabs.FlashList
