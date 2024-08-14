@@ -48,9 +48,14 @@ const Profile = () => {
 
   return (
     <View style={{ flex: 1, paddingTop: headerHeight }}>
+      <Stack.Screen
+        options={{
+          title: 'Profile',
+        }}
+      />
       <Tabs.Container
         headerHeight={HEADER_HEIGHT}
-        renderHeader={() => <UserProfileTop id={userID} />}
+        renderHeader={() => <UserProfileTop />}
       >
         <Tabs.Tab name='post' label='Post'>
           <Tabs.FlashList

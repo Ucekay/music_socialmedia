@@ -34,10 +34,6 @@ const PostDetailScreen = () => {
   const themedTextColor = { color: colors.secondaryText };
   const themedBorderColor = { borderColor: colors.border };
 
-  const { formattedDate, formattedTime } = formatCreatedAt(
-    selectedPost.createdAt
-  );
-
   if (!selectedPost) {
     return (
       <View>
@@ -46,11 +42,15 @@ const PostDetailScreen = () => {
     );
   }
 
+  const { formattedDate, formattedTime } = formatCreatedAt(
+    selectedPost.createdAt
+  );
+
   return (
     <BgView style={{ flex: 1 }}>
       <Stack.Screen
         options={{
-          title: 'Posts',
+          title: 'Post',
           headerTransparent: true,
           headerStyle: { ...themeContainerStyle },
           headerBackground: () => (
@@ -66,7 +66,7 @@ const PostDetailScreen = () => {
         }}
       >
         <BgView style={styles.container}>
-          <Link href={`/profileScreen/profile/${selectedPost.userID}`} asChild>
+          <Link href={`/profile/${selectedPost.userID}`} asChild>
             <Pressable style={styles.user}>
               <Image
                 style={styles.userAvatar}

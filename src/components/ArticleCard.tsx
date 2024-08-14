@@ -52,7 +52,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
             </View>
             <ArticleCardSubhead article={article} />
             <View style={styles.infoContainer}>
-              <Link href={`/profileScreen/profile/${userID}`} asChild>
+              <Link href={`/profile/${userID}`} asChild>
                 <Pressable style={styles.authorContainer}>
                   <Image source={userAvatarUrl} style={styles.avatar} />
                   <View>

@@ -1,30 +1,48 @@
+import { useTheme } from '@/src/contexts/ColorThemeContext';
+import { BlurView } from 'expo-blur';
 import { Stack, useNavigation } from 'expo-router';
-import { Text } from 'react-native';
+import { StyleSheet } from 'react-native';
+
+import { TopTabs } from '@/src/layouts/material-top-tabs';
 
 export default function DynamicLayout({ segment }: { segment: string }) {
-  const navigation = useNavigation(); // Add this line to get the navigation object
+  const { colors } = useTheme();
+  const themedContainerStyle = { backgroundColor: colors.headerBackground };
 
   switch (segment) {
     case '(feed)':
       return (
         <Stack
           screenOptions={{
-            headerShown: false,
+            title: 'Feed',
+            headerTransparent: true,
+            headerStyle: { ...themedContainerStyle },
+            headerBackground: () => (
+              <BlurView tint='regular' style={StyleSheet.absoluteFill} />
+            ),
           }}
         >
-          <Stack.Screen name='postsScreen' />
-          <Stack.Screen name='articlesScreen' />
-          <Stack.Screen name='profileScreen' />
+          <Stack.Screen
+            name='feedScreen'
+            options={{
+              title: 'Feed',
+            }}
+          />
         </Stack>
       );
     case '(profile)':
       return (
         <Stack
           screenOptions={{
-            headerShown: false,
+            title: 'Profile',
+            headerTransparent: true,
+            headerStyle: { ...themedContainerStyle },
+            headerBackground: () => (
+              <BlurView tint='regular' style={StyleSheet.absoluteFill} />
+            ),
           }}
         >
-          <Stack.Screen name='profileScreen' />
+          <Stack.Screen name='profile/[userID]' />
         </Stack>
       );
   }
