@@ -8,9 +8,8 @@ import {
   Modal,
 } from 'react-native';
 import { Image } from 'expo-image';
-import MusicBarOfPost from './MusicBarOfPost';
 import { type PostDataType } from '../types';
-import { Link, useSegments } from 'expo-router';
+import { Link } from 'expo-router';
 import HeartIcon from './Icon/HeartIcon';
 import IconAntDesign from './Icon/AntDesign';
 import ShareIcon from './Icon/ShareIcon';
@@ -25,8 +24,6 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
   const [modalStatus, setModalStatus] = useState(false);
   const [imageUrl, setImageUrl] = useState([{ url: '' }]);
   const [initialIndex, setInitialIndex] = useState(0);
-  const segments = useSegments();
-  const parentSegment = segments[segments.length - 2];
 
   const ImageUrlRow = JSON.stringify(post.ImageUrl);
 

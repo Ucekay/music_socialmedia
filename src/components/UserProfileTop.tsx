@@ -7,9 +7,10 @@ import FollowButton from './FollowButton';
 import Text from './ThemedText';
 import { useLocalSearchParams } from 'expo-router';
 
-const UserProfileTop = () => {
+const UserProfileTop = ({ id }) => {
   const colorScheme = useColorScheme();
-  const { userID } = useLocalSearchParams<{ userID: string }>();
+
+  const userID = id ? id : useLocalSearchParams().userID;
 
   const themeTextColor = {
     color: Colors[colorScheme ?? 'light'].text,

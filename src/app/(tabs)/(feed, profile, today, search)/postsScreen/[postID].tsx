@@ -1,5 +1,5 @@
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { Link, Stack, useLocalSearchParams } from 'expo-router';
+import { View, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { Href, Link, Stack, useLocalSearchParams } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { Image } from 'expo-image';
@@ -66,16 +66,18 @@ const PostDetailScreen = () => {
         }}
       >
         <BgView style={styles.container}>
-          <View style={styles.user}>
-            <Image
-              style={styles.userAvatar}
-              source={selectedPost.userAvatarUrl}
-            />
-            <View>
-              <Text style={styles.userName}>{selectedPost.user}</Text>
-              <Text style={themedTextColor}>@{selectedPost.userID}</Text>
-            </View>
-          </View>
+          <Link href={`/profileScreen/profile/${selectedPost.userID}`} asChild>
+            <Pressable style={styles.user}>
+              <Image
+                style={styles.userAvatar}
+                source={selectedPost.userAvatarUrl}
+              />
+              <View>
+                <Text style={styles.userName}>{selectedPost.user}</Text>
+                <Text style={themedTextColor}>@{selectedPost.userID}</Text>
+              </View>
+            </Pressable>
+          </Link>
           <Text style={styles.content}>{selectedPost.postContent}</Text>
           <PostImages imageUrls={selectedPost.ImageUrl} />
           <View>

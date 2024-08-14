@@ -25,7 +25,6 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
   } = article;
 
   const segments = useSegments();
-  const parentSegment = segments[segments.length - 2];
 
   const { colors } = useTheme();
 
@@ -53,7 +52,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
             </View>
             <ArticleCardSubhead article={article} />
             <View style={styles.infoContainer}>
-              <Link href={`/(tabs)/home/(profile)/${article.userID}`} asChild>
+              <Link href={`/profileScreen/profile/${userID}`} asChild>
                 <Pressable style={styles.authorContainer}>
                   <Image source={userAvatarUrl} style={styles.avatar} />
                   <View>
