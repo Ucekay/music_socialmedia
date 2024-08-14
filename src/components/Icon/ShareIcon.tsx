@@ -1,30 +1,51 @@
-import React from "react";
-import IconAntDesign from "./AntDesign";
+import React from 'react';
+import IconAntDesign from './AntDesign';
+import { ShareIos } from 'iconoir-react-native';
 import { Share, Alert } from 'react-native';
 
-const ShareIcon = (props: any): JSX.Element => {
-    const onShare = async () => {
-        try {
-          const result = await Share.share({
-            message:
-              'React Native | A framework for building native apps using React',
-          });
-          if (result.action === Share.sharedAction) {
-            if (result.activityType) {
-              // shared with activity type of result.activityType
-            } else {
-              // shared
-            }
-          } else if (result.action === Share.dismissedAction) {
-            // dismissed
-          }
-        } catch (error: any) {
-          Alert.alert(error.message);
+import { useTheme } from '@/src/contexts/ColorThemeContext';
+
+interface ShareIconProps {
+  width: number;
+  height: number;
+  strokeWidth?: number;
+}
+
+const ShareIcon: React.FC<ShareIconProps> = ({
+  width,
+  height,
+  strokeWidth,
+}) => {
+  const { colors } = useTheme();
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message:
+          'React Native | A framework for building native apps using React',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
         }
-      };
-    return (
-      <IconAntDesign name='upload' size={props.size} onPress={onShare} style={props.style}/>
-    );
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error: any) {
+      Alert.alert(error.message);
+    }
+  };
+
+  return (
+    <ShareIos
+      width={width}
+      height={height}
+      color={colors.secondaryText}
+      strokeWidth={strokeWidth ? strokeWidth : 1.5}
+      onPress={onShare}
+    />
+  );
 };
 
 export default ShareIcon;

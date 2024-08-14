@@ -81,6 +81,7 @@ export type ColorScheme = {
   tabBarGradient: string[];
   headerBackground: string;
   tint: string;
+  border: string;
   tabIconDefault: string;
   tabIconSelected: string;
   followButtonBg: string;

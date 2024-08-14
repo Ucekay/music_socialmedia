@@ -17,6 +17,8 @@ import ShareIcon from './Icon/ShareIcon';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { Message } from 'iconoir-react-native';
 
+import { formatCreatedAt } from '@/src/util/date/formatCreatedAt';
+
 const screen = Dimensions.get('screen');
 
 const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
@@ -42,6 +44,10 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
     setModalStatus(true);
   };
 
+  const { formattedDate, timeAgo, daysDifference } = formatCreatedAt(
+    post.createdAt
+  );
+
   return (
     <Link href={`/postsScreen/${post.postID}`} asChild>
       <Pressable style={styles.postContainer}>
@@ -59,7 +65,7 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
                 <Text style={styles.text1}>{post.user}</Text>
               </View>
               <View style={styles.headerLeft}>
-                <Text>6m</Text>
+                <Text>{daysDifference > 3 ? formattedDate : timeAgo}</Text>
                 <IconAntDesign
                   name='ellipsis1'
                   size={16}

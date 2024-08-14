@@ -37,6 +37,7 @@
     "base64-arraybuffer": "^1.0.2",
     "cdt2d": "^1.0.0",
     "chroma-js": "https://github.com/regorxxx/chroma.js",
+    "date-fns": "^3.6.0",
     "expo": "^51.0.26",
     "expo-blur": "~13.0.2",
     "expo-build-properties": "~0.12.5",

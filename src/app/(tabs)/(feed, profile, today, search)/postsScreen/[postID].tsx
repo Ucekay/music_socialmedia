@@ -2,15 +2,19 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { Link, Stack, useLocalSearchParams } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
+import { Image } from 'expo-image';
+import { BlurView } from 'expo-blur';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { ChatBubbleEmpty } from 'iconoir-react-native';
 
+import { useTheme } from '@/src/contexts/ColorThemeContext';
 import PostImages from '@/src/components/PostImages';
 import BgView from '@/src/components/ThemedBgView';
 import Text from '@/src/components/ThemedText';
-import { Image } from 'expo-image';
-import { useTheme } from '@/src/contexts/ColorThemeContext';
-import { BlurView } from 'expo-blur';
-import { useHeaderHeight } from '@react-navigation/elements';
+import { formatCreatedAt } from '@/src/util/date/formatCreatedAt';
+import HeartIcon from '@/src/components/Icon/HeartIcon';
+import ShareIcon from '@/src/components/Icon/ShareIcon';
 
 const PostDetailScreen = () => {
   const { colors } = useTheme();
@@ -28,6 +32,11 @@ const PostDetailScreen = () => {
 
   const themeContainerStyle = { backgroundColor: colors.headerBackground };
   const themedTextColor = { color: colors.secondaryText };
+  const themedBorderColor = { borderColor: colors.border };
+
+  const { formattedDate, formattedTime } = formatCreatedAt(
+    selectedPost.createdAt
+  );
 
   if (!selectedPost) {
     return (
@@ -52,9 +61,8 @@ const PostDetailScreen = () => {
       <ScrollView
         style={{
           flex: 1,
-          paddingBottom: 16,
-          paddingTop: headerHeight,
-          marginBottom: tabBarHeight,
+          paddingBottom: 16 + tabBarHeight,
+          marginTop: headerHeight,
         }}
       >
         <BgView style={styles.container}>
@@ -70,9 +78,27 @@ const PostDetailScreen = () => {
           </View>
           <Text style={styles.content}>{selectedPost.postContent}</Text>
           <PostImages imageUrls={selectedPost.ImageUrl} />
-          <View style={styles.infoContainer}>
-            <Text style={styles.info}>{selectedPost.createdAt}</Text>
+          <View>
+            <View style={[styles.infoContainer, themedBorderColor]}>
+              <Text style={[styles.info, themedTextColor]}>
+                {formattedDate} {formattedTime}
+              </Text>
+            </View>
+            <View style={[styles.infoContainer, themedBorderColor]}>
+              <Text style={styles.highlighted}>{selectedPost.likes}</Text>
+              <Text style={[styles.info, themedTextColor]}>件のいいね</Text>
+            </View>
           </View>
+          <View style={styles.iconsContainer}>
+            <HeartIcon width={20} height={20} isPost id={selectedPost.postID} />
+            <ChatBubbleEmpty
+              width={20}
+              height={20}
+              color={colors.secondaryText}
+            />
+            <ShareIcon width={20} height={20} />
+          </View>
+          <View style={{ height: tabBarHeight }} />
         </BgView>
       </ScrollView>
     </BgView>
@@ -106,9 +132,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   infoContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     height: 32,
-    justifyContent: 'center',
     borderBottomWidth: 0.5,
   },
   info: {},
+  highlighted: {
+    fontWeight: '500',
+  },
+  iconsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    gap: 24,
+  },
 });

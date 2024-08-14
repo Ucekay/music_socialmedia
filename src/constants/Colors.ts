@@ -21,6 +21,7 @@ const Colors: {
     tabBarGradient: tabBarGradientLight,
     headerBackground: headerLight,
     tint: tintColorLight,
+    border: chroma(palette.zinc['300']).hex(),
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,
     followButtonBg: chroma(palette.zinc['900']).hex(),
@@ -40,6 +41,7 @@ const Colors: {
     tabBarGradient: tabBarGradientDark,
     headerBackground: headerDark,
     tint: tintColorDark,
+    border: chroma(palette.zinc['700']).hex(),
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
     followButtonBg: chroma(palette.zinc['100']).hex(),
@@ -100,6 +102,10 @@ export const TagsColors = {
     },
     tint: chroma(palette.rose['500']).hex(),
   },
+};
+
+export const heartIconColors = {
+  default: {},
 };
 
 export const COLORS = {

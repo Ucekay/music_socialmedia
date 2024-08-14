@@ -1,17 +1,14 @@
+import { useMemo } from 'react';
+import { FlashList } from '@shopify/flash-list';
 import { Text, StyleSheet, FlatList } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 
 import { createPostDataset } from '@/src/backend/components/Front_connection/post_timeline';
-import { useTheme } from '@/src/contexts/ColorThemeContext';
 import BgView from '@/src/components/ThemedBgView';
-
 import { PostData } from '@/src/types';
-import { useMemo } from 'react';
-import { FlashList } from '@shopify/flash-list';
 import PostCard from '@/src/components/PostCard';
-import { useSegments } from 'expo-router';
 
 interface FetchPostsParams {
   cursor: string | null;
