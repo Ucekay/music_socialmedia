@@ -3,29 +3,63 @@ import { BlurView } from 'expo-blur';
 import { Stack, useNavigation } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
-import { TopTabs } from '@/src/layouts/material-top-tabs';
-
 export default function DynamicLayout({ segment }: { segment: string }) {
   const { colors } = useTheme();
   const themedContainerStyle = { backgroundColor: colors.headerBackground };
 
   switch (segment) {
-    case '(feed)':
+    case '(article)':
       return (
         <Stack
           screenOptions={{
-            title: 'Feed',
+            title: 'Article',
             headerTransparent: true,
             headerStyle: { ...themedContainerStyle },
             headerBackground: () => (
               <BlurView tint='regular' style={StyleSheet.absoluteFill} />
             ),
+            headerTintColor: colors.text,
           }}
         >
           <Stack.Screen
-            name='feedScreen'
+            name='articles'
             options={{
-              title: 'Feed',
+              title: 'Article',
+            }}
+          />
+          <Stack.Screen name='posts' />
+          <Stack.Screen
+            name='profile'
+            options={{
+              title: 'Profile',
+            }}
+          />
+        </Stack>
+      );
+    case '(post)':
+      return (
+        <Stack
+          screenOptions={{
+            title: 'Post',
+            headerTransparent: true,
+            headerStyle: { ...themedContainerStyle },
+            headerBackground: () => (
+              <BlurView tint='regular' style={StyleSheet.absoluteFill} />
+            ),
+            headerTintColor: colors.text,
+          }}
+        >
+          <Stack.Screen name='posts' />
+          <Stack.Screen
+            name='articles'
+            options={{
+              title: 'Article',
+            }}
+          />
+          <Stack.Screen
+            name='profile'
+            options={{
+              title: 'Profile',
             }}
           />
         </Stack>
@@ -40,9 +74,10 @@ export default function DynamicLayout({ segment }: { segment: string }) {
             headerBackground: () => (
               <BlurView tint='regular' style={StyleSheet.absoluteFill} />
             ),
+            headerTintColor: colors.text,
           }}
         >
-          <Stack.Screen name='profile/[userID]' />
+          <Stack.Screen name='profile' />
         </Stack>
       );
   }

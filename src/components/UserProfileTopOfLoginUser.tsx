@@ -1,7 +1,14 @@
-import { View, StyleSheet, useColorScheme, Pressable, FlatList, Dimensions } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  useColorScheme,
+  Pressable,
+  FlatList,
+  Dimensions,
+} from 'react-native';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
@@ -10,11 +17,10 @@ import Text from './ThemedText';
 import BgView from './ThemedBgView';
 
 interface LoginUserProps {
-    id: string
+  id: string;
 }
 
 const { width } = Dimensions.get('window');
-
 
 const LoginUserProfileTop = (props: LoginUserProps) => {
   const colorScheme = useColorScheme();
@@ -22,28 +28,26 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
     backgroundColor: Colors[colorScheme ?? 'light'].followButtonBg,
   };
   const textColor = { color: Colors[colorScheme ?? 'light'].followButtonText };
-  const userID  = props.id
+  const userID = props.id;
   const themeTextColor = {
     color: Colors[colorScheme ?? 'light'].text,
   };
 
   const backgroundColors = [
-    ["#F0F0F0", "#2E2E2E"],
-    ["#D3D3D3", "#444444"],
-    ["#FFE4B5", "#555555"],
-    ["#ADD8E6", "#3B3B3B"],
-    ["#FFF0F5", "#4A4A4A"]
+    ['#F0F0F0', '#2E2E2E'],
+    ['#D3D3D3', '#444444'],
+    ['#FFE4B5', '#555555'],
+    ['#ADD8E6', '#3B3B3B'],
+    ['#FFF0F5', '#4A4A4A'],
   ];
 
   const TagColor =
-  colorScheme === 'light'
-  ? backgroundColors[0][0]
-  : backgroundColors[0][1]
+    colorScheme === 'light' ? backgroundColors[0][0] : backgroundColors[0][1];
 
   const DATA = [
     { id: '1', type: 'bio' },
     { id: '2', type: 'tags' },
-  ]; 
+  ];
 
   const userInfo = userData.find((item) => item.userID === userID);
   const defaultImage = require('../assets/images/snsicon.png');
@@ -51,28 +55,43 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
     return <Text>User not found</Text>;
   }
 
-
   const renderItem = ({ item }) => {
     if (item.type === 'bio') {
       return (
-        <View style={[styles.swipeContainer, { flexWrap: 'wrap', flexDirection: 'row' }]}>
-          <Text numberOfLines={4} style={[styles.userBio, { marginBottom: 16 }]}>
+        <View
+          style={[
+            styles.swipeContainer,
+            { flexWrap: 'wrap', flexDirection: 'row' },
+          ]}
+        >
+          <Text
+            numberOfLines={4}
+            style={[styles.userBio, { marginBottom: 16 }]}
+          >
             {userInfo.bio}
           </Text>
         </View>
       );
     } else if (item.type === 'tags') {
       return (
-          <View style={[styles.swipeContainer, { flexWrap: 'wrap', flexDirection: 'row' }]}>
-            {userInfo.tag.map((item, index) => (
-              <View
-                style={[styles.item, { backgroundColor: TagColor, marginBottom: 8 }]}
-                key={index}
-              >
-                <Text style={{ fontWeight: '500', fontSize: 12 }}>{item}</Text>
-              </View>
-            ))}
-          </View>
+        <View
+          style={[
+            styles.swipeContainer,
+            { flexWrap: 'wrap', flexDirection: 'row' },
+          ]}
+        >
+          {userInfo.tag.map((item, index) => (
+            <View
+              style={[
+                styles.item,
+                { backgroundColor: TagColor, marginBottom: 8 },
+              ]}
+              key={index}
+            >
+              <Text style={{ fontWeight: '500', fontSize: 12 }}>{item}</Text>
+            </View>
+          ))}
+        </View>
       );
     }
     return null;
@@ -107,21 +126,21 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
             </View>
           </View>
           <Link href={'/(tabs)/profile/(profile-editor)'}>
-          <View style={[styles.button, backgroundColor]}>
-            <Text style={[styles.text, textColor]}>Edit</Text>
-          </View>
+            <View style={[styles.button, backgroundColor]}>
+              <Text style={[styles.text, textColor]}>Edit</Text>
+            </View>
           </Link>
         </View>
         <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
       </View>
       <FlatList
-      horizontal
-      pagingEnabled
-      data={DATA}
-      keyExtractor={(item) => item.id}
-      renderItem={renderItem}
-      showsHorizontalScrollIndicator={false}
-    />
+        horizontal
+        pagingEnabled
+        data={DATA}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        showsHorizontalScrollIndicator={false}
+      />
     </BgView>
   );
 };
@@ -141,10 +160,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 24,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
-  swipeContainer:{
-    width: width-32,
+  swipeContainer: {
+    width: width - 32,
   },
   avatar: {
     height: 64,
@@ -189,13 +208,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   row: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   item: {
     paddingVertical: 5,
-    paddingHorizontal:10,
+    paddingHorizontal: 10,
     marginRight: 10,
     backgroundColor: '#f9c2ff',
     borderRadius: 12,
   },
-})
+});

@@ -1,19 +1,20 @@
 // PostScreen.js
-import React, { useState, useRef, useEffect, useContext} from 'react';
-import { View,
-         Button,
-         StyleSheet, 
-         Text, 
-         useColorScheme, 
-         ScrollView, 
-         Platform, 
-         Animated as Animated1, 
-         Pressable, 
-         Modal,
-         ActivityIndicator,
-         Dimensions
-        } from 'react-native';
-import userData from '../../../../assets/userData';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import {
+  View,
+  Button,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  ScrollView,
+  Platform,
+  Animated as Animated1,
+  Pressable,
+  Modal,
+  ActivityIndicator,
+  Dimensions,
+} from 'react-native';
+import userData from '../../../../../assets/userData';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BgView from '@/src/components/ThemedBgView';
@@ -22,29 +23,30 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useNavigation, useRouter, Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { BlurView } from 'expo-blur';
-import * as ImagePicker from 'expo-image-picker'
+import * as ImagePicker from 'expo-image-picker';
 import Colors from '@/src/constants/Colors';
 import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
-
 
 const ProfileEditorModal = () => {
   const context = useContext(ProfileEditorContext);
   const router = useRouter();
 
   if (!context) {
-    throw new Error('ProfileEditorModal must be used within a ProfileEditorProvider');
+    throw new Error(
+      'ProfileEditorModal must be used within a ProfileEditorProvider'
+    );
   }
 
-  const {name, id, bio, tag, userAvatar, setUserAvatar} = context
+  const { name, id, bio, tag, userAvatar, setUserAvatar } = context;
 
   const handleSave = () => {
     console.log('Saving profile changes...');
   };
   const insets = useSafeAreaInsets();
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const navigation1 = useNavigation();
-  
+
   const [images, setImages] = useState<string[]>([]);
 
   const pickImage = async () => {
@@ -52,13 +54,13 @@ const ProfileEditorModal = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1,1],
+      aspect: [1, 1],
       quality: 1,
     });
 
     if (!result.canceled) {
       setLoading(true);
-      setUserAvatar(result.assets[0].uri)
+      setUserAvatar(result.assets[0].uri);
       setLoading(false);
     } else {
       setLoading(false);
@@ -67,11 +69,11 @@ const ProfileEditorModal = () => {
 
   const colorScheme = useColorScheme();
   const backgroundColor =
-        colorScheme === 'dark'
-        ? Colors.dark.secondaryBackground
-        : Colors.light.background;
+    colorScheme === 'dark'
+      ? Colors.dark.secondaryBackground
+      : Colors.light.background;
   const shadowColor = colorScheme === 'dark' ? '#fff' : '#000';
-  
+
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -89,74 +91,126 @@ const ProfileEditorModal = () => {
   const BOTTOM_TAB_HEIGHT = 96.7;
 
   return (
-    
     <BgView style={[styles.container]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
       >
-      <View style={styles.header}>
-        <Text style={[styles.headertitle, {color: textColor}]}>プロフィールを編集</Text>
-      </View>
-      <Modal animationType='fade' transparent={true} visible={loading}>
-        <View style={styles.dialog}>
-          <BlurView tint={'systemMaterial'} style={styles.dialogInner}>
-            <Text style={styles.text}>画像を読み込んでいます</Text>
-            <ActivityIndicator />
-          </BlurView>
+        <View style={styles.header}>
+          <Text style={[styles.headertitle, { color: textColor }]}>
+            プロフィールを編集
+          </Text>
         </View>
-      </Modal>
-      <View style={{marginHorizontal: 16 , marginTop: 50}}>
-        <Pressable onPress={(pickImage)}>
-        <View style={styles.profileHeader}>
-            <Image
-            source={{ uri: userAvatar }}
-            style={styles.avatar}
-            />
-        </View>
-        </Pressable>
-        <View style={[styles.card, { backgroundColor, shadowColor }]}>
-            <View style={styles.profileContent}>
-                <Pressable onPress={() => {router.push('/(tabs)/profile/(profile-editor)/name-editor-modal')}}>
-                  <View style={{borderBottomColor: '#ddd', borderBottomWidth: 1, marginHorizontal: 10}}>
-                      <Text style={[styles.label, {color: textColor}]}>name</Text>
-                      <Text style={[styles.text1, {color: textColor}]}>{name}</Text>
-                  </View>
-                </Pressable>
-                <Pressable onPress={() => {router.push('/(tabs)/profile/(profile-editor)/id-editor-modal')}}>
-                <View style={{borderBottomColor: '#ddd', borderBottomWidth: 1, marginHorizontal: 10, paddingTop: 16}}>
-                    <Text style={[styles.label, {color: textColor}]}>id</Text>
-                    <Text style={[styles.text1, {color: textColor}]}>{id}</Text>
-                </View>
-                </Pressable>
-                <Pressable onPress={() => {router.push('/(tabs)/profile/(profile-editor)/bio-editor-modal')}}>
-                <View style={{borderBottomColor: '#ddd', borderBottomWidth: 1, marginHorizontal: 10, paddingTop: 16}}>
-                    <Text style={[styles.label, {color: textColor}]}>comment</Text>
-                    <Text style={[styles.text1, {color: textColor}]}>{bio}</Text>
-                </View>
-                </Pressable>
-                <Pressable onPress={() => {router.push('/(tabs)/profile/(profile-editor)/favoriteArtists-editor-modal')}}>
-                <View style={{ marginHorizontal: 10, paddingTop: 16, gap: 8}}>
-                <Text style={[styles.label, {color: textColor}]}>favarite artists</Text>
-                <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
-                {tag.map((item, index) => (
-                    <View
-                      style={[styles.item, {marginBottom:4, flexDirection:'row'}]}
-                      key={index}
-                    >
-                      <Text style={{color: '#c0c0c0'}}>#</Text>
-                      <Text style={{color: textColor}}> {item}</Text>
-                    </View>
-                  ))
-                }
-                  </View>
-                </View>
-                </Pressable>
+        <Modal animationType='fade' transparent={true} visible={loading}>
+          <View style={styles.dialog}>
+            <BlurView tint={'systemMaterial'} style={styles.dialogInner}>
+              <Text style={styles.text}>画像を読み込んでいます</Text>
+              <ActivityIndicator />
+            </BlurView>
+          </View>
+        </Modal>
+        <View style={{ marginHorizontal: 16, marginTop: 50 }}>
+          <Pressable onPress={pickImage}>
+            <View style={styles.profileHeader}>
+              <Image source={{ uri: userAvatar }} style={styles.avatar} />
             </View>
+          </Pressable>
+          <View style={[styles.card, { backgroundColor, shadowColor }]}>
+            <View style={styles.profileContent}>
+              <Pressable
+                onPress={() => {
+                  router.push(
+                    '/(tabs)/profile/(profile-editor)/name-editor-modal'
+                  );
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomColor: '#ddd',
+                    borderBottomWidth: 1,
+                    marginHorizontal: 10,
+                  }}
+                >
+                  <Text style={[styles.label, { color: textColor }]}>name</Text>
+                  <Text style={[styles.text1, { color: textColor }]}>
+                    {name}
+                  </Text>
+                </View>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  router.push(
+                    '/(tabs)/profile/(profile-editor)/id-editor-modal'
+                  );
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomColor: '#ddd',
+                    borderBottomWidth: 1,
+                    marginHorizontal: 10,
+                    paddingTop: 16,
+                  }}
+                >
+                  <Text style={[styles.label, { color: textColor }]}>id</Text>
+                  <Text style={[styles.text1, { color: textColor }]}>{id}</Text>
+                </View>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  router.push(
+                    '/(tabs)/profile/(profile-editor)/bio-editor-modal'
+                  );
+                }}
+              >
+                <View
+                  style={{
+                    borderBottomColor: '#ddd',
+                    borderBottomWidth: 1,
+                    marginHorizontal: 10,
+                    paddingTop: 16,
+                  }}
+                >
+                  <Text style={[styles.label, { color: textColor }]}>
+                    comment
+                  </Text>
+                  <Text style={[styles.text1, { color: textColor }]}>
+                    {bio}
+                  </Text>
+                </View>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  router.push(
+                    '/(tabs)/profile/(profile-editor)/favoriteArtists-editor-modal'
+                  );
+                }}
+              >
+                <View style={{ marginHorizontal: 10, paddingTop: 16, gap: 8 }}>
+                  <Text style={[styles.label, { color: textColor }]}>
+                    favarite artists
+                  </Text>
+                  <View style={{ flexWrap: 'wrap', flexDirection: 'row' }}>
+                    {tag.map((item, index) => (
+                      <View
+                        style={[
+                          styles.item,
+                          { marginBottom: 4, flexDirection: 'row' },
+                        ]}
+                        key={index}
+                      >
+                        <Text style={{ color: '#c0c0c0' }}>#</Text>
+                        <Text style={{ color: textColor }}> {item}</Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              </Pressable>
+            </View>
+          </View>
         </View>
-      </View>
-        </ScrollView>
-        <BgView
+      </ScrollView>
+      <BgView
         style={[
           styles.bottomButtonWrapper,
           {
@@ -188,40 +242,40 @@ const ProfileEditorModal = () => {
   );
 };
 
-export default ProfileEditorModal
+export default ProfileEditorModal;
 
 const styles = StyleSheet.create({
   container: {
     paddingTop: 20,
-    flex: 1
+    flex: 1,
   },
   header: {
-    alignItems:"center",
-    borderBottomWidth:1,
-    paddingBottom:20,
-    borderBottomColor: '#ddd'
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    paddingBottom: 20,
+    borderBottomColor: '#ddd',
   },
-  headertitle:{
-    fontSize:18,
+  headertitle: {
+    fontSize: 18,
     fontWeight: '700',
   },
-  line:{
-    borderLeftWidth:2,
-    borderLeftColor:"#ddd",
+  line: {
+    borderLeftWidth: 2,
+    borderLeftColor: '#ddd',
     marginLeft: 31,
     marginTop: 10,
   },
   editorHeader: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop:20,
+    marginTop: 20,
     flex: 1,
   },
   text1: {
     fontSize: 14,
     fontWeight: '400',
     lineHeight: 20,
-    marginVertical: 8
+    marginVertical: 8,
   },
   card: {
     borderRadius: 16,
@@ -247,24 +301,24 @@ const styles = StyleSheet.create({
     borderWidth: 0.3,
     borderColor: '#000000',
   },
-  Icon:{
-    color:'#808080',
-    marginBottom:20
+  Icon: {
+    color: '#808080',
+    marginBottom: 20,
   },
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'baseline',
     gap: 8,
   },
-  status:{
-    fontSize:14,
+  status: {
+    fontSize: 14,
     marginBottom: 6,
-    color: '#ddd'
+    color: '#ddd',
   },
   image: {
     marginBottom: 20,
     borderRadius: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   bottomButtonWrapper: {
     position: 'absolute',
@@ -344,19 +398,19 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 5,
     marginBottom: 10,
-    fontSize:16,
+    fontSize: 16,
     color: '#123456',
   },
   label: {
     fontSize: 16,
     fontWeight: '500',
-    height: 16, 
+    height: 16,
   },
   row: {
     flexDirection: 'row',
     marginBottom: 4,
   },
   item: {
-    paddingRight: 12
+    paddingRight: 12,
   },
 });

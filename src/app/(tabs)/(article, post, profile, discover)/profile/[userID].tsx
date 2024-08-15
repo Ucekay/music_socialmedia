@@ -14,6 +14,7 @@ import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 import BgView from '@/src/components/ThemedBgView';
 import { useHeaderHeight } from '@react-navigation/elements';
+import UserProfileTopOfLoginUser from '@/src/components/UserProfileTopOfLoginUser';
 
 const TEXT_HEIGHT = 65.7;
 const HEADER_HEIGHT = 199;
@@ -55,7 +56,13 @@ const Profile = () => {
       />
       <Tabs.Container
         headerHeight={HEADER_HEIGHT}
-        renderHeader={() => <UserProfileTop />}
+        renderHeader={() =>
+          userID ? (
+            <UserProfileTop />
+          ) : (
+            <UserProfileTopOfLoginUser id={'@Taro1234'} />
+          )
+        }
       >
         <Tabs.Tab name='post' label='Post'>
           <Tabs.FlashList

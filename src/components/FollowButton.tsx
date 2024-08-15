@@ -2,6 +2,7 @@ import { Text, StyleSheet, Pressable } from 'react-native';
 import { useColorScheme } from 'react-native';
 
 import Colors from '@/src/constants/Colors';
+import { Link } from 'expo-router';
 
 const FollowButton = ({ isMyAccount }: { isMyAccount: boolean }) => {
   const colorScheme = useColorScheme();

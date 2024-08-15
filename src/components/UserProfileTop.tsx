@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { View, StyleSheet, useColorScheme } from 'react-native';
 import { Image } from 'expo-image';
 
@@ -10,13 +11,13 @@ import { useLocalSearchParams } from 'expo-router';
 const UserProfileTop = () => {
   const colorScheme = useColorScheme();
 
+  // stateをuseLoaclSearchParamsで取得したuserIDで変更するとrenderが多数走るためエラーを引き起こす
   const { userID } = useLocalSearchParams();
 
   const themeTextColor = {
     color: Colors[colorScheme ?? 'light'].text,
   };
 
-  const isMyAccount = userID === '@MyAccount' ? true : false;
   const userInfo = userData.find((item) => item.userID === userID);
   const defaultImage = require('../assets/images/snsicon.png');
   if (!userInfo) {
@@ -50,11 +51,17 @@ const UserProfileTop = () => {
               </View>
             </View>
           </View>
-          <FollowButton isMyAccount={isMyAccount} />
+          <FollowButton isMyAccount={false} />
         </View>
         <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
       </View>
-      <Text style={[styles.userBio, themeTextColor]}>{userInfo.bio}</Text>
+      <Text
+        numberOfLines={5}
+        ellipsizeMode='tail'
+        style={[styles.userBio, themeTextColor]}
+      >
+        {userInfo.bio}
+      </Text>
     </View>
   );
 };

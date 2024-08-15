@@ -7,13 +7,14 @@ const App = () => {
     <ProfileStateProvider>
       <Stack>
         <Stack.Screen
-          name='index'
+          name='profile-editor-modal'
           options={{
             headerShown: false,
             presentation: 'modal',
-            title: 'Peofile Editor',
+            title: 'Profile Editor',
             gestureEnabled: false,
-        }}/>
+          }}
+        />
         <Stack.Screen
           name='name-editor-modal'
           options={{
@@ -21,7 +22,8 @@ const App = () => {
             presentation: 'modal',
             title: 'Name Editor',
             gestureEnabled: true,
-        }}/>
+          }}
+        />
         <Stack.Screen
           name='id-editor-modal'
           options={{
@@ -29,7 +31,8 @@ const App = () => {
             presentation: 'modal',
             title: 'Id Editor',
             gestureEnabled: true,
-        }}/>
+          }}
+        />
         <Stack.Screen
           name='bio-editor-modal'
           options={{
@@ -37,7 +40,8 @@ const App = () => {
             presentation: 'modal',
             title: 'Bio Editor',
             gestureEnabled: true,
-        }}/>
+          }}
+        />
         <Stack.Screen
           name='favoriteArtists-editor-modal'
           options={{
@@ -45,7 +49,8 @@ const App = () => {
             presentation: 'modal',
             title: 'Favorite Artists Editor',
             gestureEnabled: true,
-        }}/>
+          }}
+        />
       </Stack>
     </ProfileStateProvider>
   );
