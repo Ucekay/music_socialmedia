@@ -40,111 +40,99 @@ export default function TabLayout() {
   const handleSheetChanges = useCallback((index: number) => {}, []);
 
   return (
-    <View style={styles.screenContainer}>
-      <Animated.View style={styles.screen}>
-        <Tabs
-          screenOptions={{
-            tabBarActiveTintColor: colors.tint,
-            // Disable the static render of the header on web
-            // to prevent a hydration error in React Navigation v6.
-            headerShown: useClientOnlyValue(false, true),
-            tabBarStyle: {
-              position: 'absolute',
-            },
-            tabBarShowLabel: false,
-            tabBarBackground: () => (
-              <>
-                <LinearGradient
-                  colors={themeContainerStyle}
-                  style={StyleSheet.absoluteFill}
-                />
-                <BlurView
-                  tint='regular'
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                  }}
-                />
-              </>
-            ),
+    <View style={styles.screen}>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: colors.tint,
+          // Disable the static render of the header on web
+          // to prevent a hydration error in React Navigation v6.
+          headerShown: useClientOnlyValue(false, true),
+          tabBarStyle: {
+            position: 'absolute',
+          },
+          tabBarShowLabel: false,
+          tabBarBackground: () => (
+            <>
+              <LinearGradient
+                colors={themeContainerStyle}
+                style={StyleSheet.absoluteFill}
+              />
+              <BlurView
+                tint='regular'
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                }}
+              />
+            </>
+          ),
+        }}
+        screenListeners={{
+          tabPress: (e: EventArg<'tabPress', true, undefined>) => {
+            const pressedTab = e.target?.split('-')[0];
+            if (pressedTab === 'create/index') {
+              e.preventDefault();
+              handlePresentModalPress();
+            }
+          },
+        }}
+      >
+        <Tabs.Screen name='index' options={{ href: null }} />
+        <Tabs.Screen
+          name='(article)'
+          options={{
+            title: 'Article',
+            headerShown: false,
+            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
           }}
-          screenListeners={{
-            tabPress: (e: EventArg<'tabPress', true, undefined>) => {
-              const pressedTab = e.target?.split('-')[0];
-              if (pressedTab === 'create/index') {
-                e.preventDefault();
-                handlePresentModalPress();
-              }
-            },
+        />
+        <Tabs.Screen
+          name='(post)'
+          options={{
+            title: 'Post',
+            headerShown: false,
+            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
           }}
-        >
-          <Tabs.Screen name='index' options={{ href: null }} />
-          <Tabs.Screen
-            name='(article)'
-            options={{
-              title: 'Article',
-              headerShown: false,
-              tabBarIcon: ({ color }) => (
-                <TabBarIcon name='code' color={color} />
-              ),
-            }}
-          />
-          <Tabs.Screen
-            name='(post)'
-            options={{
-              title: 'Post',
-              headerShown: false,
-              tabBarIcon: ({ color }) => (
-                <TabBarIcon name='code' color={color} />
-              ),
-            }}
-          />
-          <Tabs.Screen
-            name='create/index'
-            options={{
-              title: 'Create',
-              headerShown: false,
-              tabBarIcon: ({ color }) => (
-                <TabBarIcon name='code' color={color} />
-              ),
-            }}
-          />
-          <Tabs.Screen
-            name='(discover)'
-            options={{
-              title: 'Discover',
-              headerShown: false,
-              tabBarIcon: ({ color }) => (
-                <TabBarIcon name='code' color={color} />
-              ),
-            }}
-          />
-          <Tabs.Screen
-            name='(profile)'
-            options={{
-              title: 'Profile',
-              headerShown: false,
-              tabBarIcon: ({ color }) => (
-                <TabBarIcon name='code' color={color} />
-              ),
-            }}
-          />
-        </Tabs>
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          index={1}
-          snapPoints={snapPoints}
-          onChange={handleSheetChanges}
-          enablePanDownToClose
-        >
-          <BottomSheetView style={styles.contentContainer}>
-            <Text>Awesome 🎉</Text>
-          </BottomSheetView>
-        </BottomSheetModal>
-      </Animated.View>
+        />
+        <Tabs.Screen
+          name='create/index'
+          options={{
+            title: 'Create',
+            headerShown: false,
+            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name='(discover)'
+          options={{
+            title: 'Discover',
+            headerShown: false,
+            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name='(profile)'
+          options={{
+            title: 'Profile',
+            headerShown: false,
+            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+          }}
+        />
+      </Tabs>
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        index={1}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+        enablePanDownToClose
+      >
+        <BottomSheetView style={styles.contentContainer}>
+          <Text>Awesome 🎉</Text>
+        </BottomSheetView>
+      </BottomSheetModal>
     </View>
   );
 }
@@ -177,12 +165,8 @@ const styles = StyleSheet.create({
   },
   screen: {
     flex: 1,
-  },
-  screenContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignContent: 'center',
-    backgroundColor: 'black',
   },
   actionContainer: {
     width: 60,
