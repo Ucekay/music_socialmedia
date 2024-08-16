@@ -1,28 +1,18 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { EventArg } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { View, Pressable, StyleSheet, useColorScheme } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Tabs } from 'expo-router';
-
-import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-
-import Colors from '@/src/constants/Colors';
-import {
-  TabActionProvider,
-  useTabAction,
-} from '@/src/contexts/ActionButtonContext';
-import { ProfileScreenProvider } from '@/src/contexts/ProfileScreenContext';
-import { useTheme } from '@/src/contexts/ColorThemeContext';
 import Animated from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 
-interface TabPressEvent {
-  defaultPrevented: boolean;
-  preventDefault: () => void;
-  target: string;
-  type: 'tabPress';
-}
+import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
+
+import { useTabAction } from '@/src/contexts/ActionButtonContext';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -36,89 +26,126 @@ export default function TabLayout() {
   const { colors } = useTheme();
   const themeContainerStyle = colors.tabBarGradient;
 
+  const insets = useSafeAreaInsets();
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ['25%'], []);
+
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index: number) => {}, []);
+
   return (
-    <Animated.View style={styles.screen}>
-      <Tabs
-        screenOptions={{
-          tabBarActiveTintColor: colors.tint,
-          // Disable the static render of the header on web
-          // to prevent a hydration error in React Navigation v6.
-          headerShown: useClientOnlyValue(false, true),
-          tabBarStyle: {
-            position: 'absolute',
-          },
-          tabBarShowLabel: false,
-          tabBarBackground: () => (
-            <>
-              <LinearGradient
-                colors={themeContainerStyle}
-                style={StyleSheet.absoluteFill}
-              />
-              <BlurView
-                tint='regular'
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                }}
-              />
-            </>
-          ),
-        }}
-        screenListeners={{
-          tabPress: (e: EventArg<'tabPress', true, undefined>) => {
-            const pressedTab = e.target?.split('-')[0];
-            if (pressedTab === 'create/index') {
-              e.preventDefault();
-            }
-          },
-        }}
-      >
-        <Tabs.Screen name='index' options={{ href: null }} />
-        <Tabs.Screen
-          name='(article)'
-          options={{
-            title: 'Article',
-            headerShown: false,
-            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+    <View style={styles.screenContainer}>
+      <Animated.View style={styles.screen}>
+        <Tabs
+          screenOptions={{
+            tabBarActiveTintColor: colors.tint,
+            // Disable the static render of the header on web
+            // to prevent a hydration error in React Navigation v6.
+            headerShown: useClientOnlyValue(false, true),
+            tabBarStyle: {
+              position: 'absolute',
+            },
+            tabBarShowLabel: false,
+            tabBarBackground: () => (
+              <>
+                <LinearGradient
+                  colors={themeContainerStyle}
+                  style={StyleSheet.absoluteFill}
+                />
+                <BlurView
+                  tint='regular'
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                  }}
+                />
+              </>
+            ),
           }}
-        />
-        <Tabs.Screen
-          name='(post)'
-          options={{
-            title: 'Post',
-            headerShown: false,
-            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+          screenListeners={{
+            tabPress: (e: EventArg<'tabPress', true, undefined>) => {
+              const pressedTab = e.target?.split('-')[0];
+              if (pressedTab === 'create/index') {
+                e.preventDefault();
+                handlePresentModalPress();
+              }
+            },
           }}
-        />
-        <Tabs.Screen
-          name='create/index'
-          options={{
-            title: 'Create',
-            headerShown: false,
-            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name='(discover)'
-          options={{
-            title: 'Discover',
-            headerShown: false,
-            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name='(profile)'
-          options={{
-            title: 'Profile',
-            headerShown: false,
-            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
-          }}
-        />
-      </Tabs>
-    </Animated.View>
+        >
+          <Tabs.Screen name='index' options={{ href: null }} />
+          <Tabs.Screen
+            name='(article)'
+            options={{
+              title: 'Article',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name='(post)'
+            options={{
+              title: 'Post',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name='create/index'
+            options={{
+              title: 'Create',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name='(discover)'
+            options={{
+              title: 'Discover',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
+          <Tabs.Screen
+            name='(profile)'
+            options={{
+              title: 'Profile',
+              headerShown: false,
+              tabBarIcon: ({ color }) => (
+                <TabBarIcon name='code' color={color} />
+              ),
+            }}
+          />
+        </Tabs>
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={1}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}
+          enablePanDownToClose
+        >
+          <BottomSheetView style={styles.contentContainer}>
+            <Text>Awesome 🎉</Text>
+          </BottomSheetView>
+        </BottomSheetModal>
+      </Animated.View>
+    </View>
   );
 }
 
@@ -150,7 +177,12 @@ const styles = StyleSheet.create({
   },
   screen: {
     flex: 1,
-    backgroundColor: `black`,
+  },
+  screenContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
+    backgroundColor: 'black',
   },
   actionContainer: {
     width: 60,
@@ -158,5 +190,9 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: 'red',
     position: 'absolute',
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
 });

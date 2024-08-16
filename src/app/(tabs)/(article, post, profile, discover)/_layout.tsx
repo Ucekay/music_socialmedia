@@ -1,11 +1,13 @@
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 import { BlurView } from 'expo-blur';
-import { Stack, useNavigation } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
 export default function DynamicLayout({ segment }: { segment: string }) {
   const { colors } = useTheme();
-  const themedContainerStyle = { backgroundColor: colors.headerBackground };
+  const themedContainerStyle = {
+    backgroundColor: colors.headerBackground,
+  };
 
   switch (segment) {
     case '(article)':
@@ -15,9 +17,10 @@ export default function DynamicLayout({ segment }: { segment: string }) {
             title: 'Article',
             headerTransparent: true,
             headerStyle: { ...themedContainerStyle },
-            headerBackground: () => (
-              <BlurView tint='regular' style={StyleSheet.absoluteFill} />
-            ),
+            headerBlurEffect: 'regular',
+            //headerBackground: () => (
+            //  <BlurView tint='regular' style={StyleSheet.absoluteFill} />
+            //),
             headerTintColor: colors.text,
           }}
         >
