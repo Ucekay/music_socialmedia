@@ -35,8 +35,6 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
     if (post?.ImageUrl) {
       setImageUrl(post.ImageUrl.map((url) => ({ url })));
     }
-    console.log(post.userAvatarUrl);
-    console.log(post.ImageUrl);
     setInitialIndex(n);
     setModalStatus(true);
   };
@@ -159,7 +157,7 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
           </View>
         </View>
         <View style={styles.Icons}>
-          <HeartIcon size={16} />
+          <HeartIcon width={16} height={16} />
           <Link
             href={{
               pathname: '/reply-editor-modal',
@@ -178,7 +176,7 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
           >
             <Message width={16} height={16} color={'#000000'} />
           </Link>
-          <ShareIcon size={16} />
+          <ShareIcon width={16} height={16} />
         </View>
         <View
           style={[
