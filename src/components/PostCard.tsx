@@ -174,7 +174,7 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
             }}
             asChild
           >
-            <Message width={16} height={16} color={'#000000'} />
+            <Message width={16} height={16} />
           </Link>
           <ShareIcon width={16} height={16} />
         </View>

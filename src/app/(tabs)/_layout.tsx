@@ -1,18 +1,24 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { EventArg } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Tabs } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
 
 import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 
+import Text from '@/src/components/ThemedText';
 import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
+import { MultiplePages } from 'iconoir-react-native';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -38,6 +44,18 @@ export default function TabLayout() {
     bottomSheetModalRef.current?.present();
   }, []);
   const handleSheetChanges = useCallback((index: number) => {}, []);
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    []
+  );
+
+  const themedContentStyle = { backgroundColor: colors.secondaryBackground };
 
   return (
     <View style={styles.screen}>
@@ -124,13 +142,33 @@ export default function TabLayout() {
       </Tabs>
       <BottomSheetModal
         ref={bottomSheetModalRef}
-        index={1}
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
         enablePanDownToClose
+        backdropComponent={renderBackdrop}
+        backgroundStyle={themedContentStyle}
       >
         <BottomSheetView style={styles.contentContainer}>
-          <Text>Awesome 🎉</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              gap: 16,
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              borderColor: colors.border,
+            }}
+          >
+            <View>
+              <MultiplePages width={32} height={32} color={colors.text} />
+            </View>
+            <View>
+              <Text style={{ fontSize: 20 }}>New Article</Text>
+            </View>
+            <View>
+              <MultiplePages width={32} height={32} color={'transparent'} />
+            </View>
+          </View>
         </BottomSheetView>
       </BottomSheetModal>
     </View>
@@ -177,6 +215,12 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
+    padding: 16,
     alignItems: 'center',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
   },
 });
