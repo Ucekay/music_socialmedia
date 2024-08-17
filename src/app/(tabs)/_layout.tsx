@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { EventArg } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { Tabs } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -12,13 +12,15 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
+import { MultiplePages, GoogleDocs, Voice } from 'iconoir-react-native';
+import { SvgProps } from 'react-native-svg';
 
 import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 
 import Text from '@/src/components/ThemedText';
 import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
-import { MultiplePages } from 'iconoir-react-native';
+import type { ColorScheme } from '@/src/types';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -37,7 +39,7 @@ export default function TabLayout() {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   // variables
-  const snapPoints = useMemo(() => ['25%'], []);
+  const snapPoints = useMemo(() => [220 + insets.bottom], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -147,33 +149,90 @@ export default function TabLayout() {
         enablePanDownToClose
         backdropComponent={renderBackdrop}
         backgroundStyle={themedContentStyle}
+        handleIndicatorStyle={{ backgroundColor: colors.border }}
       >
         <BottomSheetView style={styles.contentContainer}>
-          <View
-            style={{
-              flexDirection: 'row',
-              width: '100%',
-              gap: 16,
-              justifyContent: 'space-around',
-              alignItems: 'center',
-              borderColor: colors.border,
-            }}
-          >
-            <View>
-              <MultiplePages width={32} height={32} color={colors.text} />
-            </View>
-            <View>
-              <Text style={{ fontSize: 20 }}>New Article</Text>
-            </View>
-            <View>
-              <MultiplePages width={32} height={32} color={'transparent'} />
-            </View>
+          <View style={[styles.content, { marginBottom: 16 + insets.bottom }]}>
+            <CreateContentList colors={colors} />
           </View>
         </BottomSheetView>
       </BottomSheetModal>
     </View>
   );
 }
+
+type CreateItemData = {
+  id: string;
+  icon: React.FC<SvgProps>;
+  text: string;
+  onPress: () => void;
+};
+
+const CreateContentList = ({ colors }: { colors: ColorScheme }) => {
+  const createItems: CreateItemData[] = [
+    {
+      id: 'article',
+      icon: MultiplePages,
+      text: '新しいArticleを作成',
+      onPress: () => {},
+    },
+    {
+      id: 'post',
+      icon: GoogleDocs,
+      text: '新しいPostを作成',
+      onPress: () => {},
+    },
+    {
+      id: 'music',
+      icon: Voice,
+      text: '今日の一曲を作成',
+      onPress: () => {},
+    },
+  ];
+
+  return (
+    <View style={styles.list}>
+      {createItems.map((item) => (
+        <CreateContentListItem
+          key={item.id}
+          icon={<item.icon width={28} height={28} color={colors.text} />}
+          text={item.text}
+          onPress={item.onPress}
+        />
+      ))}
+    </View>
+  );
+};
+
+type ListItemProps = {
+  icon: React.ReactNode;
+  text: string;
+  onPress: () => void;
+};
+
+const CreateContentListItem = ({ icon, text, onPress }: ListItemProps) => {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{
+        flexDirection: 'row',
+        width: '100%',
+        padding: 16,
+        gap: 16,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+    >
+      <View>{icon}</View>
+      <View style={{ width: 174.3 }}>
+        <Text style={{ fontSize: 20 }}>{text}</Text>
+      </View>
+      <View>
+        <MultiplePages width={28} height={28} color={'transparent'} />
+      </View>
+    </Pressable>
+  );
+};
 
 const TabBarActionButton = (props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -216,11 +275,15 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     padding: 16,
+    paddingTop: 0,
     alignItems: 'center',
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
+  },
+  list: {
+    flex: 1,
+    justifyContent: 'flex-start',
     alignContent: 'center',
   },
 });
