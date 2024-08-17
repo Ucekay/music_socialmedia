@@ -223,7 +223,7 @@ const FavoriteArtistsEditor = (): JSX.Element => {
                       <Text>{item}</Text>
                       <Pressable
                         onPress={() => {
-                          handleAdd(item);
+                          handleAdd();
                         }}
                       >
                         <View
