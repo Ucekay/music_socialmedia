@@ -19,5 +19,5 @@ export const Curves = ({ patch }: CurvesProps) => {
       .cubicTo(p4.c2.x, p4.c2.y, p1.c1.x, p1.c1.y, p1.pos.x, p1.pos.y);
     return d;
   }, [patch]);
-  return <Path path={path} color="white" strokeWidth={2} style="stroke" />;
+  return <Path path={path} color='white' strokeWidth={2} style='stroke' />;
 };

@@ -1,10 +1,7 @@
 import React, { useMemo } from 'react';
-import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
-import type { CubicBezierHandle } from '@shopify/react-native-skia';
+import type { CubicBezierHandle, Vector } from '@shopify/react-native-skia';
 import {
-  Skia,
-  isEdge,
   Group,
   add,
   Canvas,
@@ -16,19 +13,13 @@ import {
 } from '@shopify/react-native-skia';
 import { View, useWindowDimensions, StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
-import Animated, {
-  FadeIn,
-  useDerivedValue,
-  useSharedValue,
-} from 'react-native-reanimated';
+import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 
 import { createNoise2D } from './forMeshGradient/SimpleNoise';
 
 import { symmetric } from './forMeshGradient/Math';
 import { Cubic } from './forMeshGradient/Cubic';
 import { Curves } from './forMeshGradient/Curves';
-
-const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],
@@ -83,58 +74,74 @@ const useRectToPatch = (
     ];
   }, [mesh]);
 
-interface ArticleGraphicProps {
+const EPSILON = 0.001; // 浮動小数点の誤差を許容する値
+
+const isEdge = (
+  pos: Vector,
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) => {
+  'worklet';
+  return pos.x === 0 || pos.x === width || pos.y === 0 || pos.y === height;
+};
+
+interface MeshGradient {
   rows: number;
   cols: number;
   colors: string[];
   debug?: boolean;
   lines?: boolean;
   handles?: boolean;
-  play?: boolean;
-  artworkUrl: string;
+  width: number;
+  height: number;
 }
 
-const F = 8000;
-const A = 60;
+const F = 10000;
+const A = 20;
 
-export const ArticleGraphic = ({
+export const MeshGradient = ({
   rows,
   cols,
   colors,
   debug,
   lines,
   handles,
-  play,
-  artworkUrl,
-}: ArticleGraphicProps) => {
-  const { width, height } = useWindowDimensions();
-
-  const articleCardWidth = width - 40;
-  const imageSideLength = ((width - 40) / 21) * 9;
-  const window = useMemo(
-    () => Skia.XYWHRect(0, 0, articleCardWidth, imageSideLength),
-    [imageSideLength, articleCardWidth]
-  );
+  width,
+  height,
+}: MeshGradient) => {
+  // window の各プロパティを個別の SharedValue として定義
+  const windowX = useSharedValue(0);
+  const windowY = useSharedValue(0);
+  const windowWidth = useSharedValue(width);
+  const windowHeight = useSharedValue(height);
 
   const clock = useClock();
   const image = useImage(require('../assets/images/debug.png'));
-  const dx = articleCardWidth / cols;
-  const dy = imageSideLength / rows;
+  const dx = width / cols;
+  const dy = height / rows;
   const C = dx / 3;
 
-  const defaultMesh = new Array(cols + 1)
-    .fill(0)
-    .map((_c, col) =>
-      new Array(rows + 1).fill(0).map((_r, row) => {
-        const pos = vec(row * dx, col * dy);
-        return {
-          pos,
-          c1: add(pos, vec(C, 0)),
-          c2: add(pos, vec(0, C)),
-        };
-      })
-    )
-    .flat(2);
+  const defaultMesh = useMemo(() => {
+    return new Array(rows + 1)
+      .fill(0)
+      .map((_, row) =>
+        new Array(cols + 1).fill(0).map((_, col) => {
+          const pos = vec(
+            col === cols ? width : col * dx,
+            row === rows ? height : row * dy
+          );
+          return {
+            pos,
+            c1: add(pos, vec(C, 0)),
+            c2: add(pos, vec(0, C)),
+          };
+        })
+      )
+      .flat();
+  }, [rows, cols, dx, dy, C, width, height]);
+
   const rects = new Array(rows)
     .fill(0)
     .map((_r, row) =>
@@ -155,7 +162,15 @@ export const ArticleGraphic = ({
   ]);
   const meshNoise = useDerivedValue(() => {
     return defaultMesh.map((pt, i) => {
-      if (isEdge(pt.pos, window)) {
+      if (
+        isEdge(
+          pt.pos,
+          windowX.value,
+          windowY.value,
+          windowWidth.value,
+          windowHeight.value
+        )
+      ) {
         return pt;
       }
       const [noisePos, noiseC1, noiseC2] = noises[i];
@@ -172,22 +187,18 @@ export const ArticleGraphic = ({
           vec(A * noiseC1(clock.value / F, 0), A * noiseC1(0, clock.value / F))
         ),
         c2: add(
-          pt.c1,
+          pt.c2,
           vec(A * noiseC2(clock.value / F, 0), A * noiseC2(0, clock.value / F))
         ),
       };
     });
-  }, [clock]);
+  }, [clock, defaultMesh, noises, windowX, windowY, windowWidth, windowHeight]);
 
-  const meshGesture = useSharedValue(defaultMesh);
-
-  const mesh = play ? meshNoise : meshGesture;
-
-  const defaultImage = require('@/src/assets/images/snsicon.png');
+  const mesh = meshNoise;
 
   return (
-    <View style={styles.container}>
-      <Canvas style={{ width: '100%', height: imageSideLength }}>
+    <View style={[styles.container, { width, height }]}>
+      <Canvas style={{ width, height }}>
         <Group>
           <ImageShader image={image} tx='repeat' ty='repeat' />
           {rects.map((r, i) => {
@@ -204,9 +215,17 @@ export const ArticleGraphic = ({
             );
           })}
         </Group>
-
         {defaultMesh.map(({ pos }, index) => {
-          if (isEdge(pos, window) || !handles) {
+          if (
+            isEdge(
+              pos,
+              windowX.value,
+              windowY.value,
+              windowWidth.value,
+              windowHeight.value
+            ) ||
+            !handles
+          ) {
             return null;
           }
           return (
@@ -219,13 +238,7 @@ export const ArticleGraphic = ({
           );
         })}
       </Canvas>
-
-      <AnimatedImage
-        source={artworkUrl || defaultImage}
-        entering={FadeIn}
-        style={styles.image}
-      />
-      <BlurView intensity={25} style={styles.blur} />
+      <BlurView intensity={25} style={[styles.blur, { width, height }]} />
     </View>
   );
 };
@@ -261,25 +274,8 @@ const RectPatch = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
-  },
-  image: {
-    height: '100%',
-    position: 'absolute',
-    aspectRatio: 1,
-    zIndex: 1,
-  },
+  container: {},
   blur: {
     position: 'absolute',
-    width: '100%',
-    height: '100%',
   },
 });

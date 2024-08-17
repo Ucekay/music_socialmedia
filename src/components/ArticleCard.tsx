@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Pressable,
   useColorScheme,
+  useWindowDimensions,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { Link, useSegments } from 'expo-router';
@@ -12,7 +13,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import RNColorThief from 'react-native-color-thief';
 
 import { useTheme } from '../contexts/ColorThemeContext';
-import { ArticleGraphic } from './ArticleGraphic';
+import { MeshGradient } from './MeshGradient';
 import ArticleCardImage from './ArticleCardImage';
 import ArticleTag from './ArticleTag';
 import ArticleCardSubhead from './ArticleCardSubhead';
@@ -102,16 +103,46 @@ const ArticleCardVisual = ({
   articleType,
   gradientColors,
 }: ArticleCardVisualProps) => {
+  const { width, height } = useWindowDimensions();
+
   //if (!gradientColors) gradientColors = palette.otto;
   if (articleType === 'review' || articleType === 'playlist') {
     return (
-      <ArticleGraphic
-        rows={3}
-        cols={3}
-        colors={gradientColors}
-        play={true}
-        artworkUrl={imageUrl}
-      />
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 12,
+          width: '100%',
+          padding: 12,
+          paddingBottom: 0,
+        }}
+      >
+        <View
+          style={{
+            alignSelf: 'flex-start',
+            borderRadius: 8,
+            borderCurve: 'continuous',
+            overflow: 'hidden',
+          }}
+        >
+          <Image source={imageUrl} style={{ width: 100, aspectRatio: 1 }} />
+        </View>
+        <View
+          style={{
+            borderRadius: 8,
+            borderCurve: 'continuous',
+            overflow: 'hidden',
+          }}
+        >
+          <MeshGradient
+            rows={2}
+            cols={3}
+            width={width - 64 - 100 - 12}
+            height={100}
+            colors={gradientColors}
+          />
+        </View>
+      </View>
     );
   } else if (articleType === 'liveReport' || articleType === 'general') {
     return <ArticleCardImage imageUrl={imageUrl} />;
@@ -124,7 +155,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 8,
-    borderRadius: 16,
+    borderRadius: 20,
     borderCurve: 'continuous',
 
     shadowColor: '#000',
