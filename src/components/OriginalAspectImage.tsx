@@ -9,7 +9,7 @@ interface Props {
   style?: any;
 }
 
-const ImageAspectKept = (props: Props): JSX.Element => {
+const OriginalAspectImage = (props: Props): JSX.Element => {
   const [width, setWidht] = useState(200);
   RNImage.getSize(props.uri, (originalWidth, originalHeight) => {
     const newWidth = Number((originalWidth * props.height) / originalHeight);
@@ -25,4 +25,4 @@ const ImageAspectKept = (props: Props): JSX.Element => {
   );
 };
 
-export default ImageAspectKept;
+export default OriginalAspectImage;

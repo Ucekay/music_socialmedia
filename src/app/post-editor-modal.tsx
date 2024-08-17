@@ -25,7 +25,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import Icon from 'react-native-vector-icons/AntDesign';
-import ImageAspectKept from '../components/ImageAspectKept';
+import ImageAspectKept from '../components/OriginalAspectImage';
 import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
