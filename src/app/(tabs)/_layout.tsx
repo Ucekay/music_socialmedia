@@ -150,6 +150,7 @@ export default function TabLayout() {
         backdropComponent={renderBackdrop}
         backgroundStyle={themedContentStyle}
         handleIndicatorStyle={{ backgroundColor: colors.border }}
+        maxDynamicContentSize={220 + insets.bottom}
       >
         <BottomSheetView style={styles.contentContainer}>
           <View style={[styles.content, { marginBottom: 16 + insets.bottom }]}>
@@ -191,13 +192,15 @@ const CreateContentList = ({ colors }: { colors: ColorScheme }) => {
   ];
 
   return (
-    <View style={styles.list}>
-      {createItems.map((item) => (
+    <View style={[styles.list, { borderColor: colors.border }]}>
+      {createItems.map((item, index) => (
         <CreateContentListItem
           key={item.id}
           icon={<item.icon width={28} height={28} color={colors.text} />}
           text={item.text}
           onPress={item.onPress}
+          showBorder={index % 2 === 1}
+          colors={colors}
         />
       ))}
     </View>
@@ -208,20 +211,28 @@ type ListItemProps = {
   icon: React.ReactNode;
   text: string;
   onPress: () => void;
+  showBorder?: boolean;
+  colors: ColorScheme;
 };
 
-const CreateContentListItem = ({ icon, text, onPress }: ListItemProps) => {
+const CreateContentListItem = ({
+  icon,
+  text,
+  onPress,
+  showBorder,
+  colors,
+}: ListItemProps) => {
   return (
     <Pressable
       onPress={onPress}
-      style={{
-        flexDirection: 'row',
-        width: '100%',
-        padding: 16,
-        gap: 16,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}
+      style={[
+        styles.listItemContainer,
+        {
+          borderColor: colors.border,
+          borderTopWidth: showBorder ? 0.5 : 0,
+          borderBottomWidth: showBorder ? 0.5 : 0,
+        },
+      ]}
     >
       <View>{icon}</View>
       <View style={{ width: 174.3 }}>
@@ -285,5 +296,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignContent: 'center',
+    alignSelf: 'flex-start',
+    borderRadius: 12,
+    borderCurve: 'continuous',
+    borderWidth: 1,
+  },
+  listItemContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    padding: 16,
+    gap: 16,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
