@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Image } from 'expo-image';
+import { BlurView } from 'expo-blur';
 import type { CubicBezierHandle } from '@shopify/react-native-skia';
 import {
   Skia,
@@ -26,7 +27,6 @@ import { createNoise2D } from './forMeshGradient/SimpleNoise';
 import { symmetric } from './forMeshGradient/Math';
 import { Cubic } from './forMeshGradient/Cubic';
 import { Curves } from './forMeshGradient/Curves';
-import { BlurView } from 'expo-blur';
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
@@ -83,7 +83,7 @@ const useRectToPatch = (
     ];
   }, [mesh]);
 
-interface ArticleThumbnailProps {
+interface ArticleGraphicProps {
   rows: number;
   cols: number;
   colors: string[];
@@ -106,7 +106,7 @@ export const ArticleGraphic = ({
   handles,
   play,
   artworkUrl,
-}: ArticleThumbnailProps) => {
+}: ArticleGraphicProps) => {
   const { width, height } = useWindowDimensions();
 
   const articleCardWidth = width - 40;

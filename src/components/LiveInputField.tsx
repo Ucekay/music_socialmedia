@@ -24,6 +24,7 @@ const LiveInputField = () => {
   const [manualInput, setManualInput] = useState(false);
 
   const colorScheme = useColorScheme();
+  const textColor = Colors[colorScheme ?? 'light'].text;
   const secondaryTextColor = Colors[colorScheme ?? 'light'].secondaryText;
   const liveNameInputBgColor =
     TagsColors.liveReport[colorScheme ?? 'light'].background;
@@ -57,13 +58,19 @@ const LiveInputField = () => {
   };
 
   return (
-    <Animated.View
-      entering={FadeIn}
-      exiting={FadeOut}
-      style={styles.searchFieldWrapper}
-    >
-      <Text style={styles.label}>ライブの詳細</Text>
-      <View style={styles.inputContainer}>
+    <View style={styles.searchFieldWrapper}>
+      <Animated.Text
+        entering={FadeIn}
+        exiting={FadeOut}
+        style={[styles.label, { color: textColor }]}
+      >
+        ライブの詳細
+      </Animated.Text>
+      <Animated.View
+        entering={FadeIn}
+        exiting={FadeOut}
+        style={styles.inputContainer}
+      >
         <View
           style={[
             styles.inputInner,
@@ -79,7 +86,7 @@ const LiveInputField = () => {
             style={[styles.inputText, { color: liveNameInputTextColor }]}
           />
         </View>
-      </View>
+      </Animated.View>
       {!manualInput && (
         <Animated.View
           entering={FadeIn}
@@ -126,11 +133,7 @@ const LiveInputField = () => {
           />
         </Animated.View>
       )}
-      <Text style={styles.label}>見出し画像</Text>
-      <View style={styles.inputContainer}>
-        <EditorImagePicker />
-      </View>
-    </Animated.View>
+    </View>
   );
 };
 

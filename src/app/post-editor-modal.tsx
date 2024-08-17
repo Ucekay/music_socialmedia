@@ -1,20 +1,20 @@
 // PostScreen.js
-import React, { useState, useRef, useEffect} from 'react';
-import { View,
-         TextInput, 
-         Button,
-         StyleSheet, 
-         Text, 
-         useColorScheme, 
-         ScrollView, 
-         Platform, 
-         Animated as Animated1, 
-         Pressable, 
-         FlatList, 
-         Modal,
-         ActivityIndicator,
-         GestureResponderEvent
-        } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  View,
+  TextInput,
+  Button,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  ScrollView,
+  Platform,
+  Animated as Animated1,
+  Pressable,
+  FlatList,
+  Modal,
+  ActivityIndicator,
+} from 'react-native';
 import userData from '../assets/userData';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -24,11 +24,11 @@ import Color from '@/src/constants/Colors';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import Icon from "react-native-vector-icons/AntDesign"
+import Icon from 'react-native-vector-icons/AntDesign';
 import ImageAspectKept from '../components/ImageAspectKept';
 import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
-import  Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { insertPost } from '../backend/components/DB_Access/post';
 import { GetImageData } from '../backend/components/DB_Access/Image';
 import { uploadImageToStorage } from '../backend/components/DB_Access/Image';
@@ -40,11 +40,10 @@ const PostEditorModal = () => {
   const [inputHeight, setInputHeight] = useState(40); // 初期の高さを設定
   const [postHeight, setPostHeight] = useState(60);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const colorScheme = useColorScheme();
   const navigation = useNavigation();
-  const animatedHeight = useRef(new Animated1.Value(0)).current; 
-
+  const animatedHeight = useRef(new Animated1.Value(0)).current;
   const [images, setImages] = useState<string[]>([]);
 
   const pickImage = async () => {
@@ -58,8 +57,8 @@ const PostEditorModal = () => {
 
     if (!result.canceled) {
       setLoading(true);
-      for (let i = 0; i < result.assets.length; i++) 
-      setImages(images => [...images, result.assets[i].uri])
+      for (let i = 0; i < result.assets.length; i++)
+        setImages((images) => [...images, result.assets[i].uri]);
       setLoading(false);
     } else {
       setLoading(false);
@@ -87,7 +86,7 @@ const PostEditorModal = () => {
 
       if (!result.canceled) {
         setLoading(true);
-        setImages(images => [...images, result.assets[0].uri])
+        setImages((images) => [...images, result.assets[0].uri]);
         setLoading(false);
       }
     } catch (error) {
@@ -103,7 +102,7 @@ const PostEditorModal = () => {
 
   const handleLayoutChange = (event: any) => {
     const { height } = event.nativeEvent.layout;
-    setPostHeight(height-60); // Viewの高さを状態に保存
+    setPostHeight(height - 60); // Viewの高さを状態に保存
 
     // 高さをアニメーションで変更
     Animated1.timing(animatedHeight, {
@@ -127,116 +126,132 @@ const PostEditorModal = () => {
     }).start();
   };
 
-  const handlePost = async() => {
-    try{
+  const handlePost = async () => {
+    try {
       const ImageUrls = await Promise.all(
         images.map((image) => uploadImage(image, 'PostImage'))
       );
-    if(text){
-    let data = {Body: text, ImageUrl:ImageUrls}
-    const result = await insertPost(data)
-    if (typeof result === 'boolean' && result) {
-      // 記事の挿入に成功した場合の処理
-      console.log('postが正常に挿入されました');
-    } else {
-      // 記事の挿入に失敗した場合の処理
-      console.error('postの挿入に失敗しました:', result);
-  }
+      if (text) {
+        let data = { Body: text, ImageUrl: ImageUrls };
+        const result = await insertPost(data);
+        if (typeof result === 'boolean' && result) {
+          // 記事の挿入に成功した場合の処理
+          console.log('postが正常に挿入されました');
+        } else {
+          // 記事の挿入に失敗した場合の処理
+          console.error('postの挿入に失敗しました:', result);
+        }
+      }
+    } catch (error) {
+      console.error('postの挿入中にエラーが発生しました:', error);
     }
-  }catch(error) {
-    console.error('postの挿入中にエラーが発生しました:', error);
   };
-};
-
-
 
   return (
-
     <BgView style={[styles.container]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
       >
-      <View style={styles.header}>
-        <Text style={[styles.headertitle, {color: textColor}]}>新規ポスト</Text>
-      </View>
-      <Modal animationType='fade' transparent={true} visible={loading}>
-        <View style={styles.dialog}>
-          <BlurView tint={'systemMaterial'} style={styles.dialogInner}>
-            <Text style={styles.text}>画像を読み込んでいます</Text>
-            <ActivityIndicator />
-          </BlurView>
+        <View style={styles.header}>
+          <Text style={[styles.headertitle, { color: textColor }]}>
+            新規ポスト
+          </Text>
         </View>
-      </Modal>
-      <View style={styles.editorHeader}>
-          <View style={{flexDirection: 'column'}}>
-            <Image source={userData[0].userAvatarUrl} style={styles.avatorimage} />
-            <Animated1.View 
-            style={[styles.line, {height: animatedHeight}]}
-            onLayout={handleLayoutChangeLine}/>
+        <Modal animationType='fade' transparent={true} visible={loading}>
+          <View style={styles.dialog}>
+            <BlurView tint={'systemMaterial'} style={styles.dialogInner}>
+              <Text style={styles.text}>画像を読み込んでいます</Text>
+              <ActivityIndicator />
+            </BlurView>
           </View>
-            <Animated1.View
-              style={[
-                { flexDirection: 'column' },
-                { flex: 1 },
-              ]}
-              onLayout={handleLayoutChange}
-            >
-              <View style={styles.headerLeft}>
-                <Text style={styles.text1}>{userData[0].user}</Text>
-              </View>
-                <TextInput
-                    style={[styles.input, { height: Math.max(inputHeight+10), color: textColor, borderBottomColor: secondaryTextColor}]}
-                    multiline
-                    placeholder="Postを新規追加"
-                    value={text}
-                    onChangeText={setText}
-                    onContentSizeChange={(event) => {
-                      setInputHeight(event.nativeEvent.contentSize.height + 10);
-                    }}
-                    scrollEnabled={false}
-                />
-              {images.length > 0 ? (
-              <Animated.View 
-              entering={FadeIn}
-              exiting={FadeOut}>
-              <FlatList
-              horizontal
-              data={images}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => (
-                <Animated.View 
-                entering={FadeIn}
-                exiting={FadeOut}>
-                    <ImageAspectKept style={styles.image} uri={item} height={200}>
-                      <Pressable
-                        style={styles.deleteButton}
-                        onPress={() => handleDeleteImage(index)}
-                      >
-                        <Icon name="delete" size={24} color="#fff" />
-                      </Pressable>
-                    </ImageAspectKept>
-                </Animated.View>
-              )}
+        </Modal>
+        <View style={styles.editorHeader}>
+          <View style={{ flexDirection: 'column' }}>
+            <Image
+              source={userData[0].userAvatarUrl}
+              style={styles.avatorimage}
             />
-            </Animated.View>) : (
-              null
-              )}
+            <Animated1.View
+              style={[styles.line, { height: animatedHeight }]}
+              onLayout={handleLayoutChangeLine}
+            />
+          </View>
+          <Animated1.View
+            style={[{ flexDirection: 'column' }, { flex: 1 }]}
+            onLayout={handleLayoutChange}
+          >
+            <View style={styles.headerLeft}>
+              <Text style={styles.text1}>{userData[0].user}</Text>
+            </View>
+            <TextInput
+              style={[
+                styles.input,
+                {
+                  height: Math.max(inputHeight + 10),
+                  color: textColor,
+                  borderBottomColor: secondaryTextColor,
+                },
+              ]}
+              multiline
+              placeholder='Postを新規追加'
+              value={text}
+              onChangeText={setText}
+              onContentSizeChange={(event) => {
+                setInputHeight(event.nativeEvent.contentSize.height + 10);
+              }}
+              scrollEnabled={false}
+            />
+            {images.length > 0 ? (
+              <Animated.View entering={FadeIn} exiting={FadeOut}>
+                <FlatList
+                  horizontal
+                  data={images}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item, index }) => (
+                    <Animated.View entering={FadeIn} exiting={FadeOut}>
+                      <ImageAspectKept
+                        style={styles.image}
+                        uri={item}
+                        height={200}
+                      >
+                        <Pressable
+                          style={styles.deleteButton}
+                          onPress={() => handleDeleteImage(index)}
+                        >
+                          <Icon name='delete' size={24} color='#fff' />
+                        </Pressable>
+                      </ImageAspectKept>
+                    </Animated.View>
+                  )}
+                />
+              </Animated.View>
+            ) : null}
             {images.length !== 4 ? (
-            <View style={{flexDirection: 'row', gap: 20}}>
-              <IconAntDesign name='paperclip' size={20} style={styles.Icon} onPress={pickImage}/>
-              <IconAntDesign name='camerao' size={20} style={styles.Icon} onPress={takePhoto}/>
-            </View>
-            ):(
-            <View style={{flexDirection: 'row', gap: 20}}>
-              <IconAntDesign name='paperclip' size={20} style={styles.Icon}/>
-              <IconAntDesign name='camerao' size={20} style={styles.Icon}/>
-            </View>
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <IconAntDesign
+                  name='paperclip'
+                  size={20}
+                  style={styles.Icon}
+                  onPress={pickImage}
+                />
+                <IconAntDesign
+                  name='camerao'
+                  size={20}
+                  style={styles.Icon}
+                  onPress={takePhoto}
+                />
+              </View>
+            ) : (
+              <View style={{ flexDirection: 'row', gap: 20 }}>
+                <IconAntDesign name='paperclip' size={20} style={styles.Icon} />
+                <IconAntDesign name='camerao' size={20} style={styles.Icon} />
+              </View>
             )}
-            </Animated1.View>
+          </Animated1.View>
         </View>
-        </ScrollView>
-        <BgView
+      </ScrollView>
+      <BgView
         style={[
           styles.bottomButtonWrapper,
           {
@@ -269,37 +284,36 @@ const PostEditorModal = () => {
       </BgView>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
-    
   );
 };
 
-export default PostEditorModal
+export default PostEditorModal;
 
 const styles = StyleSheet.create({
   container: {
     paddingTop: 20,
-    flex: 1
+    flex: 1,
   },
   header: {
-    alignItems:"center",
-    borderBottomWidth:1,
-    paddingBottom:20,
-    borderBottomColor: '#ddd'
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    paddingBottom: 20,
+    borderBottomColor: '#ddd',
   },
-  headertitle:{
-    fontSize:18,
+  headertitle: {
+    fontSize: 18,
     fontWeight: '700',
   },
-  line:{
-    borderLeftWidth:2,
-    borderLeftColor:"#ddd",
+  line: {
+    borderLeftWidth: 2,
+    borderLeftColor: '#ddd',
     marginLeft: 31,
     marginTop: 10,
   },
   editorHeader: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop:20,
+    marginTop: 20,
     flex: 1,
   },
   text1: {
@@ -311,7 +325,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 10,
     textAlignVertical: 'top',
-    marginRight: 20
+    marginRight: 20,
   },
   avatorimage: {
     width: 30,
@@ -322,24 +336,24 @@ const styles = StyleSheet.create({
     borderWidth: 0.3,
     borderColor: '#000000',
   },
-  Icon:{
-    color:'#808080',
-    marginBottom:20
+  Icon: {
+    color: '#808080',
+    marginBottom: 20,
   },
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'baseline',
     gap: 8,
   },
-  status:{
-    fontSize:14,
+  status: {
+    fontSize: 14,
     marginBottom: 6,
-    color: '#ddd'
+    color: '#ddd',
   },
   image: {
     marginBottom: 20,
     borderRadius: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   bottomButtonWrapper: {
     position: 'absolute',

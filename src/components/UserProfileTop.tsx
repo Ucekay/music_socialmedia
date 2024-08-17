@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { View, StyleSheet, useColorScheme } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
 
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
 import FollowButton from './FollowButton';
 import Text from './ThemedText';
-import { useLocalSearchParams } from 'expo-router';
 
 const UserProfileTop = () => {
   const colorScheme = useColorScheme();
@@ -68,13 +68,17 @@ const UserProfileTop = () => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#ffffff',
     padding: 16,
     gap: 16,
+    pointerEvents: 'box-none',
   },
   profile: {
+    backgroundColor: '#ffffff',
     gap: 12,
   },
   profileHeader: {
+    backgroundColor: '#ffffff',
     flexDirection: 'row',
     alignItems: 'center',
     gap: 24,
@@ -86,10 +90,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
   },
   socialStateContainer: {
+    backgroundColor: '#ffffff',
     flexDirection: 'row',
     gap: 16,
   },
   socialState: {
+    backgroundColor: '#ffffff',
     alignItems: 'center',
   },
   socialStateText: {

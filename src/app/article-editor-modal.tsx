@@ -12,6 +12,8 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
+  FadeIn,
+  FadeOut,
   SharedValue,
   useAnimatedStyle,
   useSharedValue,
@@ -29,13 +31,15 @@ import TrackInputField from '@/src/components/TrackInputField';
 import LiveInputField from '../components/LiveInputField';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { InsertArticle } from '../backend/components/Front_connection/Article_Insert';
-import { uploadImageToStorage, GetImageData } from '../backend/components/DB_Access/Image';
+import {
+  uploadImageToStorage,
+  GetImageData,
+} from '../backend/components/DB_Access/Image';
 
 const BOTTOM_TAB_HEIGHT = 96.7;
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
-  const headerHeight = useHeaderHeight();
   const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
 
@@ -66,22 +70,31 @@ const ArticleEditorModal = () => {
     }
   };
 
-  const handleArticleInsert = async() =>{
+  const handleArticleInsert = async () => {
     try {
-
       const type = selectedType || 'null';
       let Thumbnailurl: string | null = null;
       let PlaylistID: string | null = null;
       let ArtistName: string | null = null;
-      let uri: string | null = 
-      'src/assets/images/author1.jpeg';
+      let uri: string | null = 'src/assets/images/author1.jpeg';
       let file: File | null = null;
 
-      if(uri){file = await GetImageData(uri) || null;}
-      if(file){ Thumbnailurl = await uploadImageToStorage(file, 'Article-Thumbnail');}
+      if (uri) {
+        file = (await GetImageData(uri)) || null;
+      }
+      if (file) {
+        Thumbnailurl = await uploadImageToStorage(file, 'Article-Thumbnail');
+      }
 
       const result = await InsertArticle(
-        type, articleTypes, 'cat', 'neko', PlaylistID, ArtistName, Thumbnailurl); 
+        type,
+        articleTypes,
+        'cat',
+        'neko',
+        PlaylistID,
+        ArtistName,
+        Thumbnailurl
+      );
 
       if (typeof result === 'boolean' && result) {
         // 記事の挿入に成功した場合の処理
@@ -93,15 +106,17 @@ const ArticleEditorModal = () => {
     } catch (error) {
       console.error('記事の挿入中にエラーが発生しました:', error);
     }
-  }
+  };
 
   return (
-    <BgView style={[styles.container, { paddingTop: insets.top }]}>
+    <BgView style={{ flex: 1, paddingTop: insets.top }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
+        style={{
+          marginBottom: BOTTOM_TAB_HEIGHT - 16,
+        }}
       >
-        <View style={styles.container}>
+        <BgView style={styles.container}>
           <AnimatedTextInput
             label='Article Title'
             focusedLabelTop={16}
@@ -138,10 +153,46 @@ const ArticleEditorModal = () => {
                 })}
               </View>
             </View>
+            {selectedType === 'general' && (
+              <>
+                <Animated.Text
+                  entering={FadeIn}
+                  exiting={FadeOut}
+                  style={[styles.imagePickerText, { color: textColor }]}
+                >
+                  見出し画像
+                </Animated.Text>
+                <Animated.View
+                  entering={FadeIn}
+                  exiting={FadeOut}
+                  style={styles.imagePickerContainer}
+                >
+                  <EditorImagePicker />
+                </Animated.View>
+              </>
+            )}
             {selectedType === 'review' && <TrackInputField />}
-            {selectedType === 'liveReport' && <LiveInputField />}
+            {selectedType === 'liveReport' && (
+              <>
+                <LiveInputField />
+                <Animated.Text
+                  entering={FadeIn}
+                  exiting={FadeOut}
+                  style={[styles.imagePickerText, { color: textColor }]}
+                >
+                  見出し画像
+                </Animated.Text>
+                <Animated.View
+                  entering={FadeIn}
+                  exiting={FadeOut}
+                  style={styles.imagePickerContainer}
+                >
+                  <EditorImagePicker />
+                </Animated.View>
+              </>
+            )}
           </View>
-        </View>
+        </BgView>
       </ScrollView>
 
       <BgView
@@ -171,8 +222,11 @@ const ArticleEditorModal = () => {
           </View>
           <View style={styles.buttonContainer}>
             <FontAwesome6 name='check' size={16} color={textColor} />
-            <Button title='Publish' 
-            onPress={handleArticleInsert} color={textColor} />
+            <Button
+              title='Publish'
+              onPress={handleArticleInsert}
+              color={textColor}
+            />
           </View>
         </View>
       </BgView>
@@ -214,6 +268,15 @@ const styles = StyleSheet.create({
   articleTag: {
     width: '45%',
     marginVertical: 8,
+  },
+  imagePickerText: {
+    marginTop: 8,
+    fontSize: 17,
+  },
+  imagePickerContainer: {
+    width: '100%',
+    paddingHorizontal: 12,
+    gap: 12,
   },
   bottomButtonWrapper: {
     position: 'absolute',

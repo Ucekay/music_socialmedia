@@ -1,36 +1,51 @@
-import React from 'react';
-import { Text, View, StyleSheet, Pressable } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+  useColorScheme,
+} from 'react-native';
 import { Image } from 'expo-image';
 import { Link, useSegments } from 'expo-router';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import RNColorThief from 'react-native-color-thief';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 import { ArticleGraphic } from './ArticleGraphic';
 import ArticleCardImage from './ArticleCardImage';
 import ArticleTag from './ArticleTag';
 import ArticleCardSubhead from './ArticleCardSubhead';
-import type { articleDataType } from '../types';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import type { Palette, articleDataType } from '../types';
+import Colors from '../constants/Colors';
+import { increaseSaturation, rgb2Hex } from './ColorModifier';
 
 export default function ArticleCard({ article }: { article: articleDataType }) {
-  const {
-    articleID,
-    articleTitle,
-    songName,
-    artistName,
-    imageUrl,
-    userID,
-    user,
-    userAvatarUrl,
-    type,
-  } = article;
-
-  const segments = useSegments();
+  const { articleTitle, imageUrl, userID, user, userAvatarUrl, type } = article;
+  const [hexColors, setHexColors] = useState<string[]>([]);
+  useEffect(() => {
+    RNColorThief.getPalette(imageUrl, 17, 10, false)
+      .then((palette: Palette) => {
+        const hexColors: string[] = rgb2Hex(palette);
+        setHexColors(hexColors);
+      })
+      .catch((error: Error) => {
+        console.log(error);
+      });
+  }, []);
 
   const { colors } = useTheme();
 
   const themeBackgroundStyle = { backgroundColor: colors.secondaryBackground };
   const themeTextColor = { color: colors.text };
   const themeSecondlyTextColor = { color: colors.secondaryText };
+
+  let gradientColors: string[];
+  if (hexColors.length === 0) {
+    return null;
+  } else {
+    gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
+  }
 
   return (
     <Link href={`/articlesScreen/${article.articleID}`} asChild>
@@ -39,7 +54,11 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
           entering={FadeIn}
           style={[styles.container, themeBackgroundStyle]}
         >
-          <ArticleCardVisual imageUrl={imageUrl} articleType={type} />
+          <ArticleCardVisual
+            imageUrl={imageUrl}
+            articleType={type}
+            gradientColors={gradientColors}
+          />
           <View style={styles.summaryContainer}>
             <View>
               <Text
@@ -75,7 +94,7 @@ export default function ArticleCard({ article }: { article: articleDataType }) {
 interface ArticleCardVisualProps {
   imageUrl: string;
   articleType: string;
-  gradientColors?: string[];
+  gradientColors: string[];
 }
 
 const ArticleCardVisual = ({
@@ -83,7 +102,7 @@ const ArticleCardVisual = ({
   articleType,
   gradientColors,
 }: ArticleCardVisualProps) => {
-  if (!gradientColors) gradientColors = palette.otto;
+  //if (!gradientColors) gradientColors = palette.otto;
   if (articleType === 'review' || articleType === 'playlist') {
     return (
       <ArticleGraphic
