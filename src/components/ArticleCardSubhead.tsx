@@ -30,7 +30,7 @@ const ArticleCardSubhead = ({ article }: { article: articleDataType }) => {
           />
         );
       }
-    case 'liveReport':
+    case 'live report':
       if (artistName && eventName) {
         return (
           <LiveReportCardSubhead
@@ -267,11 +267,11 @@ export default ArticleCardSubhead;
 const styles = StyleSheet.create({
   boldText: {
     flex: 1,
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '500',
   },
   lightColorText: {
-    fontSize: 17,
+    fontSize: 16,
   },
   bodyText: {
     fontSize: 14,

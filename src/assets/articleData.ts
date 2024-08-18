@@ -24,7 +24,7 @@ const articleData = [
     userID: '@rhythmsecret002',
     user: 'BeatMaster',
     userAvatarUrl: 'https://api.dicebear.com/8.x/lorelei/png',
-    type: 'liveReport',
+    type: 'live report',
   },
   {
     articleID: 'art003',
@@ -80,7 +80,7 @@ const articleData = [
     user: 'ねこまるにゃんこ',
     userAvatarUrl:
       'https://api.dicebear.com/8.x/avataaars/png?seed=Felix&accessories=round&eyebrows=raisedExcited&skinColor=ffdbb4&top=bob',
-    type: 'liveReport',
+    type: 'live report',
   },
   {
     articleID: 'art007',
@@ -133,7 +133,7 @@ const articleData = [
       'https://static-spur.hpplus.jp/upload/image/manager/139/NyQ0FyA-1200.jpg',
     user: 'かわいい女王様',
     userAvatarUrl: 'https://api.dicebear.com/8.x/thumbs/png',
-    type: 'liveReport',
+    type: 'live report',
   },
 ];
 

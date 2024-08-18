@@ -1,7 +1,9 @@
 import React, { useMemo } from 'react';
 import { BlurView } from 'expo-blur';
-import type { CubicBezierHandle, Vector } from '@shopify/react-native-skia';
+import type { CubicBezierHandle } from '@shopify/react-native-skia';
 import {
+  Skia,
+  isEdge,
   Group,
   add,
   Canvas,
@@ -20,6 +22,8 @@ import { createNoise2D } from './forMeshGradient/SimpleNoise';
 import { symmetric } from './forMeshGradient/Math';
 import { Cubic } from './forMeshGradient/Cubic';
 import { Curves } from './forMeshGradient/Curves';
+import { GestureDetector } from 'react-native-gesture-handler';
+import { useHandles } from '../hooks/useHandles';
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],
@@ -73,20 +77,6 @@ const useRectToPatch = (
       },
     ];
   }, [mesh]);
-
-const EPSILON = 0.001; // 浮動小数点の誤差を許容する値
-
-const isEdge = (
-  pos: Vector,
-  x: number,
-  y: number,
-  width: number,
-  height: number
-) => {
-  'worklet';
-  return pos.x === 0 || pos.x === width || pos.y === 0 || pos.y === height;
-};
-
 interface MeshGradient {
   rows: number;
   cols: number;
@@ -99,7 +89,7 @@ interface MeshGradient {
 }
 
 const F = 10000;
-const A = 20;
+const A = 30;
 
 export const MeshGradient = ({
   rows,
@@ -111,14 +101,13 @@ export const MeshGradient = ({
   width,
   height,
 }: MeshGradient) => {
-  // window の各プロパティを個別の SharedValue として定義
-  const windowX = useSharedValue(0);
-  const windowY = useSharedValue(0);
-  const windowWidth = useSharedValue(width);
-  const windowHeight = useSharedValue(height);
+  const window = useMemo(
+    () => Skia.XYWHRect(0, 0, width, height),
+    [height, width]
+  );
 
   const clock = useClock();
-  const image = useImage(require('../assets/images/debug.png'));
+  const image = useImage(require('@/src/assets/images/debug.png'));
   const dx = width / cols;
   const dy = height / rows;
   const C = dx / 3;
@@ -128,10 +117,7 @@ export const MeshGradient = ({
       .fill(0)
       .map((_, row) =>
         new Array(cols + 1).fill(0).map((_, col) => {
-          const pos = vec(
-            col === cols ? width : col * dx,
-            row === rows ? height : row * dy
-          );
+          const pos = vec(col * dx, row * dy);
           return {
             pos,
             c1: add(pos, vec(C, 0)),
@@ -140,8 +126,7 @@ export const MeshGradient = ({
         })
       )
       .flat();
-  }, [rows, cols, dx, dy, C, width, height]);
-
+  }, [rows, cols, dx, dy, C]);
   const rects = new Array(rows)
     .fill(0)
     .map((_r, row) =>
@@ -160,17 +145,20 @@ export const MeshGradient = ({
     createNoise2D(),
     createNoise2D(),
   ]);
+
+  const edgePoints = useMemo(() => {
+    return defaultMesh.map((pt, index) => {
+      const row = Math.floor(index / (cols + 1));
+      const col = index % (cols + 1);
+      return row === 0 || row === rows || col === 0 || col === cols;
+    });
+  }, [defaultMesh, rows, cols]);
+
+  const sharedEdgePoints = useSharedValue(edgePoints);
+
   const meshNoise = useDerivedValue(() => {
     return defaultMesh.map((pt, i) => {
-      if (
-        isEdge(
-          pt.pos,
-          windowX.value,
-          windowY.value,
-          windowWidth.value,
-          windowHeight.value
-        )
-      ) {
+      if (sharedEdgePoints.value[i]) {
         return pt;
       }
       const [noisePos, noiseC1, noiseC2] = noises[i];
@@ -187,17 +175,17 @@ export const MeshGradient = ({
           vec(A * noiseC1(clock.value / F, 0), A * noiseC1(0, clock.value / F))
         ),
         c2: add(
-          pt.c2,
+          pt.c1,
           vec(A * noiseC2(clock.value / F, 0), A * noiseC2(0, clock.value / F))
         ),
       };
     });
-  }, [clock, defaultMesh, noises, windowX, windowY, windowWidth, windowHeight]);
+  }, [clock]);
 
   const mesh = meshNoise;
 
   return (
-    <View style={[styles.container, { width, height }]}>
+    <View>
       <Canvas style={{ width, height }}>
         <Group>
           <ImageShader image={image} tx='repeat' ty='repeat' />
@@ -216,16 +204,7 @@ export const MeshGradient = ({
           })}
         </Group>
         {defaultMesh.map(({ pos }, index) => {
-          if (
-            isEdge(
-              pos,
-              windowX.value,
-              windowY.value,
-              windowWidth.value,
-              windowHeight.value
-            ) ||
-            !handles
-          ) {
+          if (sharedEdgePoints.value[index] || !handles) {
             return null;
           }
           return (
@@ -238,7 +217,6 @@ export const MeshGradient = ({
           );
         })}
       </Canvas>
-      <BlurView intensity={25} style={[styles.blur, { width, height }]} />
     </View>
   );
 };
