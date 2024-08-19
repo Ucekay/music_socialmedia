@@ -12,13 +12,11 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import RNColorThief from 'react-native-color-thief';
 
 import { useTheme } from '../contexts/ColorThemeContext';
-import { MeshGradient } from './MeshGradient';
-import ArticleCardImage from './ArticleCardImage';
 import ArticleTag from './ArticleTag';
 import ArticleCardSubhead from './ArticleCardSubhead';
 import type { Palette, articleDataType as ArticleData } from '../types';
 import { increaseSaturation, rgb2Hex } from './ColorModifier';
-import { BlurView } from 'expo-blur';
+import { ArticleThumbnail } from './ArticleThumbnail';
 
 export default function ArticleCard({ article }: { article: ArticleData }) {
   const { articleTitle, imageUrl, userID, user, userAvatarUrl, type } = article;
@@ -60,6 +58,7 @@ export default function ArticleCard({ article }: { article: ArticleData }) {
                 imageUrl={imageUrl}
                 articleType={type}
                 gradientColors={gradientColors}
+                height={100}
               />
               <View style={styles.tagContainer}>
                 <ArticleTag type={type} />
@@ -100,47 +99,7 @@ export default function ArticleCard({ article }: { article: ArticleData }) {
   );
 }
 
-interface ArticleThumbnailProps {
-  imageUrl: string;
-  articleType: string;
-  gradientColors: string[];
-}
-
-const ArticleThumbnail = ({
-  imageUrl,
-  articleType,
-  gradientColors,
-}: ArticleThumbnailProps) => {
-  if (articleType === 'review' || articleType === 'playlist') {
-    return (
-      <View style={styles.thumbnailContainer}>
-        <View style={styles.overlayImageContainer}>
-          <View style={styles.overlayImageWrapper}>
-            <Image source={imageUrl} style={styles.overlayImage} />
-          </View>
-        </View>
-        <View style={styles.gradientContainer}>
-          <MeshGradient
-            rows={2}
-            cols={3}
-            width={(100 / 9) * 16}
-            height={100}
-            colors={gradientColors}
-          />
-          <BlurView tint='regular' style={StyleSheet.absoluteFill} />
-        </View>
-      </View>
-    );
-  } else if (articleType === 'live report' || articleType === 'general') {
-    return (
-      <View style={styles.thumbnailContainer}>
-        <ArticleCardImage imageUrl={imageUrl} height={100} />
-      </View>
-    );
-  }
-};
-
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   cardWrapper: {
     flex: 1,
   },

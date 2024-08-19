@@ -8,7 +8,7 @@ import articleData from '@/src/assets/articleData';
 import ArticleCard from '@/src/components/ArticleCard';
 import { articleDataType } from '@/src/types';
 
-const ITEM_SIZE = 308;
+const ITEM_SIZE = 255;
 
 const articlesScreen = () => {
   const headerHeight = useHeaderHeight();
