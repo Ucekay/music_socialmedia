@@ -6,7 +6,7 @@ import { FlashList } from '@shopify/flash-list';
 import BgView from '@/src/components/ThemedBgView';
 import articleData from '@/src/assets/articleData';
 import ArticleCard from '@/src/components/ArticleCard';
-import { articleDataType } from '@/src/types';
+import { ArticleData } from '@/src/types';
 
 const ITEM_SIZE = 255;
 
@@ -18,9 +18,7 @@ const articlesScreen = () => {
     <BgView style={styles.container}>
       <FlashList
         data={articleData}
-        renderItem={({ item }) => (
-          <ArticleCard article={item as articleDataType} />
-        )}
+        renderItem={({ item }) => <ArticleCard article={item as ArticleData} />}
         estimatedItemSize={ITEM_SIZE}
         contentContainerStyle={{
           paddingTop: headerHeight,

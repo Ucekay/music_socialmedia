@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
-import { View, Text, useWindowDimensions } from 'react-native';
-import RNColorThief from 'react-native-color-thief';
+import { View, useWindowDimensions } from 'react-native';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 import articleData from '@/src/assets/articleData';
 import SecondaryBgView from '@/src/components/ThemedSecondaryBgView';
 import { ArticleThumbnail } from '@/src/components/ArticleThumbnail';
 import { Palette } from '@/src/types';
-import { increaseSaturation, rgb2Hex } from '@/src/components/ColorModifier';
+import { increaseSaturation, rgb2Hex } from '@/src/util/color/ColorModifier';
+import { usePalette } from '@/src/hooks/usePallete';
+import Text from '@/src/components/ThemedText';
+import { Bold } from 'iconoir-react-native';
+import ArticleCardSubhead from '@/src/components/ArticleCardSubhead';
 
 const BgView = SecondaryBgView;
 
@@ -25,33 +28,27 @@ const ArticleDetailsScreen = () => {
     );
   }
 
-  const [hexColors, setHexColors] = useState<string[]>([]);
-  useEffect(() => {
-    RNColorThief.getPalette(article.imageUrl, 17, 10, false)
-      .then((palette: Palette) => {
-        const hexColors: string[] = rgb2Hex(palette);
-        setHexColors(hexColors);
-      })
-      .catch((error: Error) => {
-        console.log(error);
-      });
-  }, []);
-
-  let gradientColors: string[];
-  if (hexColors.length === 0) {
-    return null;
-  } else {
-    gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
-  }
+  const headerHeight = useHeaderHeight();
 
   return (
-    <BgView>
-      <ArticleThumbnail
-        imageUrl={article.imageUrl}
-        articleType={article.type}
-        gradientColors={gradientColors}
-        width={screenWidth - 32}
-      />
+    <BgView style={{ flex: 1, padding: 16, paddingTop: headerHeight + 16 }}>
+      <View style={{ height: ((screenWidth - 32) / 16) * 9 }}>
+        <ArticleThumbnail
+          imageUrl={article.imageUrl}
+          articleType={article.type}
+          width={screenWidth - 32}
+        />
+      </View>
+      <View style={{ marginTop: 32, gap: 12 }}>
+        <View>
+          <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
+            {article.articleTitle}
+          </Text>
+        </View>
+        <View>
+          <ArticleCardSubhead size='md' article={article} />
+        </View>
+      </View>
     </BgView>
   );
 };

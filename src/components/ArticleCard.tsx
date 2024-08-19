@@ -1,49 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Pressable,
-  useWindowDimensions,
-} from 'react-native';
+import { Text, View, StyleSheet, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import RNColorThief from 'react-native-color-thief';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 import ArticleTag from './ArticleTag';
 import ArticleCardSubhead from './ArticleCardSubhead';
-import type { Palette, articleDataType as ArticleData } from '../types';
-import { increaseSaturation, rgb2Hex } from './ColorModifier';
+import type { ArticleData } from '../types';
 import { ArticleThumbnail } from './ArticleThumbnail';
 
 export default function ArticleCard({ article }: { article: ArticleData }) {
   const { articleTitle, imageUrl, userID, user, userAvatarUrl, type } = article;
-  const [hexColors, setHexColors] = useState<string[]>([]);
-  useEffect(() => {
-    RNColorThief.getPalette(imageUrl, 17, 10, false)
-      .then((palette: Palette) => {
-        const hexColors: string[] = rgb2Hex(palette);
-        setHexColors(hexColors);
-      })
-      .catch((error: Error) => {
-        console.log(error);
-      });
-  }, []);
 
   const { colors } = useTheme();
 
   const themeBackgroundStyle = { backgroundColor: colors.secondaryBackground };
   const themeTextColor = { color: colors.text };
   const themeSecondaryTextColor = { color: colors.secondaryText };
-
-  let gradientColors: string[];
-  if (hexColors.length === 0) {
-    return null;
-  } else {
-    gradientColors = hexColors.map((color) => increaseSaturation(color, 2));
-  }
 
   return (
     <Link href={`/articlesScreen/${article.articleID}`} asChild>
@@ -57,7 +31,6 @@ export default function ArticleCard({ article }: { article: ArticleData }) {
               <ArticleThumbnail
                 imageUrl={imageUrl}
                 articleType={type}
-                gradientColors={gradientColors}
                 height={100}
               />
               <View style={styles.tagContainer}>
@@ -129,6 +102,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+    height: 100,
     gap: 12,
   },
   thumbnailContainer: {

@@ -1,14 +1,17 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { Image } from 'expo-image';
+import { BlurView } from 'expo-blur';
+
 import { MeshGradient } from './MeshGradient';
 import ArticleCardImage from './ArticleCardImage';
-import { BlurView } from 'expo-blur';
+import { usePalette } from '../hooks/usePallete';
+import { increaseSaturation } from '../util/color/ColorModifier';
 
 export interface ArticleThumbnailProps {
   imageUrl: string;
   articleType: string;
-  gradientColors: string[];
   height?: number;
   width?: number;
 }
@@ -16,15 +19,33 @@ export interface ArticleThumbnailProps {
 export const ArticleThumbnail = ({
   imageUrl,
   articleType,
-  gradientColors,
   height,
   width,
 }: ArticleThumbnailProps) => {
   if (articleType === 'review' || articleType === 'playlist') {
+    const hexColors = usePalette(imageUrl);
+
+    let gradientColors: string[] = hexColors.map((color) =>
+      increaseSaturation(color, 2)
+    );
+    if (gradientColors.length === 0) {
+      return null;
+    }
     return (
-      <View style={styles.thumbnailContainer}>
-        <View style={styles.overlayImageContainer}>
-          <View style={styles.overlayImageWrapper}>
+      <Animated.View entering={FadeIn} style={styles.thumbnailContainer}>
+        <View
+          style={[
+            styles.overlayImageContainer,
+            {
+              padding: height
+                ? height / 25
+                : width
+                ? ((width / 16) * 9) / 25
+                : 0,
+            },
+          ]}
+        >
+          <View style={[styles.overlayImageWrapper]}>
             <Image source={imageUrl} style={styles.overlayImage} />
           </View>
         </View>
@@ -38,7 +59,7 @@ export const ArticleThumbnail = ({
           />
           <BlurView tint='regular' style={StyleSheet.absoluteFill} />
         </View>
-      </View>
+      </Animated.View>
     );
   } else if (articleType === 'live report' || articleType === 'general') {
     return (
@@ -55,25 +76,24 @@ export const ArticleThumbnail = ({
 const styles = StyleSheet.create({
   thumbnailContainer: {
     aspectRatio: 16 / 9,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   overlayImageContainer: {
     position: 'absolute',
     height: '100%',
-    padding: 4,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+
     zIndex: 1,
   },
   overlayImageWrapper: {
     borderRadius: 8,
     borderCurve: 'continuous',
     overflow: 'hidden',
-    width: 92,
     aspectRatio: 1,
   },
   overlayImage: {
-    width: '100%',
     height: '100%',
+    aspectRatio: 1,
   },
   gradientContainer: {
     borderRadius: 8,

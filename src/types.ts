@@ -33,7 +33,7 @@ export type Palette = {
   b: number;
 }[];
 
-export type articleDataType = {
+export type ArticleData = {
   articleID: string;
   articleTitle: string;
   articleBody: string;

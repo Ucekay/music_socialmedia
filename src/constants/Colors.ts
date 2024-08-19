@@ -57,7 +57,7 @@ const Colors: {
 
 export default Colors;
 
-export const TagsColors = {
+export const TagColors = {
   general: {
     light: {
       background: chroma(palette.purple['200']).hex(),

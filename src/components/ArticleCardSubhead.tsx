@@ -1,289 +1,242 @@
+import React from 'react';
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
-import { SymbolView, SymbolViewProps, SFSymbol } from 'expo-symbols';
+import { SymbolView } from 'expo-symbols';
 
 import Colors from '../constants/Colors';
-import { TagsColors } from '../constants/Colors';
-import type { articleDataType } from '../types';
+import { TagColors } from '../constants/Colors';
+import type { ArticleData } from '../types';
 
-const ArticleCardSubhead = ({ article }: { article: articleDataType }) => {
+type SubheadSize = 'sm' | 'md';
+
+interface ArticleSubheadProps {
+  article: ArticleData;
+  size?: SubheadSize;
+}
+
+const ArticleSubhead = ({ article, size = 'sm' }: ArticleSubheadProps) => {
   const colorScheme = useColorScheme();
-  const themeTextColor =
+  const primaryTextColor =
+    colorScheme === 'dark' ? Colors.dark.text : Colors.light.text;
+  const secondaryTextColor =
     colorScheme === 'dark'
-      ? { color: Colors.dark.text }
-      : { color: Colors.light.text };
-  const themeSecondlyTextColor =
-    colorScheme === 'dark'
-      ? { color: Colors.dark.secondaryText }
-      : { color: Colors.light.secondaryText };
+      ? Colors.dark.secondaryText
+      : Colors.light.secondaryText;
   const { articleBody, songName, artistName, songCount, eventName, type } =
     article;
 
+  const styles = createStyles(size);
+
   switch (type) {
     case 'review':
-      if (songName && artistName) {
-        return (
-          <ReviewCardSubhead
-            songName={songName}
-            artistName={artistName}
-            themeTextColor={themeTextColor}
-            themeSecondlyTextColor={themeSecondlyTextColor}
-          />
-        );
-      }
+      return songName && artistName ? (
+        <ReviewSubhead
+          songTitle={songName}
+          artistName={artistName}
+          primaryTextColor={primaryTextColor}
+          secondaryTextColor={secondaryTextColor}
+          styles={styles}
+        />
+      ) : null;
     case 'live report':
-      if (artistName && eventName) {
-        return (
-          <LiveReportCardSubhead
-            artistName={artistName}
-            eventName={eventName}
-            themeTextColor={themeTextColor}
-            themeSecondlyTextColor={themeSecondlyTextColor}
-          />
-        );
-      }
+      return artistName && eventName ? (
+        <LiveReportSubhead
+          artistName={artistName}
+          eventName={eventName}
+          primaryTextColor={primaryTextColor}
+          secondaryTextColor={secondaryTextColor}
+          styles={styles}
+        />
+      ) : null;
     case 'general':
-      if (articleBody) {
-        return (
-          <GeneralCardSubhead
-            body={articleBody}
-            themeTextColor={themeSecondlyTextColor}
-          />
-        );
-      }
+      return articleBody ? (
+        <GeneralSubhead
+          body={articleBody}
+          textColor={secondaryTextColor}
+          styles={styles}
+        />
+      ) : null;
     case 'playlist':
-      if (artistName && songCount) {
-        return (
-          <PlaylistCardSubhead
-            artistName={artistName}
-            songCount={songCount}
-            themeTextColor={themeTextColor}
-            themeSecondlyTextColor={themeSecondlyTextColor}
-          />
-        );
-      }
+      return artistName && songCount ? (
+        <PlaylistSubhead
+          artistName={artistName}
+          songCount={songCount}
+          primaryTextColor={primaryTextColor}
+          secondaryTextColor={secondaryTextColor}
+          styles={styles}
+        />
+      ) : null;
     default:
-      return <></>;
+      return null;
   }
 };
 
-const DefaultCardSubhead = ({
-  boldText,
-  lightColorText,
-  themeTextColor,
-  themeSecondlyTextColor,
-}: {
-  boldText: string;
-  lightColorText: string;
-  themeTextColor: { color: string };
-  themeSecondlyTextColor: { color: string };
-}) => {
-  return (
-    <View>
-      <Text
-        style={[styles.boldText, themeTextColor]}
-        numberOfLines={1}
-        ellipsizeMode='tail'
-      >
-        {boldText}
-      </Text>
-
-      <Text
-        style={[styles.lightColorText, themeSecondlyTextColor]}
-        numberOfLines={1}
-        ellipsizeMode='tail'
-      >
-        {lightColorText}
-      </Text>
-    </View>
-  );
-};
-
-const GeneralCardSubhead = ({
-  body,
-  themeTextColor,
-}: {
-  body: string;
-  themeTextColor: { color: string };
-}) => {
-  return (
-    <Text
-      style={[styles.bodyText, themeTextColor]}
-      numberOfLines={2}
-      ellipsizeMode='tail'
-    >
-      {body}
-    </Text>
-  );
-};
-
-const ReviewCardSubhead = ({
-  songName,
+const ReviewSubhead = ({
+  songTitle,
   artistName,
-  themeTextColor,
-  themeSecondlyTextColor,
+  primaryTextColor,
+  secondaryTextColor,
+  styles,
 }: {
-  songName: string;
+  songTitle: string;
   artistName: string;
-  themeTextColor: { color: string };
-  themeSecondlyTextColor: { color: string };
-}) => {
-  const tintColor = TagsColors.review.tint;
+  primaryTextColor: string;
+  secondaryTextColor: string;
+  styles: ReturnType<typeof createStyles>;
+}) => (
+  <View>
+    <SubheadRow
+      iconName='waveform'
+      text={songTitle}
+      textColor={primaryTextColor}
+      tintColor={TagColors.review.tint}
+      styles={styles}
+    />
+    <SubheadRow
+      iconName='music.mic'
+      text={artistName}
+      textColor={secondaryTextColor}
+      tintColor={TagColors.review.tint}
+      styles={styles}
+    />
+  </View>
+);
 
-  return (
-    <View>
-      <View style={styles.subheadRow}>
-        <SymbolView
-          name='waveform'
-          size={16}
-          tintColor={tintColor}
-          style={styles.symbol}
-        />
-        <Text
-          style={[styles.boldText, themeTextColor]}
-          numberOfLines={1}
-          ellipsizeMode='tail'
-        >
-          {songName}
-        </Text>
-      </View>
-      <View style={styles.subheadRow}>
-        <SymbolView
-          name='music.mic'
-          size={16}
-          tintColor={tintColor}
-          style={styles.symbol}
-        />
-        <Text
-          style={[styles.lightColorText, themeSecondlyTextColor]}
-          numberOfLines={1}
-          ellipsizeMode='tail'
-        >
-          {artistName}
-        </Text>
-      </View>
-    </View>
-  );
-};
-const LiveReportCardSubhead = ({
+const LiveReportSubhead = ({
   artistName,
   eventName,
-  themeTextColor,
-  themeSecondlyTextColor,
+  primaryTextColor,
+  secondaryTextColor,
+  styles,
 }: {
   artistName: string;
   eventName: string;
-  themeTextColor: { color: string };
-  themeSecondlyTextColor: { color: string };
-}) => {
-  const tintColor = TagsColors.liveReport.tint;
+  primaryTextColor: string;
+  secondaryTextColor: string;
+  styles: ReturnType<typeof createStyles>;
+}) => (
+  <View>
+    <SubheadRow
+      iconName='music.mic'
+      text={artistName}
+      textColor={primaryTextColor}
+      tintColor={TagColors.liveReport.tint}
+      styles={styles}
+    />
+    <SubheadRow
+      iconName='mappin.and.ellipse'
+      text={eventName}
+      textColor={secondaryTextColor}
+      tintColor={TagColors.liveReport.tint}
+      styles={styles}
+    />
+  </View>
+);
 
-  return (
-    <View>
-      <View style={styles.subheadRow}>
-        <SymbolView
-          name='music.mic'
-          size={16}
-          tintColor={tintColor}
-          style={styles.symbol}
-        />
-        <Text
-          style={[styles.boldText, themeTextColor]}
-          numberOfLines={1}
-          ellipsizeMode='tail'
-        >
-          {artistName}
-        </Text>
-      </View>
-      <View style={styles.subheadRow}>
-        <SymbolView
-          name='mappin.and.ellipse'
-          size={16}
-          tintColor={tintColor}
-          style={styles.symbol}
-        />
-        <Text
-          style={[styles.lightColorText, themeSecondlyTextColor]}
-          numberOfLines={1}
-          ellipsizeMode='tail'
-        >
-          {eventName}
-        </Text>
-      </View>
-    </View>
-  );
-};
+const GeneralSubhead = ({
+  body,
+  textColor,
+  styles,
+}: {
+  body: string;
+  textColor: string;
+  styles: ReturnType<typeof createStyles>;
+}) => (
+  <Text
+    style={[styles.bodyText, { color: textColor }]}
+    numberOfLines={2}
+    ellipsizeMode='tail'
+  >
+    {body}
+  </Text>
+);
 
-const PlaylistCardSubhead = ({
+const PlaylistSubhead = ({
   artistName,
   songCount,
-  themeTextColor,
-  themeSecondlyTextColor,
+  primaryTextColor,
+  secondaryTextColor,
+  styles,
 }: {
   artistName: string;
   songCount: string;
-  themeTextColor: { color: string };
-  themeSecondlyTextColor: { color: string };
-}) => {
-  const tintColor = TagsColors.playlist.tint;
+  primaryTextColor: string;
+  secondaryTextColor: string;
+  styles: ReturnType<typeof createStyles>;
+}) => (
+  <View>
+    <SubheadRow
+      iconName='music.mic'
+      text={artistName}
+      textColor={primaryTextColor}
+      tintColor={TagColors.playlist.tint}
+      styles={styles}
+    />
+    <SubheadRow
+      iconName='list.bullet'
+      text={songCount}
+      textColor={secondaryTextColor}
+      tintColor={TagColors.playlist.tint}
+      styles={styles}
+    />
+  </View>
+);
 
-  return (
-    <View>
-      <View style={styles.subheadRow}>
-        <SymbolView
-          name='music.mic'
-          size={16}
-          tintColor={tintColor}
-          style={styles.symbol}
-        />
-        <Text
-          style={[styles.boldText, themeTextColor]}
-          numberOfLines={1}
-          ellipsizeMode='tail'
-        >
-          {artistName}
-        </Text>
-      </View>
-      <View style={styles.subheadRow}>
-        <SymbolView
-          name='list.bullet'
-          size={16}
-          tintColor={tintColor}
-          style={styles.symbol}
-        />
-        <Text
-          style={[styles.lightColorText, themeSecondlyTextColor]}
-          numberOfLines={1}
-          ellipsizeMode='tail'
-        >
-          {songCount}
-        </Text>
-      </View>
-    </View>
-  );
+const SubheadRow = ({
+  iconName,
+  text,
+  textColor,
+  tintColor,
+  styles,
+}: {
+  iconName: string;
+  text: string;
+  textColor: string;
+  tintColor: string;
+  styles: ReturnType<typeof createStyles>;
+}) => (
+  <View style={styles.row}>
+    <SymbolView
+      name={iconName}
+      size={styles.icon.fontSize}
+      tintColor={tintColor}
+      style={styles.icon}
+    />
+    <Text
+      style={[styles.text, { color: textColor }]}
+      numberOfLines={1}
+      ellipsizeMode='tail'
+    >
+      {text}
+    </Text>
+  </View>
+);
+
+const createStyles = (size: SubheadSize) => {
+  const fontSize = size === 'sm' ? 16 : 18;
+  const iconSize = size === 'sm' ? 16 : 18;
+  const lineHeight = size === 'sm' ? 20 : 24;
+
+  return StyleSheet.create({
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    text: {
+      flex: 1,
+      fontSize,
+      fontWeight: '500',
+    },
+    bodyText: {
+      fontSize: size === 'sm' ? 14 : 16,
+      lineHeight,
+      height: size === 'sm' ? 40 : 48,
+    },
+    icon: {
+      marginHorizontal: 6,
+      fontSize: iconSize,
+    },
+  });
 };
 
-export default ArticleCardSubhead;
-
-const styles = StyleSheet.create({
-  boldText: {
-    flex: 1,
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  lightColorText: {
-    fontSize: 16,
-  },
-  bodyText: {
-    fontSize: 14,
-    height: 40,
-    lineHeight: 20,
-  },
-  subheadRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  symbol: {
-    marginHorizontal: 6,
-  },
-});
+export default ArticleSubhead;
