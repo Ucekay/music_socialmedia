@@ -101,6 +101,14 @@ function RootLayoutNav() {
                   gestureEnabled: false,
                 }}
               />
+              <Stack.Screen
+                name='today-song-editor-modal'
+                options={{
+                  title: '今日の一曲を編集',
+                  presentation: 'modal',
+                  gestureEnabled: false,
+                }}
+              />
             </Stack>
           </ThemeProvider>
         </BottomSheetModalProvider>

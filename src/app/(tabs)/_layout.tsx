@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useRef } from 'react';
 import { EventArg } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { View, StyleSheet, Pressable } from 'react-native';
-import { Tabs } from 'expo-router';
+import { Href, Link, Tabs } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -165,6 +165,7 @@ type CreateItemData = {
   icon: React.FC<SvgProps>;
   text: string;
   onPress: () => void;
+  href: Href<string>;
 };
 
 const CreateContentList = ({ colors }: { colors: ColorScheme }) => {
@@ -174,18 +175,21 @@ const CreateContentList = ({ colors }: { colors: ColorScheme }) => {
       icon: MultiplePages,
       text: '新しいArticleを作成',
       onPress: () => {},
+      href: '/article-editor-modal',
     },
     {
       id: 'post',
       icon: GoogleDocs,
       text: '新しいPostを作成',
       onPress: () => {},
+      href: '/post-editor-modal',
     },
     {
       id: 'music',
       icon: Voice,
       text: '今日の一曲を作成',
       onPress: () => {},
+      href: '/today-song-editor-modal',
     },
   ];
 
@@ -199,6 +203,7 @@ const CreateContentList = ({ colors }: { colors: ColorScheme }) => {
           onPress={item.onPress}
           showBorder={index % 2 === 1}
           colors={colors}
+          href={item.href}
         />
       ))}
     </View>
@@ -211,6 +216,7 @@ type ListItemProps = {
   onPress: () => void;
   showBorder?: boolean;
   colors: ColorScheme;
+  href: Href<string>;
 };
 
 const CreateContentListItem = ({
@@ -219,27 +225,29 @@ const CreateContentListItem = ({
   onPress,
   showBorder,
   colors,
+  href,
 }: ListItemProps) => {
   return (
-    <Pressable
-      onPress={onPress}
-      style={[
-        styles.listItemContainer,
-        {
-          borderColor: colors.border,
-          borderTopWidth: showBorder ? 0.5 : 0,
-          borderBottomWidth: showBorder ? 0.5 : 0,
-        },
-      ]}
-    >
-      <View>{icon}</View>
-      <View style={{ width: 174.3 }}>
-        <Text style={{ fontSize: 20 }}>{text}</Text>
+    <Link href={href}>
+      <View
+        style={[
+          styles.listItemContainer,
+          {
+            borderColor: colors.border,
+            borderTopWidth: showBorder ? 0.5 : 0,
+            borderBottomWidth: showBorder ? 0.5 : 0,
+          },
+        ]}
+      >
+        <View>{icon}</View>
+        <View style={{ width: 174.3 }}>
+          <Text style={{ fontSize: 20 }}>{text}</Text>
+        </View>
+        <View>
+          <MultiplePages width={28} height={28} color={'transparent'} />
+        </View>
       </View>
-      <View>
-        <MultiplePages width={28} height={28} color={'transparent'} />
-      </View>
-    </Pressable>
+    </Link>
   );
 };
 

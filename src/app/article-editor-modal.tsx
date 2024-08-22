@@ -35,6 +35,7 @@ import {
   uploadImageToStorage,
   GetImageData,
 } from '../backend/components/DB_Access/Image';
+import EditorImagePicker from '../components/EditorImagePicker';
 
 const BOTTOM_TAB_HEIGHT = 96.7;
 
