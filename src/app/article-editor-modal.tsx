@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigation } from 'expo-router';
+import { Stack, useNavigation } from 'expo-router';
 import {
   View,
   Button,
@@ -8,6 +8,9 @@ import {
   useColorScheme,
   Pressable,
   ScrollView,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  useWindowDimensions,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -19,7 +22,17 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import PagerView from 'react-native-pager-view';
+import {
+  RichText,
+  Toolbar,
+  useEditorBridge,
+  CoreBridge,
+  TenTapStartKit,
+  useEditorContent,
+} from '@10play/tentap-editor';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 import ArticleTag from '@/src/components/ArticleTag';
 import Color from '@/src/constants/Colors';
@@ -29,20 +42,113 @@ import Text from '@/src/components/ThemedText';
 import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import TrackInputField from '@/src/components/TrackInputField';
 import LiveInputField from '../components/LiveInputField';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { InsertArticle } from '../backend/components/Front_connection/Article_Insert';
-import {
-  uploadImageToStorage,
-  GetImageData,
-} from '../backend/components/DB_Access/Image';
 import EditorImagePicker from '../components/EditorImagePicker';
-
-const BOTTOM_TAB_HEIGHT = 96.7;
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
-  const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
+  const { top } = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
+  const keyboardVerticalOffset = headerHeight + top;
+  const colorScheme = useColorScheme();
+  const { showActionSheetWithOptions } = useActionSheet();
+  const textColor = Color[colorScheme ?? 'light'].text;
+
+  const editorStyle = `
+  *{
+    color: ${textColor};
+    }`;
+
+  const editor = useEditorBridge({
+    autofocus: true,
+    avoidIosKeyboard: true,
+    bridgeExtensions: [...TenTapStartKit, CoreBridge.configureCSS(editorStyle)],
+  });
+
+  editor.injectCSS(editorStyle, '*');
+
+  const content = useEditorContent(editor, { type: 'html' });
+
+  const onClose = () => {
+    const title = '下書きに保存しまますか？';
+    const options = ['内容を削除する', '内容を保存する', '編集を続行する'];
+    const destructiveButtonIndex = 0;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        title,
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex?: number) => {
+        switch (selectedIndex) {
+          case 0:
+            navigation.goBack();
+            break;
+          case 1:
+            navigation.goBack();
+            break;
+          case 2:
+            break;
+        }
+      }
+    );
+  };
+
+  const onPublish = () => {
+    const options = ['公開する', '編集を続行する'];
+    const cancelButtonIndex = 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      (selectedIndex?: number) => {
+        if (selectedIndex === 0) {
+          console.log(content);
+        }
+      }
+    );
+  };
+
+  return (
+    <BgView style={{ flex: 1, paddingTop: insets.top }}>
+      <Stack.Screen
+        options={{
+          headerLeft: () => (
+            <Button title='閉じる' color={textColor} onPress={onClose} />
+          ),
+          headerRight: () => <Button title='公開する' onPress={onPublish} />,
+        }}
+      />
+      <PagerView style={{ flex: 1 }} initialPage={0}>
+        <View key={1}>
+          <ArticleConfigScreen />
+        </View>
+        <View key={2}>
+          <View style={styles.editorContainer}>
+            <RichText editor={editor} style={styles.editor} />
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              style={styles.keyboardAvoidingView}
+              keyboardVerticalOffset={keyboardVerticalOffset}
+            >
+              <Toolbar editor={editor} />
+            </KeyboardAvoidingView>
+          </View>
+        </View>
+      </PagerView>
+      {/* Use a light status bar on iOS to account for the black space above the modal */}
+      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+    </BgView>
+  );
+};
+
+const ArticleConfigScreen = () => {
+  const colorScheme = useColorScheme();
 
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
@@ -70,170 +176,86 @@ const ArticleEditorModal = () => {
       });
     }
   };
-
-  const handleArticleInsert = async () => {
-    try {
-      const type = selectedType || 'null';
-      let Thumbnailurl: string | null = null;
-      let PlaylistID: string | null = null;
-      let ArtistName: string | null = null;
-      let uri: string | null = 'src/assets/images/author1.jpeg';
-      let file: File | null = null;
-
-      if (uri) {
-        file = (await GetImageData(uri)) || null;
-      }
-      if (file) {
-        Thumbnailurl = await uploadImageToStorage(file, 'Article-Thumbnail');
-      }
-
-      const result = await InsertArticle(
-        type,
-        articleTypes,
-        'cat',
-        'neko',
-        PlaylistID,
-        ArtistName,
-        Thumbnailurl
-      );
-
-      if (typeof result === 'boolean' && result) {
-        // 記事の挿入に成功した場合の処理
-        console.log('記事が正常に挿入されました');
-      } else {
-        // 記事の挿入に失敗した場合の処理
-        console.error('記事の挿入に失敗しました:', result);
-      }
-    } catch (error) {
-      console.error('記事の挿入中にエラーが発生しました:', error);
-    }
-  };
-
   return (
-    <BgView style={{ flex: 1, paddingTop: insets.top }}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{
-          marginBottom: BOTTOM_TAB_HEIGHT - 16,
-        }}
-      >
-        <BgView style={styles.container}>
-          <AnimatedTextInput
-            label='Article Title'
-            focusedLabelTop={16}
-            focusedLabelSize={16}
-            multiline={true}
-            blurOnSubmit={true}
-            style={[
-              styles.title,
-              { color: textColor, borderBottomColor: secondaryTextColor },
-            ]}
-          />
-          <View style={styles.articleMetadataContainer}>
-            <View style={styles.articleTagWrapper}>
-              <Text style={styles.articlePickerText}>Articleの種類</Text>
-              <View style={styles.articleTagContainer}>
-                {articleTypes.map((type) => {
-                  const animatedStyle = useAnimatedStyle(() => {
-                    return {
-                      opacity: opacityValues[type].value,
-                    };
-                  });
-
-                  return (
-                    <Pressable
-                      key={type}
-                      onPress={() => handleTagPress(type)}
-                      style={styles.articleTag}
-                    >
-                      <Animated.View style={animatedStyle}>
-                        <ArticleTag type={type} size={17} />
-                      </Animated.View>
-                    </Pressable>
-                  );
-                })}
-              </View>
-            </View>
-            {selectedType === 'general' && (
-              <>
-                <Animated.Text
-                  entering={FadeIn}
-                  exiting={FadeOut}
-                  style={[styles.imagePickerText, { color: textColor }]}
-                >
-                  見出し画像
-                </Animated.Text>
-                <Animated.View
-                  entering={FadeIn}
-                  exiting={FadeOut}
-                  style={styles.imagePickerContainer}
-                >
-                  <EditorImagePicker />
-                </Animated.View>
-              </>
-            )}
-            {selectedType === 'review' && <TrackInputField />}
-            {selectedType === 'liveReport' && (
-              <>
-                <LiveInputField />
-                <Animated.Text
-                  entering={FadeIn}
-                  exiting={FadeOut}
-                  style={[styles.imagePickerText, { color: textColor }]}
-                >
-                  見出し画像
-                </Animated.Text>
-                <Animated.View
-                  entering={FadeIn}
-                  exiting={FadeOut}
-                  style={styles.imagePickerContainer}
-                >
-                  <EditorImagePicker />
-                </Animated.View>
-              </>
-            )}
-          </View>
-        </BgView>
-      </ScrollView>
-
-      <BgView
-        style={[
-          styles.bottomButtonWrapper,
-          {
-            paddingBottom: insets.bottom,
-            paddingTop: 12,
-          },
-        ]}
-      >
-        <View
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <BgView style={styles.container}>
+        <AnimatedTextInput
+          label='Article Title'
+          focusedLabelTop={16}
+          focusedLabelSize={16}
+          multiline={true}
+          blurOnSubmit={true}
           style={[
-            styles.bottomButtonContainer,
-            { borderTopColor: secondaryTextColor },
+            styles.title,
+            { color: textColor, borderBottomColor: secondaryTextColor },
           ]}
-        >
-          <View style={[styles.buttonContainer]}>
-            <FontAwesome6 name='xmark' size={16} color={textColor} />
-            <Button
-              title='Close'
-              onPress={() => {
-                navigation.goBack();
-              }}
-              color={textColor}
-            />
+        />
+        <View style={styles.articleMetadataContainer}>
+          <View style={styles.articleTagWrapper}>
+            <Text style={styles.articlePickerText}>Articleの種類</Text>
+            <View style={styles.articleTagContainer}>
+              {articleTypes.map((type) => {
+                const animatedStyle = useAnimatedStyle(() => {
+                  return {
+                    opacity: opacityValues[type].value,
+                  };
+                });
+
+                return (
+                  <Pressable
+                    key={type}
+                    onPress={() => handleTagPress(type)}
+                    style={styles.articleTag}
+                  >
+                    <Animated.View style={animatedStyle}>
+                      <ArticleTag type={type} size={17} />
+                    </Animated.View>
+                  </Pressable>
+                );
+              })}
+            </View>
           </View>
-          <View style={styles.buttonContainer}>
-            <FontAwesome6 name='check' size={16} color={textColor} />
-            <Button
-              title='Publish'
-              onPress={handleArticleInsert}
-              color={textColor}
-            />
-          </View>
+          {selectedType === 'general' && (
+            <>
+              <Animated.Text
+                entering={FadeIn}
+                exiting={FadeOut}
+                style={[styles.imagePickerText, { color: textColor }]}
+              >
+                見出し画像
+              </Animated.Text>
+              <Animated.View
+                entering={FadeIn}
+                exiting={FadeOut}
+                style={styles.imagePickerContainer}
+              >
+                <EditorImagePicker />
+              </Animated.View>
+            </>
+          )}
+          {selectedType === 'review' && <TrackInputField />}
+          {selectedType === 'liveReport' && (
+            <>
+              <LiveInputField />
+              <Animated.Text
+                entering={FadeIn}
+                exiting={FadeOut}
+                style={[styles.imagePickerText, { color: textColor }]}
+              >
+                見出し画像
+              </Animated.Text>
+              <Animated.View
+                entering={FadeIn}
+                exiting={FadeOut}
+                style={styles.imagePickerContainer}
+              >
+                <EditorImagePicker />
+              </Animated.View>
+            </>
+          )}
         </View>
       </BgView>
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-    </BgView>
+    </ScrollView>
   );
 };
 
@@ -299,5 +321,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     paddingHorizontal: 16,
+  },
+  editorContainer: {
+    flex: 1,
+  },
+  editor: {
+    marginHorizontal: 16,
+    backgroundColor: 'transparent',
+  },
+  keyboardAvoidingView: {
+    position: 'absolute',
+    width: '100%',
+    bottom: 0,
   },
 });
