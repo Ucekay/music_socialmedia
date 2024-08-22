@@ -10,7 +10,6 @@ import PostCard from '@/src/components/PostCard';
 import ArticleCard from '@/src/components/ArticleCard';
 import { articleDataType } from '@/src/types';
 import postData from '@/src/assets/postData';
-import userArticleData from '@/src/assets/userArtickeData';
 
 const TEXT_HEIGHT = 65.7;
 const HEADER_HEIGHT = 199;

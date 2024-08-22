@@ -7,7 +7,8 @@ import {
   Dimensions,
   Image as RNImage,
   Modal,
-  GestureResponderEvent
+  GestureResponderEvent,
+  useColorScheme
 } from 'react-native';
 import { useFocusEffect, useLocalSearchParams, Link } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -21,6 +22,7 @@ import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 import ShareIcon from '@/src/components/Icon/ShareIcon';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { Message } from 'iconoir-react-native';
+import BgView from '@/src/components/ThemedBgView';
 
 const screen = Dimensions.get('screen');
 
@@ -32,6 +34,17 @@ const PostDetailScreen = (): JSX.Element => {
   const [initialIndex, setInitialIndex] = useState(0);
   const { setActionVisible } = useTabAction();
   const { setProfileDismissed } = useProfileScreen();
+  const colorScheme = useColorScheme();
+
+  const textColor = 
+  colorScheme === 'light'
+  ? '#000000'
+  : '#ffffff'
+
+  const textColor2 =
+  colorScheme === 'light'
+  ? 'rgba(67, 80, 96, 1)'
+  : "#d0d0d0"
 
   let ImageUrl: string[] = [];
 
@@ -71,7 +84,7 @@ const PostDetailScreen = (): JSX.Element => {
     return <Text>Post not found.</Text>;
   }
   return (
-    <View style={styles.container}>
+    <BgView style={styles.container}>
       <Link href={{
         pathname: '/(tabs)/home/(profile)/[userID]',
         params: {
@@ -84,14 +97,14 @@ const PostDetailScreen = (): JSX.Element => {
               style={styles.userAvatar}
               source={post.userAvatarUrl} />
             <View>
-              <Text style={styles.text1}>{post.user}</Text>
-              <Text style={styles.text2}>{post.userID}</Text>
+              <Text style={[styles.text1, {color: textColor}]}>{post.user}</Text>
+              <Text style={[styles.text2, {color: textColor2}]}>{post.userID}</Text>
             </View>
           </View>
         </View>
       </Link>
       <Text
-        style={[styles.text1, { marginBottom: 16 }]}
+        style={[styles.text1, { marginBottom: 16, color: textColor }]}
       >
         {post.postContent}
       </Text>
@@ -168,13 +181,13 @@ const PostDetailScreen = (): JSX.Element => {
         </View>
       )}
       <View style={styles.infoContainer}>
-        <Text style={styles.text3}>{post.createAt}</Text>
+        <Text style={[styles.text3, {color: textColor2}]}>{post.createAt}</Text>
       </View>
       <View style={styles.infoContainer}>
-        <Text style={styles.text3}>{post.view}件のいいね</Text>
+        <Text style={[styles.text3, {color: textColor2}]}>{post.view}件のいいね</Text>
       </View>
       <View style={styles.iconContainer}>
-        <HeartIcon size={20} />
+        <HeartIcon size={20} color={textColor}/>
         <Link href={{
           pathname: '/reply-editor-modal',
           params: {
@@ -189,12 +202,12 @@ const PostDetailScreen = (): JSX.Element => {
           },
         }}
           asChild >
-          <Message width={20} height={20} color={'#000000'} />
+          <Message width={20} height={20} color={textColor} />
         </Link>
-        <ShareIcon size={20} />
+        <ShareIcon size={20} color={textColor}/>
       </View>
       <TabActionMenu />
-    </View>
+    </BgView>
   );
 };
 
@@ -203,7 +216,6 @@ export default PostDetailScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
     paddingHorizontal: 16
   },
   userContainer: {
@@ -220,12 +232,10 @@ const styles = StyleSheet.create({
   text2: {
     fontSize: 12,
     lineHeight: 12,
-    color: 'rgba(67, 80, 96, 1)',
   },
   text3: {
     fontSize: 14,
-    lineHeight: 18,
-    color: 'rgba(67, 80, 96, 1)',
+    lineHeight: 18
   },
   userAvatar: {
     height: 32,

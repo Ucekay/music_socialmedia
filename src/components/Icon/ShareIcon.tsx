@@ -23,7 +23,7 @@ const ShareIcon = (props: any): JSX.Element => {
         }
       };
     return (
-      <ShareIos width={props.size} height={props.size} onPress={onShare} style={props.style} color={'#000000'}/>
+      <ShareIos width={props.size} height={props.size} onPress={onShare} style={props.style} color={props.color || '#000000'}/>
     );
 };
 
