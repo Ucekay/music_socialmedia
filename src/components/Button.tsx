@@ -18,6 +18,7 @@ interface IconProps {
   name: string;
   size: number;
   color: string;
+  fill?: string;
 }
 
 interface ButtonProps {
@@ -35,6 +36,7 @@ interface ButtonProps {
   style?: ViewStyle;
   textStyle?: TextStyle;
   renderIcon?: (props: IconProps) => React.ReactNode;
+  iconFill?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -52,6 +54,7 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   textStyle,
   renderIcon,
+  iconFill,
 }) => {
   const { colors } = useTheme();
 
@@ -111,7 +114,23 @@ export const Button: React.FC<ButtonProps> = ({
 
   const renderIconElement = () => {
     if (typeof icon === 'string' && renderIcon) {
-      return renderIcon({ name: icon, size: iconSize, color: iconColor });
+      return (
+        <View
+          style={{
+            width: iconSize,
+            height: iconSize,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          {renderIcon({
+            name: icon,
+            size: iconSize,
+            color: iconColor,
+            fill: iconFill,
+          })}
+        </View>
+      );
     } else if (React.isValidElement(icon)) {
       return icon;
     }
@@ -126,7 +145,9 @@ export const Button: React.FC<ButtonProps> = ({
     >
       <View style={styles.contentContainer}>
         {icon && iconPosition === 'left' && renderIconElement()}
-        <Text style={textStyles}>{text}</Text>
+        <View style={styles.textContainer}>
+          <Text style={textStyles}>{text}</Text>
+        </View>
         {icon && iconPosition === 'right' && renderIconElement()}
       </View>
     </Pressable>
@@ -139,6 +160,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
+    gap: 8,
   },
   small: {
     paddingHorizontal: 12,
@@ -178,5 +200,10 @@ const styles = StyleSheet.create({
   },
   largeText: {
     fontSize: 18,
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

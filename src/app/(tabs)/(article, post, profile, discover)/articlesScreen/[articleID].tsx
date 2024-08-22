@@ -90,60 +90,31 @@ const ArticleDetailsScreen = () => {
                 gap: 8,
               }}
             >
-              <Button
-                onPress={() => console.log('Button pressed')}
-                text='曲を再生'
-                icon='Play'
-                renderIcon={({ name, size, color }) => {
-                  const IconComponent = IconoirIcons[name];
-                  return (
-                    <IconComponent width={size} height={size} color={color} />
-                  );
-                }}
-                variant='solid'
-                size='medium'
-              />
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'transparent',
-                  borderRadius: 100,
-                  borderWidth: 1,
-                  borderColor: colors.border,
-                  paddingHorizontal: 16,
-                  paddingVertical: 8,
-                  gap: 8,
-                }}
-              >
-                <View
-                  style={{
-                    width: 24,
-                    height: 24,
-                    justifyContent: 'center',
-                    alignItems: 'center',
+              <View style={{ flex: 1 }}>
+                <Button
+                  onPress={() => console.log('Button pressed')}
+                  text='曲を再生'
+                  icon='Play'
+                  renderIcon={({ name, size, color }) => {
+                    const IconComponent = IconoirIcons[name];
+                    return (
+                      <IconComponent
+                        width={size}
+                        height={size}
+                        color={color}
+                        fill={color}
+                      />
+                    );
                   }}
-                >
-                  <HeartIcon width={16} height={16} />
-                </View>
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: '500',
-                      color: colors.secondaryText,
-                    }}
-                  >
-                    いいね
-                  </Text>
-                </View>
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Button
+                  onPress={() => console.log('Button pressed')}
+                  text='いいね'
+                  icon={<HeartIcon width={16} height={16} />}
+                  variant='outline'
+                />
               </View>
             </View>
           </View>
