@@ -26,6 +26,7 @@ export default function ArticleStack() {
           ),
         }}
       />
+<<<<<<<< HEAD:src/app/(tabs)/profile/_layout.tsx
       <Stack.Screen
         name='(profile-editor)'
         options={{
@@ -35,6 +36,8 @@ export default function ArticleStack() {
           gestureEnabled: false,
         }}
       />
+========
+>>>>>>>> 3f24f6078283677cde970c666613f0bceed6a11d:src/app/(tabs)/(post)/_layout.tsx
     </Stack>
   );
 }
