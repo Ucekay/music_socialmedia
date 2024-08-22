@@ -10,9 +10,9 @@ import {
 import { Image } from 'expo-image';
 import { type PostDataType } from '../types';
 import { Link } from 'expo-router';
-import HeartIcon from './Icon/HeartIcon';
-import IconAntDesign from './Icon/AntDesign';
-import ShareIcon from './Icon/ShareIcon';
+import HeartIcon from './Icons/HeartIcon';
+import IconAntDesign from './Icons/AntDesign';
+import ShareIcon from './Icons/ShareIcon';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { Message } from 'iconoir-react-native';
 

@@ -86,10 +86,17 @@ export type ColorScheme = {
   tabIconSelected: string;
   followButtonBg: string;
   followButtonText: string;
-  menuBorder: string;
   placeholder: string;
   appleMusicText: string;
   appleMusicBg: string;
   cancelBg: string;
   cancelText: string;
+  buttonSolid: string;
+  buttonGhost: string;
+  buttonOutline: string;
+  buttonOutlineBorder: string;
+  buttonText: string;
+  buttonGhostText: string;
+  buttonDisabled: string;
+  buttonDisabledText: string;
 };

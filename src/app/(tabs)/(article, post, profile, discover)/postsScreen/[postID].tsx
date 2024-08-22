@@ -13,8 +13,8 @@ import PostImages from '@/src/components/PostImages';
 import BgView from '@/src/components/ThemedBgView';
 import Text from '@/src/components/ThemedText';
 import { formatCreatedAt } from '@/src/util/date/formatCreatedAt';
-import HeartIcon from '@/src/components/Icon/HeartIcon';
-import ShareIcon from '@/src/components/Icon/ShareIcon';
+import HeartIcon from '@/src/components/Icons/HeartIcon';
+import ShareIcon from '@/src/components/Icons/ShareIcon';
 
 const PostDetailScreen = () => {
   const { colors } = useTheme();

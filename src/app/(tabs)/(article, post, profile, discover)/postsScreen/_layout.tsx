@@ -2,14 +2,11 @@ import { StyleSheet, useColorScheme } from 'react-native';
 import { Stack } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import React from 'react';
-import Colors from '@/src/constants/Colors';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 export default function PostStack() {
-  const colorScheme = useColorScheme();
-  const themeContainerStyle =
-    colorScheme === 'dark'
-      ? { backgroundColor: Colors['dark'].headerBackground }
-      : { backgroundColor: Colors['light'].headerBackground };
+  const { colors } = useTheme();
+  const themeContainerStyle = { backgroundColor: colors.headerBackground };
   return (
     <Stack>
       <Stack.Screen

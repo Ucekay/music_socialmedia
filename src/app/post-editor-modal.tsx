@@ -19,7 +19,7 @@ import userData from '../assets/userData';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BgView from '../components/ThemedBgView';
-import IconAntDesign from '../components/Icon/AntDesign';
+import IconAntDesign from '../components/Icons/AntDesign';
 import Color from '@/src/constants/Colors';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useNavigation } from 'expo-router';

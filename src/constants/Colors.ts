@@ -2,8 +2,8 @@ import palette from '@evilmartians/harmony/dist/base';
 import chroma from 'chroma-js';
 import type { ColorScheme } from '@/src/types';
 
-const tintColorLight = '#2f95dc';
-const tintColorDark = '#fff';
+const tintColorLight = chroma(palette.sky['500']).hex();
+const tintColorDark = chroma(palette.sky['500']).hex();
 const tabBarGradientLight = ['rgba(256,256,256,0)', 'rgba(256,256,256,1)'];
 const tabBarGradientDark = ['rgba(0,0,0,0)', 'rgba(0,0,0,1)'];
 const headerLight = 'rgba(250, 251, 254, 0.7)';
@@ -14,24 +14,31 @@ const Colors: {
   dark: ColorScheme;
 } = {
   light: {
-    text: '#000',
-    secondaryText: chroma(palette.zinc['800']).hex(),
+    text: chroma(palette.zinc['900']).hex(),
+    secondaryText: chroma(palette.zinc['600']).hex(),
     background: '#fff',
     secondaryBackground: chroma(palette.zinc['100']).hex(),
     tabBarGradient: tabBarGradientLight,
     headerBackground: headerLight,
     tint: tintColorLight,
     border: chroma(palette.zinc['300']).hex(),
-    tabIconDefault: '#ccc',
+    tabIconDefault: chroma(palette.zinc['400']).hex(),
     tabIconSelected: tintColorLight,
-    followButtonBg: chroma(palette.zinc['900']).hex(),
-    followButtonText: 'white',
-    menuBorder: chroma(palette.slate['100']).hex(),
+    followButtonBg: chroma(palette.zinc['800']).hex(),
+    followButtonText: chroma(palette.zinc['100']).hex(),
     placeholder: chroma(palette.zinc['400']).hex(),
     appleMusicText: chroma(palette.rose['700']).hex(),
-    appleMusicBg: chroma(palette.rose['200']).hex(),
-    warnBg: chroma(palette.red['200']).hex(),
-    warnText: chroma(palette.red['700']).hex(),
+    appleMusicBg: chroma(palette.rose['100']).hex(),
+    cancelBg: chroma(palette.red['100']).hex(),
+    cancelText: chroma(palette.red['700']).hex(),
+    buttonSolid: palette.zinc['900'],
+    buttonGhost: 'transparent',
+    buttonOutline: 'transparent',
+    buttonOutlineBorder: palette.zinc['900'],
+    buttonText: palette.zinc['100'],
+    buttonGhostText: palette.zinc['900'],
+    buttonDisabled: palette.zinc['300'],
+    buttonDisabledText: palette.zinc['500'],
   },
   dark: {
     text: '#fff',
@@ -46,12 +53,19 @@ const Colors: {
     tabIconSelected: tintColorDark,
     followButtonBg: chroma(palette.zinc['100']).hex(),
     followButtonText: 'black',
-    menuBorder: chroma(palette.zinc['700']).hex(),
     placeholder: chroma(palette.zinc['600']).hex(),
     appleMusicText: chroma(palette.rose['300']).hex(),
     appleMusicBg: chroma(palette.rose['800']).hex(),
-    warnBg: chroma(palette.red['800']).hex(),
-    warnText: chroma(palette.red['300']).hex(),
+    cancelBg: chroma(palette.red['800']).hex(),
+    cancelText: chroma(palette.red['300']).hex(),
+    buttonSolid: palette.zinc['100'],
+    buttonGhost: 'transparent',
+    buttonOutline: 'transparent',
+    buttonOutlineBorder: palette.zinc['100'],
+    buttonText: palette.zinc['900'],
+    buttonGhostText: palette.zinc['100'],
+    buttonDisabled: palette.zinc['700'],
+    buttonDisabledText: palette.zinc['500'],
   },
 };
 

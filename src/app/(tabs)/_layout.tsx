@@ -5,7 +5,6 @@ import { View, StyleSheet, Pressable } from 'react-native';
 import { Tabs } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   BottomSheetBackdrop,
@@ -18,7 +17,6 @@ import { SvgProps } from 'react-native-svg';
 import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 
 import Text from '@/src/components/ThemedText';
-import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 import type { ColorScheme } from '@/src/types';
 
@@ -242,25 +240,6 @@ const CreateContentListItem = ({
         <MultiplePages width={28} height={28} color={'transparent'} />
       </View>
     </Pressable>
-  );
-};
-
-const TabBarActionButton = (props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) => {
-  const { actionVisible, setActionVisible } = useTabAction();
-
-  const handleActionPress = () => {
-    setActionVisible(!actionVisible);
-  };
-  return (
-    <FontAwesome
-      onPress={handleActionPress}
-      size={28}
-      style={{ marginBottom: -3 }}
-      {...props}
-    />
   );
 };
 

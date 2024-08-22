@@ -6,15 +6,10 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import UserProfileTop from '@/src/components/UserProfileTop';
 import userArticleData from '@/src/assets/userArticleData';
 import ArticleCard from '@/src/components/ArticleCard';
-import { articleDataType } from '@/src/types';
 import { useLocalSearchParams, Stack, useFocusEffect } from 'expo-router';
-import userData from '@/src/assets/userData';
-import TabActionMenu from '@/src/components/TabActionMenu';
-import { useTabAction } from '@/src/contexts/ActionButtonContext';
-import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
-import BgView from '@/src/components/ThemedBgView';
 import { useHeaderHeight } from '@react-navigation/elements';
 import UserProfileTopOfLoginUser from '@/src/components/UserProfileTopOfLoginUser';
+import { ArticleData } from '@/src/types';
 
 const TEXT_HEIGHT = 65.7;
 const HEADER_HEIGHT = 199;
@@ -84,7 +79,7 @@ const Profile = () => {
           <Tabs.FlashList
             data={userArticleData}
             renderItem={({ item }) => (
-              <ArticleCard article={item as articleDataType} />
+              <ArticleCard article={item as ArticleData} />
             )}
             estimatedItemSize={itemSize}
             contentContainerStyle={{

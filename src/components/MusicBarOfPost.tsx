@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { type PostDataType } from '../types';
-import IconA from './Icon/AntDesign';
+import IconA from './Icons/AntDesign';
 
 const MusicBarOfPost = (props: PostDataType): JSX.Element => {
   return (

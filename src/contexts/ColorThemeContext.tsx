@@ -1,13 +1,13 @@
 import React, { createContext, useContext } from 'react';
 import { useColorScheme, ColorSchemeName } from 'react-native';
-import Colors, { TagsColors } from '@/src/constants/Colors';
+import Colors, { TagColors } from '@/src/constants/Colors';
 
 type Theme = 'light' | 'dark';
 
 interface ThemeContextType {
   theme: Theme;
   colors: typeof Colors.light | typeof Colors.dark;
-  tagsColors: typeof TagsColors;
+  tagsColors: typeof TagColors;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -22,7 +22,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   const value = {
     theme,
     colors,
-    tagsColors: TagsColors,
+    tagsColors: TagColors,
   };
 
   return (
