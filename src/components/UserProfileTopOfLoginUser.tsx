@@ -100,26 +100,28 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
                 <Text>{userInfo.userID}</Text>
               </View>
               <View style={styles.socialStateContainer}>
-                <Link href={{pathname: '/(tabs)/profile/(userList)/[userList]', params: {initialTab: 'follower'}}}>
-                <View style={styles.socialState}>
+                <Link href={{pathname: '/(tabs)/profile/(userList)/[userList]', params: {initialTab: 'follower'}}} asChild>
+                  <Pressable style={styles.socialState}>
                   <Text style={[styles.socialStateText, themeTextColor]}>
                     {userInfo.followers}
                   </Text>
                   <Text style={[styles.socialStateLabel,  {color: labelColor}]}>
                     Followers
                   </Text>
-                </View>
+                  </Pressable>
                 </Link>
-                <Text>|</Text>
-                <Link href={{pathname: '/(tabs)/profile/(userList)/[userList]', params: {initialTab: 'following'}}}>
-                <View style={styles.socialState}>
+                <View style={{alignItems: 'flex-end'}}>
+                  <Text>|</Text>
+                </View>
+                <Link href={{pathname: '/(tabs)/profile/(userList)/[userList]', params: {initialTab: 'following'}}} asChild>
+                <Pressable style={styles.socialState}>
                   <Text style={[styles.socialStateText, themeTextColor]}>
                     {userInfo.following}
                   </Text>
                   <Text style={[styles.socialStateLabel, {color: labelColor}]}>
                     Following
                   </Text>
-                </View>
+                  </Pressable>
                 </Link>
               </View>
           </View>
@@ -181,9 +183,9 @@ const styles = StyleSheet.create({
     marginRight: 8
   },
   socialState: {
-    alignItems: 'baseline',
+    alignItems: 'flex-end',
     flexDirection: 'row',
-    gap: 4,
+    gap: 4
   },
   socialStateText: {
     fontSize: 14,

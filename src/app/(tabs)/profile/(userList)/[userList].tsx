@@ -15,6 +15,7 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import userData from "@/src/assets/userData";
 import { useLocalSearchParams } from "expo-router";
 import { MaterialTabBar } from "react-native-collapsible-tab-view";
+import Colors from "@/src/constants/Colors";
 
 const width = Dimensions.get('window').width
 const backgroundColors = [
@@ -37,6 +38,10 @@ const FollowingUserCard = (props: UserListType): JSX.Element => {
   colorScheme === 'light'
   ? '#000000'
   : '#ffffff'
+
+  const themeTextColor = {
+    color: Colors[colorScheme ?? 'light'].text,
+  };
 
   const HandleUnfollow = () => {
     setFollowingStatus(false)
@@ -125,6 +130,18 @@ const UserListScreen = () : JSX.Element => {
     }
     const tabBarHeight = useBottomTabBarHeight();
 
+    const colorScheme = useColorScheme();
+
+    const backGroundColor = 
+    colorScheme === 'dark'
+    ? '#000000'
+    : '#ffffff'
+
+    const textColor = 
+    colorScheme === 'light'
+    ? '#000000'
+    : '#ffffff'
+
     const renderTabBar = props => (
       <MaterialTabBar
         {...props}
@@ -136,7 +153,7 @@ const UserListScreen = () : JSX.Element => {
           shadowOpacity: 0, 
           shadowRadius: 0, 
           elevation: 0,
-          height: 30,
+          height: 50,
         }}
       />
     )
@@ -154,7 +171,7 @@ const UserListScreen = () : JSX.Element => {
             )}
             estimatedItemSize={70}
             contentContainerStyle={{
-              backgroundColor: 'white',
+              backgroundColor: backGroundColor,
               paddingBottom: tabBarHeight,
               paddingVertical: 16
             }}
@@ -170,7 +187,7 @@ const UserListScreen = () : JSX.Element => {
             )}
             estimatedItemSize={70}
             contentContainerStyle={{
-              backgroundColor: 'white',
+              backgroundColor: backGroundColor,
               paddingBottom: tabBarHeight,
               paddingVertical: 16
             }}

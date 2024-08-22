@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import { View, StyleSheet, Text, Pressable, Dimensions, Modal } from 'react-native';
+import { View, StyleSheet, Text, Pressable, Dimensions, Modal, useColorScheme } from 'react-native';
 import { Image } from 'expo-image';
-import MusicBarOfPost from './MusicBarOfPost';
 import { type PostDataType } from '../types';
 import { Link } from 'expo-router';
 import HeartIcon from './Icon/HeartIcon';
@@ -9,6 +8,9 @@ import IconAntDesign from './Icon/AntDesign';
 import ShareIcon from './Icon/ShareIcon';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { Message } from 'iconoir-react-native';
+import PostImages from './PostImages';
+import BgView from './ThemedBgView';
+import Colors from '../constants/Colors';
 
 const screen = Dimensions.get('screen');
 
@@ -19,6 +21,17 @@ const PostCard = (props: PostDataType): JSX.Element => {
   const [initialIndex, setInitialIndex] = useState(0);
 
   const ImageUrlRow = JSON.stringify(props.ImageUrl);
+
+  const colorScheme = useColorScheme();
+
+  const themeTextColor = {
+    color: Colors[colorScheme ?? 'light'].text,
+  };
+
+  const textColor = 
+  colorScheme === 'light'
+  ? '#000000'
+  : '#ffffff'
 
   const onClose = () => {
     setModalStatus(false)
@@ -60,92 +73,27 @@ const PostCard = (props: PostDataType): JSX.Element => {
                 { flex: 1 },
               ]}
             >
-              <View style={styles.headerLeft}>
-                <Text style={styles.text1}>{props.user}</Text>
+              <View style={{justifyContent: 'space-between', flexDirection:'row', flex:1}}>
+              <View>
+                <Text style={[styles.text1, themeTextColor]}>{props.user}</Text>
               </View>
-              <View style={styles.headerLeft}>
-                <Text style={{fontSize: 14}}>6m</Text>
+              <View style={styles.headerRight}>
+                <Text style={[{fontSize: 14}, themeTextColor]}>6m</Text>
                 <IconAntDesign
                   name='ellipsis1'
                   size={16}
-                  style={styles.threeDots}
                 />
+              </View>
               </View>
             </View>
             <View>
-              <Text style={styles.postContent}>{props.postContent}</Text>
-              {props.ImageUrl.length === 0 && ( null )}
-              {props.ImageUrl.length === 1 && ( 
-                <Pressable onPress={(e) => HandleImage(0)}>
-                  <Image source={props.ImageUrl[0]} style={styles.postImage} />
-                </Pressable>
-              )}
-              {props.ImageUrl.length === 2 && (
-              <View style={styles.imageContainer}> 
-                <Pressable onPress={(e) => HandleImage(0)}>
-                  <Image source={props.ImageUrl[0]} style={styles.Image2}/>
-                </Pressable>
-                <Pressable onPress={(e) => HandleImage(1)}>
-                  <Image source={props.ImageUrl[1]} style={styles.Image2}/>
-                </Pressable>
-              </View>)}
-              {props.ImageUrl.length === 3 && (
-              <View style={styles.imageContainer}> 
-                <Pressable onPress={(e) => HandleImage(0)}>
-                  <Image source={props.ImageUrl[0]} style={styles.Image2}/>
-                </Pressable>
-                <View style={styles.imageContainer2}>
-                  <Pressable onPress={(e) => HandleImage(1)}>  
-                    <Image source={props.ImageUrl[1]} style={styles.Image3}/>
-                  </Pressable>
-                  <Pressable onPress={(e) => HandleImage(2)}> 
-                    <Image source={props.ImageUrl[2]} style={styles.Image3}/>
-                  </Pressable>
-                </View>
-              </View>)}
-              {props.ImageUrl.length === 4 && (
-              <View style={styles.imageContainer}> 
-                <View style={styles.imageContainer2}>
-                  <Pressable onPress={(e) => HandleImage(0)}>  
-                    <Image source={props.ImageUrl[0]} style={styles.Image3}/>
-                  </Pressable>
-                  <Pressable onPress={(e) => HandleImage(1)}> 
-                    <Image source={props.ImageUrl[1]} style={styles.Image3}/>
-                  </Pressable>
-                </View>
-                <View style={styles.imageContainer2}>
-                  <Pressable onPress={(e) => HandleImage(2)}>
-                    <Image source={props.ImageUrl[2]} style={styles.Image3}/>
-                  </Pressable>
-                  <Pressable onPress={(e) => HandleImage(2)}>
-                    <Image source={props.ImageUrl[3]} style={styles.Image3}/>
-                  </Pressable> 
-                </View>
-              </View>)}
-              <Modal
-                animationType="fade"
-                transparent={true}
-                visible={modalStatus}
-                onRequestClose={onClose}
-                style={styles.modalOverlay}
-              >
-                <Pressable style={styles.closeButton} onPress={onClose}>
-                <Text style={styles.closeButtonText}>X</Text>
-                </Pressable>
-                <View style={{flex:1, paddingTop: 30, backgroundColor: '#000000'}}>
-                <ImageViewer 
-                imageUrls={imageUrl}
-                enableSwipeDown
-                onSwipeDown={onClose}
-                index={initialIndex}
-                renderImage={(props) => <Image {...props} style={styles.imageModal} contentFit='contain'/>}/>
-                </View>
-          </Modal>
+              <Text style={[styles.postContent, themeTextColor]}>{props.postContent}</Text>
+              <PostImages imageUrls={props.ImageUrl}/>
             </View>
           </View>
         </View>
         <View style={styles.Icons}>
-          <HeartIcon size={16} />
+          <HeartIcon size={16} color={textColor}/>
           <Link href={{
           pathname: '/reply-editor-modal',
           params: {
@@ -160,17 +108,10 @@ const PostCard = (props: PostDataType): JSX.Element => {
           },
           }}
           asChild >
-          <Message width={16} height={16} color={'#000000'}/>
+          <Message width={16} height={16} color={textColor}/>
           </Link>
-          <ShareIcon size={16} />
+          <ShareIcon size={16} color={textColor}/>
         </View>
-        <View
-          style={[
-            { backgroundColor: 'rgba(67, 80, 96, 0.3)' },
-            { marginHorizontal: 16 },
-            { height: 0.2 },
-          ]}
-        />
       </Pressable>
     </Link>
   );
@@ -180,8 +121,10 @@ export default PostCard;
 
 const styles = StyleSheet.create({
   postContainer: {
-    backgroundColor: '#ffffff',
     flex: 1,
+    marginHorizontal: 16,
+    borderBottomWidth: 0.3,
+    borderBottomColor: 'rgba(67, 80, 96, 0.3)',
   },
   postHeader: {
     flexDirection: 'row',
@@ -198,10 +141,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    marginLeft: 16,
     marginRight: 12,
-    borderWidth: 0.3,
-    borderColor: '#000000',
   },
   postContent: {
     fontSize: 14,
@@ -218,20 +158,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   headerRight: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-end',
     flexDirection: 'row',
-    width: 'auto',
-    gap: 12,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    marginRight: 8,
     alignItems: 'baseline',
     gap: 8,
-  },
-  threeDots: {
-    marginRight: 12,
   },
   postImage: {
     marginRight: 12,
@@ -267,7 +196,7 @@ const styles = StyleSheet.create({
   },
   imageModal: {
     flex: 1,
-    resizeMode: 'contain', // 画像のリサイズモード
+    resizeMode: 'contain', 
   },
   closeButton: {
     position: 'absolute',
@@ -288,3 +217,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
 });
+
+

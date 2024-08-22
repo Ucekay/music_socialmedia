@@ -13,6 +13,7 @@ import TabActionMenuList from '@/src/components/TabActionMenuList';
 import TabActionMenu from '@/src/components/TabActionMenu';
 import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
+import BgView from '@/src/components/ThemedBgView';
 
 const PostsScreen = (): JSX.Element => {
   const headerHeight = useHeaderHeight();
@@ -33,7 +34,7 @@ const PostsScreen = (): JSX.Element => {
       ? { backgroundColor: Colors.dark.background }
       : { backgroundColor: Colors.light.background };
   return (
-    <View style={[styles.container, themeContainerStyle]}>
+    <BgView style={[styles.container, themeContainerStyle]}>
       <FlashList
         data={postData}
         estimatedItemSize={50}
@@ -44,7 +45,7 @@ const PostsScreen = (): JSX.Element => {
         }}
       />
       <TabActionMenu />
-    </View>
+    </BgView>
   );
 };
 

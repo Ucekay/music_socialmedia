@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFocusEffect } from 'expo-router';
-import {View, StyleSheet} from 'react-native'
+import {View, StyleSheet, useColorScheme} from 'react-native'
 import LoginUserProfileTop from '@/src/components/UserProfileTopOfLoginUser';
 import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 import { useTabAction } from '@/src/contexts/ActionButtonContext';
@@ -10,7 +10,8 @@ import PostCard from '@/src/components/PostCard';
 import ArticleCard from '@/src/components/ArticleCard';
 import { articleDataType } from '@/src/types';
 import postData from '@/src/assets/postData';
-import userArticleData from '@/src/assets/userArtickeData';
+import userArticleData from '@/src/assets/userArticleData';
+import BgView from '@/src/components/ThemedBgView';
 
 const TEXT_HEIGHT = 65.7;
 const HEADER_HEIGHT = 199;
@@ -29,20 +30,30 @@ const LoginProfileScreen = () => {
     }, [])
   );
 
-  const renderTabBar = props => (
+  const colorScheme = useColorScheme();
+
+  const backGroundColor = 
+  colorScheme === 'dark'
+  ? '#000000'
+  : '#ffffff'
+
+  const textColor = 
+  colorScheme === 'light'
+  ? '#000000'
+  : '#ffffff'
+
+  const renderTabBar = (props) => {
+    return(
     <MaterialTabBar
       {...props}
-      indicatorStyle={{ backgroundColor: '#000000'}}
+      indicatorStyle={{ backgroundColor: textColor}}
+      labelStyle={{color: textColor}}
       style={{
-        backgroundColor: 'white',
-        shadowColor: 'transparent', // iOS
-        shadowOffset: { width: 0, height: 0 }, // iOS
-        shadowOpacity: 0, // iOS
-        shadowRadius: 0, // iOS
-        elevation: 0, // Android
+        backgroundColor: backGroundColor
       }}
     />
-  )
+    )
+    }
 
   return (
       <Tabs.Container
@@ -60,7 +71,7 @@ const LoginProfileScreen = () => {
             )}
             estimatedItemSize={TEXT_HEIGHT}
             contentContainerStyle={{
-              backgroundColor: 'white',
+              backgroundColor: backGroundColor,
               paddingBottom: tabBarHeight,
               paddingVertical: 16
             }}
@@ -74,7 +85,7 @@ const LoginProfileScreen = () => {
             )}
             estimatedItemSize={itemSize}
             contentContainerStyle={{
-              backgroundColor: 'white',
+              backgroundColor: backGroundColor,
               paddingBottom: tabBarHeight,
               paddingHorizontal: 16,
             }}
