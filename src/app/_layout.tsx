@@ -65,54 +65,25 @@ function RootLayoutNav() {
           justifyContent: 'center',
           alignContent: 'center',
         }}
-      >
-        <BottomSheetModalProvider>
-          <ThemeProvider>
-            <Stack>
-              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-              <Stack.Screen
-                name='modal'
-                options={{ presentation: 'fullScreenModal' }}
-              />
-              <Stack.Screen
-                name='article-editor-modal'
-                options={{
-                  headerShown: false,
-                  title: 'Article Editor',
-                  presentation: 'modal',
-                  gestureEnabled: false,
-                }}
-              />
-              <Stack.Screen
-                name='post-editor-modal'
-                options={{
-                  headerShown: false,
-                  title: 'Post Editor',
-                  presentation: 'modal',
-                  gestureEnabled: false,
-                }}
-              />
-              <Stack.Screen
-                name='reply-editor-modal'
-                options={{
-                  headerShown: false,
-                  title: 'Reply Editor',
-                  presentation: 'modal',
-                  gestureEnabled: false,
-                }}
-              />
-              <Stack.Screen
-                name='today-song-editor-modal'
-                options={{
-                  title: '今日の一曲を編集',
-                  presentation: 'modal',
-                  gestureEnabled: false,
-                }}
-              />
-            </Stack>
-          </ThemeProvider>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
-    </QueryClientProvider>
+      />
+      <Stack.Screen
+        name='post-editor-modal'
+        options={{
+          headerShown: false,
+          title: 'Post Editor',
+          presentation: 'modal',
+          gestureEnabled: false,
+        }}
+      />
+      <Stack.Screen
+        name='reply-editor-modal'
+        options={{
+          headerShown: false,
+          title: 'Reply Editor',
+          presentation: 'modal',
+          gestureEnabled: false,
+        }}
+      />
+    </Stack>
   );
 }

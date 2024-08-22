@@ -20,14 +20,6 @@ export default function PostStack() {
           ),
         }}
       />
-      <Stack.Screen
-        name='reply-editor-modal'
-        options={{
-          title: 'Reply Editor',
-          headerShown: false,
-          presentation: 'modal',
-        }}
-      />
     </Stack>
   );
 }

@@ -100,3 +100,26 @@ export type ColorScheme = {
   buttonDisabled: string;
   buttonDisabledText: string;
 };
+
+export type PostType = {
+  postID: string;
+  postContent: string;
+  ImageUrl: string[];
+  userID: string;
+  user: string;
+  userAvatarUrl: string;
+  view: number;
+  createAt: string;
+}
+
+export type UserListType = {
+  userID: string;
+  userName: string;
+  userAvatarUrl: string;
+}
+
+export type MusicListType = {
+  musicName: string;
+  artistName: string;
+  artworkUrl: string;
+}
