@@ -100,3 +100,13 @@ export type ColorScheme = {
   buttonDisabled: string;
   buttonDisabledText: string;
 };
+
+export type TodaySongDataType = {
+  todaySongID: number;
+  userID: string;
+  userAvatarUrl: string;
+  songName: string;
+  artistName: string;
+  artworkUrl: string;
+  body: string;
+};

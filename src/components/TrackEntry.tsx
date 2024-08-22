@@ -1,29 +1,23 @@
 import { useState } from 'react';
 import {
-  View,
   StyleSheet,
-  useColorScheme,
-  TextInput,
   Pressable,
-  KeyboardAvoidingView,
-  Platform,
   NativeSyntheticEvent,
   TextInputChangeEventData,
 } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-import Colors from '../constants/Colors';
 import Text from '@/src/components/ThemedText';
 import EditorMetadataInput from '@/src/components/EditorMetadataInput';
+import { useTheme } from '../contexts/ColorThemeContext';
 import AddOrCancelButtons from './AddOrCancelButtons';
+import TrackSearchField from './TrackSearchField';
 
-const TrackInputField = () => {
-  const colorScheme = useColorScheme();
-  const searchFieldTextColor = Colors[colorScheme ?? 'light'].appleMusicText;
-  const searchFieldBgColor = Colors[colorScheme ?? 'light'].appleMusicBg;
-  const textColor = Colors[colorScheme ?? 'light'].text;
-  const secondaryTextColor = Colors[colorScheme ?? 'light'].secondaryText;
+const TrackEntry = () => {
+  const { colors } = useTheme();
+  const searchFieldTextColor = colors.appleMusicText;
+  const secondaryTextColor = colors.secondaryText;
 
   const [manualInput, setManualInput] = useState(false);
   const [trackName, setTrackName] = useState('');
@@ -60,28 +54,14 @@ const TrackInputField = () => {
       exiting={FadeOut}
       style={styles.searchFieldWrapper}
     >
-      <Text style={styles.label}>レビューする楽曲</Text>
+      <Text style={styles.label}>楽曲</Text>
       {!manualInput && (
         <Animated.View
           entering={FadeIn}
           exiting={FadeOut}
           style={styles.inputContainer}
         >
-          <View
-            style={[
-              styles.inputInner,
-              {
-                backgroundColor: searchFieldBgColor,
-                borderColor: searchFieldBgColor,
-              },
-            ]}
-          >
-            <TextInput
-              placeholder='楽曲を検索'
-              placeholderTextColor={searchFieldTextColor}
-              style={[styles.inputText, { color: searchFieldTextColor }]}
-            />
-          </View>
+          <TrackSearchField placeholder='楽曲名を検索' />
           <Pressable onPress={showTrackInput}>
             <Animated.View
               style={[styles.option, { borderColor: secondaryTextColor }]}
@@ -124,7 +104,7 @@ const TrackInputField = () => {
   );
 };
 
-export default TrackInputField;
+export default TrackEntry;
 
 const styles = StyleSheet.create({
   searchFieldWrapper: {
@@ -163,20 +143,5 @@ const styles = StyleSheet.create({
   icon: {
     borderWidth: 1,
     borderRadius: 100,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    gap: 24,
-    justifyContent: 'space-evenly',
-    paddingHorizontal: 6,
-  },
-  button: {
-    width: '50%',
-    alignItems: 'center',
-    borderRadius: 12,
-    padding: 8,
-  },
-  separator: {
-    width: 1,
   },
 });

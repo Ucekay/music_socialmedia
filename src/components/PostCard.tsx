@@ -16,7 +16,7 @@ import ShareIcon from './Icons/ShareIcon';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { Message } from 'iconoir-react-native';
 
-import { formatCreatedAt } from '@/src/util/date/formatCreatedAt';
+import { formatCreatedAt } from '@/src/utils/date/formatCreatedAt';
 
 const screen = Dimensions.get('screen');
 

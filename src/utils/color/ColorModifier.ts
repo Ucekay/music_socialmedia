@@ -2,25 +2,25 @@ export const increaseSaturation = (
   hexColor: string,
   saturationFactor: number
 ): string => {
-  const rgb = parseInt(hexColor.slice(1), 16);
-  let r = (rgb >> 16) & 0xff;
-  let g = (rgb >> 8) & 0xff;
-  let b = rgb & 0xff;
+  const rgb: number = parseInt(hexColor.slice(1), 16);
+  let r: number = (rgb >> 16) & 0xff;
+  let g: number = (rgb >> 8) & 0xff;
+  let b: number = rgb & 0xff;
 
   // RGBをHSLに変換
   r /= 255;
   g /= 255;
   b /= 255;
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  let h,
-    s,
-    l = (max + min) / 2;
+  const max: number = Math.max(r, g, b);
+  const min: number = Math.min(r, g, b);
+  let h: number = 0,
+    s: number = 0,
+    l: number = (max + min) / 2;
 
   if (max === min) {
     h = s = 0;
   } else {
-    const d = max - min;
+    const d: number = max - min;
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
     switch (max) {
       case r:
@@ -88,4 +88,29 @@ export const rgb2Hex = (
 const toHex = (color: number): string => {
   const hex = color.toString(16).toUpperCase();
   return hex.length === 1 ? `0${hex}` : hex;
+};
+
+interface RGB {
+  r: number;
+  g: number;
+  b: number;
+}
+
+export const rgbObjectToRgbaString = (rgb: RGB, alpha: number): string => {
+  // RGBの値が有効範囲内かどうかを確認する
+  const { r, g, b } = rgb;
+  if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+    throw new Error('RGB values must be between 0 and 255.');
+  }
+
+  // 透明度のパーセンテージが有効範囲内かどうかを確認する
+  if (alpha < 0 || alpha > 100) {
+    throw new Error('Alpha must be between 0 and 100.');
+  }
+
+  // 透明度のパーセンテージを0〜1の範囲に変換
+  const alphaDecimal = alpha / 100;
+
+  // rgba()形式の文字列を生成して返す
+  return `rgba(${r}, ${g}, ${b}, ${alphaDecimal})`;
 };

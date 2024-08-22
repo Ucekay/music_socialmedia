@@ -5,6 +5,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useReactQueryDevTools } from '@dev-plugins/react-query';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 import { ThemeProvider } from '@/src/contexts/ColorThemeContext';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -66,52 +67,54 @@ function RootLayoutNav() {
           alignContent: 'center',
         }}
       >
-        <BottomSheetModalProvider>
-          <ThemeProvider>
-            <Stack>
-              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-              <Stack.Screen
-                name='modal'
-                options={{ presentation: 'fullScreenModal' }}
-              />
-              <Stack.Screen
-                name='article-editor-modal'
-                options={{
-                  headerShown: false,
-                  title: 'Article Editor',
-                  presentation: 'modal',
-                  gestureEnabled: false,
-                }}
-              />
-              <Stack.Screen
-                name='post-editor-modal'
-                options={{
-                  headerShown: false,
-                  title: 'Post Editor',
-                  presentation: 'modal',
-                  gestureEnabled: false,
-                }}
-              />
-              <Stack.Screen
-                name='reply-editor-modal'
-                options={{
-                  headerShown: false,
-                  title: 'Reply Editor',
-                  presentation: 'modal',
-                  gestureEnabled: false,
-                }}
-              />
-              <Stack.Screen
-                name='today-song-editor-modal'
-                options={{
-                  title: '今日の一曲を編集',
-                  presentation: 'modal',
-                  gestureEnabled: false,
-                }}
-              />
-            </Stack>
-          </ThemeProvider>
-        </BottomSheetModalProvider>
+        <ActionSheetProvider>
+          <BottomSheetModalProvider>
+            <ThemeProvider>
+              <Stack>
+                <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+                <Stack.Screen
+                  name='modal'
+                  options={{ presentation: 'fullScreenModal' }}
+                />
+                <Stack.Screen
+                  name='article-editor-modal'
+                  options={{
+                    title: 'Article Editor',
+                    headerTransparent: true,
+                    presentation: 'modal',
+                    gestureEnabled: false,
+                  }}
+                />
+                <Stack.Screen
+                  name='post-editor-modal'
+                  options={{
+                    headerShown: false,
+                    title: 'Post Editor',
+                    presentation: 'modal',
+                    gestureEnabled: false,
+                  }}
+                />
+                <Stack.Screen
+                  name='reply-editor-modal'
+                  options={{
+                    headerShown: false,
+                    title: 'Reply Editor',
+                    presentation: 'modal',
+                    gestureEnabled: false,
+                  }}
+                />
+                <Stack.Screen
+                  name='today-song-editor-modal'
+                  options={{
+                    title: '今日の一曲を編集',
+                    presentation: 'modal',
+                    gestureEnabled: false,
+                  }}
+                />
+              </Stack>
+            </ThemeProvider>
+          </BottomSheetModalProvider>
+        </ActionSheetProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>
   );

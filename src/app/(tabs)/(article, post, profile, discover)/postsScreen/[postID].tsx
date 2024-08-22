@@ -12,7 +12,7 @@ import { useTheme } from '@/src/contexts/ColorThemeContext';
 import PostImages from '@/src/components/PostImages';
 import BgView from '@/src/components/ThemedBgView';
 import Text from '@/src/components/ThemedText';
-import { formatCreatedAt } from '@/src/util/date/formatCreatedAt';
+import { formatCreatedAt } from '@/src/utils/date/formatCreatedAt';
 import HeartIcon from '@/src/components/Icons/HeartIcon';
 import ShareIcon from '@/src/components/Icons/ShareIcon';
 

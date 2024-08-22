@@ -7,7 +7,7 @@ import { BlurView } from 'expo-blur';
 import { MeshGradient } from './MeshGradient';
 import ArticleCardImage from './ArticleCardImage';
 import { usePalette } from '../hooks/usePallete';
-import { increaseSaturation } from '../util/color/ColorModifier';
+import { increaseSaturation } from '../utils/color/ColorModifier';
 
 export interface ArticleThumbnailProps {
   imageUrl: string;

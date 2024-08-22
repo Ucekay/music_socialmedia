@@ -40,7 +40,7 @@ import Color from '@/src/constants/Colors';
 import BgView from '@/src/components/ThemedSecondaryBgView';
 import Text from '@/src/components/ThemedText';
 import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
-import TrackInputField from '@/src/components/TrackInputField';
+import TrackEntry from '@/src/components/TrackEntry';
 import LiveInputField from '../components/LiveInputField';
 import EditorImagePicker from '../components/EditorImagePicker';
 
@@ -82,7 +82,7 @@ const ArticleEditorModal = () => {
         cancelButtonIndex,
         destructiveButtonIndex,
       },
-      (selectedIndex?: number) => {
+      (selectedIndex) => {
         switch (selectedIndex) {
           case 0:
             navigation.goBack();
@@ -106,7 +106,7 @@ const ArticleEditorModal = () => {
         options,
         cancelButtonIndex,
       },
-      (selectedIndex?: number) => {
+      (selectedIndex) => {
         if (selectedIndex === 0) {
           console.log(content);
         }
@@ -233,7 +233,7 @@ const ArticleConfigScreen = () => {
               </Animated.View>
             </>
           )}
-          {selectedType === 'review' && <TrackInputField />}
+          {selectedType === 'review' && <TrackEntry />}
           {selectedType === 'liveReport' && (
             <>
               <LiveInputField />

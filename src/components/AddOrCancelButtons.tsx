@@ -1,11 +1,5 @@
-import {
-  Pressable,
-  View,
-  Text,
-  StyleSheet,
-  useColorScheme,
-} from 'react-native';
-import Colors from '../constants/Colors';
+import { Pressable, View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 interface AddOrCancelButtonsProps {
   handleCancel: () => void;
@@ -16,14 +10,12 @@ const AddOrCancelButtons = ({
   handleCancel,
   handleAdd,
 }: AddOrCancelButtonsProps) => {
-  const colorScheme = useColorScheme();
-  const secondaryTextColor = Colors[colorScheme ?? 'light'].secondaryText;
+  const { colors } = useTheme();
+  const secondaryTextColor = colors.secondaryText;
   return (
     <View style={styles.buttonContainer}>
       <Pressable onPress={handleCancel} style={styles.button}>
-        <Text style={{ color: Colors[colorScheme ?? 'light'].warnText }}>
-          キャンセル
-        </Text>
+        <Text style={{ color: colors.cancelText }}>キャンセル</Text>
       </Pressable>
       <View
         style={[styles.separator, { backgroundColor: secondaryTextColor }]}
@@ -45,7 +37,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   button: {
-    width: '50%',
+    flex: 1,
     alignItems: 'center',
     borderRadius: 12,
     padding: 14,
