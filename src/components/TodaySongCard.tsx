@@ -14,25 +14,27 @@ import BgView from './ThemedBgView';
 import Text from './ThemedText';
 
 import { rgbObjectToRgbaString } from '../utils/color/ColorModifier';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import Colors from '../constants/Colors';
 import type { TodaySongDataType } from '../types';
 import { useTheme } from '../contexts/ColorThemeContext';
+import TrackSearchField from './TrackSearchField';
+import { TextInput } from 'react-native-gesture-handler';
 
 type TodaySongCardProps = {
   todaySong?: TodaySongDataType;
   isEditing: boolean;
+  songInfoShown: boolean;
   onSongInfoPress?: () => void;
   onBodyPress?: () => void;
-  onImagePress?: () => void;
 };
 
 const TodaySongCard = ({
   todaySong,
   isEditing,
+  songInfoShown,
   onSongInfoPress,
   onBodyPress,
-  onImagePress,
 }: TodaySongCardProps) => {
   const { width } = useWindowDimensions();
   const colorScheme = useColorScheme();
@@ -60,31 +62,43 @@ const TodaySongCard = ({
 
   const shadowColor = colorScheme === 'dark' ? '#fff' : '#000';
 
-  const renderSongInfo = () => (
-    <Pressable onPress={isEditing ? onSongInfoPress : undefined}>
-      <View style={styles.songInfo}>
-        <Text style={styles.songName}>
-          {isEditing ? 'タップして曲を選択' : todaySong?.songName || ''}
-        </Text>
-        <Text style={styles.artistName}>
-          {isEditing ? '' : todaySong?.artistName || ''}
-        </Text>
-      </View>
-    </Pressable>
-  );
+  const renderSongInfo = () => {
+    if (songInfoShown) {
+      return (
+        <Pressable onPress={isEditing ? onSongInfoPress : undefined}>
+          <View style={styles.songInfo}>
+            <Text style={styles.songName}>
+              {isEditing ? 'タップして曲を選択' : todaySong?.songName || ''}
+            </Text>
+            <Text style={styles.artistName}>
+              {isEditing ? '' : todaySong?.artistName || ''}
+            </Text>
+          </View>
+        </Pressable>
+      );
+    }
+  };
 
   const renderBody = () => (
     <Pressable onPress={isEditing ? onBodyPress : undefined}>
       <View>
-        <Text>
-          {isEditing ? 'タップして本文を入力' : todaySong?.body || ''}
-        </Text>
+        {isEditing ? (
+          <TextInput
+            placeholder='本文を入力'
+            placeholderTextColor={colors.secondaryText}
+            multiline
+            readOnly={!songInfoShown}
+            style={{ color: colors.text }}
+          />
+        ) : (
+          <Text>{todaySong?.body || ''}</Text>
+        )}
       </View>
     </Pressable>
   );
 
   const renderImage = () => {
-    if (isEditing) {
+    if (isEditing && songInfoShown) {
       return (
         <View
           style={[
@@ -94,17 +108,17 @@ const TodaySongCard = ({
           ]}
         ></View>
       );
+    } else if (songInfoShown) {
+      return (
+        <BgView style={styles.imageContainer}>
+          <Image source={{ uri: todaySong?.artworkUrl }} style={styles.image} />
+        </BgView>
+      );
     }
-
-    return (
-      <BgView style={styles.imageContainer}>
-        <Image source={{ uri: todaySong?.artworkUrl }} style={styles.image} />
-      </BgView>
-    );
   };
 
   return (
-    <View style={[styles.cardContainer, { width }]}>
+    <Animated.View style={[styles.cardContainer, { width }]}>
       <View style={[styles.card, { backgroundColor, shadowColor }]}>
         {startColor && endColor && !isEditing && (
           <Animated.View entering={FadeIn} style={StyleSheet.absoluteFill}>
@@ -133,10 +147,11 @@ const TodaySongCard = ({
             {renderImage()}
             {renderSongInfo()}
           </View>
+          {!songInfoShown && <TrackSearchField placeholder='楽曲を検索' />}
           {renderBody()}
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

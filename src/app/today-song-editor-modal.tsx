@@ -1,4 +1,12 @@
-import { View, Platform, Button, TextInput } from 'react-native';
+import {
+  View,
+  Platform,
+  Button,
+  TextInput,
+  Modal,
+  SafeAreaView,
+  useWindowDimensions,
+} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Stack, useNavigation } from 'expo-router';
 import { useActionSheet } from '@expo/react-native-action-sheet';
@@ -7,13 +15,17 @@ import SecondaryBgView from '../components/ThemedSecondaryBgView';
 import TrackSearchField from '../components/TrackSearchField';
 import { useState } from 'react';
 import TodaySongCard from '../components/TodaySongCard';
+import { Pressable } from 'react-native-gesture-handler';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 const TodaySongEditorModal = () => {
   const { colors } = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const navigation = useNavigation();
+  const headerHeight = useHeaderHeight();
   const [trackName, setTrackName] = useState('');
   const [inputText, setInputText] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
 
   const onClose = () => {
     const title = '下書きに保存しまますか？';
@@ -69,7 +81,11 @@ const TodaySongEditorModal = () => {
         }}
       />
       <View style={{ paddingTop: 32 }}>
-        <TodaySongCard isEditing />
+        <TodaySongCard
+          isEditing
+          onSongInfoPress={() => setIsSearching(true)}
+          songInfoShown={!isSearching}
+        />
       </View>
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
