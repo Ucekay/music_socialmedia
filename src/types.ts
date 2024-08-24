@@ -110,3 +110,28 @@ export type TodaySongDataType = {
   artworkUrl: string;
   body: string;
 };
+
+export type UserListPropsType = {
+  userID: string;
+  userName: string;
+  userAvatarUrl: string;
+}
+
+export type PlaylistType = {
+  ImageURL?: string;
+  playlistName: string
+}
+
+export type SongTypeSimple = {
+  musicID: string;
+  musicName: string;
+  artistname: string;
+  artworkURL: string; 
+}
+
+export type PlaylistDetailType = {
+  playlistID: string;
+  playlistName: string;
+  ImageURL: string
+  songs: SongTypeSimple[]
+}

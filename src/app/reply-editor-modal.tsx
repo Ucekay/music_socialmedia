@@ -26,11 +26,12 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useNavigation, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import Icon from 'react-native-vector-icons/AntDesign';
-import ImageAspectKept from '../components/OriginalAspectImage';
+import OriginalAspectImage from '../components/OriginalAspectImage';
 import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const ReplyEditorModal = () => {
   const [text, setText] = useState('');
@@ -130,6 +131,8 @@ const ReplyEditorModal = () => {
 
   const BOTTOM_TAB_HEIGHT = 96.7;
 
+  const { showActionSheetWithOptions } = useActionSheet();
+
   const handlePost = () => {
     setText('');
     // ここでポストをサーバーに送信する処理を追加します
@@ -162,13 +165,77 @@ const ReplyEditorModal = () => {
     }).start();
   };
 
+  const openCropEditor = async (num: number, uri: string) => {
+    try {
+      setLoading(true);
+      const cropped = await ImageCropPicker.openCropper({
+        path: uri,
+        cropperToolbarTitle: '画像を編集',
+        mediaType: 'photo',
+        freeStyleCropEnabled: true,
+      });
+      setImages(
+        images.map((images, index) => (index === num ? cropped.path : images))
+      );
+    } catch (e: any) {
+      console.log(e.message);
+      if (e.message === 'User cancelled image selection') {
+        setErrorMessage(
+          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。'
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onClose = () => {
+    const title = '返信を削除しまますか？';
+    const options = ['内容を削除する', '編集を続行する'];
+    const destructiveButtonIndex = 0;
+    const cancelButtonIndex = 1;
+
+    showActionSheetWithOptions(
+      {
+        title,
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+            navigation.goBack();
+            break;
+          case 1:
+            break;
+        }
+      }
+    );
+  };
+
+  const onPublish = () => {
+    const options = ['公開する', '編集を続行する'];
+    const cancelButtonIndex = 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex === 0) {
+          handlePost
+        }
+      }
+    );
+  };
+  const handleCropEditor = (num: number, uri: string) => {
+    openCropEditor(num, uri);
+  };
+
   return (
     <BgView style={[styles.container]}>
-      <View style={styles.header}>
-        <Text style={[styles.headertitle, { color: textColor }]}>
-          返信を作成
-        </Text>
-      </View>
       <Modal animationType='fade' transparent={true} visible={loading}>
         <View style={styles.dialog}>
           <BlurView tint={'systemMaterial'} style={styles.dialogInner}>
@@ -177,6 +244,23 @@ const ReplyEditorModal = () => {
           </BlurView>
         </View>
       </Modal>
+      <View style={styles.header}>
+        <Pressable
+          onPress={onClose}
+          style={[styles.headerItem, { alignItems: 'flex-start' }]}
+        >
+          <Text style={[styles.text1, { color: textColor }]}>キャンセル</Text>
+        </Pressable>
+        <View style={[styles.headerItem]}>
+          <Text style={[styles.text2, { color: textColor }]}>返信を作成</Text>
+        </View>
+        <Pressable
+          onPress={onPublish}
+          style={[styles.headerItem, { alignItems: 'flex-end' }]}
+        >
+          <Text style={[styles.text2, { color: '#2f95dc' }]}>完了</Text>
+        </Pressable>
+      </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
@@ -213,12 +297,18 @@ const ReplyEditorModal = () => {
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item, index }) => (
                     <Animated.View entering={FadeIn} exiting={FadeOut}>
-                      <ImageAspectKept
+                      <OriginalAspectImage
                         style={styles.image}
-                        url={item}
+                        uri={item}
                         height={200}
-                        src='url'
-                      ></ImageAspectKept>
+                      >
+                        <Pressable
+                          style={styles.deleteButton}
+                          onPress={() => handleDeleteImage(index)}
+                        >
+                          <Icon name='delete' size={24} color='#fff' />
+                        </Pressable>
+                      </OriginalAspectImage>
                     </Animated.View>
                   )}
                 />
@@ -270,12 +360,15 @@ const ReplyEditorModal = () => {
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item, index }) => (
                     <Animated.View entering={FadeIn} exiting={FadeOut}>
-                      <Pressable onPress={(e) => {}}>
-                        <ImageAspectKept
+                      <Pressable
+                        onPress={(e) => {
+                          handleCropEditor(index, item);
+                        }}
+                      >
+                        <OriginalAspectImage
                           style={styles.image}
                           uri={item}
                           height={200}
-                          src='uri'
                         >
                           <Pressable
                             style={styles.deleteButton}
@@ -283,7 +376,7 @@ const ReplyEditorModal = () => {
                           >
                             <Icon name='delete' size={24} color='#fff' />
                           </Pressable>
-                        </ImageAspectKept>
+                        </OriginalAspectImage>
                       </Pressable>
                     </Animated.View>
                   )}
@@ -314,43 +407,6 @@ const ReplyEditorModal = () => {
           </Animated1.View>
         </View>
       </ScrollView>
-      <BgView
-        style={[
-          styles.bottomButtonWrapper,
-          {
-            paddingBottom: insets.bottom,
-            paddingTop: 12,
-          },
-        ]}
-      >
-        <View
-          style={[
-            styles.bottomButtonContainer,
-            { borderTopColor: secondaryTextColor },
-          ]}
-        >
-          <View style={[styles.buttonContainer]}>
-            <FontAwesome6 name='xmark' size={16} color={textColor} />
-            <Button
-              title='Close'
-              onPress={() => {
-                navigation.goBack();
-              }}
-              color={textColor}
-            />
-          </View>
-          <View style={styles.buttonContainer}>
-            <FontAwesome6 name='check' size={16} color={textColor} />
-            <Button
-              title='Post'
-              onPress={() => {
-                handlePost;
-              }}
-              color={textColor}
-            />
-          </View>
-        </View>
-      </BgView>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
   );
@@ -368,6 +424,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingBottom: 20,
     borderBottomColor: '#ddd',
+    flexDirection: 'row',
+    paddingHorizontal: 16
+  },
+  headerItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  text2: {
+    fontSize: 16,
+    fontWeight: '600',
   },
   headertitle: {
     fontSize: 18,

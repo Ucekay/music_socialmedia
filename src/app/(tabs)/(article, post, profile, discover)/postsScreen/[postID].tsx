@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, Pressable } from 'react-native';
+import { View, StyleSheet, ScrollView, Pressable, useColorScheme } from 'react-native';
 import { Href, Link, Stack, useLocalSearchParams } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
@@ -21,6 +21,7 @@ const PostDetailScreen = () => {
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
   const queryClient = useQueryClient();
+  const colorScheme = useColorScheme();
   const { postID } = useLocalSearchParams();
   const posts = queryClient.getQueryData(['posts']);
   const flattenedPosts = useMemo(() => {
@@ -31,6 +32,8 @@ const PostDetailScreen = () => {
   }, [flattenedPosts, postID]);
 
   const themeContainerStyle = { backgroundColor: colors.headerBackground };
+  const themeIconColor =
+  colorScheme === 'light' ? '#000000' : '#ffffff'
   const themedTextColor = { color: colors.secondaryText };
   const themedBorderColor = { borderColor: colors.border };
 
@@ -92,13 +95,13 @@ const PostDetailScreen = () => {
             </View>
           </View>
           <View style={styles.iconsContainer}>
-            <HeartIcon width={20} height={20} isPost id={selectedPost.postID} />
+            <HeartIcon width={20} height={20} isPost id={selectedPost.postID} initialcolor={themeIconColor}/>
             <ChatBubbleEmpty
               width={20}
               height={20}
-              color={colors.secondaryText}
+              color={themeIconColor}
             />
-            <ShareIcon width={20} height={20} />
+            <ShareIcon width={20} height={20} color={themeIconColor}/>
           </View>
           <View style={{ height: tabBarHeight }} />
         </BgView>
@@ -132,6 +135,7 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 16,
+    lineHeight: 24
   },
   infoContainer: {
     flexDirection: 'row',
@@ -146,7 +150,7 @@ const styles = StyleSheet.create({
   },
   iconsContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     gap: 24,
   },
 });
