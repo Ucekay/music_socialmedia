@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { View, StyleSheet, useColorScheme } from 'react-native'
+import { View, StyleSheet, useColorScheme } from 'react-native';
 import LoginUserProfileTop from '@/src/components/UserProfileTopOfLoginUser';
 import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
 import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
@@ -16,34 +16,32 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 const TEXT_HEIGHT = 65.7;
-const itemSize = 320;
 
 const Profile = () => {
   const { userID } = useLocalSearchParams();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
-  const { setProfileDismissed } = useProfileScreen();;
-
-  const colorScheme = useColorScheme();
 
   const backGroundColor = colors.background;
 
-  const textColor = colors.text
+  const textColor = colors.text;
+
+  const itemSize = userID ? 320 : 250;
 
   const renderTabBar = (props) => {
-    return(
-    <MaterialTabBar
-      {...props}
-      indicatorStyle={{ backgroundColor: textColor}}
-      labelStyle={{color: textColor}}
-      style={{
-        backgroundColor: backGroundColor
-      }}
-    />
-    )
-    }
+    return (
+      <MaterialTabBar
+        {...props}
+        indicatorStyle={{ backgroundColor: textColor }}
+        labelStyle={{ color: textColor }}
+        style={{
+          backgroundColor: backGroundColor,
+        }}
+      />
+    );
+  };
 
   return (
     <View style={{ flex: 1, paddingTop: headerHeight }}>
@@ -52,30 +50,26 @@ const Profile = () => {
           title: 'Profile',
         }}
       />
-    <Tabs.Container
-    headerHeight={headerHeight}
-    renderHeader={() =>
-      userID ? (
-        <UserProfileTop />
-      ) : (
-        <LoginUserProfileTop id={'@Taro1234'} />
-      )
-    }
-    renderTabBar={renderTabBar}
-    >
+      <Tabs.Container
+        headerHeight={headerHeight}
+        renderHeader={() =>
+          userID ? <UserProfileTop /> : <LoginUserProfileTop id={'@Taro1234'} />
+        }
+        renderTabBar={renderTabBar}
+      >
         <Tabs.Tab name='post' label='Post'>
           <Tabs.FlashList
             data={postData}
             renderItem={({ item }) => (
               <BgView>
-                <PostCard post={item}/>
+                <PostCard post={item} />
               </BgView>
             )}
             estimatedItemSize={TEXT_HEIGHT}
             contentContainerStyle={{
               backgroundColor: backGroundColor,
               paddingBottom: tabBarHeight,
-              paddingVertical: 16
+              paddingVertical: 16,
             }}
           />
         </Tabs.Tab>
@@ -94,14 +88,13 @@ const Profile = () => {
           />
         </Tabs.Tab>
       </Tabs.Container>
-      </View>
-    );
-  };
-  export default Profile;
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-  });
-  
+    </View>
+  );
+};
+export default Profile;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
