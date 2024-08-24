@@ -19,6 +19,7 @@ type HeartIconProps = {
   isArticle?: boolean;
   isToday?: boolean;
   id?: number;
+  initialcolor?: string
 };
 
 const HeartIcon = ({
@@ -29,6 +30,7 @@ const HeartIcon = ({
   isArticle,
   isToday,
   id,
+  initialcolor
 }: HeartIconProps) => {
   const colorScheme = useColorScheme();
   const { colors } = useTheme();
@@ -73,7 +75,7 @@ const HeartIcon = ({
     <Heart
       width={width}
       height={height}
-      color={color}
+      color={initialcolor || color}
       strokeWidth={strokeWidth ? strokeWidth : 1.5}
       fill={fill}
       onPress={onPress}

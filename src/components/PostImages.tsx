@@ -6,15 +6,19 @@ import React, {
 } from 'react';
 import {
   View,
+  Text,
   Pressable,
   Image as RNImage,
   StyleSheet,
   Dimensions,
   Modal,
+  Button,
 } from 'react-native';
 import { Image } from 'expo-image';
 import Animated, {
   Extrapolation,
+  FadeIn,
+  FadeOut,
   SharedValue,
   interpolate,
   runOnJS,
@@ -22,15 +26,23 @@ import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withTiming,
+  withSpring
 } from 'react-native-reanimated';
 import {
   Gesture,
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
+import IconAntDesign from './Icons/AntDesign';
+import { Link } from 'expo-router';
+import { Message, Xmark } from 'iconoir-react-native';
+import HeartIcon from './Icons/HeartIcon';
+import ShareIcon from './Icons/ShareIcon';
 
 const AnimatedFlatList = Animated.FlatList;
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
@@ -137,7 +149,7 @@ const SingleImage = ({
         setSelectedIndex(0);
         setModalVisible(true);
       }}
-      style={styles.imageContainer}
+      style={[styles.imageContainer, {marginBottom: 16}]}
     >
       <Image
         source={{ uri: imageUrl }}
@@ -162,7 +174,7 @@ const MultipleImages = ({
   switch (imageUrls.length) {
     case 2:
       return (
-        <View style={[styles.multiImageContainer, styles.row, { gap: 4 }]}>
+        <View style={[styles.multiImageContainer, styles.row, { gap: 4, marginBottom: 16 }]}>
           <Pressable
             onPress={() => {
               setSelectedIndex(0);
@@ -170,7 +182,7 @@ const MultipleImages = ({
             }}
             style={{ flex: 1 }}
           >
-            <Image source={{ uri: imageUrls[0] }} contentFit='cover' />
+            <Image style={styles.image} source={{ uri: imageUrls[0] }} contentFit='cover' />
           </Pressable>
           <Pressable
             onPress={() => {
@@ -179,13 +191,13 @@ const MultipleImages = ({
             }}
             style={{ flex: 1 }}
           >
-            <Image source={{ uri: imageUrls[1] }} contentFit='cover' />
+            <Image style={styles.image} source={{ uri: imageUrls[1] }} contentFit='cover' />
           </Pressable>
         </View>
       );
     case 3:
       return (
-        <View style={[styles.multiImageContainer, styles.row, { gap: 4 }]}>
+        <View style={[styles.multiImageContainer, styles.row, { gap: 4 ,marginBottom: 16 }]}>
           <Pressable
             onPress={() => {
               setSelectedIndex(0);
@@ -231,7 +243,7 @@ const MultipleImages = ({
       );
     case 4:
       return (
-        <View style={[styles.multiImageContainer, { gap: 4 }]}>
+        <View style={[styles.multiImageContainer, { gap: 4 , marginBottom: 16}]}>
           <View style={[styles.row, { gap: 4, height: '50%' }]}>
             <Pressable
               onPress={() => {
@@ -355,6 +367,7 @@ const ImageModal = ({
         savedTranslateX={savedTranslateX[index]}
         savedTranslateY={savedTranslateY[index]}
         onClose={onClose}
+        onSingleTap={() => setOptionVisible(!OptionVisible)}
       />
     ),
     [
@@ -396,6 +409,24 @@ const ImageModal = ({
     },
   });
 
+  const [OptionVisible, setOptionVisible] = useState(false)
+  const [renderStatus, setRenderStatus] = useState(false);
+
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+      if (OptionVisible) {
+        setRenderStatus(true); // Render the component when modal becomes visible
+        opacity.value = withSpring(1, { duration: 300 });
+      } else {
+        opacity.value = withSpring(0, { duration: 300 }, () => {
+          runOnJS(() => {
+            setRenderStatus(false); // Remove the component after animation
+          });
+        });
+      }
+    }, [OptionVisible]);
+  
   return (
     <Modal visible={visible} transparent animationType='fade'>
       <GestureHandlerRootView style={styles.modalContainer}>
@@ -417,6 +448,18 @@ const ImageModal = ({
             index,
           })}
         />
+        {renderStatus && (
+          <Animated.View
+          style={{opacity: opacity}}>
+              <OptionModal/>
+          </Animated.View>
+          )}
+          {renderStatus && (
+          <Animated.View
+          style={{opacity: opacity}}>
+              <OptionModalUpper onClose={onClose}/>
+          </Animated.View>
+      )}
       </GestureHandlerRootView>
     </Modal>
   );
@@ -433,6 +476,7 @@ const ImageItem = React.memo(
     savedTranslateX,
     savedTranslateY,
     onClose,
+    onSingleTap
   }: {
     item: string;
     index: number;
@@ -443,6 +487,7 @@ const ImageItem = React.memo(
     savedTranslateX: SharedValue<number>;
     savedTranslateY: SharedValue<number>;
     onClose: () => void;
+    onSingleTap: () => void
   }) => {
     useEffect(() => {
       if (index === 0) {
@@ -498,6 +543,13 @@ const ImageItem = React.memo(
         }
       });
 
+      const singleTap = Gesture.Tap()
+      .numberOfTaps(1)
+      .maxDuration(300)
+      .onStart(() => {
+        runOnJS(onSingleTap)();
+      });
+
     const doubleTap = Gesture.Tap()
       .numberOfTaps(2)
       .onStart(() => {
@@ -513,8 +565,10 @@ const ImageItem = React.memo(
           savedScale.value = 2;
         }
       });
+    
+    const tapGesture = Gesture.Exclusive(doubleTap, singleTap);
 
-    const composed = Gesture.Simultaneous(pan, pinch, doubleTap);
+    const composed = Gesture.Simultaneous(pan, pinch, tapGesture);
 
     const animatedStyle = useAnimatedStyle(() => {
       return {
@@ -539,6 +593,77 @@ const ImageItem = React.memo(
     );
   }
 );
+
+const OptionModalUpper = (props): JSX.Element => {
+  return(
+      <View style={[
+          {position: 'absolute',
+          bottom: SCREEN_HEIGHT- 100,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          paddingHorizontal: 30,
+          paddingVertical:50,
+          elevation: 6,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 10,
+          height: 100,
+          width: SCREEN_WIDTH
+          }]}
+      >
+          <Pressable onPress={props.onClose}>
+              <Xmark height={25} width={25} color={'#ffffff'}/>
+          </Pressable>
+          </View>
+  )
+}
+
+const OptionModal = (props): JSX.Element => {
+  return(
+      <View style={[
+                      {position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                      padding: 20,
+                      elevation: 5,
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: -2 },
+                      shadowOpacity: 0.1,
+                      shadowRadius: 10
+                      }]}
+          >
+
+              <View style={{marginHorizontal: 16,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          height: 24,
+                          marginVertical: 16,
+              }}>
+                  <HeartIcon width={20} height={20} initialcolor='#ffffff'/>
+                  <Link href={{
+                  pathname: '/reply-editor-modal',
+                  params: {
+                      postID: props.postID,
+                      postContent: props.postContent,
+                      ImageUrlRow: props.ImageUrlRow,
+                      userID: props.userID,
+                      user: props.user,
+                      userAvatarUrl: props.userAvatarUrl,
+                      createAt: props.createAt,
+                      view: props.view
+                  },
+                  }}
+                  asChild >
+                  <Message width={20} height={20} color={'#ffffff'} />
+                  </Link>
+                  <ShareIcon width={20} height={20} color={'#ffffff'} />
+              </View>
+          </View>
+  )
+}
 
 const styles = StyleSheet.create({
   imageContainer: {

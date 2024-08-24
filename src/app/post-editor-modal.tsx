@@ -22,7 +22,7 @@ import BgView from '../components/ThemedBgView';
 import IconAntDesign from '../components/Icons/AntDesign';
 import Color from '@/src/constants/Colors';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { useNavigation } from 'expo-router';
+import { useNavigation, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import Icon from 'react-native-vector-icons/AntDesign';
 import ImageAspectKept from '../components/OriginalAspectImage';
@@ -33,6 +33,7 @@ import { insertPost } from '../backend/components/DB_Access/post';
 import { GetImageData } from '../backend/components/DB_Access/Image';
 import { uploadImageToStorage } from '../backend/components/DB_Access/Image';
 import { uploadImage } from '../backend/components/DB_Access/Image';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const PostEditorModal = () => {
   const [text, setText] = useState('');
@@ -95,6 +96,8 @@ const PostEditorModal = () => {
     }
   };
 
+  const { showActionSheetWithOptions } = useActionSheet();
+
   const textColor = Color[colorScheme ?? 'light'].text;
   const secondaryTextColor = Color[colorScheme ?? 'light'].secondaryText;
 
@@ -126,6 +129,51 @@ const PostEditorModal = () => {
     }).start();
   };
 
+  const onClose = () => {
+    const title = '下書きに保存しまますか？';
+    const options = ['内容を削除する', '内容を保存する', '編集を続行する'];
+    const destructiveButtonIndex = 0;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        title,
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+            navigation.goBack();
+            break;
+          case 1:
+            navigation.goBack();
+            break;
+          case 2:
+            break;
+        }
+      }
+    );
+  };
+
+  const onPublish = () => {
+    const options = ['公開する', '編集を続行する'];
+    const cancelButtonIndex = 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex === 0) {
+          handlePost
+        }
+      }
+    );
+  };
+
   const handlePost = async () => {
     try {
       const ImageUrls = await Promise.all(
@@ -149,15 +197,27 @@ const PostEditorModal = () => {
 
   return (
     <BgView style={[styles.container]}>
+      <View style={styles.header}>
+        <Pressable
+          onPress={onClose}
+          style={[styles.headerItem, { alignItems: 'flex-start' }]}
+        >
+          <Text style={[styles.text1, { color: textColor }]}>キャンセル</Text>
+        </Pressable>
+        <View style={[styles.headerItem]}>
+          <Text style={[styles.text2, { color: textColor }]}>新規ポスト</Text>
+        </View>
+        <Pressable
+          onPress={onPublish}
+          style={[styles.headerItem, { alignItems: 'flex-end' }]}
+        >
+          <Text style={[styles.text2, { color: '#2f95dc' }]}>完了</Text>
+        </Pressable>
+      </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
       >
-        <View style={styles.header}>
-          <Text style={[styles.headertitle, { color: textColor }]}>
-            新規ポスト
-          </Text>
-        </View>
         <Modal animationType='fade' transparent={true} visible={loading}>
           <View style={styles.dialog}>
             <BlurView tint={'systemMaterial'} style={styles.dialogInner}>
@@ -260,27 +320,6 @@ const PostEditorModal = () => {
           },
         ]}
       >
-        <View
-          style={[
-            styles.bottomButtonContainer,
-            { borderTopColor: secondaryTextColor },
-          ]}
-        >
-          <View style={[styles.buttonContainer]}>
-            <FontAwesome6 name='xmark' size={16} color={textColor} />
-            <Button
-              title='Close'
-              onPress={() => {
-                navigation.goBack();
-              }}
-              color={textColor}
-            />
-          </View>
-          <View style={styles.buttonContainer}>
-            <FontAwesome6 name='check' size={16} color={textColor} />
-            <Button title='Post' onPress={handlePost} color={textColor} />
-          </View>
-        </View>
       </BgView>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
@@ -299,6 +338,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingBottom: 20,
     borderBottomColor: '#ddd',
+    flexDirection: 'row',
+    paddingHorizontal: 16
+  },
+  headerItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  text2: {
+    fontSize: 16,
+    fontWeight: '600',
   },
   headertitle: {
     fontSize: 18,
