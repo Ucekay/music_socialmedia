@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -28,6 +28,13 @@ import { useTheme } from '../contexts/ColorThemeContext';
 import TrackSearchField from './TrackSearchField';
 import { TextInput } from 'react-native-gesture-handler';
 
+interface Track {
+  id: string;
+  songName: string;
+  artistName: string;
+  artworkUrl: string;
+}
+
 type TodaySongCardProps = {
   todaySong?: TodaySongDataType;
   isEditing: boolean;
@@ -35,9 +42,11 @@ type TodaySongCardProps = {
   onSongInfoPress?: () => void;
   onBodyPress?: () => void;
   inputText?: string;
-  setInputText?: (text: string) => void;
-  trackName: string;
-  setTrackName?: (text: string) => void;
+  setInputText?: React.Dispatch<React.SetStateAction<string>>;
+  track: Track;
+  setTrack?: React.Dispatch<React.SetStateAction<Track>>;
+  isSearching?: boolean;
+  setIsSearching?: React.Dispatch<React.SetStateAction<boolean>>;
   displayCharCount?: number;
   setDisplayCharCount?: (count: number) => void;
 };
@@ -50,8 +59,10 @@ const TodaySongCard = ({
   onBodyPress,
   inputText,
   setInputText,
-  trackName,
-  setTrackName,
+  track,
+  setTrack,
+  isSearching,
+  setIsSearching,
   displayCharCount,
   setDisplayCharCount,
 }: TodaySongCardProps) => {
@@ -66,6 +77,13 @@ const TodaySongCard = ({
   const [endColor, setEndColor] = useState('');
   const [songInfoHeight, setSongInfoHeight] = useState(0);
   const prevNewlineCountRef = useRef(0);
+
+  const handleTrackSelect = (selectedTrack: Track) => {
+    if (setTrack && setIsSearching) {
+      setTrack(selectedTrack);
+      setIsSearching(false);
+    }
+  };
 
   const calculateAdjustedCount = (text: string) => {
     const newlineCount = (text.match(/\n/g) || []).length;
@@ -87,23 +105,16 @@ const TodaySongCard = ({
     prevNewlineCountRef.current = newNewlineCount;
   };
 
-  const onLayout = ({
-    nativeEvent: {
-      layout: { height },
-    },
-  }: {
-    nativeEvent: {
-      layout: {
-        height: number;
-      };
-    };
-  }) => {
-    setSongInfoHeight(height);
-  };
-
   useEffect(() => {
     if (!isEditing && todaySong?.artworkUrl) {
       RNColorThief.getColor(todaySong.artworkUrl, 20, false).then(
+        (color: { r: number; g: number; b: number }) => {
+          setStartColor(rgbObjectToRgbaString(color, 40));
+          setEndColor(rgbObjectToRgbaString(color, 0));
+        }
+      );
+    } else if (isEditing && track.artworkUrl) {
+      RNColorThief.getColor(track.artworkUrl, 20, false).then(
         (color: { r: number; g: number; b: number }) => {
           setStartColor(rgbObjectToRgbaString(color, 40));
           setEndColor(rgbObjectToRgbaString(color, 0));
@@ -113,7 +124,7 @@ const TodaySongCard = ({
       setStartColor('');
       setEndColor('');
     }
-  }, [todaySong?.artworkUrl, isEditing]);
+  }, [todaySong?.artworkUrl, isEditing, track.artworkUrl]);
 
   const shadowColor = colorScheme === 'dark' ? '#fff' : '#000';
 
@@ -123,10 +134,18 @@ const TodaySongCard = ({
         <Pressable onPress={isEditing ? onSongInfoPress : undefined}>
           <View style={styles.songInfo}>
             <Text style={styles.songName}>
-              {isEditing ? 'タップして曲を選択' : todaySong?.songName || ''}
+              {isEditing
+                ? !track.artistName && !track.songName
+                  ? 'タップして曲を選択'
+                  : track.songName
+                : todaySong?.songName || ''}
             </Text>
             <Text style={styles.artistName}>
-              {isEditing ? '' : todaySong?.artistName || ''}
+              {isEditing
+                ? !track.artistName && !track.songName
+                  ? ''
+                  : track.artistName
+                : todaySong?.artistName || ''}
             </Text>
           </View>
         </Pressable>
@@ -157,7 +176,7 @@ const TodaySongCard = ({
     </View>
   );
   const renderImage = () => {
-    if (isEditing && songInfoShown) {
+    if (isEditing && songInfoShown && !track.artworkUrl) {
       return (
         <View
           style={[
@@ -166,6 +185,12 @@ const TodaySongCard = ({
             { backgroundColor: colors.border },
           ]}
         ></View>
+      );
+    } else if (isEditing && songInfoShown && track.artworkUrl) {
+      return (
+        <BgView style={styles.imageContainer}>
+          <Image source={{ uri: track.artworkUrl }} style={styles.image} />
+        </BgView>
       );
     } else if (songInfoShown) {
       return (
@@ -179,12 +204,7 @@ const TodaySongCard = ({
   const renderSong = () => {
     if (songInfoShown) {
       return (
-        <Animated.View
-          entering={FadeIn}
-          exiting={FadeOut}
-          style={styles.song}
-          onLayout={onLayout}
-        >
+        <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.song}>
           {renderImage()}
           {renderSongInfo()}
         </Animated.View>
@@ -204,7 +224,7 @@ const TodaySongCard = ({
         onPress={dismissKeyboard}
         style={[styles.card, { backgroundColor, shadowColor }]}
       >
-        {startColor && endColor && !isEditing && (
+        {startColor && endColor && (
           <Animated.View entering={FadeIn} style={StyleSheet.absoluteFill}>
             <LinearGradient
               colors={[startColor, endColor, 'transparent']}
@@ -234,13 +254,13 @@ const TodaySongCard = ({
               exiting={FadeOut}
               style={{
                 width: '100%',
-                height: songInfoHeight,
+                height: 300,
+                paddingBottom: 4,
               }}
             >
               <TrackSearchField
                 placeholder='楽曲を検索'
-                trackName={trackName}
-                setTrackName={() => setTrackName}
+                onTrackSelect={handleTrackSelect}
               />
             </Animated.View>
           )}
@@ -260,7 +280,8 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 16,
     borderCurve: 'continuous',
-    padding: 16,
+    paddingTop: 16,
+    paddingHorizontal: 12,
     paddingBottom: 20,
     gap: 40,
     shadowOffset: {
@@ -281,10 +302,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     gap: 8,
+    marginHorizontal: 4,
   },
   todaySongInner: {
-    width: '100%',
     gap: 32,
+    paddingHorizontal: 4,
   },
   avatar: {
     width: 32,
@@ -294,6 +316,7 @@ const styles = StyleSheet.create({
   song: {
     alignItems: 'center',
     gap: 28,
+    height: 300,
   },
   imageContainer: {
     width: 220,

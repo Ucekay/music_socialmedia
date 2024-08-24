@@ -1,14 +1,27 @@
-import React from 'react';
-import { View, TextInput, StyleSheet, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  TouchableWithoutFeedback,
+  Pressable,
+} from 'react-native';
 import { useTheme } from '../contexts/ColorThemeContext';
 import { Image } from 'expo-image';
 
 import Text from './ThemedText';
+import { set } from 'date-fns';
+interface Track {
+  id: string;
+  songName: string;
+  artistName: string;
+  artworkUrl: string;
+}
 
 interface SearchFieldProps {
   placeholder: string;
-  trackName: string;
-  setTrackName: React.Dispatch<React.SetStateAction<string>>;
+  onTrackSelect: (track: Track) => void;
 }
 
 const SONGS = [
@@ -58,16 +71,21 @@ const SONGS = [
 
 const TrackSearchField: React.FC<SearchFieldProps> = ({
   placeholder,
-  trackName,
-  setTrackName,
+  onTrackSelect,
 }) => {
   const { colors } = useTheme();
+  const [searchQuery, setSearchQuery] = useState('');
   const searchFieldTextColor = colors.appleMusicText;
   const searchFieldBgColor = colors.appleMusicBg;
 
-  const renderItem = ({ item, index }) => {
+  const handlePress = (item: Track) => {
+    onTrackSelect(item);
+  };
+
+  const renderItem = ({ item, index }: { item: Track; index: number }) => {
     return (
-      <View
+      <Pressable
+        onPress={() => handlePress(item)}
         style={{
           flexDirection: 'row',
           alignItems: 'center',
@@ -100,7 +118,7 @@ const TrackSearchField: React.FC<SearchFieldProps> = ({
             </Text>
           </View>
         </View>
-      </View>
+      </Pressable>
     );
   };
 
@@ -118,6 +136,8 @@ const TrackSearchField: React.FC<SearchFieldProps> = ({
         <TextInput
           placeholder={placeholder}
           placeholderTextColor={searchFieldTextColor}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
           style={[styles.inputText, { color: searchFieldTextColor }]}
         />
       </View>
