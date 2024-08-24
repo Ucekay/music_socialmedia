@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -37,7 +37,7 @@ type TodaySongCardProps = {
   inputText?: string;
   setInputText?: (text: string) => void;
   trackName: string;
-  setTrackName?: (text: string) => void;
+  setTrackName: React.Dispatch<React.SetStateAction<string>>;
   displayCharCount?: number;
   setDisplayCharCount?: (count: number) => void;
 };
@@ -199,54 +199,14 @@ const TodaySongCard = ({
   };
 
   return (
-    <View style={[styles.cardContainer, { width }]}>
-      <Pressable
-        onPress={dismissKeyboard}
-        style={[styles.card, { backgroundColor, shadowColor }]}
-      >
-        {startColor && endColor && !isEditing && (
-          <Animated.View entering={FadeIn} style={StyleSheet.absoluteFill}>
-            <LinearGradient
-              colors={[startColor, endColor, 'transparent']}
-              style={[styles.gradient, StyleSheet.absoluteFill]}
-            />
-          </Animated.View>
-        )}
-        {!isEditing && (
-          <View style={styles.userInfo}>
-            <Image
-              source={{ uri: todaySong?.userAvatarUrl }}
-              style={styles.avatar}
-            />
-            <Text>{todaySong?.userID || ''}</Text>
-          </View>
-        )}
-        {isEditing && (
-          <View style={styles.userInfo}>
-            <View style={styles.avatar}></View>
-          </View>
-        )}
-        <View style={styles.todaySongInner}>
-          {renderSong()}
-          {!songInfoShown && (
-            <Animated.View
-              entering={FadeInDown}
-              exiting={FadeOut}
-              style={{
-                width: '100%',
-                height: songInfoHeight,
-              }}
-            >
-              <TrackSearchField
-                placeholder='楽曲を検索'
-                trackName={trackName}
-                setTrackName={() => setTrackName}
-              />
-            </Animated.View>
-          )}
-          {renderBody()}
-        </View>
-      </Pressable>
+    <View>
+      <View style={{ height: 300 }}>
+        <TrackSearchField
+          placeholder='楽曲を検索'
+          trackName={trackName}
+          setTrackName={setTrackName}
+        />
+      </View>
     </View>
   );
 };

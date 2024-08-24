@@ -83,5 +83,21 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           <Stack.Screen name='profile' />
         </Stack>
       );
+    case '(discover)':
+      return (
+        <Stack
+          screenOptions={{
+            title: 'Discover',
+            headerTransparent: true,
+            headerStyle: { ...themedContainerStyle },
+            headerBackground: () => (
+              <BlurView tint='regular' style={StyleSheet.absoluteFill} />
+            ),
+            headerTintColor: colors.text,
+          }}
+        >
+          <Stack.Screen name='discover' />
+        </Stack>
+      );
   }
 }

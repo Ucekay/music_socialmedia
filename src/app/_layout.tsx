@@ -107,7 +107,7 @@ function RootLayoutNav() {
                   name='today-song-editor-modal'
                   options={{
                     title: '今日の一曲を編集',
-                    presentation: 'modal',
+                    presentation: 'fullScreenModal',
                     gestureEnabled: false,
                   }}
                 />
