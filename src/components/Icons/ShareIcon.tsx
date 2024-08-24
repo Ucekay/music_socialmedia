@@ -9,12 +9,14 @@ interface ShareIconProps {
   width: number;
   height: number;
   strokeWidth?: number;
+  color?: string
 }
 
 const ShareIcon: React.FC<ShareIconProps> = ({
   width,
   height,
   strokeWidth,
+  color
 }) => {
   const { colors } = useTheme();
   const onShare = async () => {
@@ -41,7 +43,7 @@ const ShareIcon: React.FC<ShareIconProps> = ({
     <ShareIos
       width={width}
       height={height}
-      color={colors.secondaryText}
+      color={color || colors.secondaryText}
       strokeWidth={strokeWidth ? strokeWidth : 1.5}
       onPress={onShare}
     />
