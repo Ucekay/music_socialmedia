@@ -8,6 +8,7 @@ import { getLiveReport } from "../DB_Access/Article/LiveReport";
 import { getPlaylistArticle } from "../DB_Access/Article/PlaylistArticle";
 import { getReview } from "../DB_Access/Article/Review";
 import { checkAuth } from "../DB_Access/checkAuth";
+import { getUserProfileforPosts } from "../DB_Access/profile";
 
 export type ArticleMetaData = 
         Database['public']['Tables']['Article']['Row']
@@ -52,15 +53,8 @@ Promise<{articlemetaData: Articles[], cursor:string | null, latestcursor:string|
     
     try{
         const articlemetaData: Articles[]= await Promise.all(metadata.map(async(Data)=>{
-            const {data, error} = await supabase
-            .from('Users')
-            .select('IconImageUrl, UserName, ProfileID')
-            .eq('UserID', Data.UserID)
-            .single()
+            const data = await getUserProfileforPosts(Data.UserID)
 
-            if(error){
-                throw error;
-            }
             return{
                 ArticleID: Data.ArticleID,
                 Title :Data.Title,

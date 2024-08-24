@@ -1,66 +1,77 @@
 import ExpoModulesCore
 import MusicKit
+import Foundation
 
 @objc(MusicKitModule)
-class MusicKitModule: NSObject, ExpoModulesProvider {
-  func getModuleClasses() -> [AnyClass] {
-    return [Self.self]
-  }
+public class MusicKitAuth: NSObject, ExpoModulesProvider {
+  public func definition() -> ModuleDefinition {
+    Name("MusicKitAuth")
 
-  // MusicKit の初期化ステータス
-  private var musicKitAuthorizationStatus: MusicAuthorization.Status? = nil
+    // MusicKit の初期化ステータス
+    private var musicKitAuthorizationStatus: MusicAuthorization.Status? = nil
 
-  // Apple Music の機能利用許可をリクエストする
-  @objc
-  func requestAuthorization(_ promise: EXPOPromise) {
-    Task {
-      do {
-        let status = try await MusicAuthorization.request()
-        self.musicKitAuthorizationStatus = status
-        promise.resolve(status.rawValue) // 状態を数値として返す
-      } catch {
-        promise.reject("MusicKitAuthorizationError", error.localizedDescription)
+    // Apple Music の機能利用許可をリクエストする
+    @ExpoMethod
+    Function("requestAuthorization"){(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void in
+          Task {
+              do {
+                  let status = try await MusicAuthorization.request()
+                  resolve(status.rawValue) // 状態を数値として返す
+              } catch {
+                  reject("MusicKitAuthorizationError", error.localizedDescription, error)
+              }
+          }
+      }
+
+    // 現在の MusicKit 認証状態を取得する
+    @ExpoMethod
+    Function("getAuthorizationStatus"){(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void in
+      Task {
+        let status = MusicAuthorization.currentStatus
+        musicKitAuthorizationStatus = status
+        resolve(status.rawValue)
       }
     }
-  }
 
-  // 現在の MusicKit 認証状態を取得する
-  @objc
-  func getAuthorizationStatus(_ promise: EXPOPromise) {
-    let status = MusicKit.authorizationStatus
-    musicKitAuthorizationStatus = status
-    promise.resolve(status.rawValue)
-  }
+    // サブスクリプションのステータスを取得する
+    @ExpoMethod
+    Funtion("getSubscriptionStatus"){(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void in
+          Task {
+              do {
+                  // 現在の認証状態を確認
+                  let status = MusicAuthorization.currentStatus
+                  guard status == .authorized else {
+                      reject("MusicKitNotAuthorized", "MusicKit is not authorized.", nil)
+                      return
+                  }
 
-  // サブスクリプションのステータスを取得する
-  @objc
-  func getSubscriptionStatus(_ promise: EXPOPromise) {
-    Task {
-      do {
-        if let musicKitAuthorizationStatus,
-           musicKitAuthorizationStatus == .authorized,
-           let currentStorefrontCountryCode = MusicKit.shared.currentCountryCode {
-          let subscriptionStatus = try await MusicData.shared.subscriptionStatus(in: currentStorefrontCountryCode)
-          
-          // subscriptionStatus から必要な情報を取得して JavaScript に返す
-          let statusDictionary: [String: Any] = [
-            "isSubscribed": subscriptionStatus.isSubscribed,
-            "productType": subscriptionStatus.productType.rawValue
-          ]
-          promise.resolve(statusDictionary)
-        } else {
-          promise.reject("MusicKitNotAuthorized", "MusicKit is not authorized.")
-        }
-      } catch {
-        promise.reject("SubscriptionStatusError", error.localizedDescription)
+                  // 現在のストアフロントの国コードを取得
+                  guard let currentStorefrontCountryCode = try await MusicKit.currentCountryCode else {
+                      reject("StorefrontCountryCodeError", "Failed to get current storefront country code.", nil)
+                      return
+                  }
+
+                  // サブスクリプションのステータスを取得
+                  let subscriptionStatus = try await MusicSubscription.current
+
+                  // subscriptionStatus から必要な情報を取得して JavaScript に返す
+                  let statusDictionary: [String: Any] = [
+                      "isSubscribed": subscriptionStatus.canPlayCatalogContent,
+                      "productType": subscriptionStatus.subscriptionType.rawValue
+                  ]
+                  resolve(statusDictionary)
+              } catch {
+                  reject("SubscriptionStatusError", error.localizedDescription, error)
+              }
+          }
       }
-    }
-  }
 
-  // 開発者トークンを設定する
-  @objc
-  func setDeveloperToken(_ developerToken: String, promise: EXPOPromise) {
-    MusicKit.configure(developerToken: developerToken)
-    promise.resolve(nil)
+
+    // 開発者トークンを設定する
+    @ExpoMethod
+    Function("setDeveloperToken"){(_ developerToken: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void in
+      MusicKit.configure(developerToken: developerToken)
+      resolve(nil)
+    }
   }
 }

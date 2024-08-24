@@ -4,6 +4,11 @@ import { checkAuth } from "./checkAuth";
 
 export type UserProfile = Database['public']['Tables']['Users']['Row']
 export type UpdateUserProfile = Omit<Database['public']['Tables']['Users']['Update'], "UserID">
+export type UserProfileforPosts = { 
+      IconImageUrl: string,
+      ProfileID: string,
+      UserName: string
+}
 
 export const getUserId = async (): Promise<string> => {
     const userId = checkAuth();
@@ -53,3 +58,22 @@ Promise<boolean> => {
     }
   };
 
+//投稿用のプロフィール取得関数
+export const getUserProfileforPosts = async (userId: string): Promise<UserProfileforPosts> =>{
+  try {
+      const { data, error } = await supabase // UserIDによる絞り込みを削除
+        .from('Users') // テーブル名を修正
+        .select('IconImageUrl, UserName, ProfileID')
+        .eq('UserID', userId)
+        .single()
+  
+      if (error) {
+        throw new Error('データの取得エラー: ' + error.message);
+      }
+  
+      return data; 
+    } catch (error) {
+      console.error('データの取得中にエラーが発生しました:', error);
+      throw error;
+    }
+  };

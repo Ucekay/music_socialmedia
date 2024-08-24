@@ -5,6 +5,7 @@ import {
   getNewerPosts,
 } from '../DB_Access/post';
 import { PostData } from '@/src/types';
+import { getUserProfileforPosts } from '../DB_Access/profile';
 
 interface FetchPostsParams {
   cursor: string | null;
@@ -44,14 +45,7 @@ export const createPostDataset = async ({
 
   const postData: PostData[] = await Promise.all(
     posts.map(async (post) => {
-      const { data: userData, error: userError } = await supabase
-        .from('Users')
-        .select('IconImageUrl, UserName, ProfileID')
-        .eq('UserID', post.UserID)
-        .single();
-
-      if (userError) throw userError;
-
+      const userData= await getUserProfileforPosts(post.UserID)
       const { data: likeData, error: likeError } = await supabase
         .from('PostLikes')
         .select('PostID')

@@ -115,22 +115,27 @@ export type Database = {
         Row: {
           ArticleID: number
           created_at: string
-          Type: string
           UserID: string
         }
         Insert: {
           ArticleID?: number
           created_at?: string
-          Type: string
           UserID?: string
         }
         Update: {
           ArticleID?: number
           created_at?: string
-          Type?: string
           UserID?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "ArticleLikes_ArticleID_fkey"
+            columns: ["ArticleID"]
+            isOneToOne: false
+            referencedRelation: "Article"
+            referencedColumns: ["ArticleID"]
+          },
+        ]
       }
       Blocks: {
         Row: {
@@ -593,6 +598,36 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "Today'sSong_UserID_fkey"
+            columns: ["UserID"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      TodaysSongLikes: {
+        Row: {
+          TodaysSongID: number
+          UserID: string
+        }
+        Insert: {
+          TodaysSongID: number
+          UserID?: string
+        }
+        Update: {
+          TodaysSongID?: number
+          UserID?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "TodaysSongLikes_TodaysSongID_fkey"
+            columns: ["TodaysSongID"]
+            isOneToOne: false
+            referencedRelation: "TodaysSong"
+            referencedColumns: ["TodaysSongID"]
+          },
+          {
+            foreignKeyName: "TodaysSongLikes_UserID_fkey"
             columns: ["UserID"]
             isOneToOne: false
             referencedRelation: "users"

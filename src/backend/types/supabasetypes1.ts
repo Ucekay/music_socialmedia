@@ -42,6 +42,7 @@ export type Database = {
           Info1: string | null
           Info2: string | null
           ThumbnailURL: string
+          Title: string
           Type: string
           UserID: string
         }
@@ -51,6 +52,7 @@ export type Database = {
           Info1?: string | null
           Info2?: string | null
           ThumbnailURL: string
+          Title: string
           Type: string
           UserID?: string
         }
@@ -60,6 +62,7 @@ export type Database = {
           Info1?: string | null
           Info2?: string | null
           ThumbnailURL?: string
+          Title?: string
           Type?: string
           UserID?: string
         }
@@ -199,37 +202,35 @@ export type Database = {
         Row: {
           ArticleID: number
           Body: Json
-          created_at: string
           likes: number
           PlaylistID: number | null
-          Thumbnailurl: string | null
-          Title: string
           UserID: string
           view: number
         }
         Insert: {
           ArticleID?: number
           Body: Json
-          created_at?: string
           likes?: number
           PlaylistID?: number | null
-          Thumbnailurl?: string | null
-          Title: string
           UserID?: string
           view?: number
         }
         Update: {
           ArticleID?: number
           Body?: Json
-          created_at?: string
           likes?: number
           PlaylistID?: number | null
-          Thumbnailurl?: string | null
-          Title?: string
           UserID?: string
           view?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "General_ArticleID_fkey"
+            columns: ["ArticleID"]
+            isOneToOne: true
+            referencedRelation: "Article"
+            referencedColumns: ["ArticleID"]
+          },
           {
             foreignKeyName: "General_PlaylistID_fkey"
             columns: ["PlaylistID"]
@@ -248,38 +249,26 @@ export type Database = {
       }
       LiveReport: {
         Row: {
-          ArtistName: string | null
           Body: Json
-          created_at: string
           likes: number
           LiveReportID: number
           PlaylistID: number | null
-          Thumbnailurl: string | null
-          Title: string
           UserID: string
           view: number
         }
         Insert: {
-          ArtistName?: string | null
           Body: Json
-          created_at?: string
           likes?: number
           LiveReportID?: number
           PlaylistID?: number | null
-          Thumbnailurl?: string | null
-          Title: string
           UserID?: string
           view?: number
         }
         Update: {
-          ArtistName?: string | null
           Body?: Json
-          created_at?: string
           likes?: number
           LiveReportID?: number
           PlaylistID?: number | null
-          Thumbnailurl?: string | null
-          Title?: string
           UserID?: string
           view?: number
         }
@@ -333,33 +322,24 @@ export type Database = {
         Row: {
           ArticleID: number
           Body: Json
-          created_at: string
           likes: number
           PlaylistID: number | null
-          Thumbnailurl: string | null
-          Title: string
           UserID: string
           view: number
         }
         Insert: {
           ArticleID?: number
           Body: Json
-          created_at?: string
           likes?: number
           PlaylistID?: number | null
-          Thumbnailurl?: string | null
-          Title: string
           UserID?: string
           view?: number
         }
         Update: {
           ArticleID?: number
           Body?: Json
-          created_at?: string
           likes?: number
           PlaylistID?: number | null
-          Thumbnailurl?: string | null
-          Title?: string
           UserID?: string
           view?: number
         }
@@ -542,38 +522,26 @@ export type Database = {
       }
       Review: {
         Row: {
-          ArtistName: string | null
           Body: Json
-          created_at: string
           likes: number
           PlaylistID: number | null
           ReviewID: number
-          Thumbnailurl: string | null
-          Title: string
           UserID: string
           view: number
         }
         Insert: {
-          ArtistName?: string | null
           Body: Json
-          created_at?: string
           likes?: number
           PlaylistID?: number | null
           ReviewID?: number
-          Thumbnailurl?: string | null
-          Title: string
           UserID?: string
           view?: number
         }
         Update: {
-          ArtistName?: string | null
           Body?: Json
-          created_at?: string
           likes?: number
           PlaylistID?: number | null
           ReviewID?: number
-          Thumbnailurl?: string | null
-          Title?: string
           UserID?: string
           view?: number
         }
