@@ -1,19 +1,43 @@
-import { View, Platform, Button, TextInput } from 'react-native';
+import { useState } from 'react';
+import {
+  View,
+  Platform,
+  Button,
+  Text,
+  KeyboardAvoidingView,
+} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Stack, useNavigation } from 'expo-router';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { useTheme } from '../contexts/ColorThemeContext';
 import SecondaryBgView from '../components/ThemedSecondaryBgView';
-import TrackSearchField from '../components/TrackSearchField';
-import { useState } from 'react';
 import TodaySongCard from '../components/TodaySongCard';
+
+interface Track {
+  id: string;
+  songName: string;
+  artistName: string;
+  artworkUrl: string;
+}
 
 const TodaySongEditorModal = () => {
   const { colors } = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
   const navigation = useNavigation();
-  const [trackName, setTrackName] = useState('');
+  const headerHeight = useHeaderHeight();
+  const insets = useSafeAreaInsets();
+  const [track, setTrack] = useState<Track>({
+    id: '',
+    songName: '',
+    artistName: '',
+    artworkUrl: '',
+  });
   const [inputText, setInputText] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [displayCharCount, setDisplayCharCount] = useState(0);
 
   const onClose = () => {
     const title = '下書きに保存しまますか？';
@@ -58,21 +82,79 @@ const TodaySongEditorModal = () => {
       }
     );
   };
+
   return (
     <SecondaryBgView style={{ flex: 1 }}>
-      <Stack.Screen
-        options={{
-          headerLeft: () => (
-            <Button title='閉じる' color={colors.text} onPress={onClose} />
-          ),
-          headerRight: () => <Button title='公開する' onPress={onPublish} />,
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={headerHeight + insets.top}
+        style={{
+          flex: 1,
         }}
-      />
-      <View style={{ paddingTop: 32 }}>
-        <TodaySongCard isEditing />
-      </View>
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      >
+        <Stack.Screen
+          options={{
+            headerLeft: () => (
+              <Button title='閉じる' color={colors.text} onPress={onClose} />
+            ),
+            headerRight: () => <Button title='公開する' onPress={onPublish} />,
+          }}
+        />
+        <View
+          style={{
+            paddingTop: 32,
+            justifyContent: 'flex-end',
+          }}
+        >
+          <TodaySongCard
+            isEditing
+            onSongInfoPress={() => setIsSearching(true)}
+            songInfoShown={!isSearching}
+            inputText={inputText}
+            setInputText={setInputText}
+            track={track}
+            setTrack={setTrack}
+            setIsSearching={setIsSearching}
+            displayCharCount={displayCharCount}
+            setDisplayCharCount={setDisplayCharCount}
+          />
+          <View
+            style={{
+              paddingVertical: 16,
+              paddingHorizontal: 32,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Text style={{ color: colors.text }}>
+              {displayCharCount}/150文字
+            </Text>
+            <View
+              style={{
+                width: '60%',
+                height: 4,
+                backgroundColor: colors.border,
+                borderRadius: 2,
+              }}
+            >
+              <View
+                style={{
+                  width:
+                    displayCharCount <= 150
+                      ? `${(displayCharCount / 150) * 100}%`
+                      : '100%',
+                  height: '100%',
+                  backgroundColor: displayCharCount > 150 ? 'red' : colors.tint,
+                  borderRadius: 2,
+                }}
+              />
+            </View>
+          </View>
+        </View>
+        {/* Use a light status bar on iOS to account for the black space above the modal */}
+        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+      </KeyboardAvoidingView>
     </SecondaryBgView>
   );
 };

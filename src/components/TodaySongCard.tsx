@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -14,25 +14,57 @@ import BgView from './ThemedBgView';
 import Text from './ThemedText';
 
 import { rgbObjectToRgbaString } from '../utils/color/ColorModifier';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import Colors from '../constants/Colors';
 import type { TodaySongDataType } from '../types';
 import { useTheme } from '../contexts/ColorThemeContext';
+import TrackSearchField from './TrackSearchField';
+import { TextInput } from 'react-native-gesture-handler';
+
+interface Track {
+  id: string;
+  songName: string;
+  artistName: string;
+  artworkUrl: string;
+}
 
 type TodaySongCardProps = {
   todaySong?: TodaySongDataType;
   isEditing: boolean;
+  songInfoShown: boolean;
   onSongInfoPress?: () => void;
   onBodyPress?: () => void;
-  onImagePress?: () => void;
+  inputText?: string;
+  setInputText?: React.Dispatch<React.SetStateAction<string>>;
+  track: Track;
+  setTrack?: React.Dispatch<React.SetStateAction<Track>>;
+  isSearching?: boolean;
+  setIsSearching?: React.Dispatch<React.SetStateAction<boolean>>;
+  displayCharCount?: number;
+  setDisplayCharCount?: (count: number) => void;
 };
 
 const TodaySongCard = ({
   todaySong,
   isEditing,
+  songInfoShown,
   onSongInfoPress,
   onBodyPress,
-  onImagePress,
+  inputText,
+  setInputText,
+  track,
+  setTrack,
+  isSearching,
+  setIsSearching,
+  displayCharCount,
+  setDisplayCharCount,
 }: TodaySongCardProps) => {
   const { width } = useWindowDimensions();
   const colorScheme = useColorScheme();
@@ -43,6 +75,35 @@ const TodaySongCard = ({
   const { colors } = useTheme();
   const [startColor, setStartColor] = useState('');
   const [endColor, setEndColor] = useState('');
+  const [songInfoHeight, setSongInfoHeight] = useState(0);
+  const prevNewlineCountRef = useRef(0);
+
+  const handleTrackSelect = (selectedTrack: Track) => {
+    if (setTrack && setIsSearching) {
+      setTrack(selectedTrack);
+      setIsSearching(false);
+    }
+  };
+
+  const calculateAdjustedCount = (text: string) => {
+    const newlineCount = (text.match(/\n/g) || []).length;
+    return text.length + newlineCount * 19;
+  };
+
+  useEffect(() => {
+    setDisplayCharCount?.(calculateAdjustedCount(inputText || ''));
+    prevNewlineCountRef.current = (inputText?.match(/\n/g) || []).length;
+  }, [inputText, calculateAdjustedCount]);
+
+  const onChangeInputText = (newText: string) => {
+    const newAdjustedCount = calculateAdjustedCount(newText);
+
+    setInputText?.(newText);
+    setDisplayCharCount?.(newAdjustedCount);
+
+    const newNewlineCount = (newText.match(/\n/g) || []).length;
+    prevNewlineCountRef.current = newNewlineCount;
+  };
 
   useEffect(() => {
     if (!isEditing && todaySong?.artworkUrl) {
@@ -52,39 +113,70 @@ const TodaySongCard = ({
           setEndColor(rgbObjectToRgbaString(color, 0));
         }
       );
+    } else if (isEditing && track.artworkUrl) {
+      RNColorThief.getColor(track.artworkUrl, 20, false).then(
+        (color: { r: number; g: number; b: number }) => {
+          setStartColor(rgbObjectToRgbaString(color, 40));
+          setEndColor(rgbObjectToRgbaString(color, 0));
+        }
+      );
     } else {
       setStartColor('');
       setEndColor('');
     }
-  }, [todaySong?.artworkUrl, isEditing]);
+  }, [todaySong?.artworkUrl, isEditing, track.artworkUrl]);
 
   const shadowColor = colorScheme === 'dark' ? '#fff' : '#000';
 
-  const renderSongInfo = () => (
-    <Pressable onPress={isEditing ? onSongInfoPress : undefined}>
-      <View style={styles.songInfo}>
-        <Text style={styles.songName}>
-          {isEditing ? 'タップして曲を選択' : todaySong?.songName || ''}
-        </Text>
-        <Text style={styles.artistName}>
-          {isEditing ? '' : todaySong?.artistName || ''}
-        </Text>
-      </View>
-    </Pressable>
-  );
+  const renderSongInfo = () => {
+    if (songInfoShown) {
+      return (
+        <Pressable onPress={isEditing ? onSongInfoPress : undefined}>
+          <View style={styles.songInfo}>
+            <Text style={styles.songName}>
+              {isEditing
+                ? !track.artistName && !track.songName
+                  ? 'タップして曲を選択'
+                  : track.songName
+                : todaySong?.songName || ''}
+            </Text>
+            <Text style={styles.artistName}>
+              {isEditing
+                ? !track.artistName && !track.songName
+                  ? ''
+                  : track.artistName
+                : todaySong?.artistName || ''}
+            </Text>
+          </View>
+        </Pressable>
+      );
+    }
+  };
+
+  const bodyInputRef = useRef<TextInput>(null);
 
   const renderBody = () => (
-    <Pressable onPress={isEditing ? onBodyPress : undefined}>
-      <View>
-        <Text>
-          {isEditing ? 'タップして本文を入力' : todaySong?.body || ''}
-        </Text>
-      </View>
-    </Pressable>
+    <View>
+      {isEditing ? (
+        <TextInput
+          ref={bodyInputRef}
+          value={inputText}
+          onChangeText={(text) => onChangeInputText(text)}
+          placeholder='本文を入力'
+          placeholderTextColor={colors.secondaryText}
+          multiline
+          numberOfLines={8}
+          maxLength={150}
+          readOnly={!songInfoShown}
+          style={{ color: colors.text }}
+        />
+      ) : (
+        <Text>{todaySong?.body || ''}</Text>
+      )}
+    </View>
   );
-
   const renderImage = () => {
-    if (isEditing) {
+    if (isEditing && songInfoShown && !track.artworkUrl) {
       return (
         <View
           style={[
@@ -94,19 +186,45 @@ const TodaySongCard = ({
           ]}
         ></View>
       );
+    } else if (isEditing && songInfoShown && track.artworkUrl) {
+      return (
+        <BgView style={styles.imageContainer}>
+          <Image source={{ uri: track.artworkUrl }} style={styles.image} />
+        </BgView>
+      );
+    } else if (songInfoShown) {
+      return (
+        <BgView style={styles.imageContainer}>
+          <Image source={{ uri: todaySong?.artworkUrl }} style={styles.image} />
+        </BgView>
+      );
     }
+  };
 
-    return (
-      <BgView style={styles.imageContainer}>
-        <Image source={{ uri: todaySong?.artworkUrl }} style={styles.image} />
-      </BgView>
-    );
+  const renderSong = () => {
+    if (songInfoShown) {
+      return (
+        <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.song}>
+          {renderImage()}
+          {renderSongInfo()}
+        </Animated.View>
+      );
+    }
+  };
+
+  const dismissKeyboard = () => {
+    if (isEditing && bodyInputRef.current?.isFocused()) {
+      bodyInputRef.current?.blur();
+    }
   };
 
   return (
     <View style={[styles.cardContainer, { width }]}>
-      <View style={[styles.card, { backgroundColor, shadowColor }]}>
-        {startColor && endColor && !isEditing && (
+      <Pressable
+        onPress={dismissKeyboard}
+        style={[styles.card, { backgroundColor, shadowColor }]}
+      >
+        {startColor && endColor && (
           <Animated.View entering={FadeIn} style={StyleSheet.absoluteFill}>
             <LinearGradient
               colors={[startColor, endColor, 'transparent']}
@@ -125,17 +243,30 @@ const TodaySongCard = ({
         )}
         {isEditing && (
           <View style={styles.userInfo}>
-            <View />
+            <View style={styles.avatar}></View>
           </View>
         )}
         <View style={styles.todaySongInner}>
-          <View style={styles.song}>
-            {renderImage()}
-            {renderSongInfo()}
-          </View>
+          {renderSong()}
+          {!songInfoShown && (
+            <Animated.View
+              entering={FadeInDown}
+              exiting={FadeOut}
+              style={{
+                width: '100%',
+                height: 300,
+                paddingBottom: 4,
+              }}
+            >
+              <TrackSearchField
+                placeholder='楽曲を検索'
+                onTrackSelect={handleTrackSelect}
+              />
+            </Animated.View>
+          )}
           {renderBody()}
         </View>
-      </View>
+      </Pressable>
     </View>
   );
 };
@@ -144,14 +275,13 @@ export default TodaySongCard;
 
 const styles = StyleSheet.create({
   cardContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
     paddingHorizontal: 16,
   },
   card: {
     borderRadius: 16,
     borderCurve: 'continuous',
-    padding: 16,
+    paddingTop: 16,
+    paddingHorizontal: 12,
     paddingBottom: 20,
     gap: 40,
     shadowOffset: {
@@ -172,10 +302,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     gap: 8,
+    marginHorizontal: 4,
   },
   todaySongInner: {
-    width: '100%',
     gap: 32,
+    paddingHorizontal: 4,
   },
   avatar: {
     width: 32,
@@ -185,6 +316,7 @@ const styles = StyleSheet.create({
   song: {
     alignItems: 'center',
     gap: 28,
+    height: 300,
   },
   imageContainer: {
     width: 220,
