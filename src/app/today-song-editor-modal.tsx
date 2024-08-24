@@ -174,10 +174,8 @@ const TodaySongEditorModal = () => {
         />
         <View
           style={{
-            flex: 1,
             paddingTop: 32,
             justifyContent: 'flex-end',
-            alignSelf: 'flex-start',
           }}
         >
           <TodaySongCard
