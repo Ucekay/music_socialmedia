@@ -7,11 +7,6 @@ const discover = () => {
   return (
     <View style={{ flex: 1 }}>
       <Text>discover</Text>
-      <TrackSearchField
-        placeholder='test'
-        trackName={search}
-        setTrackName={setSearch}
-      />
     </View>
   );
 };
