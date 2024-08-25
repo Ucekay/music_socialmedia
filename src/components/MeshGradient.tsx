@@ -1,9 +1,7 @@
 import React, { useMemo } from 'react';
-import { BlurView } from 'expo-blur';
 import type { CubicBezierHandle } from '@shopify/react-native-skia';
 import {
   Skia,
-  isEdge,
   Group,
   add,
   Canvas,
@@ -13,7 +11,7 @@ import {
   useImage,
   useClock,
 } from '@shopify/react-native-skia';
-import { View, useWindowDimensions, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 
@@ -22,8 +20,6 @@ import { createNoise2D } from './forMeshGradient/SimpleNoise';
 import { symmetric } from './forMeshGradient/Math';
 import { Cubic } from './forMeshGradient/Cubic';
 import { Curves } from './forMeshGradient/Curves';
-import { GestureDetector } from 'react-native-gesture-handler';
-import { useHandles } from '../hooks/useHandles';
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],

@@ -44,9 +44,7 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
   };
 
   const themeTextColor =
-  colorScheme === 'light' ?
-  { color: '#000000'} :
-  { color: '#ffffff'}
+    colorScheme === 'light' ? { color: '#000000' } : { color: '#ffffff' };
 
   const { formattedDate, timeAgo, daysDifference } = formatCreatedAt(
     post.createdAt
@@ -69,22 +67,30 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
                 <Text style={[styles.text1, themeTextColor]}>{post.user}</Text>
               </View>
               <View style={styles.headerRight}>
-                <Text style={themeTextColor}>{daysDifference > 3 ? formattedDate : timeAgo}</Text>
+                <Text style={themeTextColor}>
+                  {daysDifference > 3 ? formattedDate : timeAgo}
+                </Text>
                 <IconAntDesign
                   name='ellipsis1'
                   size={16}
-                  style={{themeTextColor}}
+                  style={{ themeTextColor }}
                 />
               </View>
             </View>
             <View>
-              <Text style={[styles.postContent, themeTextColor]}>{post.postContent}</Text>
-              <PostImages imageUrls={post.ImageUrl}/>
+              <Text style={[styles.postContent, themeTextColor]}>
+                {post.postContent}
+              </Text>
+              <PostImages imageUrls={post.ImageUrl} postID={post.postID} />
             </View>
           </View>
         </View>
         <View style={styles.Icons}>
-          <HeartIcon width={16} height={16} initialcolor={themeTextColor.color}/>
+          <HeartIcon
+            width={16}
+            height={16}
+            initialcolor={themeTextColor.color}
+          />
           <Link
             href={{
               pathname: '/reply-editor-modal',
@@ -101,9 +107,9 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
             }}
             asChild
           >
-            <Message width={16} height={16} color={themeTextColor.color}/>
+            <Message width={16} height={16} color={themeTextColor.color} />
           </Link>
-          <ShareIcon width={16} height={16} color={themeTextColor.color}/>
+          <ShareIcon width={16} height={16} color={themeTextColor.color} />
         </View>
         <View
           style={[
@@ -193,7 +199,7 @@ const styles = StyleSheet.create({
   },
   imageModal: {
     flex: 1,
-    resizeMode: 'contain', 
+    resizeMode: 'contain',
   },
   closeButton: {
     position: 'absolute',

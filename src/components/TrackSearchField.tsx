@@ -1,70 +1,62 @@
 import React, { useState } from 'react';
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  FlatList,
-  TouchableWithoutFeedback,
-  Pressable,
-} from 'react-native';
+import { View, TextInput, StyleSheet, FlatList, Pressable } from 'react-native';
 import { useTheme } from '../contexts/ColorThemeContext';
 import { Image } from 'expo-image';
 
 import Text from './ThemedText';
-import { set } from 'date-fns';
-interface Track {
+interface Song {
   id: string;
-  songName: string;
-  artistName: string;
-  artworkUrl: string;
+  title: string;
+  artist: string;
+  coverArtUrl: string;
 }
 
 interface SearchFieldProps {
   placeholder: string;
-  onTrackSelect: (track: Track) => void;
+  onTrackSelect: (track: Song) => void;
 }
 
 const SONGS = [
   {
     id: '1',
-    songName: 'Pray',
-    artistName: 'Hakubi',
-    artworkUrl:
+    title: 'Pray',
+    artist: 'Hakubi',
+    coverArtUrl:
       'https://www.uta-net.com/res/getamazon.php?jcode=4943674336401&asin=&tid=306896&uimg=',
   },
   {
     id: '2',
-    songName: '331',
-    artistName: '湯木慧',
-    artworkUrl:
+    title: '331',
+    artist: '湯木慧',
+    coverArtUrl:
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuyOkC51dEBqOnXTQ74HSMDuT0XJIw70rXCQ&s',
   },
   {
     id: '3',
-    songName: `少年少女よ`,
-    artistName: 'Organic Call',
-    artworkUrl:
+    title: `少年少女よ`,
+    artist: 'Organic Call',
+    coverArtUrl:
       'https://pimg.awa.io/v2/jacket/22cecc9d6d12dce69595.w630.h630.v1724018957.jpg',
   },
   {
     id: '4',
-    songName: '青くね',
-    artistName: 'bokula.',
-    artworkUrl:
+    title: '青くね',
+    artist: 'bokula.',
+    coverArtUrl:
       'https://pimg.awa.io/v2/jacket/b5de9216a67ac9171e70.w200.h200.v1722773904.jpg',
   },
   {
     id: '5',
-    songName: 'Cloud 9',
-    artistName: "SHE'S",
-    artworkUrl:
+    title: 'Cloud 9',
+    artist: "SHE'S",
+    coverArtUrl:
       'https://cf.mora.jp/contents/package/0000/00000083/0035/694/921/0035694921.200.jpg',
   },
   {
     id: '6',
-    songName: 'ベガ',
-    artistName: 'kalmia',
-    artworkUrl:
+    title: 'ベガ',
+    artist: 'kalmia',
+    coverArtUrl:
       'https://cf.mora.jp/contents/package/0000/00000166/0035/486/185/0035486185.200.jpg',
   },
 ];
@@ -78,11 +70,11 @@ const TrackSearchField: React.FC<SearchFieldProps> = ({
   const searchFieldTextColor = colors.appleMusicText;
   const searchFieldBgColor = colors.appleMusicBg;
 
-  const handlePress = (item: Track) => {
+  const handlePress = (item: Song) => {
     onTrackSelect(item);
   };
 
-  const renderItem = ({ item, index }: { item: Track; index: number }) => {
+  const renderItem = ({ item, index }: { item: Song; index: number }) => {
     return (
       <Pressable
         onPress={() => handlePress(item)}
@@ -104,18 +96,16 @@ const TrackSearchField: React.FC<SearchFieldProps> = ({
           }}
         >
           <Image
-            source={{ uri: item.artworkUrl }}
+            source={{ uri: item.coverArtUrl }}
             style={{ width: 50, height: 50 }}
           />
         </View>
         <View>
           <View>
-            <Text style={{ fontSize: 16 }}>{item.songName}</Text>
+            <Text style={{ fontSize: 16 }}>{item.title}</Text>
           </View>
           <View>
-            <Text style={{ color: colors.secondaryText }}>
-              {item.artistName}
-            </Text>
+            <Text style={{ color: colors.secondaryText }}>{item.artist}</Text>
           </View>
         </View>
       </Pressable>

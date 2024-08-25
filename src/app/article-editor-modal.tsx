@@ -8,9 +8,7 @@ import {
   useColorScheme,
   Pressable,
   ScrollView,
-  SafeAreaView,
   KeyboardAvoidingView,
-  useWindowDimensions,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

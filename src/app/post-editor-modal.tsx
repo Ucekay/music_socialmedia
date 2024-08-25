@@ -30,10 +30,12 @@ import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { insertPost } from '../backend/components/DB_Access/post';
-import { GetImageData } from '../backend/components/DB_Access/Image';
-import { uploadImageToStorage } from '../backend/components/DB_Access/Image';
 import { uploadImage } from '../backend/components/DB_Access/Image';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+
+type ImagePickerResult = ImagePicker.ImagePickerResult & {
+  assets?: ImagePicker.ImagePickerAsset[];
+};
 
 const PostEditorModal = () => {
   const [text, setText] = useState('');
@@ -49,17 +51,18 @@ const PostEditorModal = () => {
 
   const pickImage = async () => {
     setErrorMessage('');
-    let result = await ImagePicker.launchImageLibraryAsync({
+    let result = (await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 4 - images.length,
       quality: 1,
-    });
+    })) as ImagePickerResult;
 
-    if (!result.canceled) {
+    if (!result.canceled && result.assets && result.assets.length > 0) {
       setLoading(true);
-      for (let i = 0; i < result.assets.length; i++)
-        setImages((images) => [...images, result.assets[i].uri]);
+      for (let i = 0; i < result.assets.length; i++) {
+        setImages((prevImages) => [...prevImages, result.assets[i].uri]);
+      }
       setLoading(false);
     } else {
       setLoading(false);
@@ -168,7 +171,7 @@ const PostEditorModal = () => {
       },
       (selectedIndex) => {
         if (selectedIndex === 0) {
-          handlePost
+          handlePost;
         }
       }
     );
@@ -319,8 +322,7 @@ const PostEditorModal = () => {
             paddingTop: 12,
           },
         ]}
-      >
-      </BgView>
+      ></BgView>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
   );
@@ -339,7 +341,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   headerItem: {
     flex: 1,

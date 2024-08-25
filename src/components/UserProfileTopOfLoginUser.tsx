@@ -4,7 +4,6 @@ import { Image } from 'expo-image';
 import React, {useState, useEffect, useRef} from 'react';
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
-import FollowButton from './FollowButton';
 import Text from './ThemedText';
 import BgView from './ThemedBgView';
 
@@ -59,28 +58,40 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
     return <Text>User not found</Text>;
   }
 
-
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: { item: { id: string; type: string } }) => {
     if (item.type === 'bio') {
       return (
-        <View style={[styles.swipeContainer, { flexWrap: 'wrap', flexDirection: 'row'}]}>
-          <Text style={[styles.userBio, { lineHeight: 20 }]} numberOfLines={4}>
+        <View
+          style={[
+            styles.swipeContainer,
+            { flexWrap: 'wrap', flexDirection: 'row' },
+          ]}
+        >
+          <Text style={[styles.userBio, { lineHeight: 22 }]} numberOfLines={4}>
             {userInfo.bio}
           </Text>
         </View>
       );
     } else if (item.type === 'tags') {
       return (
-          <View style={[styles.swipeContainer, { flexWrap: 'wrap', flexDirection: 'row' }]}>
-            {userInfo.tag.map((item, index) => (
-              <View
-                style={[styles.item, { backgroundColor: TagColor, marginBottom: 8 }]}
-                key={index}
-              >
-                <Text style={{ fontWeight: '500', fontSize: 12 }}>{item}</Text>
-              </View>
-            ))}
-          </View>
+        <View
+          style={[
+            styles.swipeContainer,
+            { flexWrap: 'wrap', flexDirection: 'row' },
+          ]}
+        >
+          {userInfo.tag?.map((item, index) => (
+            <View
+              style={[
+                styles.item,
+                { backgroundColor: TagColor, marginBottom: 8 },
+              ]}
+              key={index}
+            >
+              <Text style={{ fontWeight: '500', fontSize: 12 }}>{item}</Text>
+            </View>
+          ))}
+        </View>
       );
     }
     return null;
@@ -180,12 +191,12 @@ const styles = StyleSheet.create({
   socialStateContainer: {
     flexDirection: 'row',
     gap: 8,
-    marginRight: 8
+    marginRight: 8,
   },
   socialState: {
     alignItems: 'flex-end',
     flexDirection: 'row',
-    gap: 4
+    gap: 4,
   },
   socialStateText: {
     fontSize: 14,

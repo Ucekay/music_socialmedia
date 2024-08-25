@@ -1,7 +1,7 @@
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { Pressable, Text, StyleSheet, useColorScheme } from 'react-native';
+import { Pressable, Text, StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
-import Colors from '../constants/Colors';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 type EditorOptionButtonProps = {
   onPress: () => void;
@@ -9,8 +9,8 @@ type EditorOptionButtonProps = {
 };
 
 const EditorOptionButton = ({ onPress, title }: EditorOptionButtonProps) => {
-  const colorScheme = useColorScheme();
-  const secondaryTextColor = Colors[colorScheme ?? 'light'].secondaryText;
+  const { colors } = useTheme();
+  const secondaryTextColor = colors.secondaryText;
 
   return (
     <Pressable onPress={onPress}>

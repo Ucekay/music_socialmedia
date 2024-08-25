@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
-import { SymbolView } from 'expo-symbols';
+import { SymbolView, SFSymbol } from 'expo-symbols';
 
 import Colors from '../constants/Colors';
 import { TagColors } from '../constants/Colors';
@@ -188,7 +188,7 @@ const SubheadRow = ({
   tintColor,
   styles,
 }: {
-  iconName: string;
+  iconName: SFSymbol;
   text: string;
   textColor: string;
   tintColor: string;

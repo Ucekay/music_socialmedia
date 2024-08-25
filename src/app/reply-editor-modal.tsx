@@ -33,6 +33,10 @@ import ImageCropPicker from 'react-native-image-crop-picker';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 
+type ImagePickerResult = ImagePicker.ImagePickerResult & {
+  assets?: ImagePicker.ImagePickerAsset[];
+};
+
 const ReplyEditorModal = () => {
   const [text, setText] = useState('');
   const insets = useSafeAreaInsets();
@@ -79,17 +83,18 @@ const ReplyEditorModal = () => {
 
   const pickImage = async () => {
     setErrorMessage('');
-    let result = await ImagePicker.launchImageLibraryAsync({
+    let result = (await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 4 - images.length,
       quality: 1,
-    });
+    })) as ImagePickerResult;
 
-    if (!result.canceled) {
+    if (!result.canceled && result.assets && result.assets.length > 0) {
       setLoading(true);
-      for (let i = 0; i < result.assets.length; i++)
-        setImages((images) => [...images, result.assets[i].uri]);
+      for (let i = 0; i < result.assets.length; i++) {
+        setImages((prevImages) => [...prevImages, result.assets[i].uri]);
+      }
       setLoading(false);
     } else {
       setLoading(false);
@@ -225,7 +230,7 @@ const ReplyEditorModal = () => {
       },
       (selectedIndex) => {
         if (selectedIndex === 0) {
-          handlePost
+          handlePost;
         }
       }
     );
@@ -426,7 +431,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     borderBottomColor: '#ddd',
     flexDirection: 'row',
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   headerItem: {
     flex: 1,

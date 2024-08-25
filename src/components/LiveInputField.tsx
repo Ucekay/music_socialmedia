@@ -14,7 +14,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Text } from './Themed';
 import EditorMetadataInput from './EditorMetadataInput';
 import EditorOptionButton from './EditorOptionButton';
-import Colors, { TagsColors } from '../constants/Colors';
+import Colors, { TagColors } from '../constants/Colors';
 import AddOrCancelButtons from './AddOrCancelButtons';
 import EditorImagePicker from './EditorImagePicker';
 
@@ -27,9 +27,9 @@ const LiveInputField = () => {
   const textColor = Colors[colorScheme ?? 'light'].text;
   const secondaryTextColor = Colors[colorScheme ?? 'light'].secondaryText;
   const liveNameInputBgColor =
-    TagsColors.liveReport[colorScheme ?? 'light'].background;
+    TagColors.liveReport[colorScheme ?? 'light'].background;
   const liveNameInputTextColor =
-    TagsColors.liveReport[colorScheme ?? 'light'].text;
+    TagColors.liveReport[colorScheme ?? 'light'].text;
   const artistInputBgColor = Colors[colorScheme ?? 'light'].appleMusicBg;
   const artistInputTextColor = Colors[colorScheme ?? 'light'].appleMusicText;
 

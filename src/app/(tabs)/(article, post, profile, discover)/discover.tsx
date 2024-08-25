@@ -1,18 +1,15 @@
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import React from 'react';
-import TrackSearchField from '@/src/components/TrackSearchField';
+import { Link, useNavigation } from 'expo-router';
 
 const discover = () => {
-  const [search, setSearch] = React.useState('');
+  const navigation = useNavigation();
   return (
-    <View style={{ flex: 1 }}>
-      <Text>discover</Text>
-      <TrackSearchField
-        placeholder='test'
-        trackName={search}
-        setTrackName={setSearch}
-      />
-    </View>
+    <Link href={'/today-song-modal'}>
+      <View style={{ flex: 1 }}>
+        <Text>discover</Text>
+      </View>
+    </Link>
   );
 };
 

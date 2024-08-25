@@ -1,5 +1,11 @@
-import { View, StyleSheet, ScrollView, Pressable, useColorScheme } from 'react-native';
-import { Href, Link, Stack, useLocalSearchParams } from 'expo-router';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+  useColorScheme,
+} from 'react-native';
+import { Link, Stack, useLocalSearchParams } from 'expo-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { Image } from 'expo-image';
@@ -16,6 +22,34 @@ import { formatCreatedAt } from '@/src/utils/date/formatCreatedAt';
 import HeartIcon from '@/src/components/Icons/HeartIcon';
 import ShareIcon from '@/src/components/Icons/ShareIcon';
 
+interface Post {
+  ImageUrl: string[];
+  LiketoPost: boolean;
+  createdAt: string;
+  likes: number;
+  postContent: string;
+  postID: number;
+  user: string;
+  userAvatarUrl: string;
+  userID: string;
+}
+
+interface PageData {
+  cursor: string | null;
+  latestcursor: string | null;
+  postData: Post[];
+}
+
+interface PageParam {
+  cursor: string | null;
+  isForward: boolean | null;
+}
+
+interface InfiniteQueryResult {
+  pageParams: PageParam[];
+  pages: PageData[];
+}
+
 const PostDetailScreen = () => {
   const { colors } = useTheme();
   const headerHeight = useHeaderHeight();
@@ -23,17 +57,15 @@ const PostDetailScreen = () => {
   const queryClient = useQueryClient();
   const colorScheme = useColorScheme();
   const { postID } = useLocalSearchParams();
-  const posts = queryClient.getQueryData(['posts']);
+  const posts = queryClient.getQueryData<InfiniteQueryResult>(['posts']);
   const flattenedPosts = useMemo(() => {
     return posts?.pages.flatMap((page) => page.postData) ?? [];
   }, [posts]);
   const selectedPost = useMemo(() => {
     return flattenedPosts.find((post) => post.postID === Number(postID));
   }, [flattenedPosts, postID]);
-
   const themeContainerStyle = { backgroundColor: colors.headerBackground };
-  const themeIconColor =
-  colorScheme === 'light' ? '#000000' : '#ffffff'
+  const themeIconColor = colors.text;
   const themedTextColor = { color: colors.secondaryText };
   const themedBorderColor = { borderColor: colors.border };
 
@@ -82,7 +114,10 @@ const PostDetailScreen = () => {
             </Pressable>
           </Link>
           <Text style={styles.content}>{selectedPost.postContent}</Text>
-          <PostImages imageUrls={selectedPost.ImageUrl} />
+          <PostImages
+            imageUrls={selectedPost.ImageUrl}
+            postID={selectedPost.postID}
+          />
           <View>
             <View style={[styles.infoContainer, themedBorderColor]}>
               <Text style={[styles.info, themedTextColor]}>
@@ -95,13 +130,15 @@ const PostDetailScreen = () => {
             </View>
           </View>
           <View style={styles.iconsContainer}>
-            <HeartIcon width={20} height={20} isPost id={selectedPost.postID} initialcolor={themeIconColor}/>
-            <ChatBubbleEmpty
+            <HeartIcon
               width={20}
               height={20}
-              color={themeIconColor}
+              isPost
+              id={selectedPost.postID}
+              initialcolor={themeIconColor}
             />
-            <ShareIcon width={20} height={20} color={themeIconColor}/>
+            <ChatBubbleEmpty width={20} height={20} color={themeIconColor} />
+            <ShareIcon width={20} height={20} color={themeIconColor} />
           </View>
           <View style={{ height: tabBarHeight }} />
         </BgView>
@@ -135,7 +172,7 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 16,
-    lineHeight: 24
+    lineHeight: 24,
   },
   infoContainer: {
     flexDirection: 'row',

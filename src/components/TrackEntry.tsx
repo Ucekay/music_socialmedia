@@ -14,12 +14,25 @@ import { useTheme } from '../contexts/ColorThemeContext';
 import AddOrCancelButtons from './AddOrCancelButtons';
 import TrackSearchField from './TrackSearchField';
 
+interface Track {
+  id: string;
+  songName: string;
+  artistName: string;
+  artworkUrl: string;
+}
+
 const TrackEntry = () => {
   const { colors } = useTheme();
   const searchFieldTextColor = colors.appleMusicText;
   const secondaryTextColor = colors.secondaryText;
 
   const [manualInput, setManualInput] = useState(false);
+  const [track, setTrack] = useState<Track>({
+    id: '',
+    songName: '',
+    artistName: '',
+    artworkUrl: '',
+  });
   const [trackName, setTrackName] = useState('');
   const [artistName, setArtistName] = useState('');
 
@@ -47,7 +60,6 @@ const TrackEntry = () => {
     setManualInput(false);
   };
 
-  let trackData: any = [];
   return (
     <Animated.View
       entering={FadeIn}
@@ -61,7 +73,10 @@ const TrackEntry = () => {
           exiting={FadeOut}
           style={styles.inputContainer}
         >
-          <TrackSearchField placeholder='楽曲名を検索' />
+          <TrackSearchField
+            placeholder='楽曲名を検索'
+            onTrackSelect={() => setTrack}
+          />
           <Pressable onPress={showTrackInput}>
             <Animated.View
               style={[styles.option, { borderColor: secondaryTextColor }]}
