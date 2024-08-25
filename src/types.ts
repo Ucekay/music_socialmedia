@@ -125,7 +125,7 @@ export type PlaylistType = {
 export type SongTypeSimple = {
   musicID: string;
   musicName: string;
-  artistname: string;
+  artistName: string;
   artworkURL: string; 
 }
 
