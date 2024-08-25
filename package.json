@@ -61,7 +61,6 @@
     "expo-system-ui": "~3.0.7",
     "expo-web-browser": "~13.0.3",
     "iconoir-react-native": "^7.8.0",
-    "patch-package": "^8.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "~0.75.0",
