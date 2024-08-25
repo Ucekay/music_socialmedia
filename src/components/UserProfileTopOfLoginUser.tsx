@@ -64,7 +64,7 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
     if (item.type === 'bio') {
       return (
         <View style={[styles.swipeContainer, { flexWrap: 'wrap', flexDirection: 'row'}]}>
-          <Text style={[styles.userBio, { lineHeight: 22 }]} numberOfLines={4}>
+          <Text style={[styles.userBio, { lineHeight: 20 }]} numberOfLines={4}>
             {userInfo.bio}
           </Text>
         </View>
