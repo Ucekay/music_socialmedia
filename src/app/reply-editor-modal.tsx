@@ -344,6 +344,7 @@ const ReplyEditorModal = () => {
                 },
               ]}
               multiline
+              autoFocus
               placeholder='返信を新規追加'
               value={text}
               onChangeText={setText}
