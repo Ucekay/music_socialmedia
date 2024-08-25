@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, useColorScheme } from 'react-native';
 import React from 'react';
-import { TagsColors } from '../constants/Colors';
+import { TagColors } from '../constants/Colors';
 
 type ArticleTagProps = {
   type: string;
@@ -11,19 +11,19 @@ const ArticleTag = ({ type }: ArticleTagProps) => {
   let Color;
   switch (type) {
     case 'general':
-      Color = TagsColors.general;
+      Color = TagColors.general;
       break;
     case 'review':
-      Color = TagsColors.review;
+      Color = TagColors.review;
       break;
     case 'liveReport':
-      Color = TagsColors.liveReport;
+      Color = TagColors.liveReport;
       break;
     case 'playlist':
-      Color = TagsColors.playlist;
+      Color = TagColors.playlist;
       break;
     default:
-      Color = TagsColors.general;
+      Color = TagColors.general;
       break;
   }
 

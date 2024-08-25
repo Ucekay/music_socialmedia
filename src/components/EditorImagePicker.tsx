@@ -85,7 +85,7 @@ const EditorImagePicker = () => {
         </View>
       </Modal>
       {errorMessage !== '' && (
-        <Text style={{ color: Color[colorScheme ?? 'light'].warnText }}>
+        <Text style={{ color: Color[colorScheme ?? 'light'].cancelText }}>
           {errorMessage}
         </Text>
       )}

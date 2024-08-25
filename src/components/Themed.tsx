@@ -30,11 +30,18 @@ export function useThemeColor(
   }
 }
 
+import { ColorValue } from 'react-native';
+
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
 
-  return <DefaultText style={[{ color }, style]} {...otherProps} />;
+  return (
+    <DefaultText
+      style={[{ color: color as ColorValue }, style]}
+      {...otherProps}
+    />
+  );
 }
 
 export function View(props: ViewProps) {
@@ -42,7 +49,7 @@ export function View(props: ViewProps) {
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     'background'
-  );
+  ) as ColorValue; // Cast the backgroundColor to ColorValue
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
 }

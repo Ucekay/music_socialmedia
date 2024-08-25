@@ -19,6 +19,7 @@ import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 import Text from '@/src/components/ThemedText';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 import type { ColorScheme } from '@/src/types';
+import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -45,7 +46,9 @@ export default function TabLayout() {
   }, []);
   const handleSheetChanges = useCallback((index: number) => {}, []);
   const renderBackdrop = useCallback(
-    (props) => (
+    (
+      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps
+    ) => (
       <BottomSheetBackdrop
         {...props}
         appearsOnIndex={0}

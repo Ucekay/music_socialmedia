@@ -14,14 +14,7 @@ import BgView from './ThemedBgView';
 import Text from './ThemedText';
 
 import { rgbObjectToRgbaString } from '../utils/color/ColorModifier';
-import Animated, {
-  FadeIn,
-  FadeInDown,
-  FadeOut,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated';
 import Colors from '../constants/Colors';
 import type { TodaySongDataType } from '../types';
 import { useTheme } from '../contexts/ColorThemeContext';

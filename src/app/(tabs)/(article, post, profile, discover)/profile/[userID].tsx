@@ -1,9 +1,22 @@
 import React from 'react';
-import { Stack, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { View, StyleSheet, useColorScheme } from 'react-native';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import {
+  View,
+  StyleSheet,
+  Falsy,
+  RecursiveArray,
+  RegisteredStyle,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import LoginUserProfileTop from '@/src/components/UserProfileTopOfLoginUser';
-import { useProfileScreen } from '@/src/contexts/ProfileScreenContext';
-import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
+import {
+  Tabs,
+  MaterialTabBar,
+  MaterialTabItemProps,
+  TabBarProps,
+} from 'react-native-collapsible-tab-view';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import PostCard from '@/src/components/PostCard';
 import ArticleCard from '@/src/components/ArticleCard';
@@ -14,8 +27,7 @@ import UserProfileTop from '@/src/components/UserProfileTop';
 import { ArticleData } from '@/src/types';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
-
-const TEXT_HEIGHT = 65.7;
+import { AnimatedStyle } from 'react-native-reanimated';
 
 const Profile = () => {
   const { userID } = useLocalSearchParams();
@@ -30,7 +42,45 @@ const Profile = () => {
 
   const itemSize = userID ? 320 : 250;
 
-  const renderTabBar = (props) => {
+  const renderTabBar = (
+    props: React.JSX.IntrinsicAttributes &
+      TabBarProps<string> & {
+        scrollEnabled?: boolean | undefined;
+        indicatorStyle?:
+          | Falsy
+          | AnimatedStyle<ViewStyle>
+          | RegisteredStyle<AnimatedStyle<ViewStyle>>
+          | RecursiveArray<
+              | Falsy
+              | AnimatedStyle<ViewStyle>
+              | RegisteredStyle<AnimatedStyle<ViewStyle>>
+            >;
+        TabItemComponent?:
+          | ((
+              props: MaterialTabItemProps<string>
+            ) => React.ReactElement<
+              any,
+              string | React.JSXElementConstructor<any>
+            >)
+          | undefined;
+        getLabelText?: ((name: string) => string) | undefined;
+        style?: StyleProp<ViewStyle>;
+        contentContainerStyle?: StyleProp<ViewStyle>;
+        tabStyle?: StyleProp<ViewStyle>;
+        labelStyle?:
+          | Falsy
+          | AnimatedStyle<TextStyle>
+          | RegisteredStyle<AnimatedStyle<TextStyle>>
+          | RecursiveArray<
+              | Falsy
+              | AnimatedStyle<TextStyle>
+              | RegisteredStyle<AnimatedStyle<TextStyle>>
+            >;
+        activeColor?: string | undefined;
+        inactiveColor?: string | undefined;
+        keepActiveTabCentered?: boolean | undefined;
+      }
+  ) => {
     return (
       <MaterialTabBar
         {...props}
@@ -65,7 +115,7 @@ const Profile = () => {
                 <PostCard post={item} />
               </BgView>
             )}
-            estimatedItemSize={TEXT_HEIGHT}
+            estimatedItemSize={150}
             contentContainerStyle={{
               backgroundColor: backGroundColor,
               paddingBottom: tabBarHeight,
@@ -92,9 +142,3 @@ const Profile = () => {
   );
 };
 export default Profile;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

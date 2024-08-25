@@ -6,12 +6,11 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import { Link, useLocalSearchParams } from 'expo-router';
+import { Link } from 'expo-router';
 import { Image } from 'expo-image';
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
-import FollowButton from './FollowButton';
 import Text from './ThemedText';
 import BgView from './ThemedBgView';
 
@@ -23,9 +22,6 @@ const { width } = Dimensions.get('window');
 
 const LoginUserProfileTop = (props: LoginUserProps) => {
   const colorScheme = useColorScheme();
-  const backgroundColor = {
-    backgroundColor: Colors[colorScheme ?? 'light'].followButtonBg,
-  };
   const textColor = colorScheme === 'light' ? '#000000' : '#ffffff';
 
   const labelColor = colorScheme === 'light' ? 'gray' : '#F0F0F0';
@@ -57,12 +53,7 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
     return <Text>User not found</Text>;
   }
 
-  const onLayout = (e) => {
-    const { height } = e.nativeEvent.layout;
-    console.log('height', height);
-  };
-
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: { item: { id: string; type: string } }) => {
     if (item.type === 'bio') {
       return (
         <View
@@ -84,7 +75,7 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
             { flexWrap: 'wrap', flexDirection: 'row' },
           ]}
         >
-          {userInfo.tag.map((item, index) => (
+          {userInfo.tag?.map((item, index) => (
             <View
               style={[
                 styles.item,
@@ -102,7 +93,7 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
   };
 
   return (
-    <BgView style={styles.container} onLayout={onLayout}>
+    <BgView style={styles.container}>
       <View style={styles.profile}>
         <View style={styles.profileHeader}>
           <Image
