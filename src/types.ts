@@ -73,6 +73,20 @@ export type PostData = {
   LiketoPost: boolean;
 };
 
+export type TodaysSongsData = {
+  TodaysSongID: number;
+  UserID: string;
+  SongID: string;
+  Body: string;
+  likes: number;
+  view: number;
+  created_at: string;
+  ProfileID: string;
+  UserName: string;
+  IconImageUrl: string
+  LiketoPost: boolean
+}
+
 export type ColorScheme = {
   text: string;
   secondaryText: string;

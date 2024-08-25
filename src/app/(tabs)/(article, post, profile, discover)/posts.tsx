@@ -5,7 +5,7 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 
-import { createPostDataset } from '@/src/backend/components/Front_connection/post_timeline';
+import { createPostDataset } from '@/src/backend/components/Front_connection/Post_TimeLine';
 import BgView from '@/src/components/ThemedBgView';
 import { PostData } from '@/src/types';
 import PostCard from '@/src/components/PostCard';
