@@ -115,12 +115,12 @@ export type UserListPropsType = {
   userID: string;
   userName: string;
   userAvatarUrl: string;
-};
+}
 
 export type PlaylistType = {
   ImageURL?: string;
-  playlistName: string;
-};
+  playlistName: string
+}
 
 export type SongTypeSimple = {
   musicID: string;
