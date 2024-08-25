@@ -2,7 +2,6 @@ import React from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import {
   View,
-  StyleSheet,
   Falsy,
   RecursiveArray,
   RegisteredStyle,
@@ -35,26 +34,6 @@ const Profile = () => {
 
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
-  const { setProfileDismissed } = useProfileScreen();;
-
-  const colorScheme = useColorScheme();
-
-  const backGroundColor = colors.background;
-
-  const textColor = colors.text
-
-  const renderTabBar = (props) => {
-    return(
-    <MaterialTabBar
-      {...props}
-      indicatorStyle={{ backgroundColor: textColor}}
-      labelStyle={{color: textColor}}
-      style={{
-        backgroundColor: backGroundColor
-      }}
-    />
-    )
-    }
 
   const backGroundColor = colors.background;
 
