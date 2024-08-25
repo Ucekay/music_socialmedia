@@ -33,7 +33,7 @@ export const uploadImage = async (imageUri: string, storageName: string) => {
       });
       
     if(uploadData){
-      console.log('アップロードされた画像データ:', uploadData);
+      //console.log('アップロードされた画像データ:', uploadData);
     }
 
     if (uploadError) {
