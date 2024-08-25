@@ -111,6 +111,14 @@ function RootLayoutNav() {
                     gestureEnabled: false,
                   }}
                 />
+                <Stack.Screen
+                  name='today-song-modal'
+                  options={{
+                    title: 'Today',
+                    presentation: 'fullScreenModal',
+                    gestureEnabled: false,
+                  }}
+                />
               </Stack>
             </ThemeProvider>
           </BottomSheetModalProvider>
