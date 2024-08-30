@@ -15,7 +15,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.otography.app"
+      "bundleIdentifier": "com.musicsocial.otography"
     },
     "android": {
       "adaptiveIcon": {
