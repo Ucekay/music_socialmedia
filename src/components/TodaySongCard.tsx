@@ -301,6 +301,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   card: {
+    flexGrow: 1,
     borderRadius: 16,
     borderCurve: 'continuous',
     paddingTop: 16,

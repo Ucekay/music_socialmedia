@@ -133,21 +133,34 @@ const CharacterCountIndicator = ({
   colors: any;
 }) => (
   <View style={styles.characterCountContainer}>
-    <Text style={[styles.characterCountText, { color: colors.text }]}>
-      {currentCount}/{maxCount}文字
-    </Text>
+    <View style={{ flex: 1 }}></View>
     <View
-      style={[styles.progressBarBackground, { backgroundColor: colors.border }]}
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}
     >
+      <Text style={[styles.characterCountText, { color: colors.text }]}>
+        {currentCount}/{maxCount}文字
+      </Text>
       <View
         style={[
-          styles.progressBar,
-          {
-            width: `${Math.min((currentCount / maxCount) * 100, 100)}%`,
-            backgroundColor: currentCount > maxCount ? 'red' : colors.tint,
-          },
+          styles.progressBarBackground,
+          { backgroundColor: colors.border },
         ]}
-      />
+      >
+        <View
+          style={[
+            styles.progressBar,
+            {
+              width: `${Math.min((currentCount / maxCount) * 100, 100)}%`,
+              backgroundColor: currentCount >= maxCount ? 'red' : colors.tint,
+            },
+          ]}
+        />
+      </View>
     </View>
   </View>
 );
@@ -174,7 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   progressBarBackground: {
-    width: '60%',
+    width: '50%',
     height: 4,
     borderRadius: 2,
   },
