@@ -1,21 +1,20 @@
-import { useState } from 'react';
-import { View, StyleSheet, useColorScheme } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Image } from 'expo-image';
 
 import userData from '../assets/userData';
-import Colors from '../constants/Colors';
 import FollowButton from './FollowButton';
 import Text from './ThemedText';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 const UserProfileTop = () => {
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
 
   // stateをuseLoaclSearchParamsで取得したuserIDで変更するとrenderが多数走るためエラーを引き起こす
   const { userID } = useLocalSearchParams();
 
   const themeTextColor = {
-    color: Colors[colorScheme ?? 'light'].text,
+    color: colors.text,
   };
 
   const userInfo = userData.find((item) => item.userID === userID);

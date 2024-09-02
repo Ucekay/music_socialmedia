@@ -6,13 +6,12 @@ import {
   TextInput,
   Pressable,
   StyleSheet,
-  Dimensions,
   useColorScheme,
 } from 'react-native';
 import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
-import { useNavigation, useRouter } from 'expo-router';
-import Color from '@/src/constants/Colors';
+import { useRouter } from 'expo-router';
 import Colors from '@/src/constants/Colors';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 const BioEditor = (): JSX.Element => {
   const context = useContext(ProfileEditorContext);
@@ -24,9 +23,9 @@ const BioEditor = (): JSX.Element => {
       'NameEditorModal must be used within a ProfileEditorProvider'
     );
   }
-
   const colorScheme = useColorScheme();
-  const textColor = Color[colorScheme ?? 'light'].text;
+  const { colors } = useTheme();
+  const textColor = colors.text;
   const backgroundColor =
     colorScheme === 'dark'
       ? Colors.dark.secondaryBackground

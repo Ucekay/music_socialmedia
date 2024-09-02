@@ -38,7 +38,7 @@ export default function TabLayout() {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   // variables
-  const snapPoints = useMemo(() => [220 + insets.bottom], []);
+  const snapPoints = useMemo(() => [221 + insets.bottom], []);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -151,7 +151,7 @@ export default function TabLayout() {
         backdropComponent={renderBackdrop}
         backgroundStyle={themedContentStyle}
         handleIndicatorStyle={{ backgroundColor: colors.border }}
-        maxDynamicContentSize={220 + insets.bottom}
+        maxDynamicContentSize={221 + insets.bottom}
       >
         <BottomSheetView style={styles.contentContainer}>
           <View style={[styles.content, { marginBottom: 16 + insets.bottom }]}>
@@ -237,8 +237,8 @@ const CreateContentListItem = ({
           styles.listItemContainer,
           {
             borderColor: colors.border,
-            borderTopWidth: showBorder ? 0.5 : 0,
-            borderBottomWidth: showBorder ? 0.5 : 0,
+            borderTopWidth: showBorder ? 1 : 0,
+            borderBottomWidth: showBorder ? 1 : 0,
           },
         ]}
       >
@@ -287,6 +287,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignContent: 'center',
     alignSelf: 'flex-start',
+    height: 181,
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,

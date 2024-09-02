@@ -3,13 +3,11 @@ import {
   NativeSyntheticEvent,
   Pressable,
   StyleSheet,
-  Text,
   TextInput,
   TextInputChangeEventData,
   TextInputProps,
   TextStyle,
   View,
-  useColorScheme,
 } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -17,7 +15,8 @@ import Animated, {
   withTiming,
   interpolate,
 } from 'react-native-reanimated';
-import Colors from '../constants/Colors';
+
+import { useTheme } from '../contexts/ColorThemeContext';
 
 interface AnimatedTextInputProps extends TextInputProps {
   focusedLabelTop: number;
@@ -29,8 +28,8 @@ const AnimatedTextInput = (props: AnimatedTextInputProps) => {
   const { label, style, focusedLabelTop, focusedLabelSize, ...otherProps } =
     props;
 
-  const colorScheme = useColorScheme();
-  const placeholderColor = Colors[colorScheme ?? 'light'].placeholder;
+  const { colors } = useTheme();
+  const placeholderColor = colors.placeholder;
 
   const [value, setValue] = useState('');
   const inputRef = useRef<TextInput>(null);

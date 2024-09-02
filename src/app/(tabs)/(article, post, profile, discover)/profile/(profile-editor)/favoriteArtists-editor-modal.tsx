@@ -12,7 +12,7 @@ import {
   Modal,
 } from 'react-native';
 import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
-import { useNavigation, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import Color from '@/src/constants/Colors';
 import Colors from '@/src/constants/Colors';
 import { Xmark, Plus, Search } from 'iconoir-react-native';

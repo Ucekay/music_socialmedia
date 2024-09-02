@@ -3,10 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   TextInput,
-  Button,
   StyleSheet,
   Text,
-  useColorScheme,
   ScrollView,
   Platform,
   Animated as Animated1,
@@ -20,9 +18,7 @@ import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BgView from '../components/ThemedBgView';
 import IconAntDesign from '../components/Icons/AntDesign';
-import Color from '@/src/constants/Colors';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { useNavigation, Stack } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import Icon from 'react-native-vector-icons/AntDesign';
 import ImageAspectKept from '../components/OriginalAspectImage';
@@ -32,6 +28,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { insertPost } from '../backend/components/DB_Access/post';
 import { uploadImage } from '../backend/components/DB_Access/Image';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 type ImagePickerResult = ImagePicker.ImagePickerResult & {
   assets?: ImagePicker.ImagePickerAsset[];
@@ -44,7 +41,7 @@ const PostEditorModal = () => {
   const [postHeight, setPostHeight] = useState(60);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
   const animatedHeight = useRef(new Animated1.Value(0)).current;
   const [images, setImages] = useState<string[]>([]);
@@ -101,8 +98,8 @@ const PostEditorModal = () => {
 
   const { showActionSheetWithOptions } = useActionSheet();
 
-  const textColor = Color[colorScheme ?? 'light'].text;
-  const secondaryTextColor = Color[colorScheme ?? 'light'].secondaryText;
+  const textColor = colors.text;
+  const secondaryTextColor = colors.secondaryText;
 
   const BOTTOM_TAB_HEIGHT = 96.7;
 

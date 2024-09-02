@@ -51,7 +51,7 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
   );
 
   return (
-    <Link href={`/postsScreen/${post.postID}`} asChild>
+    <Link href={`./post-screen/${post.postID}`} asChild>
       <Pressable style={styles.postContainer}>
         <View style={styles.postHeader}>
           <Image source={post.userAvatarUrl} style={styles.image} />
@@ -182,20 +182,20 @@ const styles = StyleSheet.create({
     objectFit: 'cover',
     overflow: 'hidden',
     flexWrap: 'wrap',
-    gap: 2
+    gap: 2,
   },
   Image2: {
     height: 150,
-    width: screen.width/2 - 38
+    width: screen.width / 2 - 38,
   },
-  imageContainer2:{
+  imageContainer2: {
     height: 150,
-    width: screen.width/2 - 38,
-    gap: 2
+    width: screen.width / 2 - 38,
+    gap: 2,
   },
   Image3: {
     height: 78,
-    width: '100%'
+    width: '100%',
   },
   imageModal: {
     flex: 1,

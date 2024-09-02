@@ -1,4 +1,4 @@
-import { View, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
 import Animated, { FadeIn } from 'react-native-reanimated';
 const AnimatedImage = Animated.createAnimatedComponent(Image);
@@ -10,8 +10,6 @@ const ArticleCardImage = ({
   imageUrl: string;
   height: number;
 }) => {
-  const { width } = useWindowDimensions();
-  const imageHeight = ((width - 64) / 21) * 9;
   const defaultImage = require('../assets/images/snsicon.png');
   return (
     <View

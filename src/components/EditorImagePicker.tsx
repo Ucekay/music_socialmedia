@@ -5,7 +5,6 @@ import {
   Modal,
   ActivityIndicator,
   StyleSheet,
-  useColorScheme,
 } from 'react-native';
 import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
@@ -15,7 +14,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import EditorOptionButton from './EditorOptionButton';
 import Text from './ThemedText';
-import Color from '../constants/Colors';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 const EditorImagePicker = () => {
   const { width } = useWindowDimensions();
@@ -23,7 +22,7 @@ const EditorImagePicker = () => {
   const [imageEdited, setImageEdited] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
   const cropperWidth = width - 40;
   const cropperHeight = ((width - 40) / 21) * 9;
   const imageWidth = width - 88;
@@ -85,9 +84,7 @@ const EditorImagePicker = () => {
         </View>
       </Modal>
       {errorMessage !== '' && (
-        <Text style={{ color: Color[colorScheme ?? 'light'].cancelText }}>
-          {errorMessage}
-        </Text>
+        <Text style={{ color: colors.cancelText }}>{errorMessage}</Text>
       )}
       {imageEdited && (
         <Animated.View

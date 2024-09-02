@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Pressable } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import Animated, { FadeIn } from 'react-native-reanimated';
@@ -9,6 +9,7 @@ import ArticleTag from './ArticleTag';
 import ArticleCardSubhead from './ArticleCardSubhead';
 import type { ArticleData } from '../types';
 import { ArticleThumbnail } from './ArticleThumbnail';
+import Text from './ThemedText';
 
 export default function ArticleCard({ article }: { article: ArticleData }) {
   const { articleTitle, imageUrl, userID, user, userAvatarUrl, type } = article;
@@ -16,11 +17,10 @@ export default function ArticleCard({ article }: { article: ArticleData }) {
   const { colors } = useTheme();
 
   const themeBackgroundStyle = { backgroundColor: colors.secondaryBackground };
-  const themeTextColor = { color: colors.text };
   const themeSecondaryTextColor = { color: colors.secondaryText };
 
   return (
-    <Link href={`/articlesScreen/${article.articleID}`} asChild>
+    <Link href={`./article-screen/${article.articleID}`} asChild>
       <Pressable style={styles.cardWrapper}>
         <Animated.View
           entering={FadeIn}
@@ -41,7 +41,7 @@ export default function ArticleCard({ article }: { article: ArticleData }) {
           <View style={styles.cardContent}>
             <View>
               <Text
-                style={[styles.articleTitle, themeTextColor]}
+                style={[styles.articleTitle]}
                 numberOfLines={2}
                 ellipsizeMode='tail'
               >
@@ -55,9 +55,7 @@ export default function ArticleCard({ article }: { article: ArticleData }) {
                 <Pressable style={styles.authorInfo}>
                   <Image source={userAvatarUrl} style={styles.authorAvatar} />
                   <View style={{ flexDirection: 'row' }}>
-                    <Text style={[styles.authorName, themeTextColor]}>
-                      {user}
-                    </Text>
+                    <Text style={[styles.authorName]}>{user}</Text>
                     <Text style={[styles.authorId, themeSecondaryTextColor]}>
                       {userID}
                     </Text>

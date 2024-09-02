@@ -41,6 +41,7 @@ import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import TrackEntry from '@/src/components/TrackEntry';
 import LiveInputField from '../components/LiveInputField';
 import EditorImagePicker from '../components/EditorImagePicker';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
@@ -48,9 +49,10 @@ const ArticleEditorModal = () => {
   const { top } = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const keyboardVerticalOffset = headerHeight + top;
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
-  const textColor = Color[colorScheme ?? 'light'].text;
+
+  const textColor = colors.text;
 
   const editorStyle = `
   *{

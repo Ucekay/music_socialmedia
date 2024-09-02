@@ -2,13 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   TextInput,
-  Button,
   StyleSheet,
   Text,
-  useColorScheme,
   ScrollView,
   Platform,
-  Animated as Animated1,
   Pressable,
   FlatList,
   Modal,
@@ -18,11 +15,8 @@ import {
 } from 'react-native';
 import userData from '../assets/userData';
 import { Image } from 'expo-image';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BgView from '../components/ThemedBgView';
 import IconAntDesign from '../components/Icons/AntDesign';
-import Color from '@/src/constants/Colors';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useNavigation, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -30,8 +24,15 @@ import OriginalAspectImage from '../components/OriginalAspectImage';
 import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
 import ImageCropPicker from 'react-native-image-crop-picker';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 type ImagePickerResult = ImagePicker.ImagePickerResult & {
   assets?: ImagePicker.ImagePickerAsset[];
@@ -39,14 +40,13 @@ type ImagePickerResult = ImagePicker.ImagePickerResult & {
 
 const ReplyEditorModal = () => {
   const [text, setText] = useState('');
-  const insets = useSafeAreaInsets();
   const [inputHeight, setInputHeight] = useState(40); // 初期の高さを設定
   const [postHeight, setPostHeight] = useState(60);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
-  const animatedHeight = useRef(new Animated1.Value(0)).current;
+  const animatedHeight = useSharedValue(0);
 
   const params = useLocalSearchParams();
   const post = params;
@@ -131,8 +131,8 @@ const ReplyEditorModal = () => {
     }
   };
 
-  const textColor = Color[colorScheme ?? 'light'].text;
-  const secondaryTextColor = Color[colorScheme ?? 'light'].secondaryText;
+  const textColor = colors.text;
+  const secondaryTextColor = colors.secondaryText;
 
   const BOTTOM_TAB_HEIGHT = 96.7;
 
@@ -147,13 +147,7 @@ const ReplyEditorModal = () => {
   const handleLayoutChange = (event: any) => {
     const { height } = event.nativeEvent.layout;
     setPostHeight(height - 60); // Viewの高さを状態に保存
-
-    // 高さをアニメーションで変更
-    Animated1.timing(animatedHeight, {
-      toValue: height,
-      duration: 300, // アニメーションの持続時間（ミリ秒）
-      useNativeDriver: false, // height のアニメーションには native driver は使えない
-    }).start();
+    animatedHeight.value = withTiming(height, { duration: 300 });
   };
 
   const handleDeleteImage = (index: number) => {
@@ -163,12 +157,14 @@ const ReplyEditorModal = () => {
   };
 
   const handleLayoutChangeLine = () => {
-    Animated1.timing(animatedHeight, {
-      toValue: postHeight,
-      duration: 100, // アニメーションの持続時間（ミリ秒）
-      useNativeDriver: false, // height のアニメーションには native driver は使えない
-    }).start();
+    animatedHeight.value = withTiming(postHeight, { duration: 100 });
   };
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      height: animatedHeight.value,
+    };
+  });
 
   const openCropEditor = async (num: number, uri: string) => {
     try {
@@ -272,7 +268,7 @@ const ReplyEditorModal = () => {
       >
         <View style={styles.editorHeader}>
           <View style={{ flexDirection: 'column' }}>
-            <Image source={post.userAvatarUrl} style={styles.avatorimage} />
+            <Image source={post.userAvatarUrl} style={styles.avatarImage} />
             <View style={[styles.line, { height: postHeight2 - 10 }]} />
           </View>
           <View
@@ -325,14 +321,14 @@ const ReplyEditorModal = () => {
           <View style={{ flexDirection: 'column' }}>
             <Image
               source={userData[0].userAvatarUrl}
-              style={styles.avatorimage}
+              style={styles.avatarImage}
             />
-            <Animated1.View
-              style={[styles.line, { height: animatedHeight }]}
+            <Animated.View
+              style={[styles.line, animatedStyle]}
               onLayout={handleLayoutChangeLine}
             />
           </View>
-          <Animated1.View
+          <Animated.View
             style={[{ flexDirection: 'column' }, { flex: 1 }]}
             onLayout={handleLayoutChange}
           >
@@ -410,7 +406,7 @@ const ReplyEditorModal = () => {
                 <IconAntDesign name='camerao' size={20} style={styles.Icon} />
               </View>
             )}
-          </Animated1.View>
+          </Animated.View>
         </View>
       </ScrollView>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
@@ -441,7 +437,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-  headertitle: {
+  headerTitle: {
     fontSize: 18,
     fontWeight: '700',
   },
@@ -474,7 +470,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     marginRight: 20,
   },
-  avatorimage: {
+  avatarImage: {
     width: 30,
     height: 30,
     borderRadius: 15,

@@ -8,13 +8,10 @@ import {
   useColorScheme,
   ScrollView,
   Platform,
-  Animated as Animated1,
   Pressable,
   Modal,
   ActivityIndicator,
-  Dimensions,
 } from 'react-native';
-import userData from '../../../../../assets/userData';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BgView from '@/src/components/ThemedBgView';
