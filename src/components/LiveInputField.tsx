@@ -2,36 +2,29 @@ import { useState } from 'react';
 import {
   View,
   StyleSheet,
-  Pressable,
-  useColorScheme,
   NativeSyntheticEvent,
   TextInputChangeEventData,
   TextInput,
 } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-import { Text } from './Themed';
 import EditorMetadataInput from './EditorMetadataInput';
 import EditorOptionButton from './EditorOptionButton';
-import Colors, { TagColors } from '../constants/Colors';
 import AddOrCancelButtons from './AddOrCancelButtons';
-import EditorImagePicker from './EditorImagePicker';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 const LiveInputField = () => {
   const [liveName, setLiveName] = useState('');
   const [artistName, setArtistName] = useState('');
   const [manualInput, setManualInput] = useState(false);
 
-  const colorScheme = useColorScheme();
-  const textColor = Colors[colorScheme ?? 'light'].text;
-  const secondaryTextColor = Colors[colorScheme ?? 'light'].secondaryText;
-  const liveNameInputBgColor =
-    TagColors.liveReport[colorScheme ?? 'light'].background;
-  const liveNameInputTextColor =
-    TagColors.liveReport[colorScheme ?? 'light'].text;
-  const artistInputBgColor = Colors[colorScheme ?? 'light'].appleMusicBg;
-  const artistInputTextColor = Colors[colorScheme ?? 'light'].appleMusicText;
+  const { colors, tagColors } = useTheme();
+  const textColor = colors.text;
+  const secondaryTextColor = colors.secondaryText;
+  const liveNameInputBgColor = tagColors.liveReport.background;
+  const liveNameInputTextColor = tagColors.liveReport.text;
+  const artistInputBgColor = colors.appleMusicBg;
+  const artistInputTextColor = colors.appleMusicText;
 
   const handleLiveNameChange = (
     e: NativeSyntheticEvent<TextInputChangeEventData>

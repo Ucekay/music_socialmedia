@@ -1,6 +1,6 @@
 import BgView from '@/src/components/ThemedBgView';
 import { UserListPropsType } from '@/src/types';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -25,9 +25,9 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import userData from '@/src/assets/userData';
 import { useLocalSearchParams } from 'expo-router';
 import { MaterialTabBar } from 'react-native-collapsible-tab-view';
-import Colors from '@/src/constants/Colors';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { AnimatedStyle } from 'react-native-reanimated';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 const width = Dimensions.get('window').width;
 const backgroundColors = [
@@ -41,14 +41,11 @@ const backgroundColors = [
 const FollowingUserCard = (props: UserListPropsType): JSX.Element => {
   const [followingStatus, setFollowingStatus] = useState(true); //初期値は毎度検証したものを入力してください
   const colorScheme = useColorScheme();
+  const { colors } = useTheme();
   const TagColor =
     colorScheme === 'light' ? backgroundColors[0][0] : backgroundColors[0][1];
 
-  const textColor = colorScheme === 'light' ? '#000000' : '#ffffff';
-
-  const themeTextColor = {
-    color: Colors[colorScheme ?? 'light'].text,
-  };
+  const textColor = colors.text;
 
   const HandleUnfollow = () => {
     setFollowingStatus(false);

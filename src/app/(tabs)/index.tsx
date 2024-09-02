@@ -6,8 +6,6 @@ import {
   StyleSheet,
   Pressable,
   Text,
-  useWindowDimensions,
-  useColorScheme,
   TextInput,
   Button,
 } from 'react-native';

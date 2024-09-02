@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, useWindowDimensions, useColorScheme } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 
 import BgView from '../components/ThemedBgView';
@@ -9,7 +9,6 @@ import TodaySongCard from '@/src/components/TodaySongCard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Message, PlaySolid, ShareIos } from 'iconoir-react-native';
 import { useTheme } from '../contexts/ColorThemeContext';
-import Colors from '../constants/Colors';
 import HeartIcon from '../components/Icons/HeartIcon';
 
 const TodaySongModal = () => {
@@ -17,7 +16,6 @@ const TodaySongModal = () => {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const backgroundColor = colors.background;
-  const secondaryBackgroundColor = colors.secondaryBackground;
   const iconColor = colors.text;
   return (
     <BgView
@@ -29,9 +27,9 @@ const TodaySongModal = () => {
           pagingEnabled
           data={todaySongData}
           renderItem={({ item }) => (
-            <View style={{ paddingBottom: 8 }}>
+            <View style={{ paddingHorizontal: 16, paddingBottom: 24, width }}>
               <TodaySongCard
-                currentSong={item}
+                todaySong={item}
                 isEditing={false}
                 isSongInfoVisible
               />

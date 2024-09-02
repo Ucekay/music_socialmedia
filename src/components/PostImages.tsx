@@ -6,20 +6,16 @@ import React, {
 } from 'react';
 import {
   View,
-  Text,
   Pressable,
   Image as RNImage,
   StyleSheet,
   Dimensions,
   Modal,
   GestureResponderEvent,
-  Button,
 } from 'react-native';
 import { Image } from 'expo-image';
 import Animated, {
   Extrapolation,
-  FadeIn,
-  FadeOut,
   SharedValue,
   interpolate,
   runOnJS,
@@ -27,7 +23,6 @@ import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
   withTiming,
   withSpring,
 } from 'react-native-reanimated';
@@ -42,7 +37,6 @@ import HeartIcon from './Icons/HeartIcon';
 import ShareIcon from './Icons/ShareIcon';
 
 const AnimatedFlatList = Animated.FlatList;
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const SCREEN_WIDTH = Dimensions.get('screen').width;
 const SCREEN_HEIGHT = Dimensions.get('screen').height;
@@ -589,7 +583,7 @@ const ImageItem = React.memo(
           savedScale.value = 2;
         }
       });
-    
+
     const tapGesture = Gesture.Exclusive(doubleTap, singleTap);
 
     const composed = Gesture.Simultaneous(pan, pinch, tapGesture);

@@ -6,6 +6,7 @@ import {
   Text,
   KeyboardAvoidingView,
   StyleSheet,
+  useWindowDimensions,
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Stack, useNavigation } from 'expo-router';
@@ -30,6 +31,7 @@ const SongEditorModal = () => {
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [editorContent, setEditorContent] = useState('');
   const [isSongSearchActive, setIsSongSearchActive] = useState(false);
@@ -99,7 +101,7 @@ const SongEditorModal = () => {
             ),
           }}
         />
-        <View style={styles.editorContainer}>
+        <View style={[styles.editorContainer, { width }]}>
           <TodaySongCard
             isEditing
             onSongInfoPress={() => setIsSongSearchActive(true)}
@@ -174,11 +176,11 @@ const styles = StyleSheet.create({
   },
   editorContainer: {
     paddingTop: 32,
+    paddingHorizontal: 16,
     justifyContent: 'flex-end',
   },
   characterCountContainer: {
-    paddingVertical: 16,
-    paddingHorizontal: 32,
+    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
