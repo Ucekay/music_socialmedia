@@ -1,25 +1,15 @@
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 import { Stack } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { Appearance } from 'react-native';
-import { BlurEffectTypes } from 'react-native-screens';
+import { useColorScheme } from 'react-native';
 
 export default function DynamicLayout({ segment }: { segment: string }) {
   const { colors } = useTheme();
-  const [blurEffect, setBlurEffect] = useState<BlurEffectTypes>(
-    'systemUltraThinMaterial'
-  );
+  const colorScheme = useColorScheme();
 
-  useEffect(() => {
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setBlurEffect(
-        colorScheme === 'dark'
-          ? 'systemUltraThinMaterialDark'
-          : 'systemUltraThinMaterialLight'
-      );
-    });
-    return () => subscription.remove();
-  }, []);
+  const blurEffect =
+    colorScheme === 'dark'
+      ? 'systemUltraThinMaterialDark'
+      : 'systemUltraThinMaterialLight';
 
   switch (segment) {
     case '(article)':
