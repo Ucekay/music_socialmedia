@@ -17,6 +17,8 @@ const search_result = () => {
     <View style={{ paddingTop: headerHeight }}>
       <Stack.Screen
         options={{
+          headerBackTitleVisible: false,
+          headerTitle: '',
           headerSearchBarOptions: {
             placeholder: '検索',
             placement: 'inline',
