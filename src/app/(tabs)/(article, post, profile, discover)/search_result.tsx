@@ -19,6 +19,7 @@ const search_result = () => {
         options={{
           headerSearchBarOptions: {
             placeholder: '検索',
+            placement: 'inline',
             ref: searchRef,
           },
         }}

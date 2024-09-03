@@ -27,6 +27,10 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import Text from '@/src/components/ThemedText';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 import { Search, Xmark } from 'iconoir-react-native';
+import {
+  ScreenStackHeaderSearchBarView,
+  SearchBar,
+} from 'react-native-screens';
 
 interface SearchHistoryItem {
   query: string;
