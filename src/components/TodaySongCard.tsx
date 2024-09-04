@@ -226,7 +226,7 @@ const TodaySongCard = ({
       return (
         <Animated.View
           entering={FadeIn}
-          exiting={FadeOut}
+          exiting={size !== 'sm' ? FadeOut : undefined}
           style={[
             styles.song,
             {

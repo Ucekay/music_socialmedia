@@ -3,26 +3,29 @@ import {
   FlatList,
   NativeSyntheticEvent,
   Pressable,
-  TextInputFocusEventData,
   useWindowDimensions,
   View,
+  StyleSheet,
+  Platform,
+  TextInputSubmitEditingEventData,
+  Button,
 } from 'react-native';
 import { Link, Stack, useFocusEffect, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SearchBarCommands } from 'react-native-screens';
 import { Search, Xmark } from 'iconoir-react-native';
+import { SearchBarCommands } from 'react-native-screens';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 import BgView from '@/src/components/ThemedBgView';
 import SecondaryBgView from '@/src/components/ThemedSecondaryBgView';
 import todaySongData from '@/src/assets/todaySongData';
 import TodaySongCard from '@/src/components/TodaySongCard';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useHeaderHeight } from '@react-navigation/elements';
 import Text from '@/src/components/ThemedText';
+import SearchBarHeader from '@/src/components/SearchBarHeader';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
-
-import SearchBar from '@/src/components/SearchBar';
 import { BlurView } from 'expo-blur';
+import SearchBar from '@/src/components/SearchBar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface SearchHistoryItem {
   query: string;
@@ -31,9 +34,8 @@ interface SearchHistoryItem {
 
 const Discover = () => {
   const router = useRouter();
-  const { width } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
+  const insetsTop = useSafeAreaInsets().top;
   const { colors } = useTheme();
   const searchRef = React.useRef<SearchBarCommands>(null);
   const [returnFromSearchResult, setReturnFromSearchResult] = useState(false);
@@ -54,7 +56,7 @@ const Discover = () => {
       }
     };
     loadHistory();
-  }, []);
+  }, [history]);
 
   useFocusEffect(() => {
     if (returnFromSearchResult) {
@@ -85,6 +87,7 @@ const Discover = () => {
 
   const handleSearch = (query: string) => {
     searchRef.current?.setText(query);
+    searchRef.current?.focus();
     setReturnFromSearchResult(true);
     const newHistoryItem = {
       query,
@@ -114,7 +117,7 @@ const Discover = () => {
   };
 
   const handleSearchButtonPress = (
-    e: NativeSyntheticEvent<TextInputFocusEventData>
+    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
   ) => {
     const query = e.nativeEvent.text;
     handleSearch(query);
@@ -148,36 +151,40 @@ const Discover = () => {
     <BgView
       style={{
         flex: 1,
-        padding: 16,
-        paddingTop: headerHeight + 16,
       }}
     >
       <Stack.Screen
         options={{
-          headerSearchBarOptions: {
-            placeholder: '検索',
-            onFocus: handleSearchFocus,
-            onSearchButtonPress(e) {
-              handleSearchButtonPress(e);
-            },
-            onCancelButtonPress: handleSearchCancel,
-            ref: searchRef,
-          },
+          header: () => (
+            <BlurView
+              tint='systemUltraThinMaterial'
+              intensity={100}
+              style={{ height: insetsTop }}
+            ></BlurView>
+          ),
         }}
       />
       <BlurView
-        intensity={100}
         tint='systemUltraThinMaterial'
+        intensity={100}
         style={{
-          height: 60,
-          paddingTop: 10,
-          marginTop: 36,
+          height: 44,
+          marginTop: insetsTop,
+          paddingHorizontal: 16,
         }}
       >
-        <SearchBar />
+        <SearchBar
+          ref={searchRef}
+          canBack={false}
+          placeholder='検索'
+          onFocus={handleSearchFocus}
+          onSearchButtonPress={handleSearchButtonPress}
+          onCancelButtonPress={handleSearchCancel}
+        />
       </BlurView>
+
       {!showHistory && (
-        <View style={{ marginTop: 52 }}>
+        <View style={{ marginTop: 52, paddingHorizontal: 16 }}>
           <Link href={'/today-song-modal'} asChild>
             <Pressable
               style={{
@@ -286,3 +293,17 @@ const Discover = () => {
 };
 
 export default Discover;
+
+const styles = StyleSheet.create({
+  title: Platform.select({
+    ios: {
+      fontSize: 17,
+    },
+    android: {
+      fontSize: 20,
+    },
+    default: {
+      fontSize: 18,
+    },
+  }),
+});
