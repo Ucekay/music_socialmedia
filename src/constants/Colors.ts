@@ -14,7 +14,7 @@ const Colors: {
   dark: ColorScheme;
 } = {
   light: {
-    text: chroma(palette.zinc['900']).hex(),
+    text: '#000',
     secondaryText: chroma(palette.zinc['600']).hex(),
     background: '#fff',
     secondaryBackground: chroma(palette.zinc['100']).hex(),
@@ -39,9 +39,10 @@ const Colors: {
     buttonGhostText: chroma(palette.zinc['900']).hex(),
     buttonDisabled: chroma(palette.zinc['300']).hex(),
     buttonDisabledText: chroma(palette.zinc['500']).hex(),
+    searchBar: chroma(palette.zinc['300']).hex(),
   },
   dark: {
-    text: chroma(palette.zinc['100']).hex(),
+    text: '#fff',
     secondaryText: chroma(palette.zinc['400']).hex(),
     background: '#000',
     secondaryBackground: chroma(palette.zinc['900']).hex(),
@@ -66,6 +67,7 @@ const Colors: {
     buttonGhostText: chroma(palette.zinc['100']).hex(),
     buttonDisabled: chroma(palette.zinc['700']).hex(),
     buttonDisabledText: chroma(palette.zinc['500']).hex(),
+    searchBar: chroma(palette.zinc['800']).hex(),
   },
 };
 

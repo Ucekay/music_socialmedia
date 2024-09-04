@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import {
   FlatList,
-  ListRenderItem,
   NativeSyntheticEvent,
   Pressable,
   TextInputFocusEventData,
   useWindowDimensions,
   View,
 } from 'react-native';
-import {
-  Link,
-  Stack,
-  useFocusEffect,
-  useNavigation,
-  useRouter,
-} from 'expo-router';
+import { Link, Stack, useFocusEffect, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SearchBarCommands } from 'react-native-screens';
+import { Search, Xmark } from 'iconoir-react-native';
 
 import BgView from '@/src/components/ThemedBgView';
 import SecondaryBgView from '@/src/components/ThemedSecondaryBgView';
@@ -26,11 +20,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useHeaderHeight } from '@react-navigation/elements';
 import Text from '@/src/components/ThemedText';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
-import { Search, Xmark } from 'iconoir-react-native';
-import {
-  ScreenStackHeaderSearchBarView,
-  SearchBar,
-} from 'react-native-screens';
+
+import SearchBar from '@/src/components/SearchBar';
+import { BlurView } from 'expo-blur';
 
 interface SearchHistoryItem {
   query: string;
@@ -38,7 +30,6 @@ interface SearchHistoryItem {
 }
 
 const Discover = () => {
-  const navigation = useNavigation();
   const router = useRouter();
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -174,6 +165,17 @@ const Discover = () => {
           },
         }}
       />
+      <BlurView
+        intensity={100}
+        tint='systemUltraThinMaterial'
+        style={{
+          height: 60,
+          paddingTop: 10,
+          marginTop: 36,
+        }}
+      >
+        <SearchBar />
+      </BlurView>
       {!showHistory && (
         <View style={{ marginTop: 52 }}>
           <Link href={'/today-song-modal'} asChild>
@@ -262,6 +264,7 @@ const Discover = () => {
           </Link>
         </View>
       )}
+
       {showHistory && (
         <View>
           <View>

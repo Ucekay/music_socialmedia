@@ -83,9 +83,9 @@ export type TodaysSongsData = {
   created_at: string;
   ProfileID: string;
   UserName: string;
-  IconImageUrl: string
-  LiketoPost: boolean
-}
+  IconImageUrl: string;
+  LiketoPost: boolean;
+};
 
 export type ColorScheme = {
   text: string;
@@ -113,6 +113,7 @@ export type ColorScheme = {
   buttonGhostText: string;
   buttonDisabled: string;
   buttonDisabledText: string;
+  searchBar: string;
 };
 
 export type TodaySongDataType = {
@@ -129,12 +130,12 @@ export type UserListPropsType = {
   userID: string;
   userName: string;
   userAvatarUrl: string;
-}
+};
 
 export type PlaylistType = {
   ImageURL?: string;
-  playlistName: string
-}
+  playlistName: string;
+};
 
 export type SongTypeSimple = {
   musicID: string;

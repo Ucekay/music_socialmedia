@@ -1,15 +1,8 @@
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 import { Stack } from 'expo-router';
-import { useColorScheme } from 'react-native';
 
 export default function DynamicLayout({ segment }: { segment: string }) {
   const { colors } = useTheme();
-  const colorScheme = useColorScheme();
-
-  const blurEffect =
-    colorScheme === 'dark'
-      ? 'systemUltraThinMaterialDark'
-      : 'systemUltraThinMaterialLight';
 
   switch (segment) {
     case '(article)':
@@ -18,7 +11,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           screenOptions={{
             title: 'Article',
             headerTransparent: true,
-            headerBlurEffect: blurEffect,
+            headerBlurEffect: 'systemUltraThinMaterial',
             headerTintColor: colors.text,
           }}
         >
@@ -43,7 +36,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           screenOptions={{
             title: 'Post',
             headerTransparent: true,
-            headerBlurEffect: blurEffect,
+            headerBlurEffect: 'systemUltraThinMaterial',
             headerTintColor: colors.text,
           }}
         >
@@ -68,7 +61,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           screenOptions={{
             title: 'Profile',
             headerTransparent: true,
-            headerBlurEffect: blurEffect,
+            headerBlurEffect: 'systemUltraThinMaterial',
             headerTintColor: colors.text,
           }}
         >
@@ -81,7 +74,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           screenOptions={{
             title: 'Discover',
             headerTransparent: true,
-            headerBlurEffect: blurEffect,
+            headerBlurEffect: 'systemUltraThinMaterial',
             headerTintColor: colors.text,
           }}
         >
