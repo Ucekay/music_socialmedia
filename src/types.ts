@@ -150,3 +150,8 @@ export type PlaylistDetailType = {
   ImageURL: string;
   songs: SongTypeSimple[];
 };
+
+export interface SearchHistoryItem {
+  query: string;
+  timestamp: number;
+}

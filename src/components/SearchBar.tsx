@@ -18,21 +18,20 @@ import {
 import { NavArrowLeft, Search, XmarkCircleSolid } from 'iconoir-react-native';
 import Animated, {
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { SearchBarCommands } from 'react-native-screens';
+import { useNavigation } from 'expo-router';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 import Text from './ThemedText';
 
-import { SearchBarCommands } from 'react-native-screens';
-import { set } from 'date-fns';
-import { useNavigation } from 'expo-router';
-
 interface SearchBarProps {
   placeholder?: string;
   onBlur?: () => void;
-  onCancelButtonPress?: (e: NativeSyntheticEvent<TargetedEvent>) => void;
+  onCancelButtonPress?: () => void;
   onChangeText?: (text: string) => void;
   onFocus?: (e: NativeSyntheticEvent<TargetedEvent>) => void;
   onSearchButtonPress?: (
@@ -82,10 +81,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
             onChangeText?.(text);
           },
           cancelSearch: () => {
-            setValue('');
-            onChangeText?.('');
-            inputRef.current?.blur();
-            setIsFocused(false);
+            handleCancel();
           },
         };
       },
@@ -97,22 +93,12 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
     };
 
     const searchBoxWidth = useSharedValue(initialWidth);
-    const cancelButtonWidth = useSharedValue(0);
     const cancelButtonOpacity = useSharedValue(0);
     const backButtonWidth = useSharedValue(32);
-    const backButtonMarginLeft = useSharedValue(-16);
-    searchBoxWidth.value = withTiming(
-      isFocused ? focusedSearchBarWidth : initialWidth,
-      { duration: 300 }
-    );
-    cancelButtonWidth.value = withTiming(isFocused ? 53 : 0, { duration: 300 });
-    cancelButtonOpacity.value = withTiming(isFocused ? 1 : 0, {
-      duration: 300,
+    const backButtonMarginLeft = useDerivedValue(() => {
+      return (backButtonWidth.value / 2) * -1;
     });
-    backButtonWidth.value = withTiming(isFocused ? 0 : 32, { duration: 300 });
-    backButtonMarginLeft.value = withTiming(isFocused ? 0 : -16, {
-      duration: 300,
-    });
+
     const animatedSearchBoxStyle = useAnimatedStyle(() => {
       return {
         width: searchBoxWidth.value,
@@ -120,7 +106,6 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
     });
     const animatedCancelButtonStyle = useAnimatedStyle(() => {
       return {
-        width: cancelButtonWidth.value,
         opacity: cancelButtonOpacity.value,
       };
     });
@@ -159,6 +144,13 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
     };
 
     const handleCancel = () => {
+      searchBoxWidth.value = withTiming(initialWidth, { duration: 300 });
+      cancelButtonOpacity.value = withTiming(0, {
+        duration: 300,
+      });
+      backButtonWidth.value = withTiming(32, {
+        duration: 300,
+      });
       setValue('');
       onChangeText?.('');
       setIsFocused(false);
@@ -174,6 +166,18 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
       navigation.goBack();
     };
 
+    const handlePress = () => {
+      searchBoxWidth.value = withTiming(focusedSearchBarWidth, {
+        duration: 300,
+      });
+      cancelButtonOpacity.value = withTiming(1, {
+        duration: 300,
+      });
+      backButtonWidth.value = withTiming(0, {
+        duration: 300,
+      });
+    };
+
     return (
       <View
         style={{
@@ -184,9 +188,12 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
         }}
       >
         <View style={{ flexDirection: 'row' }}>
-          {canBack === true ? (
+          {canBack === true && (
             <Animated.View
-              style={[animatedBackButtonStyle, { overflow: 'hidden' }]}
+              style={[
+                animatedBackButtonStyle,
+                { marginLeft: -16, overflow: 'hidden' },
+              ]}
             >
               <Pressable onPress={handleBack} style={[styles.button]}>
                 <NavArrowLeft
@@ -197,7 +204,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
                 />
               </Pressable>
             </Animated.View>
-          ) : null}
+          )}
           <Animated.View
             style={[
               styles.container,
@@ -227,6 +234,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
               onSubmitEditing={handleSubmit}
               onFocus={handleFocus}
               onBlur={handleBlur}
+              onPress={handlePress}
             />
             {value.length > 0 && isFocused && (
               <Pressable onPress={handleClear} style={styles.button}>
@@ -239,7 +247,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
             )}
           </Animated.View>
         </View>
-        <Animated.View style={animatedCancelButtonStyle}>
+        <Animated.View style={[animatedCancelButtonStyle, { width: 53 }]}>
           <Pressable
             onPress={handleCancel}
             style={{

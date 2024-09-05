@@ -8,11 +8,9 @@ import {
 import { useHeaderHeight } from '@react-navigation/elements';
 import { SearchBarCommands } from 'react-native-screens';
 
-import SearchBarHeader from '@/src/components/SearchBarHeader';
 import BgView from '@/src/components/ThemedBgView';
 import Text from '@/src/components/ThemedText';
 import {
-  Button,
   FlatList,
   NativeSyntheticEvent,
   Pressable,
@@ -21,17 +19,13 @@ import {
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import SearchBar from '@/src/components/SearchBar';
-import handleSearch from '@/src/backend/components/DB_Access/Searh';
-import { insertTodaysSongs } from '@/src/backend/components/DB_Access/TodaysSong';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Search, Xmark } from 'iconoir-react-native';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
-
-interface SearchHistoryItem {
-  query: string;
-  timestamp: number;
-}
+import type { SearchHistoryItem } from '@/src/types';
+import SearchHistoryList from '@/src/components/SearchHistoryList';
+import { set } from 'date-fns';
 
 const search_result = () => {
   const { query } = useLocalSearchParams();
@@ -53,6 +47,7 @@ const search_result = () => {
 
   const handleCancelButtonPress = () => {
     showCurrentQuery();
+    setShowHistory(false);
   };
 
   useFocusEffect(() => {
@@ -96,6 +91,7 @@ const search_result = () => {
   };
 
   const handleSearch = (query: string) => {
+    searchRef.current?.cancelSearch();
     setReturnFromSearchResult(true);
     const newHistoryItem = {
       query,
@@ -119,7 +115,7 @@ const search_result = () => {
     });
 
     router.push({
-      pathname: '/search_result',
+      pathname: '/search-result',
       params: { query },
     });
   };
@@ -131,28 +127,8 @@ const search_result = () => {
     handleSearch(query);
   };
 
-  const renderHistoryItem = ({ item }: { item: SearchHistoryItem }) => {
-    return (
-      <View style={{ flexDirection: 'row' }}>
-        <Pressable onPress={() => handleSearch(item.query)}>
-          <View style={{ flexDirection: 'row' }}>
-            <View>
-              <Search color={colors.text} width={20} height={20} />
-            </View>
-            <View>
-              <Text>{item.query}</Text>
-            </View>
-          </View>
-        </Pressable>
-        <Pressable onPress={() => clearHistory(item)}>
-          <Xmark color={colors.text} width={20} height={20} />
-        </Pressable>
-      </View>
-    );
-  };
-
   return (
-    <BgView style={{ paddingTop: headerHeight }}>
+    <BgView style={{ flex: 1, paddingTop: insetsTop }}>
       <Stack.Screen
         options={{
           header: () => (
@@ -162,15 +138,13 @@ const search_result = () => {
               style={{ height: insetsTop, paddingHorizontal: 16 }}
             ></BlurView>
           ),
+          headerTransparent: true,
         }}
       />
       <BlurView
         tint='systemUltraThinMaterial'
         intensity={100}
         style={{
-          position: 'absolute',
-          top: insetsTop,
-          zIndex: 1,
           height: 44,
           paddingHorizontal: 16,
         }}
@@ -184,26 +158,17 @@ const search_result = () => {
           onSearchButtonPress={handleSearchButtonPress}
         />
       </BlurView>
-      <View style={{ paddingTop: insetsTop }}>
+      <View style={{}}>
         <Text>search_result</Text>
         <Text>query: {query}</Text>
       </View>
 
       {showHistory && (
-        <View>
-          <View>
-            <Text>履歴</Text>
-          </View>
-          {history.length > 0 && (
-            <View>
-              <FlatList
-                data={history}
-                renderItem={renderHistoryItem}
-                keyExtractor={(item) => item.timestamp.toString()}
-              />
-            </View>
-          )}
-        </View>
+        <SearchHistoryList
+          data={history}
+          onItemPress={handleSearch}
+          onClearHistory={clearHistory}
+        />
       )}
     </BgView>
   );

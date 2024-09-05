@@ -3,43 +3,34 @@ import {
   FlatList,
   NativeSyntheticEvent,
   Pressable,
-  useWindowDimensions,
   View,
   StyleSheet,
   Platform,
   TextInputSubmitEditingEventData,
-  Button,
 } from 'react-native';
 import { Link, Stack, useFocusEffect, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Search, Xmark } from 'iconoir-react-native';
 import { SearchBarCommands } from 'react-native-screens';
-import { useHeaderHeight } from '@react-navigation/elements';
+import { BlurView } from 'expo-blur';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import BgView from '@/src/components/ThemedBgView';
 import SecondaryBgView from '@/src/components/ThemedSecondaryBgView';
 import todaySongData from '@/src/assets/todaySongData';
 import TodaySongCard from '@/src/components/TodaySongCard';
 import Text from '@/src/components/ThemedText';
-import SearchBarHeader from '@/src/components/SearchBarHeader';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
-import { BlurView } from 'expo-blur';
 import SearchBar from '@/src/components/SearchBar';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-interface SearchHistoryItem {
-  query: string;
-  timestamp: number;
-}
+import type { SearchHistoryItem } from '@/src/types';
+import SearchHistoryList from '@/src/components/SearchHistoryList';
 
 const Discover = () => {
   const router = useRouter();
-  const headerHeight = useHeaderHeight();
   const insetsTop = useSafeAreaInsets().top;
   const { colors } = useTheme();
   const searchRef = React.useRef<SearchBarCommands>(null);
   const [returnFromSearchResult, setReturnFromSearchResult] = useState(false);
-
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState<SearchHistoryItem[]>([]);
 
@@ -111,7 +102,7 @@ const Discover = () => {
     });
 
     router.push({
-      pathname: '/search_result',
+      pathname: '/search-result',
       params: { query },
     });
   };
@@ -125,26 +116,6 @@ const Discover = () => {
 
   const handleSearchCancel = () => {
     setShowHistory(false);
-  };
-
-  const renderHistoryItem = ({ item }: { item: SearchHistoryItem }) => {
-    return (
-      <View style={{ flexDirection: 'row' }}>
-        <Pressable onPress={() => handleSearch(item.query)}>
-          <View style={{ flexDirection: 'row' }}>
-            <View>
-              <Search color={colors.text} width={20} height={20} />
-            </View>
-            <View>
-              <Text>{item.query}</Text>
-            </View>
-          </View>
-        </Pressable>
-        <Pressable onPress={() => clearHistory(item)}>
-          <Xmark color={colors.text} width={20} height={20} />
-        </Pressable>
-      </View>
-    );
   };
 
   return (
@@ -184,7 +155,7 @@ const Discover = () => {
       </BlurView>
 
       {!showHistory && (
-        <View style={{ marginTop: 52, paddingHorizontal: 16 }}>
+        <View style={{ padding: 16, flex: 1 }}>
           <Link href={'/today-song-modal'} asChild>
             <Pressable
               style={{
@@ -273,20 +244,11 @@ const Discover = () => {
       )}
 
       {showHistory && (
-        <View>
-          <View>
-            <Text>履歴</Text>
-          </View>
-          {history.length > 0 && (
-            <View>
-              <FlatList
-                data={history}
-                renderItem={renderHistoryItem}
-                keyExtractor={(item) => item.timestamp.toString()}
-              />
-            </View>
-          )}
-        </View>
+        <SearchHistoryList
+          data={history}
+          onItemPress={handleSearch}
+          onClearHistory={clearHistory}
+        />
       )}
     </BgView>
   );
