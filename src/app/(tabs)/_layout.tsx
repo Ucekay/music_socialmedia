@@ -33,14 +33,14 @@ export default function TabLayout() {
   const { colors } = useTheme();
   const themeContainerStyle = colors.tabBarGradient;
 
-  const insets = useSafeAreaInsets();
+  const insetsBottom = useSafeAreaInsets().bottom;
+
+  const bottomSheetHeight = 222 + insetsBottom;
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  // variables
-  const snapPoints = useMemo(() => [221 + insets.bottom], []);
+  const snapPoints = useMemo(() => [bottomSheetHeight], []);
 
-  // callbacks
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
@@ -151,10 +151,10 @@ export default function TabLayout() {
         backdropComponent={renderBackdrop}
         backgroundStyle={themedContentStyle}
         handleIndicatorStyle={{ backgroundColor: colors.border }}
-        maxDynamicContentSize={221 + insets.bottom}
+        maxDynamicContentSize={bottomSheetHeight}
       >
         <BottomSheetView style={styles.contentContainer}>
-          <View style={[styles.content, { marginBottom: 16 + insets.bottom }]}>
+          <View style={[styles.content, { marginBottom: 16 + insetsBottom }]}>
             <CreateContentList colors={colors} />
           </View>
         </BottomSheetView>
@@ -243,8 +243,8 @@ const CreateContentListItem = ({
         ]}
       >
         <View>{icon}</View>
-        <View style={{ width: 174.3 }}>
-          <Text style={{ fontSize: 20 }}>{text}</Text>
+        <View style={styles.listTextContainer}>
+          <Text style={styles.listText}>{text}</Text>
         </View>
         <View>
           <MultiplePages width={28} height={28} color={'transparent'} />
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignContent: 'center',
     alignSelf: 'flex-start',
-    height: 181,
+    height: 182,
     borderRadius: 12,
     borderCurve: 'continuous',
     borderWidth: 1,
@@ -299,5 +299,11 @@ const styles = StyleSheet.create({
     gap: 16,
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  listTextContainer: {
+    width: 174.3,
+  },
+  listText: {
+    fontSize: 20,
   },
 });

@@ -30,7 +30,6 @@ import { set } from 'date-fns';
 const search_result = () => {
   const { query } = useLocalSearchParams();
   const { colors } = useTheme();
-  const headerHeight = useHeaderHeight();
   const insetsTop = useSafeAreaInsets().top;
   const [history, setHistory] = useState<SearchHistoryItem[]>([]);
   const [returnFromSearchResult, setReturnFromSearchResult] = useState(false);
@@ -38,16 +37,6 @@ const search_result = () => {
 
   const showCurrentQuery = () => {
     searchRef.current?.setText(query as string);
-  };
-
-  const searchRef = useRef<SearchBarCommands>(null);
-  useEffect(() => {
-    showCurrentQuery();
-  }, []);
-
-  const handleCancelButtonPress = () => {
-    showCurrentQuery();
-    setShowHistory(false);
   };
 
   useFocusEffect(() => {
@@ -84,6 +73,16 @@ const search_result = () => {
       saveHistory(newHistory);
       return newHistory;
     });
+  };
+
+  const searchRef = useRef<SearchBarCommands>(null);
+  useEffect(() => {
+    showCurrentQuery();
+  }, []);
+
+  const handleCancelButtonPress = () => {
+    showCurrentQuery();
+    setShowHistory(false);
   };
 
   const handleSearchFocus = () => {
@@ -158,6 +157,7 @@ const search_result = () => {
           onSearchButtonPress={handleSearchButtonPress}
         />
       </BlurView>
+
       <View style={{}}>
         <Text>search_result</Text>
         <Text>query: {query}</Text>
