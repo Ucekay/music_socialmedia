@@ -1,12 +1,7 @@
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
-import { Message, Xmark } from 'iconoir-react-native';
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-} from 'react';
+import type React from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import {
   Dimensions,
   type GestureResponderEvent,
@@ -16,6 +11,8 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+
+import { Message, Xmark } from 'iconoir-react-native';
 import {
   Gesture,
   GestureDetector,
@@ -31,8 +28,10 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  withSpring,
+  FadeIn,
+  FadeOut,
 } from 'react-native-reanimated';
+
 import HeartIcon from './Icons/HeartIcon';
 import ShareIcon from './Icons/ShareIcon';
 
@@ -293,7 +292,8 @@ const MultipleImages = ({
           <View style={[styles.row, { gap: 4, height: '50%' }]}>
             <Pressable
               onPress={() => {
-                setSelectedIndex(2), setModalVisible(true);
+                setSelectedIndex(2);
+                setModalVisible(true);
               }}
               style={{ flex: 1 }}
             >
@@ -338,6 +338,7 @@ const ImageModal = ({
   onClose: () => void;
 }) => {
   const flatListRef = useAnimatedRef<Animated.FlatList<string>>();
+  const [OptionVisible, setOptionVisible] = useState(false);
   const scrollX = useSharedValue(0);
   const scales = imageUrls.map(() => useSharedValue(1));
   const savedScales = imageUrls.map(() => useSharedValue(1));
@@ -347,21 +348,22 @@ const ImageModal = ({
   const savedTranslateY = imageUrls.map(() => useSharedValue(0));
   const currentIndex = useSharedValue(initialIndex);
 
-  const resetImagePosition = useCallback((index: number) => {
+  const resetImagePosition = (index: number) => {
     scales[index].value = 1;
     savedScales[index].value = 1;
     translateX[index].value = 0;
     translateY[index].value = 0;
     savedTranslateX[index].value = 0;
     savedTranslateY[index].value = 0;
-  }, []);
+  };
 
-  const resetAllImagePositions = useCallback(() => {
+  const resetAllImagePositions = () => {
     imageUrls.forEach((_, index) => {
       resetImagePosition(index);
     });
-  }, [imageUrls, resetImagePosition]);
+  };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useLayoutEffect(() => {
     if (visible) {
       currentIndex.value = initialIndex;
@@ -373,33 +375,21 @@ const ImageModal = ({
         });
       }
     }
-  }, [visible, initialIndex, resetAllImagePositions]);
+  }, [visible, initialIndex]);
 
-  const renderItem = useCallback(
-    ({ item, index }: { item: string; index: number }) => (
-      <ImageItem
-        item={item}
-        index={index}
-        scale={scales[index]}
-        savedScale={savedScales[index]}
-        translateX={translateX[index]}
-        translateY={translateY[index]}
-        savedTranslateX={savedTranslateX[index]}
-        savedTranslateY={savedTranslateY[index]}
-        onClose={onClose}
-        onSingleTap={() => setOptionVisible(!OptionVisible)}
-      />
-    ),
-    [
-      scales,
-      savedScales,
-      translateX,
-      translateY,
-      savedTranslateX,
-      savedTranslateY,
-      resetImagePosition,
-      onClose,
-    ],
+  const renderItem = ({ item, index }: { item: string; index: number }) => (
+    <ImageItem
+      item={item}
+      index={index}
+      scale={scales[index]}
+      savedScale={savedScales[index]}
+      translateX={translateX[index]}
+      translateY={translateY[index]}
+      savedTranslateX={savedTranslateX[index]}
+      savedTranslateY={savedTranslateY[index]}
+      onClose={onClose}
+      onSingleTap={handleSingleTap}
+    />
   );
 
   const backgroundStyle = useAnimatedStyle(() => {
@@ -429,28 +419,20 @@ const ImageModal = ({
     },
   });
 
-  const [OptionVisible, setOptionVisible] = useState(false);
-  const [renderStatus, setRenderStatus] = useState(false);
-
-  const opacity = useSharedValue(0);
-
-  useEffect(() => {
-    if (OptionVisible) {
-      setRenderStatus(true); // Render the component when modal becomes visible
-      opacity.value = withSpring(1, { duration: 300 });
-    } else {
-      opacity.value = withSpring(0, { duration: 300 }, () => {
-        runOnJS(() => {
-          setRenderStatus(false); // Remove the component after animation
-        });
-      });
-    }
-  }, [OptionVisible]);
+  const handleSingleTap = () => {
+    setOptionVisible(!OptionVisible);
+  };
 
   return (
     <Modal visible={visible} transparent animationType='fade'>
       <GestureHandlerRootView style={styles.modalContainer}>
-        <Animated.View style={[styles.modalBackground, backgroundStyle]} />
+        <Animated.View
+          style={[
+            styles.modalBackground,
+            backgroundStyle,
+            StyleSheet.absoluteFillObject,
+          ]}
+        />
         <AnimatedFlatList
           ref={flatListRef}
           data={imageUrls}
@@ -468,13 +450,13 @@ const ImageModal = ({
             index,
           })}
         />
-        {renderStatus && (
-          <Animated.View style={{ opacity: opacity }}>
+        {OptionVisible && (
+          <Animated.View entering={FadeIn} exiting={FadeOut}>
             <OptionModal postID={postID} />
           </Animated.View>
         )}
-        {renderStatus && (
-          <Animated.View style={{ opacity: opacity }}>
+        {OptionVisible && (
+          <Animated.View entering={FadeIn} exiting={FadeOut}>
             <OptionModalUpper onClose={onClose} />
           </Animated.View>
         )}
@@ -483,134 +465,133 @@ const ImageModal = ({
   );
 };
 
-const ImageItem = React.memo(
-  ({
-    item,
-    index,
-    scale,
-    savedScale,
-    translateX,
-    translateY,
-    savedTranslateX,
-    savedTranslateY,
-    onClose,
-    onSingleTap,
-  }: {
-    item: string;
-    index: number;
-    scale: SharedValue<number>;
-    savedScale: SharedValue<number>;
-    translateX: SharedValue<number>;
-    translateY: SharedValue<number>;
-    savedTranslateX: SharedValue<number>;
-    savedTranslateY: SharedValue<number>;
-    onClose: () => void;
-    onSingleTap: () => void;
-  }) => {
-    useEffect(() => {
-      if (index === 0) {
-        return () => {
-          scale.value = 1;
-          savedScale.value = 1;
-          translateX.value = 0;
-          translateY.value = 0;
-          savedTranslateX.value = 0;
-          savedTranslateY.value = 0;
-        };
-      }
-    }, []);
-    const pinch = Gesture.Pinch()
-      .onUpdate((e) => {
-        scale.value = Math.abs(savedScale.value) * e.scale;
-      })
-      .onEnd(() => {
-        savedScale.value = scale.value;
-        if (scale.value < 1) {
-          scale.value = withTiming(1);
-          savedScale.value = 1;
-        }
-      });
-
-    const pan = Gesture.Pan()
-      .activeOffsetY([-10, 10])
-      .onUpdate((e) => {
-        if (scale.value > 1) {
-          translateX.value = savedTranslateX.value + e.translationX;
-          translateY.value = savedTranslateY.value + e.translationY;
-        } else {
-          translateY.value = e.translationY;
-        }
-      })
-      .onEnd((e) => {
-        if (scale.value > 1) {
-          savedTranslateX.value = translateX.value;
-          savedTranslateY.value = translateY.value;
-          return;
-        }
-
-        const isSwipeVelocityExceeded =
-          Math.abs(e.velocityY) > SWIPE_VELOCITY_THRESHOLD;
-        const isSwipeDistanceExceeded =
-          Math.abs(translateY.value) > SCREEN_HEIGHT / 10;
-
-        if (isSwipeVelocityExceeded && isSwipeDistanceExceeded) {
-          runOnJS(onClose)();
-        } else {
-          translateX.value = withTiming(0);
-          translateY.value = withTiming(0);
-        }
-      });
-
-    const singleTap = Gesture.Tap()
-      .numberOfTaps(1)
-      .maxDuration(300)
-      .onStart(() => {
-        runOnJS(onSingleTap)();
-      });
-
-    const doubleTap = Gesture.Tap()
-      .numberOfTaps(2)
-      .onStart(() => {
-        if (scale.value > 1) {
-          scale.value = withTiming(1);
-          savedScale.value = withTiming(1);
-          translateX.value = withTiming(0);
-          translateY.value = withTiming(0);
-          savedTranslateX.value = withTiming(0);
-          savedTranslateY.value = withTiming(0);
-        } else {
-          scale.value = withTiming(2);
-          savedScale.value = 2;
-        }
-      });
-
-    const tapGesture = Gesture.Exclusive(doubleTap, singleTap);
-
-    const composed = Gesture.Simultaneous(pan, pinch, tapGesture);
-
-    const animatedStyle = useAnimatedStyle(() => {
-      return {
-        transform: [
-          { scale: scale.value },
-          { translateX: translateX.value },
-          { translateY: translateY.value },
-        ],
+const ImageItem = ({
+  item,
+  index,
+  scale,
+  savedScale,
+  translateX,
+  translateY,
+  savedTranslateX,
+  savedTranslateY,
+  onClose,
+  onSingleTap,
+}: {
+  item: string;
+  index: number;
+  scale: SharedValue<number>;
+  savedScale: SharedValue<number>;
+  translateX: SharedValue<number>;
+  translateY: SharedValue<number>;
+  savedTranslateX: SharedValue<number>;
+  savedTranslateY: SharedValue<number>;
+  onClose: () => void;
+  onSingleTap: () => void;
+}) => {
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (index === 0) {
+      return () => {
+        scale.value = 1;
+        savedScale.value = 1;
+        translateX.value = 0;
+        translateY.value = 0;
+        savedTranslateX.value = 0;
+        savedTranslateY.value = 0;
       };
+    }
+  }, []);
+  const pinch = Gesture.Pinch()
+    .onUpdate((e) => {
+      scale.value = Math.abs(savedScale.value) * e.scale;
+    })
+    .onEnd(() => {
+      savedScale.value = scale.value;
+      if (scale.value < 1) {
+        scale.value = withTiming(1);
+        savedScale.value = 1;
+      }
     });
 
-    return (
-      <GestureDetector gesture={composed}>
-        <Animated.View style={[styles.modalImageContainer, animatedStyle]}>
-          <Image
-            source={{ uri: item }}
-            style={styles.modalImage}
-            contentFit='contain'
-          />
-        </Animated.View>
-      </GestureDetector>
-    );
-  },
-);
+  const pan = Gesture.Pan()
+    .activeOffsetY([-10, 10])
+    .onUpdate((e) => {
+      if (scale.value > 1) {
+        translateX.value = savedTranslateX.value + e.translationX;
+        translateY.value = savedTranslateY.value + e.translationY;
+      } else {
+        translateY.value = e.translationY;
+      }
+    })
+    .onEnd((e) => {
+      if (scale.value > 1) {
+        savedTranslateX.value = translateX.value;
+        savedTranslateY.value = translateY.value;
+        return;
+      }
+
+      const isSwipeVelocityExceeded =
+        Math.abs(e.velocityY) > SWIPE_VELOCITY_THRESHOLD;
+      const isSwipeDistanceExceeded =
+        Math.abs(translateY.value) > SCREEN_HEIGHT / 10;
+
+      if (isSwipeVelocityExceeded && isSwipeDistanceExceeded) {
+        runOnJS(onClose)();
+      } else {
+        translateX.value = withTiming(0);
+        translateY.value = withTiming(0);
+      }
+    });
+
+  const singleTap = Gesture.Tap()
+    .numberOfTaps(1)
+    .maxDuration(300)
+    .onStart(() => {
+      runOnJS(onSingleTap)();
+    });
+
+  const doubleTap = Gesture.Tap()
+    .numberOfTaps(2)
+    .onStart(() => {
+      if (scale.value > 1) {
+        scale.value = withTiming(1);
+        savedScale.value = withTiming(1);
+        translateX.value = withTiming(0);
+        translateY.value = withTiming(0);
+        savedTranslateX.value = withTiming(0);
+        savedTranslateY.value = withTiming(0);
+      } else {
+        scale.value = withTiming(2);
+        savedScale.value = 2;
+      }
+    });
+
+  const tapGesture = Gesture.Exclusive(doubleTap, singleTap);
+
+  const composed = Gesture.Simultaneous(pan, pinch, tapGesture);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { scale: scale.value },
+        { translateX: translateX.value },
+        { translateY: translateY.value },
+      ],
+    };
+  });
+
+  return (
+    <GestureDetector gesture={composed}>
+      <Animated.View style={[styles.modalImageContainer, animatedStyle]}>
+        <Image
+          source={{ uri: item }}
+          style={styles.modalImage}
+          contentFit='contain'
+        />
+      </Animated.View>
+    </GestureDetector>
+  );
+};
 
 const OptionModalUpper = (props: {
   onClose: ((event: GestureResponderEvent) => void) | null | undefined;
@@ -624,11 +605,6 @@ const OptionModalUpper = (props: {
           backgroundColor: 'rgba(0, 0, 0, 0.6)',
           paddingHorizontal: 30,
           paddingVertical: 50,
-          elevation: 6,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 10,
           height: 100,
           width: SCREEN_WIDTH,
         },
@@ -652,11 +628,6 @@ const OptionModal = ({ postID }: { postID: number }): JSX.Element => {
           right: 0,
           backgroundColor: 'rgba(0, 0, 0, 0.6)',
           padding: 20,
-          elevation: 5,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 10,
         },
       ]}
     >
@@ -670,7 +641,7 @@ const OptionModal = ({ postID }: { postID: number }): JSX.Element => {
           marginVertical: 16,
         }}
       >
-        <HeartIcon width={20} height={20} initialcolor='#ffffff' />
+        <HeartIcon width={20} height={20} initialColor='#ffffff' />
         <Link
           href={{
             pathname: '/reply-editor-modal',
@@ -690,15 +661,15 @@ const OptionModal = ({ postID }: { postID: number }): JSX.Element => {
 
 const styles = StyleSheet.create({
   imageContainer: {
-    borderRadius: 12,
-    borderCurve: 'continuous',
     overflow: 'hidden',
+    borderCurve: 'continuous',
+    borderRadius: 12,
   },
   multiImageContainer: {
-    borderRadius: 12,
-    borderCurve: 'continuous',
     overflow: 'hidden',
     width: '100%',
+    borderCurve: 'continuous',
+    borderRadius: 12,
     aspectRatio: 7 / 4,
   },
   singleImage: {
@@ -711,22 +682,21 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   image: {
-    height: '100%',
     width: '100%',
+    height: '100%',
   },
   modalContainer: {
     flex: 1,
     backgroundColor: 'black',
   },
   modalBackground: {
-    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'black',
   },
   modalImageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   modalImage: {
     width: SCREEN_WIDTH,

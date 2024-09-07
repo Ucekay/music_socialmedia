@@ -1,4 +1,3 @@
-import { RichText, Toolbar, useEditorBridge } from '@10play/tentap-editor';
 import { Stack, useNavigation } from 'expo-router';
 import {
   Button,
@@ -8,6 +7,8 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+
+import { RichText, Toolbar, useEditorBridge } from '@10play/tentap-editor';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ModalScreen() {
@@ -57,13 +58,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   separator: {
-    marginVertical: 30,
-    height: 1,
     width: '80%',
+    height: 1,
+    marginVertical: 30,
   },
   keyboardAvoidingView: {
     position: 'absolute',
-    width: '100%',
     bottom: 0,
+    width: '100%',
   },
 });
