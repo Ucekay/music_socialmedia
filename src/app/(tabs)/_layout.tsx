@@ -8,9 +8,14 @@ import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   BottomSheetBackdrop,
+  BottomSheetBackgroundProps,
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
+import {
+  type BottomSheetBackdropProps,
+  type BottomSheetDefaultBackdropProps,
+} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 import { MultiplePages, GoogleDocs, Voice } from 'iconoir-react-native';
 import { SvgProps } from 'react-native-svg';
 
@@ -19,7 +24,6 @@ import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 import Text from '@/src/components/ThemedText';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 import type { ColorScheme } from '@/src/types';
-import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -149,9 +153,9 @@ export default function TabLayout() {
         onChange={handleSheetChanges}
         enablePanDownToClose
         backdropComponent={renderBackdrop}
-        backgroundStyle={themedContentStyle}
         handleIndicatorStyle={{ backgroundColor: colors.border }}
         maxDynamicContentSize={bottomSheetHeight}
+        backgroundComponent={BottomSheetBackground}
       >
         <BottomSheetView style={styles.contentContainer}>
           <View style={[styles.content, { marginBottom: 16 + insetsBottom }]}>
@@ -162,6 +166,20 @@ export default function TabLayout() {
     </View>
   );
 }
+
+const BottomSheetBackground: React.FC<BottomSheetBackgroundProps> = ({
+  style,
+  animatedIndex,
+}) => {
+  const containerStyle = [styles.bottomSheetBackground, style];
+  return (
+    <BlurView
+      tint='systemUltraThinMaterial'
+      intensity={100}
+      style={containerStyle}
+    ></BlurView>
+  );
+};
 
 type CreateItemData = {
   id: string;
@@ -305,5 +323,11 @@ const styles = StyleSheet.create({
   },
   listText: {
     fontSize: 20,
+  },
+  bottomSheetBackground: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderCurve: 'continuous',
+    overflow: 'hidden',
   },
 });

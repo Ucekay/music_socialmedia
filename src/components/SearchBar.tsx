@@ -148,9 +148,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
       cancelButtonOpacity.value = withTiming(0, {
         duration: 300,
       });
-      backButtonWidth.value = withTiming(32, {
-        duration: 300,
-      });
+      backButtonWidth.value = withTiming(32, { duration: 300 });
       setValue('');
       onChangeText?.('');
       setIsFocused(false);
@@ -167,13 +165,11 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
     };
 
     const handlePress = () => {
+      backButtonWidth.value = withTiming(0, { duration: 300 });
       searchBoxWidth.value = withTiming(focusedSearchBarWidth, {
         duration: 300,
       });
       cancelButtonOpacity.value = withTiming(1, {
-        duration: 300,
-      });
-      backButtonWidth.value = withTiming(0, {
         duration: 300,
       });
     };

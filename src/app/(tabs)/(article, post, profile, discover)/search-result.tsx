@@ -27,7 +27,7 @@ import type { SearchHistoryItem } from '@/src/types';
 import SearchHistoryList from '@/src/components/SearchHistoryList';
 import { set } from 'date-fns';
 
-const search_result = () => {
+const SearchResult = () => {
   const { query } = useLocalSearchParams();
   const { colors } = useTheme();
   const insetsTop = useSafeAreaInsets().top;
@@ -174,4 +174,12 @@ const search_result = () => {
   );
 };
 
-export default search_result;
+const SearchResultTabs = ({ query }: { query: string }) => {
+  return (
+    <View>
+      <Text>search-result</Text>
+    </View>
+  );
+};
+
+export default SearchResult;
