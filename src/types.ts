@@ -50,7 +50,6 @@ export type ArticleData = {
 };
 
 export type PostDataType = {
-  style?: any;
   postID: number;
   postContent: string;
   ImageUrl: string[];

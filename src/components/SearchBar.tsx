@@ -1,20 +1,17 @@
-import React, {
-  useState,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-} from 'react';
+import { useNavigation } from 'expo-router';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import {
-  View,
-  TextInput,
-  StyleSheet,
+  type LayoutChangeEvent,
+  type NativeSyntheticEvent,
   Pressable,
-  LayoutChangeEvent,
+  StyleSheet,
+  type TargetedEvent,
+  TextInput,
+  type TextInputSubmitEditingEventData,
+  View,
   useWindowDimensions,
-  NativeSyntheticEvent,
-  TargetedEvent,
-  TextInputSubmitEditingEventData,
 } from 'react-native';
+
 import { NavArrowLeft, Search, XmarkCircleSolid } from 'iconoir-react-native';
 import Animated, {
   useAnimatedStyle,
@@ -22,11 +19,13 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { SearchBarCommands } from 'react-native-screens';
-import { useNavigation } from 'expo-router';
+
 
 import { useTheme } from '../contexts/ColorThemeContext';
+
 import Text from './ThemedText';
+
+import type { SearchBarCommands } from 'react-native-screens';
 
 interface SearchBarProps {
   placeholder?: string;
@@ -35,7 +34,7 @@ interface SearchBarProps {
   onChangeText?: (text: string) => void;
   onFocus?: (e: NativeSyntheticEvent<TargetedEvent>) => void;
   onSearchButtonPress?: (
-    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
   ) => void;
   canBack: boolean;
 }
@@ -57,7 +56,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
     const [value, setValue] = useState('');
     const [isFocused, setIsFocused] = useState(false);
     const [initialWidth, setInitialWidth] = useState(
-      canBack ? width - 48 : width - 32
+      canBack ? width - 48 : width - 32,
     );
     const inputRef = useRef<TextInput>(null);
 
@@ -85,7 +84,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
           },
         };
       },
-      []
+      [],
     );
 
     const handleLayout = (event: LayoutChangeEvent) => {
@@ -132,7 +131,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
     };
 
     const handleSubmit = (
-      e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+      e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
     ) => {
       onSearchButtonPress?.(e);
     };
@@ -257,31 +256,31 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
         </Animated.View>
       </View>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 10,
-    borderCurve: 'continuous',
-    paddingHorizontal: 6,
+    flexDirection: 'row',
     height: 36,
+    paddingHorizontal: 6,
+    borderCurve: 'continuous',
+    borderRadius: 10,
+    backgroundColor: '#f0f0f0',
   },
   searchIcon: {
     marginRight: 8,
   },
   input: {
-    flex: 1,
     fontSize: 17,
-    padding: 0,
+    flex: 1,
     height: '100%',
+    padding: 0,
   },
   button: {
-    height: '100%',
     justifyContent: 'center',
+    height: '100%',
   },
 });
 

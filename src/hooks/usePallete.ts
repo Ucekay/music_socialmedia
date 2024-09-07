@@ -1,6 +1,9 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
 import RNColorThief from 'react-native-color-thief';
+
 import { rgb2Hex } from '@/src/utils/color/ColorModifier';
+
 import type { Palette } from '../types';
 
 export function usePalette(imageUrl: string) {
@@ -12,7 +15,7 @@ export function usePalette(imageUrl: string) {
         imageUrl,
         13,
         20,
-        false
+        false,
       );
       return rgb2Hex(palette);
     } catch (error) {

@@ -8,7 +8,10 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "postinstall": "patch-package"
+    "check": "biome check ./src",
+    "fix": "biome check --write ./src",
+    "postinstall": "patch-package",
+    "lint": "eslint ."
   },
   "jest": {
     "preset": "jest-expo",
@@ -84,10 +87,15 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@biomejs/biome": "1.8.3",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^12.5.1",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.45",
+    "eslint": "^8.57.0",
+    "eslint-config-expo": "^7.1.2",
+    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-react-native-style-order": "^1.1.0",
     "jest": "^29.7.0",
     "jest-expo": "52.0.0-canary-20240904-69100c1",
     "patch-package": "^8.0.0",

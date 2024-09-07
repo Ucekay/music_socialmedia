@@ -1,13 +1,14 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import { StyleSheet, View } from 'react-native';
 
-import { MeshGradient } from './MeshGradient';
-import ArticleCardImage from './ArticleCardImage';
+import Animated, { FadeIn } from 'react-native-reanimated';
+
 import { usePalette } from '../hooks/usePallete';
 import { increaseSaturation } from '../utils/color/ColorModifier';
+
+import ArticleCardImage from './ArticleCardImage';
+import { MeshGradient } from './MeshGradient';
 
 export interface ArticleThumbnailProps {
   imageUrl: string;
@@ -25,8 +26,8 @@ export const ArticleThumbnail = ({
   if (articleType === 'review' || articleType === 'playlist') {
     const hexColors = usePalette(imageUrl);
 
-    let gradientColors: string[] = hexColors.map((color) =>
-      increaseSaturation(color, 2)
+    const gradientColors: string[] = hexColors.map((color) =>
+      increaseSaturation(color, 2),
     );
     if (gradientColors.length === 0) {
       return null;
@@ -40,8 +41,8 @@ export const ArticleThumbnail = ({
               padding: height
                 ? height / 25
                 : width
-                ? ((width / 16) * 9) / 25
-                : 0,
+                  ? ((width / 16) * 9) / 25
+                  : 0,
             },
           ]}
         >
@@ -61,7 +62,8 @@ export const ArticleThumbnail = ({
         </View>
       </Animated.View>
     );
-  } else if (articleType === 'live report' || articleType === 'general') {
+  }
+  if (articleType === 'liveReport' || articleType === 'general') {
     return (
       <View style={styles.thumbnailContainer}>
         <ArticleCardImage
@@ -75,20 +77,19 @@ export const ArticleThumbnail = ({
 
 const styles = StyleSheet.create({
   thumbnailContainer: {
-    aspectRatio: 16 / 9,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    aspectRatio: 16 / 9,
   },
   overlayImageContainer: {
     position: 'absolute',
-    height: '100%',
-
     zIndex: 1,
+    height: '100%',
   },
   overlayImageWrapper: {
-    borderRadius: 8,
-    borderCurve: 'continuous',
     overflow: 'hidden',
+    borderCurve: 'continuous',
+    borderRadius: 8,
     aspectRatio: 1,
   },
   overlayImage: {
@@ -96,9 +97,9 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   gradientContainer: {
-    borderRadius: 8,
-    borderCurve: 'continuous',
     overflow: 'hidden',
+    borderCurve: 'continuous',
+    borderRadius: 8,
   },
   fullWidthImageContainer: {
     flex: 1,

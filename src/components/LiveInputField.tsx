@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import {
-  View,
+  type NativeSyntheticEvent,
   StyleSheet,
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
   TextInput,
+  type TextInputChangeEventData,
+  View,
 } from 'react-native';
+
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
+import { useTheme } from '../contexts/ColorThemeContext';
+
+import AddOrCancelButtons from './AddOrCancelButtons';
 import EditorMetadataInput from './EditorMetadataInput';
 import EditorOptionButton from './EditorOptionButton';
-import AddOrCancelButtons from './AddOrCancelButtons';
-import { useTheme } from '../contexts/ColorThemeContext';
 
 const LiveInputField = () => {
   const [liveName, setLiveName] = useState('');
@@ -27,13 +29,13 @@ const LiveInputField = () => {
   const artistInputTextColor = colors.appleMusicText;
 
   const handleLiveNameChange = (
-    e: NativeSyntheticEvent<TextInputChangeEventData>
+    e: NativeSyntheticEvent<TextInputChangeEventData>,
   ) => {
     setLiveName(e.nativeEvent.text);
   };
 
   const handleArtistNameChange = (
-    e: NativeSyntheticEvent<TextInputChangeEventData>
+    e: NativeSyntheticEvent<TextInputChangeEventData>,
   ) => {
     setArtistName(e.nativeEvent.text);
   };
@@ -146,8 +148,8 @@ const styles = StyleSheet.create({
   },
   inputInner: {
     padding: 12,
-    borderRadius: 12,
     borderCurve: 'continuous',
+    borderRadius: 12,
     borderWidth: 1,
   },
   inputText: {
@@ -155,7 +157,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   icon: {
-    borderWidth: 1,
     borderRadius: 100,
+    borderWidth: 1,
   },
 });

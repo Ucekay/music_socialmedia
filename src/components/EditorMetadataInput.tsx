@@ -1,4 +1,4 @@
-import { TextInput, TextInputProps, View, StyleSheet } from 'react-native';
+import { StyleSheet, TextInput, type TextInputProps, View } from 'react-native';
 
 interface EditorMetadataInputProps extends TextInputProps {
   borderColor: string;
@@ -18,16 +18,16 @@ export default EditorMetadataInput;
 
 const styles = StyleSheet.create({
   inputText: {
-    width: '100%',
     fontSize: 16,
+    width: '100%',
   },
   option: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
     padding: 12,
-    borderWidth: 1,
-    borderRadius: 12,
     borderCurve: 'continuous',
+    borderRadius: 12,
+    borderWidth: 1,
   },
 });

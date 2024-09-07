@@ -1,10 +1,10 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { SymbolView, SFSymbol } from 'expo-symbols';
+import { type SFSymbol, SymbolView } from 'expo-symbols';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { TagColors } from '../constants/Colors';
-import type { ArticleData } from '../types';
 import { useTheme } from '../contexts/ColorThemeContext';
+
+import type { ArticleData } from '../types';
 
 type SubheadSize = 'sm' | 'md';
 

@@ -1,10 +1,11 @@
-import { View, StyleSheet } from 'react-native';
-import React from 'react';
 import { Image } from 'expo-image';
+import { StyleSheet, View } from 'react-native';
+
+import { useTheme } from '../contexts/ColorThemeContext';
+
+import Text from './ThemedText';
 
 import type { UsersListItemProps } from '../types';
-import Text from './ThemedText';
-import { useTheme } from '../contexts/ColorThemeContext';
 
 const UsersListItem = ({ userAvatarUrl, userID, user }: UsersListItemProps) => {
   const { colors } = useTheme();
@@ -25,18 +26,18 @@ export default UsersListItem;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    flexDirection: 'row',
     width: '100%',
     paddingHorizontal: 16,
     paddingVertical: 8,
+    gap: 12,
   },
   image: {
     width: 44,
     height: 44,
-    borderRadius: 22,
     borderCurve: 'continuous',
+    borderRadius: 22,
   },
   userID: {
     fontSize: 14,

@@ -310,7 +310,7 @@ const userData = [
     bio: '料理を愛するシェフマスターです。特に新しいレシピを試すのが好きで、美味しい料理を作ることが生きがいです。レシピや料理のコツを皆さんと共有しています。',
     followers: 325,
     following: 280,
-  }
+  },
 ];
 
 export default userData;

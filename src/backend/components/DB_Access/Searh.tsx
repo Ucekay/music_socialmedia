@@ -1,13 +1,15 @@
 import { supabase } from '../../lib/supabase';
 
-
-const handleSearch = async (databaseName: string, query: string): Promise<any[]> => {
+const handleSearch = async (
+  databaseName: string,
+  query: string,
+): Promise<any[]> => {
   try {
     // ワードを空白で分割して配列にする
     const searchWords = query.split(' ');
 
     // 検索クエリを構築する
-    let searchQuery = `to_tsvector('japanese', name) @@ to_tsquery('japanese', '(${searchWords.join(' & ')})')`;
+    const searchQuery = `to_tsvector('japanese', name) @@ to_tsquery('japanese', '(${searchWords.join(' & ')})')`;
 
     // Supabaseから検索結果を取得する
     const { data, error } = await supabase
@@ -27,6 +29,5 @@ const handleSearch = async (databaseName: string, query: string): Promise<any[]>
     return []; // エラーが発生した場合は空の配列を返す
   }
 };
-
 
 export default handleSearch;

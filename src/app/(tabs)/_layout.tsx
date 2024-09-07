@@ -1,29 +1,30 @@
-import React, { useCallback, useMemo, useRef } from 'react';
-import { EventArg } from '@react-navigation/native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { View, StyleSheet, Pressable } from 'react-native';
-import { Href, Link, Tabs } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { type Href, Link, Tabs } from 'expo-router';
+import type React from 'react';
+import { useCallback, useMemo, useRef } from 'react';
+import { StyleSheet, View } from 'react-native';
+import type { EventArg } from '@react-navigation/native';
+
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   BottomSheetBackdrop,
-  BottomSheetBackgroundProps,
+  type BottomSheetBackgroundProps,
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import {
-  type BottomSheetBackdropProps,
-  type BottomSheetDefaultBackdropProps,
-} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
-import { MultiplePages, GoogleDocs, Voice } from 'iconoir-react-native';
-import { SvgProps } from 'react-native-svg';
+import { GoogleDocs, MultiplePages, Voice } from 'iconoir-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
+
 
 import Text from '@/src/components/ThemedText';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
+import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
+
 import type { ColorScheme } from '@/src/types';
+import type { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
+import type { SvgProps } from 'react-native-svg';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -51,7 +52,7 @@ export default function TabLayout() {
   const handleSheetChanges = useCallback((index: number) => {}, []);
   const renderBackdrop = useCallback(
     (
-      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps
+      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps,
     ) => (
       <BottomSheetBackdrop
         {...props}
@@ -59,7 +60,7 @@ export default function TabLayout() {
         disappearsOnIndex={-1}
       />
     ),
-    []
+    [],
   );
 
   const themedContentStyle = { backgroundColor: colors.secondaryBackground };
@@ -274,49 +275,49 @@ const CreateContentListItem = ({
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'transparent',
   },
   screen: {
+    alignContent: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignContent: 'center',
   },
   actionContainer: {
+    position: 'absolute',
     width: 60,
     height: 60,
     borderRadius: 30,
     backgroundColor: 'red',
-    position: 'absolute',
   },
   contentContainer: {
+    alignItems: 'center',
     flex: 1,
     padding: 16,
     paddingTop: 0,
-    alignItems: 'center',
   },
   content: {
     flex: 1,
   },
   list: {
-    flex: 1,
-    justifyContent: 'flex-start',
     alignContent: 'center',
     alignSelf: 'flex-start',
+    flex: 1,
+    justifyContent: 'flex-start',
     height: 182,
-    borderRadius: 12,
     borderCurve: 'continuous',
+    borderRadius: 12,
     borderWidth: 1,
   },
   listItemContainer: {
+    alignItems: 'center',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     width: '100%',
     padding: 16,
     gap: 16,
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
   listTextContainer: {
     width: 174.3,
@@ -325,9 +326,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   bottomSheetBackground: {
+    overflow: 'hidden',
+    borderCurve: 'continuous',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    borderCurve: 'continuous',
-    overflow: 'hidden',
   },
 });

@@ -1,4 +1,9 @@
-import { Text as DefaultText, TextProps, useColorScheme } from 'react-native';
+import {
+  Text as DefaultText,
+  type TextProps,
+  useColorScheme,
+} from 'react-native';
+
 import Colors from '../constants/Colors';
 
 const Text = (props: TextProps) => {
