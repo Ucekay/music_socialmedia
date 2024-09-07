@@ -58,6 +58,12 @@ module.exports = {
         order: 'predefined',
       },
     ],
-    'react-hooks': 0,
+    'no-unused-expressions': 'off',
+    'react/display-name': 'off',
+    'react-hooks/exhaustive-deps': 'off',
+    'react-hooks/rules-of-hooks': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-redeclare': 'off',
+    'import/no-duplicates': 'off',
   },
 };

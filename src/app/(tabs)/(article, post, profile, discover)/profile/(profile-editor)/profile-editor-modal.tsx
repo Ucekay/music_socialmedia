@@ -3,7 +3,6 @@ import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-// PostScreen.js
 import { useContext, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -22,13 +21,15 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import BgView from '@/src/components/ThemedBgView';
+import ThemedText from '@/src/components/ThemedText';
 import Colors from '@/src/constants/Colors';
-import Color from '@/src/constants/Colors';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
 import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
 
 const ProfileEditorModal = () => {
   const context = useContext(ProfileEditorContext);
   const router = useRouter();
+  const { colors } = useTheme();
 
   if (!context) {
     throw new Error(
@@ -72,6 +73,7 @@ const ProfileEditorModal = () => {
       ? Colors.dark.secondaryBackground
       : Colors.light.background;
   const shadowColor = colorScheme === 'dark' ? '#fff' : '#000';
+  const textColor = colors.text;
 
   useEffect(() => {
     (async () => {
@@ -84,8 +86,7 @@ const ProfileEditorModal = () => {
     })();
   }, []);
 
-  const textColor = Color[colorScheme ?? 'light'].text;
-  const secondaryTextColor = Color[colorScheme ?? 'light'].secondaryText;
+  const secondaryTextColor = colors.secondaryText;
 
   const BOTTOM_TAB_HEIGHT = 96.7;
 
@@ -96,9 +97,7 @@ const ProfileEditorModal = () => {
         style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
       >
         <View style={styles.header}>
-          <Text style={[styles.headertitle, { color: textColor }]}>
-            プロフィールを編集
-          </Text>
+          <ThemedText style={styles.headerTitle}>プロフィールを編集</ThemedText>
         </View>
         <Modal animationType='fade' transparent={true} visible={loading}>
           <View style={styles.dialog}>
@@ -130,10 +129,8 @@ const ProfileEditorModal = () => {
                     marginHorizontal: 10,
                   }}
                 >
-                  <Text style={[styles.label, { color: textColor }]}>name</Text>
-                  <Text style={[styles.text1, { color: textColor }]}>
-                    {name}
-                  </Text>
+                  <ThemedText style={styles.label}>name</ThemedText>
+                  <ThemedText style={styles.text1}>{name}</ThemedText>
                 </View>
               </Pressable>
               <Pressable
@@ -151,8 +148,8 @@ const ProfileEditorModal = () => {
                     paddingTop: 16,
                   }}
                 >
-                  <Text style={[styles.label, { color: textColor }]}>id</Text>
-                  <Text style={[styles.text1, { color: textColor }]}>{id}</Text>
+                  <ThemedText style={styles.label}>id</ThemedText>
+                  <ThemedText style={styles.text1}>{id}</ThemedText>
                 </View>
               </Pressable>
               <Pressable
@@ -170,12 +167,8 @@ const ProfileEditorModal = () => {
                     paddingTop: 16,
                   }}
                 >
-                  <Text style={[styles.label, { color: textColor }]}>
-                    comment
-                  </Text>
-                  <Text style={[styles.text1, { color: textColor }]}>
-                    {bio}
-                  </Text>
+                  <ThemedText style={styles.label}>comment</ThemedText>
+                  <ThemedText style={styles.text1}>{bio}</ThemedText>
                 </View>
               </Pressable>
               <Pressable
@@ -186,9 +179,7 @@ const ProfileEditorModal = () => {
                 }}
               >
                 <View style={{ marginHorizontal: 10, paddingTop: 16, gap: 8 }}>
-                  <Text style={[styles.label, { color: textColor }]}>
-                    favarite artists
-                  </Text>
+                  <ThemedText style={styles.label}>favorite artists</ThemedText>
                   <View style={{ flexWrap: 'wrap', flexDirection: 'row' }}>
                     {tag.map((item, index) => (
                       <View
@@ -199,7 +190,7 @@ const ProfileEditorModal = () => {
                         key={index}
                       >
                         <Text style={{ color: '#c0c0c0' }}>#</Text>
-                        <Text style={{ color: textColor }}> {item}</Text>
+                        <ThemedText> {item}</ThemedText>
                       </View>
                     ))}
                   </View>
@@ -254,7 +245,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
     borderBottomWidth: 1,
   },
-  headertitle: {
+  headerTitle: {
     fontSize: 18,
     fontWeight: '700',
   },
@@ -290,7 +281,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     gap: 40,
   },
-  avatorimage: {
+  avatarImage: {
     width: 30,
     height: 30,
     marginLeft: 16,
