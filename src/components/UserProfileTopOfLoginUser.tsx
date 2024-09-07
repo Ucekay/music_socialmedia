@@ -1,19 +1,20 @@
-import {
-  View,
-  StyleSheet,
-  useColorScheme,
-  Pressable,
-  FlatList,
-  Dimensions,
-} from 'react-native';
-import { Link } from 'expo-router';
 import { Image } from 'expo-image';
-import React from 'react';
+import { Link } from 'expo-router';
+import {
+  Dimensions,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  View,
+  useColorScheme,
+} from 'react-native';
+
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
-import Text from './ThemedText';
-import BgView from './ThemedBgView';
 import { useTheme } from '../contexts/ColorThemeContext';
+
+import BgView from './ThemedBgView';
+import Text from './ThemedText';
 
 interface LoginUserProps {
   id: string;
@@ -208,23 +209,23 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   profileHeader: {
-    flexDirection: 'row',
     alignItems: 'flex-end',
+    flexDirection: 'row',
     gap: 20,
   },
   swipeContainer: {
     width: width - 32,
   },
   avatar: {
-    height: 64,
     width: 64,
+    height: 64,
     borderRadius: 32,
     backgroundColor: '#f0f0f0',
   },
   socialStateContainer: {
     flexDirection: 'row',
-    gap: 8,
     marginRight: 8,
+    gap: 8,
   },
   socialState: {
     alignItems: 'flex-end',
@@ -249,11 +250,11 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   button: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
-    paddingVertical: 8,
     paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 8,
   },
   text: {
@@ -264,10 +265,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   item: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
     marginRight: 10,
-    backgroundColor: '#f9c2ff',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 12,
+    backgroundColor: '#f9c2ff',
   },
 });

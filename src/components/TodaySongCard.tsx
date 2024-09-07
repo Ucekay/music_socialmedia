@@ -1,19 +1,22 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, useColorScheme, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
+import type React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Pressable, StyleSheet, View, useColorScheme } from 'react-native';
+
 import RNColorThief from 'react-native-color-thief';
+import { TextInput } from 'react-native-gesture-handler';
+import Animated, { FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated';
+
+import Colors from '../constants/Colors';
+import { useTheme } from '../contexts/ColorThemeContext';
+import { rgbObjectToRgbaString } from '../utils/color/ColorModifier';
 
 import BgView from './ThemedBgView';
 import Text from './ThemedText';
-
-import { rgbObjectToRgbaString } from '../utils/color/ColorModifier';
-import Animated, { FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated';
-import Colors from '../constants/Colors';
-import type { TodaySongDataType as SongData } from '../types';
-import { useTheme } from '../contexts/ColorThemeContext';
 import TrackSearchField from './TrackSearchField';
-import { TextInput } from 'react-native-gesture-handler';
+
+import type { TodaySongDataType as SongData } from '../types';
 
 type size = 'sm' | 'lg';
 
@@ -114,7 +117,7 @@ const TodaySongCard = ({
         setEndColor('');
       }
     },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -313,31 +316,30 @@ const styles = StyleSheet.create({
   },
   card: {
     flexGrow: 1,
-    borderRadius: 16,
-    borderCurve: 'continuous',
-    paddingTop: 12,
-    paddingHorizontal: 12,
     paddingBottom: 16,
-    gap: 16,
+    paddingHorizontal: 12,
+    paddingTop: 12,
+    borderCurve: 'continuous',
+    borderRadius: 16,
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
+    gap: 16,
   },
   gradient: {
-    borderRadius: 16,
     borderCurve: 'continuous',
+    borderRadius: 16,
   },
   userInfo: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginTop: 4,
+    flexDirection: 'row',
     marginHorizontal: 4,
+    marginTop: 4,
+    gap: 8,
   },
   todaySongInner: {
     gap: 28,
@@ -353,8 +355,8 @@ const styles = StyleSheet.create({
   lgImageContainer: {
     width: 220,
     height: 220,
-    borderRadius: 16,
     borderCurve: 'continuous',
+    borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -362,14 +364,13 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
   },
   smImageContainer: {
     width: 100,
     height: 100,
-    borderRadius: 4,
     borderCurve: 'continuous',
+    borderRadius: 4,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -377,20 +378,19 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
   },
   lgImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 16,
     borderCurve: 'continuous',
+    borderRadius: 16,
   },
   smImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 4,
     borderCurve: 'continuous',
+    borderRadius: 4,
   },
   lgSongName: {
     fontSize: 22,
@@ -418,11 +418,11 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   playButtonContainer: {
-    justifyContent: 'center',
     alignSelf: 'center',
-    borderRadius: 100,
+    justifyContent: 'center',
     paddingHorizontal: 36,
     paddingVertical: 8,
+    borderRadius: 100,
     backgroundColor: 'white',
     shadowColor: '#000',
     shadowOffset: {
@@ -431,11 +431,10 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
   },
   editingImageContainer: {
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
 });

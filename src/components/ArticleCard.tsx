@@ -1,15 +1,17 @@
-import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
+import { Pressable, StyleSheet, View } from 'react-native';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { useTheme } from '../contexts/ColorThemeContext';
-import ArticleTag from './ArticleTag';
+
 import ArticleCardSubhead from './ArticleCardSubhead';
-import type { ArticleData } from '../types';
+import ArticleTag from './ArticleTag';
 import { ArticleThumbnail } from './ArticleThumbnail';
 import Text from './ThemedText';
+
+import type { ArticleData } from '../types';
 
 export default function ArticleCard({ article }: { article: ArticleData }) {
   const { articleTitle, imageUrl, userID, user, userAvatarUrl, type } = article;
@@ -75,12 +77,12 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   cardContainer: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     marginVertical: 8,
-    borderRadius: 20,
     borderCurve: 'continuous',
+    borderRadius: 20,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -110,23 +112,23 @@ export const styles = StyleSheet.create({
   cardContent: {
     width: '100%',
     padding: 12,
-    gap: 8,
-    borderBottomRightRadius: 12,
     borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
     borderCurve: 'continuous',
+    gap: 8,
   },
   cardFooter: {
+    alignItems: 'flex-end',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-end',
   },
   articleTitle: {
     fontSize: 20,
     fontWeight: '500',
   },
   authorInfo: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     gap: 8,
   },
   authorAvatar: {
@@ -143,17 +145,17 @@ export const styles = StyleSheet.create({
   },
   overlayImageContainer: {
     position: 'absolute',
+    zIndex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
     height: '100%',
     padding: 4,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    zIndex: 1,
   },
   overlayImageWrapper: {
-    borderRadius: 8,
-    borderCurve: 'continuous',
     overflow: 'hidden',
     width: 92,
+    borderCurve: 'continuous',
+    borderRadius: 8,
     aspectRatio: 1,
   },
   overlayImage: {
@@ -161,9 +163,9 @@ export const styles = StyleSheet.create({
     height: '100%',
   },
   gradientContainer: {
-    borderRadius: 8,
-    borderCurve: 'continuous',
     overflow: 'hidden',
+    borderCurve: 'continuous',
+    borderRadius: 8,
   },
   fullWidthImageContainer: {
     flex: 1,

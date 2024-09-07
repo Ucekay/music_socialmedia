@@ -1,20 +1,22 @@
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import {
+  ActivityIndicator,
+  Modal,
+  StyleSheet,
   View,
   useWindowDimensions,
-  Modal,
-  ActivityIndicator,
-  StyleSheet,
 } from 'react-native';
-import { Image } from 'expo-image';
-import { BlurView } from 'expo-blur';
-import * as ImagePicker from 'expo-image-picker';
+
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
+import { useTheme } from '../contexts/ColorThemeContext';
+
 import EditorOptionButton from './EditorOptionButton';
 import Text from './ThemedText';
-import { useTheme } from '../contexts/ColorThemeContext';
 
 const EditorImagePicker = () => {
   const { width } = useWindowDimensions();
@@ -30,7 +32,7 @@ const EditorImagePicker = () => {
 
   const pickImage = async () => {
     setErrorMessage('');
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
@@ -60,7 +62,7 @@ const EditorImagePicker = () => {
       console.log(e.message);
       if (e.message === 'User cancelled image selection') {
         setErrorMessage(
-          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。'
+          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。',
         );
       }
     } finally {
@@ -115,20 +117,20 @@ export default EditorImagePicker;
 
 const styles = StyleSheet.create({
   dialog: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
   },
   dialogInner: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '70%',
     paddingHorizontal: 20,
     paddingVertical: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    borderRadius: 16,
     borderCurve: 'continuous',
-    overflow: 'hidden',
+    borderRadius: 16,
+    gap: 12,
   },
   text: {
     fontSize: 17,

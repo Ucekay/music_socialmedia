@@ -1,28 +1,27 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect, useRef, useState } from 'react';
 import {
-  View,
-  TextInput,
-  StyleSheet,
-  Text,
-  ScrollView,
+  ActivityIndicator,
+  FlatList,
+  type LayoutChangeEvent,
+  Modal,
   Platform,
   Pressable,
-  FlatList,
-  Modal,
-  ActivityIndicator,
-  findNodeHandle,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
   UIManager,
+  View,
+  findNodeHandle,
 } from 'react-native';
-import userData from '../assets/userData';
-import { Image } from 'expo-image';
-import BgView from '../components/ThemedBgView';
-import IconAntDesign from '../components/Icons/AntDesign';
-import { useNavigation, useLocalSearchParams } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import Icon from 'react-native-vector-icons/AntDesign';
-import OriginalAspectImage from '../components/OriginalAspectImage';
-import { BlurView } from 'expo-blur';
-import * as ImagePicker from 'expo-image-picker';
+
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import { set } from 'date-fns';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Animated, {
   FadeIn,
@@ -31,7 +30,12 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useActionSheet } from '@expo/react-native-action-sheet';
+import Icon from 'react-native-vector-icons/AntDesign';
+
+import userData from '../assets/userData';
+import IconAntDesign from '../components/Icons/AntDesign';
+import OriginalAspectImage from '../components/OriginalAspectImage';
+import BgView from '../components/ThemedBgView';
 import { useTheme } from '../contexts/ColorThemeContext';
 
 type ImagePickerResult = ImagePicker.ImagePickerResult & {
@@ -83,7 +87,7 @@ const ReplyEditorModal = () => {
 
   const pickImage = async () => {
     setErrorMessage('');
-    let result = (await ImagePicker.launchImageLibraryAsync({
+    const result = (await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 4 - images.length,
@@ -144,7 +148,7 @@ const ReplyEditorModal = () => {
     console.log('Posted:', text, images);
   };
 
-  const handleLayoutChange = (event: any) => {
+  const handleLayoutChange = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
     setPostHeight(height - 60); // Viewの高さを状態に保存
     animatedHeight.value = withTiming(height, { duration: 300 });
@@ -167,27 +171,27 @@ const ReplyEditorModal = () => {
   });
 
   const openCropEditor = async (num: number, uri: string) => {
-    try {
-      setLoading(true);
-      const cropped = await ImageCropPicker.openCropper({
-        path: uri,
-        cropperToolbarTitle: '画像を編集',
-        mediaType: 'photo',
-        freeStyleCropEnabled: true,
-      });
-      setImages(
-        images.map((images, index) => (index === num ? cropped.path : images))
-      );
-    } catch (e: any) {
-      console.log(e.message);
-      if (e.message === 'User cancelled image selection') {
-        setErrorMessage(
-          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。'
+    setLoading(true);
+    ImageCropPicker.openCropper({
+      path: uri,
+      cropperToolbarTitle: '画像を編集',
+      mediaType: 'photo',
+      freeStyleCropEnabled: true,
+    })
+      .then((cropped) => {
+        setImages(
+          images.map((images, index) =>
+            index === num ? cropped.path : images,
+          ),
         );
-      }
-    } finally {
-      setLoading(false);
-    }
+        setLoading(false);
+      })
+      .catch((error) => {
+        if (error.message === 'User cancelled image selection') {
+          setErrorMessage('画像の選択がキャンセルされました');
+        }
+        setLoading(false);
+      });
   };
 
   const onClose = () => {
@@ -211,7 +215,7 @@ const ReplyEditorModal = () => {
           case 1:
             break;
         }
-      }
+      },
     );
   };
 
@@ -228,7 +232,7 @@ const ReplyEditorModal = () => {
         if (selectedIndex === 0) {
           handlePost;
         }
-      }
+      },
     );
   };
   const handleCropEditor = (num: number, uri: string) => {
@@ -418,20 +422,20 @@ export default ReplyEditorModal;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
     flex: 1,
+    paddingTop: 20,
   },
   header: {
     alignItems: 'center',
-    borderBottomWidth: 1,
-    paddingBottom: 20,
-    borderBottomColor: '#ddd',
     flexDirection: 'row',
+    paddingBottom: 20,
     paddingHorizontal: 16,
+    borderBottomColor: '#ddd',
+    borderBottomWidth: 1,
   },
   headerItem: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
   },
   text2: {
     fontSize: 16,
@@ -442,22 +446,22 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   line: {
-    borderLeftWidth: 2,
-    borderLeftColor: '#ddd',
     marginLeft: 31,
     marginTop: 10,
+    borderLeftColor: '#ddd',
+    borderLeftWidth: 2,
   },
   editorHeader: {
-    flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: 20,
     flex: 1,
+    flexDirection: 'row',
+    marginTop: 20,
   },
   editorHeader2: {
-    flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: 8,
     flex: 1,
+    flexDirection: 'row',
+    marginTop: 8,
   },
   text1: {
     fontSize: 14,
@@ -466,26 +470,26 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 14,
-    marginTop: 10,
     textAlignVertical: 'top',
     marginRight: 20,
+    marginTop: 10,
   },
   avatarImage: {
     width: 30,
     height: 30,
-    borderRadius: 15,
     marginLeft: 16,
     marginRight: 12,
-    borderWidth: 0.3,
     borderColor: '#000000',
+    borderRadius: 15,
+    borderWidth: 0.3,
   },
   Icon: {
-    color: '#808080',
     marginBottom: 20,
+    color: '#808080',
   },
   headerLeft: {
-    flexDirection: 'row',
     alignItems: 'baseline',
+    flexDirection: 'row',
     gap: 8,
   },
   status: {
@@ -495,8 +499,8 @@ const styles = StyleSheet.create({
   },
   image: {
     marginBottom: 20,
-    borderRadius: 10,
     marginRight: 10,
+    borderRadius: 10,
   },
   bottomButtonWrapper: {
     position: 'absolute',
@@ -508,40 +512,40 @@ const styles = StyleSheet.create({
   bottomButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 8,
     marginHorizontal: 16,
     paddingTop: 12,
     borderTopWidth: 1,
+    gap: 8,
   },
   deleteButton: {
     position: 'absolute',
     top: 5,
     right: 5,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 12,
     padding: 5,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   buttonContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    flexDirection: 'row',
     paddingHorizontal: 16,
+    gap: 4,
   },
   dialog: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
   },
   dialogInner: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '70%',
     paddingHorizontal: 20,
     paddingVertical: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    borderRadius: 16,
     borderCurve: 'continuous',
-    overflow: 'hidden',
+    borderRadius: 16,
+    gap: 12,
   },
   text: {
     fontSize: 17,

@@ -1,4 +1,5 @@
-import React, { createContext, useState } from 'react';
+import type React from 'react';
+import { createContext, useState } from 'react';
 
 type ProfileStateType = {
   name: string;
@@ -15,7 +16,7 @@ type ProfileStateType = {
 
 // Contextを作成
 export const ProfileEditorContext = createContext<ProfileStateType | undefined>(
-  undefined
+  undefined,
 );
 
 // Providerコンポーネントを作成
@@ -28,7 +29,7 @@ export const ProfileStateProvider = ({
   const [id, setId] = useState('');
   const [bio, setBio] = useState('');
   const [userAvatar, setUserAvatar] = useState(
-    'https://api.dicebear.com/8.x/bottts/png'
+    'https://api.dicebear.com/8.x/bottts/png',
   );
   const [tag, setTag] = useState([
     'Kana Nishino',

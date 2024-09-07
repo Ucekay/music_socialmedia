@@ -1,4 +1,4 @@
-import { Text, StyleSheet, Pressable } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 
@@ -28,11 +28,11 @@ export default FollowButton;
 
 const styles = StyleSheet.create({
   button: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
-    paddingVertical: 8,
     paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 100,
   },
   text: {

@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Heart } from 'iconoir-react-native';
+import { useEffect, useState } from 'react';
+import { useColorScheme } from 'react-native';
+
 import palette from '@evilmartians/harmony/dist/base';
 import chroma from 'chroma-js';
-import { useColorScheme } from 'react-native';
-import {
-  insertlike,
-  deleteLike,
-} from '@/src/backend/components/DB_Access/like';
+import { Heart } from 'iconoir-react-native';
 
-import { useTheme } from '@/src/contexts/ColorThemeContext';
 import Colors from '@/src/constants/Colors';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 type HeartIconProps = {
   width: number;
@@ -19,7 +16,7 @@ type HeartIconProps = {
   isArticle?: boolean;
   isToday?: boolean;
   id?: number;
-  initialcolor?: string
+  initialColor?: string;
 };
 
 const HeartIcon = ({
@@ -30,14 +27,14 @@ const HeartIcon = ({
   isArticle,
   isToday,
   id,
-  initialcolor
+  initialColor,
 }: HeartIconProps) => {
   const colorScheme = useColorScheme();
   const { colors } = useTheme();
   const [color, setColor] = useState<string>(
     colorScheme === 'light'
-      ? Colors['light'].secondaryText
-      : Colors['dark'].secondaryText
+      ? Colors.light.secondaryText
+      : Colors.dark.secondaryText,
   );
   const [fill, setFill] = useState<string>('none');
   const [status, setStatus] = useState<boolean>(false);
@@ -46,25 +43,25 @@ const HeartIcon = ({
     if (status) return;
     setColor(
       colorScheme === 'light'
-        ? Colors['light'].secondaryText
-        : Colors['dark'].secondaryText
+        ? Colors.light.secondaryText
+        : Colors.dark.secondaryText,
     );
-  }, [colorScheme]);
+  }, [colorScheme, status]);
 
   //読み込み時にdetabase参照して管理する
   const onPress = () => {
     if (isPost && id) {
-      if (status == false) {
+      if (status === false) {
         //insertlike(id);
         setColor(chroma(palette.rose['500']).hex());
         setFill(chroma(palette.rose['500']).hex());
         setStatus(true);
-      } else if (status == true) {
+      } else if (status === true) {
         //deleteLike(id);
         setColor(
           colorScheme === 'light'
-            ? Colors['light'].secondaryText
-            : Colors['dark'].secondaryText
+            ? Colors.light.secondaryText
+            : Colors.dark.secondaryText,
         );
         setFill('none');
         setStatus(false);
@@ -75,7 +72,7 @@ const HeartIcon = ({
     <Heart
       width={width}
       height={height}
-      color={initialcolor || color}
+      color={initialColor || color}
       strokeWidth={strokeWidth ? strokeWidth : 1.5}
       fill={fill}
       onPress={onPress}
