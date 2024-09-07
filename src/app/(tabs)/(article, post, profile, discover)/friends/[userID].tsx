@@ -1,9 +1,3 @@
-import userData from '@/src/assets/userData';
-import BgView from '@/src/components/ThemedBgView';
-import { useTheme } from '@/src/contexts/ColorThemeContext';
-import type { UserListPropsType } from '@/src/types';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import type React from 'react';
@@ -22,12 +16,21 @@ import {
   type ViewStyle,
   useColorScheme,
 } from 'react-native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useHeaderHeight } from '@react-navigation/elements';
+
 import {
   type MaterialTabItemProps,
   type TabBarProps,
   Tabs,
 } from 'react-native-collapsible-tab-view';
 import { MaterialTabBar } from 'react-native-collapsible-tab-view';
+
+import userData from '@/src/assets/userData';
+import BgView from '@/src/components/ThemedBgView';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
+
+import type { UserListPropsType } from '@/src/types';
 import type { AnimatedStyle } from 'react-native-reanimated';
 
 const width = Dimensions.get('window').width;
@@ -236,21 +239,21 @@ export default UserListScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginHorizontal: 16,
-    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 4,
+    flex: 1,
+    flexDirection: 'row',
     justifyContent: 'space-between',
+    marginHorizontal: 16,
+    paddingVertical: 4,
   },
   userInfoContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
   },
   userAvatar: {
-    marginRight: 16,
-    height: 45,
     width: 45,
+    height: 45,
+    marginRight: 16,
     borderRadius: 25,
   },
   userId: {
@@ -262,22 +265,22 @@ const styles = StyleSheet.create({
     color: '#696969',
   },
   button: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
     width: 100,
     height: 40,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
   },
   text: {
     fontSize: 14,
     fontWeight: '500',
   },
   tabBar: {
-    backgroundColor: '#ffffff',
     height: 50,
+    backgroundColor: '#ffffff',
   },
   indicator: {
     backgroundColor: '#000000',

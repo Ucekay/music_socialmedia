@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+
 import { useTheme } from '../contexts/ColorThemeContext';
 
 type ArticleTagProps = {
@@ -30,14 +31,14 @@ export default ArticleTag;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    gap: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 8,
     borderCurve: 'continuous',
+    borderRadius: 8,
+    gap: 8,
   },
 });

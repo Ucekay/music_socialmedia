@@ -1,10 +1,13 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 import type React from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { supabase } from '../backend/lib/supabase';
+
+import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 const USER_ID_KEY = Constants.expoConfig?.extra?.USER_ID_KEY;
 const SECURE_STORE_KEY = Constants.exxpoConfig?.extra?.SECURE_STORE_KEY;

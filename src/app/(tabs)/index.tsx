@@ -1,7 +1,4 @@
-import { supabase } from '@/src/backend/lib/supabase';
-import BgView from '@/src/components/ThemedBgView';
 import { router } from 'expo-router';
-import { AppleMac, GoogleCircle } from 'iconoir-react-native';
 import { useState } from 'react';
 import {
   Alert,
@@ -13,7 +10,12 @@ import {
   TextInput,
   View,
 } from 'react-native';
+
+import { AppleMac, GoogleCircle } from 'iconoir-react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
+
+import { supabase } from '@/src/backend/lib/supabase';
+import BgView from '@/src/components/ThemedBgView';
 
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
@@ -157,29 +159,29 @@ export default function TabIndex() {
 
 const styles = StyleSheet.create({
   screenContainer: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
   },
   container: {
-    borderRadius: 16,
-    borderCurve: 'continuous',
     padding: 16,
     paddingBottom: 20,
-    gap: 16,
+    borderCurve: 'continuous',
+    borderRadius: 16,
     elevation: 5,
+    gap: 16,
   },
   label: {
     justifyContent: 'center',
     marginBottom: 20,
   },
   button: {
-    gap: 25,
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
+    height: 50,
     borderColor: '#000000',
     borderRadius: 25,
     borderWidth: 0.3,
-    height: 50,
+    gap: 25,
   },
   Icon: {
     width: 24,

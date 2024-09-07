@@ -1,6 +1,7 @@
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { Dimensions, StyleSheet, Text, useColorScheme } from 'react-native';
+
 import BgView from './ThemedBgView';
 
 interface PlaylistProps {
@@ -40,10 +41,10 @@ export default PlaylistCard;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: width / 2 - 24,
     justifyContent: 'center',
-    gap: 4,
+    width: width / 2 - 24,
     paddingVertical: 8,
+    gap: 4,
   },
   image: {
     width: width / 2 - 24,

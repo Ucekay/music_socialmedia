@@ -1,5 +1,6 @@
-import { useTheme } from '@/src/contexts/ColorThemeContext';
 import { Stack } from 'expo-router';
+
+import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 export default function DynamicLayout({ segment }: { segment: string }) {
   const { colors } = useTheme();

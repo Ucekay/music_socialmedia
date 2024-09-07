@@ -1,7 +1,8 @@
-import type { PatchProps } from '@shopify/react-native-skia';
 import { Path, Skia } from '@shopify/react-native-skia';
-import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue } from 'react-native-reanimated';
+
+import type { PatchProps } from '@shopify/react-native-skia';
+import type { SharedValue } from 'react-native-reanimated';
 
 interface CurvesProps {
   patch: SharedValue<PatchProps['patch']>;

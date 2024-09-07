@@ -1,9 +1,10 @@
-import type { CubicBezierHandle } from '@shopify/react-native-skia';
 import { Circle, Line, Paint } from '@shopify/react-native-skia';
-import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue } from 'react-native-reanimated';
 
 import { symmetric } from './Math';
+
+import type { CubicBezierHandle } from '@shopify/react-native-skia';
+import type { SharedValue } from 'react-native-reanimated';
 
 interface CubicProps {
   mesh: SharedValue<CubicBezierHandle[]>;

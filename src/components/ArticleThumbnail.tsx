@@ -1,10 +1,12 @@
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
+
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { usePalette } from '../hooks/usePallete';
 import { increaseSaturation } from '../utils/color/ColorModifier';
+
 import ArticleCardImage from './ArticleCardImage';
 import { MeshGradient } from './MeshGradient';
 
@@ -75,20 +77,19 @@ export const ArticleThumbnail = ({
 
 const styles = StyleSheet.create({
   thumbnailContainer: {
-    aspectRatio: 16 / 9,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    aspectRatio: 16 / 9,
   },
   overlayImageContainer: {
     position: 'absolute',
-    height: '100%',
-
     zIndex: 1,
+    height: '100%',
   },
   overlayImageWrapper: {
-    borderRadius: 8,
-    borderCurve: 'continuous',
     overflow: 'hidden',
+    borderCurve: 'continuous',
+    borderRadius: 8,
     aspectRatio: 1,
   },
   overlayImage: {
@@ -96,9 +97,9 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   gradientContainer: {
-    borderRadius: 8,
-    borderCurve: 'continuous',
     overflow: 'hidden',
+    borderCurve: 'continuous',
+    borderRadius: 8,
   },
   fullWidthImageContainer: {
     flex: 1,

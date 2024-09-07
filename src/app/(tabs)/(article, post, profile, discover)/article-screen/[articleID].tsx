@@ -1,14 +1,15 @@
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
-import * as IconoirIcons from 'iconoir-react-native';
 import {
   ScrollView,
   StyleSheet,
   View,
   useWindowDimensions,
 } from 'react-native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useHeaderHeight } from '@react-navigation/elements';
+
+import * as IconoirIcons from 'iconoir-react-native';
 
 import articleData from '@/src/assets/articleData';
 import ArticleCardSubhead from '@/src/components/ArticleCardSubhead';
@@ -130,8 +131,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    gap: 24,
     padding: 16,
+    gap: 24,
   },
   thumbnailContainer: {
     width: '100%',
@@ -144,8 +145,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   authorContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     gap: 4,
   },
   authorAvatar: {

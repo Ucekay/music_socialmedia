@@ -1,4 +1,3 @@
-import type { PostData } from '@/src/types';
 import { supabase } from '../../lib/supabase';
 import {
   getInitialPosts,
@@ -6,6 +5,8 @@ import {
   getOlderPosts,
 } from '../DB_Access/post';
 import { getUserProfileforPosts } from '../DB_Access/profile';
+
+import type { PostData } from '@/src/types';
 
 interface FetchPostsParams {
   cursor: string | null;

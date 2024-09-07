@@ -9,6 +9,7 @@ import {
   type TextStyle,
   View,
 } from 'react-native';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -127,10 +128,10 @@ export default AnimatedTextInput;
 const styles = StyleSheet.create({
   textInputLabelWrapper: {
     position: 'absolute',
-    left: 10,
     zIndex: 10,
-    bottom: 0,
     top: 0,
+    bottom: 0,
+    left: 10,
     justifyContent: 'center',
     padding: 0,
   },

@@ -1,8 +1,11 @@
-import { Button, Input } from '@rneui/themed';
-import type { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
+
+import { Button, Input } from '@rneui/themed';
+
 import { supabase } from '../lib/supabase';
+
+import type { Session } from '@supabase/supabase-js';
 
 //サインインの後の画面
 export default function Account({ session }: { session: Session }) {
@@ -121,9 +124,9 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
     alignSelf: 'stretch',
+    paddingBottom: 4,
+    paddingTop: 4,
   },
   mt20: {
     marginTop: 20,

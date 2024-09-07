@@ -1,13 +1,3 @@
-import {
-  CoreBridge,
-  RichText,
-  TenTapStartKit,
-  Toolbar,
-  useEditorBridge,
-  useEditorContent,
-} from '@10play/tentap-editor';
-import { useActionSheet } from '@expo/react-native-action-sheet';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { Stack, useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
@@ -21,6 +11,17 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
+import { useHeaderHeight } from '@react-navigation/elements';
+
+import {
+  CoreBridge,
+  RichText,
+  TenTapStartKit,
+  Toolbar,
+  useEditorBridge,
+  useEditorContent,
+} from '@10play/tentap-editor';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 import PagerView from 'react-native-pager-view';
 import Animated, {
   FadeIn,
@@ -33,11 +34,11 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ArticleTag from '@/src/components/ArticleTag';
-import Color from '@/src/constants/Colors';
-
 import BgView from '@/src/components/ThemedSecondaryBgView';
 import Text from '@/src/components/ThemedText';
 import TrackEntry from '@/src/components/TrackEntry';
+import Color from '@/src/constants/Colors';
+
 import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import EditorImagePicker from '../components/EditorImagePicker';
 import LiveInputField from '../components/LiveInputField';
@@ -286,18 +287,18 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   articleTagContainer: {
-    paddingHorizontal: 12,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    paddingHorizontal: 12,
   },
   articleTag: {
     width: '45%',
     marginVertical: 8,
   },
   imagePickerText: {
-    marginTop: 8,
     fontSize: 17,
+    marginTop: 8,
   },
   imagePickerContainer: {
     width: '100%',
@@ -314,16 +315,16 @@ const styles = StyleSheet.create({
   bottomButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 8,
     marginHorizontal: 16,
     paddingTop: 12,
     borderTopWidth: 1,
+    gap: 8,
   },
   buttonContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    flexDirection: 'row',
     paddingHorizontal: 16,
+    gap: 4,
   },
   editorContainer: {
     flex: 1,
@@ -334,7 +335,7 @@ const styles = StyleSheet.create({
   },
   keyboardAvoidingView: {
     position: 'absolute',
-    width: '100%',
     bottom: 0,
+    width: '100%',
   },
 });

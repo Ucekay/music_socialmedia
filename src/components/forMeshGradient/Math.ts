@@ -1,5 +1,6 @@
-import type { Color, Vector } from '@shopify/react-native-skia';
 import { dist, mixColors, vec } from '@shopify/react-native-skia';
+
+import type { Color, Vector } from '@shopify/react-native-skia';
 
 export const bilinearInterpolate = (
   [color0, color1, color2, color3]: Color[],

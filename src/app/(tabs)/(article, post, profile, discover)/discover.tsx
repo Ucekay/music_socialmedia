@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BlurView } from 'expo-blur';
 import { Link, Stack, useFocusEffect, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -8,8 +7,10 @@ import {
   type TextInputSubmitEditingEventData,
   View,
 } from 'react-native';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import type { SearchBarCommands } from 'react-native-screens';
+
 
 import todaySongData from '@/src/assets/todaySongData';
 import SearchBar from '@/src/components/SearchBar';
@@ -19,7 +20,9 @@ import SecondaryBgView from '@/src/components/ThemedSecondaryBgView';
 import Text from '@/src/components/ThemedText';
 import TodaySongCard from '@/src/components/TodaySongCard';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
+
 import type { SearchHistoryItem } from '@/src/types';
+import type { SearchBarCommands } from 'react-native-screens';
 
 const Discover = () => {
   const router = useRouter();

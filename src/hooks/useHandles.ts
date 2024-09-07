@@ -1,10 +1,11 @@
-import type { CubicBezierHandle, SkRect } from '@shopify/react-native-skia';
 import { isEdge, sub } from '@shopify/react-native-skia';
 import { Gesture } from 'react-native-gesture-handler';
-import type { SharedValue } from 'react-native-reanimated';
 import { useSharedValue } from 'react-native-reanimated';
 
 import { inRadius, symmetric } from '../components/forMeshGradient/Math';
+
+import type { CubicBezierHandle, SkRect } from '@shopify/react-native-skia';
+import type { SharedValue } from 'react-native-reanimated';
 
 type TouchSelection = null | {
   index: number;

@@ -1,4 +1,6 @@
-import type { CubicBezierHandle } from '@shopify/react-native-skia';
+import { useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
+
 import {
   Canvas,
   Group,
@@ -10,16 +12,16 @@ import {
   useImage,
   vec,
 } from '@shopify/react-native-skia';
-import { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
-import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 
-import { createNoise2D } from './forMeshGradient/SimpleNoise';
 
 import { Cubic } from './forMeshGradient/Cubic';
 import { Curves } from './forMeshGradient/Curves';
 import { symmetric } from './forMeshGradient/Math';
+import { createNoise2D } from './forMeshGradient/SimpleNoise';
+
+import type { CubicBezierHandle } from '@shopify/react-native-skia';
+import type { SharedValue } from 'react-native-reanimated';
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],

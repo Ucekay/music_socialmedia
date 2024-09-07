@@ -1,10 +1,6 @@
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { useQueryClient } from '@tanstack/react-query';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import { Link, Stack, useLocalSearchParams } from 'expo-router';
-import { ChatBubbleEmpty } from 'iconoir-react-native';
 import { useMemo } from 'react';
 import {
   Pressable,
@@ -13,6 +9,11 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useHeaderHeight } from '@react-navigation/elements';
+
+import { useQueryClient } from '@tanstack/react-query';
+import { ChatBubbleEmpty } from 'iconoir-react-native';
 
 import HeartIcon from '@/src/components/Icons/HeartIcon';
 import ShareIcon from '@/src/components/Icons/ShareIcon';
@@ -156,14 +157,14 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   user: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     gap: 8,
-    alignItems: 'center',
   },
   userAvatar: {
-    height: 40,
     width: 40,
+    height: 40,
     borderRadius: 100,
   },
   userName: {
@@ -175,9 +176,9 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   infoContainer: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center',
     height: 32,
     borderBottomWidth: 0.5,
   },

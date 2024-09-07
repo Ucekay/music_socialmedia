@@ -1,4 +1,3 @@
-import type { Database } from '../../types/supabasetypes';
 import {
   getInitialArticleMetaData,
   getNewerMetaData,
@@ -13,6 +12,8 @@ import { getPlaylistArticle } from '../DB_Access/Article/PlaylistArticle';
 import { getReview } from '../DB_Access/Article/Review';
 import { checkAuth } from '../DB_Access/checkAuth';
 import { getUserProfileforPosts } from '../DB_Access/profile';
+
+import type { Database } from '../../types/supabasetypes';
 
 export type ArticleMetaData = Database['public']['Tables']['Article']['Row'];
 

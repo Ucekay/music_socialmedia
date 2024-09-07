@@ -1,8 +1,3 @@
-import BgView from '@/src/components/ThemedBgView';
-import Color from '@/src/constants/Colors';
-import Colors from '@/src/constants/Colors';
-import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
@@ -22,7 +17,14 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
+
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import BgView from '@/src/components/ThemedBgView';
+import Colors from '@/src/constants/Colors';
+import Color from '@/src/constants/Colors';
+import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
 
 const ProfileEditorModal = () => {
   const context = useContext(ProfileEditorContext);
@@ -243,30 +245,30 @@ export default ProfileEditorModal;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
     flex: 1,
+    paddingTop: 20,
   },
   header: {
     alignItems: 'center',
-    borderBottomWidth: 1,
     paddingBottom: 20,
     borderBottomColor: '#ddd',
+    borderBottomWidth: 1,
   },
   headertitle: {
     fontSize: 18,
     fontWeight: '700',
   },
   line: {
-    borderLeftWidth: 2,
-    borderLeftColor: '#ddd',
     marginLeft: 31,
     marginTop: 10,
+    borderLeftColor: '#ddd',
+    borderLeftWidth: 2,
   },
   editorHeader: {
-    flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: 20,
     flex: 1,
+    flexDirection: 'row',
+    marginTop: 20,
   },
   text1: {
     fontSize: 14,
@@ -275,36 +277,35 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   card: {
-    borderRadius: 16,
-    borderCurve: 'continuous',
     padding: 16,
     paddingBottom: 20,
-    gap: 40,
+    borderCurve: 'continuous',
+    borderRadius: 16,
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
+    gap: 40,
   },
   avatorimage: {
     width: 30,
     height: 30,
-    borderRadius: 15,
     marginLeft: 16,
     marginRight: 12,
-    borderWidth: 0.3,
     borderColor: '#000000',
+    borderRadius: 15,
+    borderWidth: 0.3,
   },
   Icon: {
-    color: '#808080',
     marginBottom: 20,
+    color: '#808080',
   },
   headerLeft: {
-    flexDirection: 'row',
     alignItems: 'baseline',
+    flexDirection: 'row',
     gap: 8,
   },
   status: {
@@ -314,8 +315,8 @@ const styles = StyleSheet.create({
   },
   image: {
     marginBottom: 20,
-    borderRadius: 10,
     marginRight: 10,
+    borderRadius: 10,
   },
   bottomButtonWrapper: {
     position: 'absolute',
@@ -327,40 +328,40 @@ const styles = StyleSheet.create({
   bottomButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 8,
     marginHorizontal: 16,
     paddingTop: 12,
     borderTopWidth: 1,
+    gap: 8,
   },
   deleteButton: {
     position: 'absolute',
     top: 5,
     right: 5,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 12,
     padding: 5,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   buttonContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    flexDirection: 'row',
     paddingHorizontal: 16,
+    gap: 4,
   },
   dialog: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
   },
   dialogInner: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '70%',
     paddingHorizontal: 20,
     paddingVertical: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    borderRadius: 16,
     borderCurve: 'continuous',
-    overflow: 'hidden',
+    borderRadius: 16,
+    gap: 12,
   },
   text: {
     fontSize: 17,
@@ -372,8 +373,8 @@ const styles = StyleSheet.create({
   avatar: {
     width: 100,
     height: 100,
-    borderRadius: 50,
     marginBottom: 10,
+    borderRadius: 50,
   },
   title: {
     fontSize: 24,
@@ -390,12 +391,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    height: 30,
-    borderColor: '#ddd',
-    borderWidth: 0,
-    borderRadius: 5,
-    marginBottom: 10,
     fontSize: 16,
+    height: 30,
+    marginBottom: 10,
+    borderColor: '#ddd',
+    borderRadius: 5,
+    borderWidth: 0,
     color: '#123456',
   },
   label: {

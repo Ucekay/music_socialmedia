@@ -1,6 +1,8 @@
 import { supabase } from '../../lib/supabase';
-import type { Database } from '../../types/supabasetypes';
+
 import { checkAuth } from './checkAuth';
+
+import type { Database } from '../../types/supabasetypes';
 
 export type Post = Database['public']['Tables']['Post']['Insert'];
 export type GetPost = Database['public']['Tables']['Post']['Row'];

@@ -1,9 +1,11 @@
 import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
+
 import { useTheme } from '../contexts/ColorThemeContext';
 
-import type { TodaySongsListItemProps } from '../types';
 import Text from './ThemedText';
+
+import type { TodaySongsListItemProps } from '../types';
 
 const TodaySongsListItem = ({
   artworkUrl,
@@ -34,23 +36,23 @@ export default TodaySongsListItem;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     width: '100%',
     marginHorizontal: 16,
-    gap: 16,
     paddingVertical: 8,
+    gap: 16,
   },
   image: {
     width: 88,
     height: 88,
-    borderRadius: 12,
     borderCurve: 'continuous',
+    borderRadius: 12,
   },
   info: {
+    justifyContent: 'space-between',
     height: '100%',
     paddingVertical: 8,
-    justifyContent: 'space-between',
   },
   songInfo: {
     gap: 2,

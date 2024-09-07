@@ -3,6 +3,7 @@ import {
   type TextProps,
   useColorScheme,
 } from 'react-native';
+
 import Colors from '../constants/Colors';
 
 const Text = (props: TextProps) => {

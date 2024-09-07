@@ -1,10 +1,13 @@
+import { FlatList } from 'react-native';
+import { useHeaderHeight } from '@react-navigation/elements';
+
+import { useQuery } from '@tanstack/react-query';
+
 import playlistsData from '@/src/assets/playlistsData';
 import PlaylistCard from '@/src/components/PlaylistCard';
 import BgView from '@/src/components/ThemedBgView';
+
 import type { PlaylistDetailType } from '@/src/types';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { useQuery } from '@tanstack/react-query';
-import { FlatList } from 'react-native';
 
 const PlaylistScreen = (): JSX.Element => {
   const getLocalPlaylists = async (): Promise<PlaylistDetailType[]> => {

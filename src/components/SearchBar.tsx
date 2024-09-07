@@ -1,5 +1,4 @@
 import { useNavigation } from 'expo-router';
-import { NavArrowLeft, Search, XmarkCircleSolid } from 'iconoir-react-native';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import {
   type LayoutChangeEvent,
@@ -12,16 +11,21 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+
+import { NavArrowLeft, Search, XmarkCircleSolid } from 'iconoir-react-native';
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import type { SearchBarCommands } from 'react-native-screens';
+
 
 import { useTheme } from '../contexts/ColorThemeContext';
+
 import Text from './ThemedText';
+
+import type { SearchBarCommands } from 'react-native-screens';
 
 interface SearchBarProps {
   placeholder?: string;
@@ -257,26 +261,26 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 10,
-    borderCurve: 'continuous',
-    paddingHorizontal: 6,
+    flexDirection: 'row',
     height: 36,
+    paddingHorizontal: 6,
+    borderCurve: 'continuous',
+    borderRadius: 10,
+    backgroundColor: '#f0f0f0',
   },
   searchIcon: {
     marginRight: 8,
   },
   input: {
-    flex: 1,
     fontSize: 17,
-    padding: 0,
+    flex: 1,
     height: '100%',
+    padding: 0,
   },
   button: {
-    height: '100%',
     justifyContent: 'center',
+    height: '100%',
   },
 });
 

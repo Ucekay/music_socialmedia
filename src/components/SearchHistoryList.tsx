@@ -1,11 +1,14 @@
-import { Search, Xmark } from 'iconoir-react-native';
 import type React from 'react';
 import { FlatList, type FlatListProps, Pressable, View } from 'react-native';
 
+import { Search, Xmark } from 'iconoir-react-native';
+
+import { useTheme } from '../contexts/ColorThemeContext';
+
+import Text from './ThemedText';
+
 import type { SearchHistoryItem } from '@/src/types';
 import type { SearchBarCommands } from 'react-native-screens';
-import { useTheme } from '../contexts/ColorThemeContext';
-import Text from './ThemedText';
 
 type CustomFlatListProps<T> = Omit<
   FlatListProps<T>,

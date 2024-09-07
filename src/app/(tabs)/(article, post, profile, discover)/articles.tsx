@@ -1,11 +1,13 @@
+import { StyleSheet } from 'react-native';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
+
 import { FlashList } from '@shopify/flash-list';
-import { StyleSheet } from 'react-native';
 
 import articleData from '@/src/assets/articleData';
 import ArticleCard from '@/src/components/ArticleCard';
 import BgView from '@/src/components/ThemedBgView';
+
 import type { ArticleData } from '@/src/types';
 
 const ITEM_SIZE = 255;
@@ -38,9 +40,9 @@ const styles = StyleSheet.create({
   },
   button: {
     position: 'absolute',
+    zIndex: 100,
     bottom: 100,
     left: 0,
-    zIndex: 100,
     backgroundColor: 'red',
   },
 });

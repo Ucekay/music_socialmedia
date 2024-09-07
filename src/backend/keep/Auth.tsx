@@ -1,6 +1,8 @@
-import { Button, Input } from '@rneui/themed';
 import { useState } from 'react';
 import { Alert, AppState, StyleSheet, View } from 'react-native';
+
+import { Button, Input } from '@rneui/themed';
+
 import { supabase } from '../lib/supabase';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
@@ -117,9 +119,9 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
     alignSelf: 'stretch',
+    paddingBottom: 4,
+    paddingTop: 4,
   },
   mt20: {
     marginTop: 20,

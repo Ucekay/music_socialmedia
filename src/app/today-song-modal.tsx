@@ -1,9 +1,12 @@
-import todaySongData from '@/src/assets/todaySongData';
-import TodaySongCard from '@/src/components/TodaySongCard';
+import { View, useWindowDimensions } from 'react-native';
+
 import { FlashList } from '@shopify/flash-list';
 import { Message, PlaySolid, ShareIos } from 'iconoir-react-native';
-import { View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import todaySongData from '@/src/assets/todaySongData';
+import TodaySongCard from '@/src/components/TodaySongCard';
+
 
 import HeartIcon from '../components/Icons/HeartIcon';
 import BgView from '../components/ThemedBgView';

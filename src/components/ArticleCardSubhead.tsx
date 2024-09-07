@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { TagColors } from '../constants/Colors';
 import { useTheme } from '../contexts/ColorThemeContext';
+
 import type { ArticleData } from '../types';
 
 type SubheadSize = 'sm' | 'md';

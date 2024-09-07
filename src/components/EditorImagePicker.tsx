@@ -9,10 +9,12 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { useTheme } from '../contexts/ColorThemeContext';
+
 import EditorOptionButton from './EditorOptionButton';
 import Text from './ThemedText';
 
@@ -115,20 +117,20 @@ export default EditorImagePicker;
 
 const styles = StyleSheet.create({
   dialog: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
   },
   dialogInner: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '70%',
     paddingHorizontal: 20,
     paddingVertical: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    borderRadius: 16,
     borderCurve: 'continuous',
-    overflow: 'hidden',
+    borderRadius: 16,
+    gap: 12,
   },
   text: {
     fontSize: 17,

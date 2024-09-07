@@ -1,14 +1,3 @@
-import postData from '@/src/assets/postData';
-import userArticleData from '@/src/assets/userArticleData';
-import ArticleCard from '@/src/components/ArticleCard';
-import PostCard from '@/src/components/PostCard';
-import BgView from '@/src/components/ThemedBgView';
-import UserProfileTop from '@/src/components/UserProfileTop';
-import LoginUserProfileTop from '@/src/components/UserProfileTopOfLoginUser';
-import { useTheme } from '@/src/contexts/ColorThemeContext';
-import type { ArticleData } from '@/src/types';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import type React from 'react';
 import {
@@ -20,12 +9,26 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useHeaderHeight } from '@react-navigation/elements';
+
 import {
   MaterialTabBar,
   type MaterialTabItemProps,
   type TabBarProps,
   Tabs,
 } from 'react-native-collapsible-tab-view';
+
+import postData from '@/src/assets/postData';
+import userArticleData from '@/src/assets/userArticleData';
+import ArticleCard from '@/src/components/ArticleCard';
+import PostCard from '@/src/components/PostCard';
+import BgView from '@/src/components/ThemedBgView';
+import UserProfileTop from '@/src/components/UserProfileTop';
+import LoginUserProfileTop from '@/src/components/UserProfileTopOfLoginUser';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
+
+import type { ArticleData } from '@/src/types';
 import type { AnimatedStyle } from 'react-native-reanimated';
 
 const Profile = () => {

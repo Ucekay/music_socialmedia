@@ -1,13 +1,17 @@
+import { Image } from 'expo-image';
+import { useLocalSearchParams } from 'expo-router';
+import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useHeaderHeight } from '@react-navigation/elements';
+
+import { useQueryClient } from '@tanstack/react-query';
+import * as IconoirIcons from 'iconoir-react-native';
+
 import { Button } from '@/src/components/Button';
 import BgView from '@/src/components/ThemedBgView';
 import TracksListItem from '@/src/components/TracksListItem';
+
 import type { PlaylistDetailType } from '@/src/types';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { useQueryClient } from '@tanstack/react-query';
-import { Image } from 'expo-image';
-import { useLocalSearchParams } from 'expo-router';
-import * as IconoirIcons from 'iconoir-react-native';
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+
 
 const PlaylistDetailScreen = (): JSX.Element => {
   const { playlistID } = useLocalSearchParams();
@@ -89,10 +93,10 @@ export default PlaylistDetailScreen;
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     flex: 1,
     paddingTop: 16,
     gap: 16,
-    alignItems: 'center',
   },
   image: {
     width: 250,
@@ -107,8 +111,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     marginTop: 8,
-    gap: 8,
     paddingHorizontal: 16,
+    gap: 8,
   },
   buttonWrapper: {
     flex: 1,

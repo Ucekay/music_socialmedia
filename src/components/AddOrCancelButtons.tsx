@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+
 import { useTheme } from '../contexts/ColorThemeContext';
 
 interface AddOrCancelButtonsProps {
@@ -32,15 +33,15 @@ export default AddOrCancelButtons;
 const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
-    gap: 24,
     justifyContent: 'space-evenly',
     paddingHorizontal: 6,
+    gap: 24,
   },
   button: {
-    flex: 1,
     alignItems: 'center',
-    borderRadius: 12,
+    flex: 1,
     padding: 14,
+    borderRadius: 12,
   },
   separator: {
     width: 1,

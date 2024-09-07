@@ -1,5 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { BlurView } from 'expo-blur';
 import {
   Stack,
@@ -21,8 +19,20 @@ import {
   type ViewStyle,
   useWindowDimensions,
 } from 'react-native';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FlashList } from '@shopify/flash-list';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import type { SearchBarCommands } from 'react-native-screens';
+import {
+  type NavigationState,
+  type Route,
+  type SceneRendererProps,
+  TabBar,
+  type TabBarIndicatorProps,
+  type TabBarItemProps,
+  TabView,
+} from 'react-native-tab-view';
 
 import articleData from '@/src/assets/articleData';
 import postData from '@/src/assets/postData';
@@ -38,6 +48,7 @@ import TodaySongsListItem from '@/src/components/TodaySongsListItem';
 import TracksListItem from '@/src/components/TracksListItem';
 import UsersListItem from '@/src/components/UsersListItem';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
+
 import type {
   ArticleData,
   PostData,
@@ -46,16 +57,7 @@ import type {
   Track,
   UsersListItemProps,
 } from '@/src/types';
-import { FlashList } from '@shopify/flash-list';
-import {
-  type NavigationState,
-  type Route,
-  type SceneRendererProps,
-  TabBar,
-  type TabBarIndicatorProps,
-  type TabBarItemProps,
-  TabView,
-} from 'react-native-tab-view';
+import type { SearchBarCommands } from 'react-native-screens';
 import type {
   Event,
   Scene,
@@ -583,9 +585,9 @@ export default SearchResult;
 
 const styles = StyleSheet.create({
   activityIndicatorContainer: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
   resultsContainer: {
     flex: 1,

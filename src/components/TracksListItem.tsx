@@ -2,9 +2,11 @@ import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../contexts/ColorThemeContext';
-import type { Track } from '../types';
+
 import BgView from './ThemedBgView';
 import Text from './ThemedText';
+
+import type { Track } from '../types';
 
 const TracksListItem = (props: Track) => {
   const { colors } = useTheme();
@@ -25,18 +27,18 @@ export default TracksListItem;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     marginHorizontal: 16,
-    gap: 12,
     paddingVertical: 8,
     borderBottomWidth: 0.5,
+    gap: 12,
   },
   image: {
-    height: 44,
     width: 44,
-    borderRadius: 8,
+    height: 44,
     borderCurve: 'continuous',
+    borderRadius: 8,
   },
   song: {
     fontSize: 16,

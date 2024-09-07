@@ -1,6 +1,8 @@
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Pressable, StyleSheet, Text } from 'react-native';
+
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Animated from 'react-native-reanimated';
+
 import { useTheme } from '../contexts/ColorThemeContext';
 
 type EditorOptionButtonProps = {
@@ -30,13 +32,13 @@ export default EditorOptionButton;
 
 const styles = StyleSheet.create({
   option: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
     padding: 12,
-    borderWidth: 1,
-    borderRadius: 12,
     borderCurve: 'continuous',
+    borderRadius: 12,
+    borderWidth: 1,
   },
   optionText: {
     fontSize: 16,

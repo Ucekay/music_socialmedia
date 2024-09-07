@@ -1,6 +1,7 @@
 import * as ImagePicker from 'expo-image-picker';
 import { useEffect, useState } from 'react';
 import { Alert, Button, Image, StyleSheet, View } from 'react-native';
+
 import { supabase } from '../lib/supabase';
 
 interface Props {
@@ -116,19 +117,19 @@ export default function Avatar({ url, size = 150, onUpload }: Props) {
 
 const styles = StyleSheet.create({
   avatar: {
-    borderRadius: 5,
     overflow: 'hidden',
     maxWidth: '100%',
+    borderRadius: 5,
   },
   image: {
-    objectFit: 'cover',
     paddingTop: 0,
+    objectFit: 'cover',
   },
   noImage: {
-    backgroundColor: '#333',
-    borderWidth: 1,
-    borderStyle: 'solid',
     borderColor: 'rgb(200, 200, 200)',
     borderRadius: 5,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    backgroundColor: '#333',
   },
 });

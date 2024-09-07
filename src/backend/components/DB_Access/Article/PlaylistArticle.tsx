@@ -1,7 +1,8 @@
 import { supabase } from '../../../lib/supabase';
-import type { Database } from '../../../types/supabasetypes';
 import { checkAuth } from '../checkAuth';
+
 import type { GetGetArticleContent } from './General';
+import type { Database } from '../../../types/supabasetypes';
 
 type PlaylistArticle =
   Database['public']['Tables']['PlaylistArticle']['Insert'];

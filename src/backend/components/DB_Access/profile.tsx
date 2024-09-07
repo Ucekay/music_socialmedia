@@ -1,6 +1,8 @@
 import { supabase } from '../../lib/supabase';
-import type { Database } from '../../types/supabasetypes';
+
 import { checkAuth } from './checkAuth';
+
+import type { Database } from '../../types/supabasetypes';
 
 export type UserProfile = Database['public']['Tables']['Users']['Row'];
 export type UpdateUserProfile = Omit<

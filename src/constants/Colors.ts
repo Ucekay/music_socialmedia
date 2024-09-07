@@ -1,6 +1,7 @@
-import type { ColorScheme } from '@/src/types';
 import palette from '@evilmartians/harmony/dist/base';
 import chroma from 'chroma-js';
+
+import type { ColorScheme } from '@/src/types';
 
 const tintColorLight = chroma(palette.sky['500']).hex();
 const tintColorDark = chroma(palette.sky['500']).hex();

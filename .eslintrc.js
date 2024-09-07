@@ -43,7 +43,7 @@ module.exports = {
             position: 'before',
           },
           {
-            pattern: 'react-navigation/*',
+            pattern: '@react-navigation/*',
             group: 'builtin',
             position: 'before',
           },

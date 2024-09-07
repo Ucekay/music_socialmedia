@@ -1,5 +1,3 @@
-import { useActionSheet } from '@expo/react-native-action-sheet';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { Stack, useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
@@ -12,6 +10,9 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import { useHeaderHeight } from '@react-navigation/elements';
+
+import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import SecondaryBackgroundView from '../components/ThemedSecondaryBgView';
@@ -175,15 +176,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   editorContainer: {
-    paddingTop: 32,
-    paddingHorizontal: 16,
     justifyContent: 'flex-end',
+    paddingHorizontal: 16,
+    paddingTop: 32,
   },
   characterCountContainer: {
-    padding: 16,
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'space-between',
+    padding: 16,
   },
   characterCountText: {
     fontSize: 14,

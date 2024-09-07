@@ -1,5 +1,3 @@
-import { useActionSheet } from '@expo/react-native-action-sheet';
-import { set } from 'date-fns';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
@@ -21,6 +19,9 @@ import {
   View,
   findNodeHandle,
 } from 'react-native';
+
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import { set } from 'date-fns';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Animated, {
   FadeIn,
@@ -30,6 +31,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/AntDesign';
+
 import userData from '../assets/userData';
 import IconAntDesign from '../components/Icons/AntDesign';
 import OriginalAspectImage from '../components/OriginalAspectImage';
@@ -420,20 +422,20 @@ export default ReplyEditorModal;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
     flex: 1,
+    paddingTop: 20,
   },
   header: {
     alignItems: 'center',
-    borderBottomWidth: 1,
-    paddingBottom: 20,
-    borderBottomColor: '#ddd',
     flexDirection: 'row',
+    paddingBottom: 20,
     paddingHorizontal: 16,
+    borderBottomColor: '#ddd',
+    borderBottomWidth: 1,
   },
   headerItem: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
   },
   text2: {
     fontSize: 16,
@@ -444,22 +446,22 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   line: {
-    borderLeftWidth: 2,
-    borderLeftColor: '#ddd',
     marginLeft: 31,
     marginTop: 10,
+    borderLeftColor: '#ddd',
+    borderLeftWidth: 2,
   },
   editorHeader: {
-    flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: 20,
     flex: 1,
+    flexDirection: 'row',
+    marginTop: 20,
   },
   editorHeader2: {
-    flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: 8,
     flex: 1,
+    flexDirection: 'row',
+    marginTop: 8,
   },
   text1: {
     fontSize: 14,
@@ -468,26 +470,26 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 14,
-    marginTop: 10,
     textAlignVertical: 'top',
     marginRight: 20,
+    marginTop: 10,
   },
   avatarImage: {
     width: 30,
     height: 30,
-    borderRadius: 15,
     marginLeft: 16,
     marginRight: 12,
-    borderWidth: 0.3,
     borderColor: '#000000',
+    borderRadius: 15,
+    borderWidth: 0.3,
   },
   Icon: {
-    color: '#808080',
     marginBottom: 20,
+    color: '#808080',
   },
   headerLeft: {
-    flexDirection: 'row',
     alignItems: 'baseline',
+    flexDirection: 'row',
     gap: 8,
   },
   status: {
@@ -497,8 +499,8 @@ const styles = StyleSheet.create({
   },
   image: {
     marginBottom: 20,
-    borderRadius: 10,
     marginRight: 10,
+    borderRadius: 10,
   },
   bottomButtonWrapper: {
     position: 'absolute',
@@ -510,40 +512,40 @@ const styles = StyleSheet.create({
   bottomButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 8,
     marginHorizontal: 16,
     paddingTop: 12,
     borderTopWidth: 1,
+    gap: 8,
   },
   deleteButton: {
     position: 'absolute',
     top: 5,
     right: 5,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 12,
     padding: 5,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   buttonContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    flexDirection: 'row',
     paddingHorizontal: 16,
+    gap: 4,
   },
   dialog: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
   },
   dialogInner: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '70%',
     paddingHorizontal: 20,
     paddingVertical: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    borderRadius: 16,
     borderCurve: 'continuous',
-    overflow: 'hidden',
+    borderRadius: 16,
+    gap: 12,
   },
   text: {
     fontSize: 17,

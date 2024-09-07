@@ -6,9 +6,11 @@ import {
   type TextInputChangeEventData,
   View,
 } from 'react-native';
+
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { useTheme } from '../contexts/ColorThemeContext';
+
 import AddOrCancelButtons from './AddOrCancelButtons';
 import EditorMetadataInput from './EditorMetadataInput';
 import EditorOptionButton from './EditorOptionButton';
@@ -146,8 +148,8 @@ const styles = StyleSheet.create({
   },
   inputInner: {
     padding: 12,
-    borderRadius: 12,
     borderCurve: 'continuous',
+    borderRadius: 12,
     borderWidth: 1,
   },
   inputText: {
@@ -155,7 +157,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   icon: {
-    borderWidth: 1,
     borderRadius: 100,
+    borderWidth: 1,
   },
 });

@@ -1,7 +1,3 @@
-import BgView from '@/src/components/ThemedBgView';
-import Color from '@/src/constants/Colors';
-import Colors from '@/src/constants/Colors';
-import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
 import { useRouter } from 'expo-router';
 import { useContext, useState } from 'react';
 import {
@@ -12,6 +8,11 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
+
+import BgView from '@/src/components/ThemedBgView';
+import Color from '@/src/constants/Colors';
+import Colors from '@/src/constants/Colors';
+import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
 
 const NameEditor = (): JSX.Element => {
   const context = useContext(ProfileEditorContext);
@@ -78,22 +79,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    height: 60,
-    width: '100%',
     alignItems: 'center',
-    paddingHorizontal: 16,
     flexDirection: 'row',
+    width: '100%',
+    height: 60,
+    paddingHorizontal: 16,
   },
   headerItem: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
   },
   Editor: {
+    height: 100,
     marginHorizontal: 16,
     padding: 16,
-    borderWidth: 0.3,
     borderRadius: 20,
-    height: 100,
+    borderWidth: 0.3,
     gap: 8,
   },
   text1: {

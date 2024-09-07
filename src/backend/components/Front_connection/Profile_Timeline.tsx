@@ -1,10 +1,11 @@
-import type { PostData } from '@/src/types';
 import { supabase } from '../../lib/supabase';
 import {
   getInitialUsersPosts,
   getNewerUsersPosts,
   getOlderUsersPosts,
 } from '../DB_Access/post';
+
+import type { PostData } from '@/src/types';
 
 //最初に表示するポストデータを作成する関数
 export const createPostDataset = async (
