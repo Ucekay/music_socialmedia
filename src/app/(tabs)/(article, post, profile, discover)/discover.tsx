@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-  FlatList,
   NativeSyntheticEvent,
   Pressable,
   View,
-  StyleSheet,
-  Platform,
   TextInputSubmitEditingEventData,
 } from 'react-native';
 import { Link, Stack, useFocusEffect, useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Search, Xmark } from 'iconoir-react-native';
 import { SearchBarCommands } from 'react-native-screens';
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -248,6 +244,7 @@ const Discover = () => {
           data={history}
           onItemPress={handleSearch}
           onClearHistory={clearHistory}
+          searchRef={searchRef}
         />
       )}
     </BgView>
@@ -255,17 +252,3 @@ const Discover = () => {
 };
 
 export default Discover;
-
-const styles = StyleSheet.create({
-  title: Platform.select({
-    ios: {
-      fontSize: 17,
-    },
-    android: {
-      fontSize: 20,
-    },
-    default: {
-      fontSize: 18,
-    },
-  }),
-});

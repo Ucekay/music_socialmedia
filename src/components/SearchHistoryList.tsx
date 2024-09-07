@@ -5,6 +5,7 @@ import { Search, Xmark } from 'iconoir-react-native';
 import type { SearchHistoryItem } from '@/src/types';
 import Text from './ThemedText';
 import { useTheme } from '../contexts/ColorThemeContext';
+import { SearchBarCommands } from 'react-native-screens';
 
 type CustomFlatListProps<T> = Omit<
   FlatListProps<T>,
@@ -15,6 +16,7 @@ interface SearchHistoryListProps
   extends CustomFlatListProps<SearchHistoryItem> {
   onItemPress: (query: string) => void;
   onClearHistory: (item: SearchHistoryItem) => void;
+  searchRef: React.RefObject<SearchBarCommands>;
 }
 
 const SearchHistoryList = (props: SearchHistoryListProps) => {
@@ -69,6 +71,12 @@ const SearchHistoryList = (props: SearchHistoryListProps) => {
           data={data}
           renderItem={renderHistoryItem}
           keyExtractor={(item) => item.timestamp.toString()}
+          style={{ height: '100%' }}
+          onScroll={() => {
+            if (props.searchRef.current) {
+              props.searchRef.current.blur();
+            }
+          }}
         />
       </View>
     </View>

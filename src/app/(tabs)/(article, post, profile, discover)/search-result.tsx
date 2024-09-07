@@ -571,6 +571,7 @@ const SearchResult = () => {
             data={history}
             onItemPress={handleSearch}
             onClearHistory={clearHistory}
+            searchRef={searchRef}
           />
         </View>
       )}
