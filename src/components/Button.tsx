@@ -1,13 +1,13 @@
+import * as IconoirIcons from 'iconoir-react-native';
 import React from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
   Pressable,
-  ViewStyle,
-  TextStyle,
+  StyleSheet,
+  Text,
+  type TextStyle,
+  View,
+  type ViewStyle,
 } from 'react-native';
-import * as IconoirIcons from 'iconoir-react-native';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 

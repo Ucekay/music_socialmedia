@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Heart } from 'iconoir-react-native';
+import {
+  deleteLike,
+  insertlike,
+} from '@/src/backend/components/DB_Access/like';
 import palette from '@evilmartians/harmony/dist/base';
 import chroma from 'chroma-js';
+import { Heart } from 'iconoir-react-native';
+import React, { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
-import {
-  insertlike,
-  deleteLike,
-} from '@/src/backend/components/DB_Access/like';
 
-import { useTheme } from '@/src/contexts/ColorThemeContext';
 import Colors from '@/src/constants/Colors';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 type HeartIconProps = {
   width: number;
@@ -19,7 +19,7 @@ type HeartIconProps = {
   isArticle?: boolean;
   isToday?: boolean;
   id?: number;
-  initialcolor?: string
+  initialcolor?: string;
 };
 
 const HeartIcon = ({
@@ -30,14 +30,14 @@ const HeartIcon = ({
   isArticle,
   isToday,
   id,
-  initialcolor
+  initialcolor,
 }: HeartIconProps) => {
   const colorScheme = useColorScheme();
   const { colors } = useTheme();
   const [color, setColor] = useState<string>(
     colorScheme === 'light'
       ? Colors['light'].secondaryText
-      : Colors['dark'].secondaryText
+      : Colors['dark'].secondaryText,
   );
   const [fill, setFill] = useState<string>('none');
   const [status, setStatus] = useState<boolean>(false);
@@ -47,7 +47,7 @@ const HeartIcon = ({
     setColor(
       colorScheme === 'light'
         ? Colors['light'].secondaryText
-        : Colors['dark'].secondaryText
+        : Colors['dark'].secondaryText,
     );
   }, [colorScheme]);
 
@@ -64,7 +64,7 @@ const HeartIcon = ({
         setColor(
           colorScheme === 'light'
             ? Colors['light'].secondaryText
-            : Colors['dark'].secondaryText
+            : Colors['dark'].secondaryText,
         );
         setFill('none');
         setStatus(false);

@@ -1,20 +1,20 @@
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import {
+  ActivityIndicator,
+  Modal,
+  StyleSheet,
   View,
   useWindowDimensions,
-  Modal,
-  ActivityIndicator,
-  StyleSheet,
 } from 'react-native';
-import { Image } from 'expo-image';
-import { BlurView } from 'expo-blur';
-import * as ImagePicker from 'expo-image-picker';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
+import { useTheme } from '../contexts/ColorThemeContext';
 import EditorOptionButton from './EditorOptionButton';
 import Text from './ThemedText';
-import { useTheme } from '../contexts/ColorThemeContext';
 
 const EditorImagePicker = () => {
   const { width } = useWindowDimensions();
@@ -30,7 +30,7 @@ const EditorImagePicker = () => {
 
   const pickImage = async () => {
     setErrorMessage('');
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
@@ -60,7 +60,7 @@ const EditorImagePicker = () => {
       console.log(e.message);
       if (e.message === 'User cancelled image selection') {
         setErrorMessage(
-          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。'
+          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。',
         );
       }
     } finally {

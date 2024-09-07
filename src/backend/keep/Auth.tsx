@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { Alert, StyleSheet, View, AppState } from 'react-native'
-import { supabase } from '../lib/supabase'
-import { Button, Input } from '@rneui/themed'
+import { Button, Input } from '@rneui/themed';
+import React, { useState } from 'react';
+import { Alert, AppState, StyleSheet, View } from 'react-native';
+import { supabase } from '../lib/supabase';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -9,55 +9,57 @@ import { Button, Input } from '@rneui/themed'
 // if the user's session is terminated. This should only be registered once.
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
-    supabase.auth.startAutoRefresh()
+    supabase.auth.startAutoRefresh();
   } else {
-    supabase.auth.stopAutoRefresh()
+    supabase.auth.stopAutoRefresh();
   }
-})
+});
 
 //サインイン前の画面
 export default function Auth() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   async function signInWithEmail() {
-    setLoading(true)
+    setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
-    })
+    });
 
-    if (error) Alert.alert(error.message)
-    setLoading(false)
+    if (error) Alert.alert(error.message);
+    setLoading(false);
   }
 
   async function signUpWithEmail() {
-    setLoading(true)
+    setLoading(true);
     const {
       data: { session },
       error,
     } = await supabase.auth.signUp({
       email: email,
       password: password,
-    })
+    });
 
-    if (error) Alert.alert(error.message)
-    if (!session) Alert.alert('Please check your inbox for email verification!')
-    setLoading(false)
+    if (error) Alert.alert(error.message);
+    if (!session)
+      Alert.alert('Please check your inbox for email verification!');
+    setLoading(false);
   }
 
-  async function Sendemail(){
-      try{
-        const { error:sendEmailError } =await supabase.auth.resetPasswordForEmail(email, {
+  async function Sendemail() {
+    try {
+      const { error: sendEmailError } =
+        await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: 'http://localhost:3000/passwordReset/',
         });
-        if (sendEmailError) {
-          throw sendEmailError;
-        }
-        alert('パスワード設定メールを確認してください');
-      }catch(error){
-        alert('エラーが発生しました');
+      if (sendEmailError) {
+        throw sendEmailError;
+      }
+      alert('パスワード設定メールを確認してください');
+    } catch (error) {
+      alert('エラーが発生しました');
     }
   }
 
@@ -65,36 +67,48 @@ export default function Auth() {
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Input
-          label="Email"
+          label='Email'
           leftIcon={{ type: 'font-awesome', name: 'envelope' }}
           onChangeText={(text) => setEmail(text)}
           value={email}
-          placeholder="email@address.com"
+          placeholder='email@address.com'
           autoCapitalize={'none'}
         />
       </View>
       <View style={styles.verticallySpaced}>
         <Input
-          label="Password"
+          label='Password'
           leftIcon={{ type: 'font-awesome', name: 'lock' }}
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry={true}
-          placeholder="Password"
+          placeholder='Password'
           autoCapitalize={'none'}
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+        <Button
+          title='Sign in'
+          disabled={loading}
+          onPress={() => signInWithEmail()}
+        />
       </View>
       <View style={styles.verticallySpaced}>
-        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+        <Button
+          title='Sign up'
+          disabled={loading}
+          onPress={() => signUpWithEmail()}
+        />
       </View>
       <View style={styles.verticallySpaced}>
-        <Button title="Forgot the password" disabled={loading} onPress={() => Sendemail()} />
+        <Button
+          title='Forgot the password'
+          disabled={loading}
+          onPress={() => Sendemail()}
+        />
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -110,4 +124,4 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
-})
+});

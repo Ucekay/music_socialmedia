@@ -1,6 +1,7 @@
-import React, { createContext, useContext } from 'react';
-import { useColorScheme, ColorSchemeName } from 'react-native';
 import Colors, { TagColors } from '@/src/constants/Colors';
+import type React from 'react';
+import { createContext, useContext } from 'react';
+import { type ColorSchemeName, useColorScheme } from 'react-native';
 
 type Theme = 'light' | 'dark';
 

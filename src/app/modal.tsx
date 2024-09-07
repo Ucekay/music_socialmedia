@@ -1,14 +1,14 @@
+import { RichText, Toolbar, useEditorBridge } from '@10play/tentap-editor';
+import { Stack, useNavigation } from 'expo-router';
 import React from 'react';
 import {
-  View,
+  Button,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  Button,
+  View,
   useWindowDimensions,
 } from 'react-native';
-import { RichText, Toolbar, useEditorBridge } from '@10play/tentap-editor';
-import { Stack, useNavigation } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ModalScreen() {

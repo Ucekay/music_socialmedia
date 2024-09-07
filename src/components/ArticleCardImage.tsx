@@ -1,5 +1,5 @@
-import { View, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
+import { StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 

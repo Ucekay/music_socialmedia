@@ -1,33 +1,34 @@
+import userData from '@/src/assets/userData';
 import BgView from '@/src/components/ThemedBgView';
-import { UserListPropsType } from '@/src/types';
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  useColorScheme,
-  Pressable,
-  Falsy,
-  RecursiveArray,
-  RegisteredStyle,
-  StyleProp,
-  TextStyle,
-  ViewStyle,
-} from 'react-native';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
+import type { UserListPropsType } from '@/src/types';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { Image } from 'expo-image';
+import { useLocalSearchParams } from 'expo-router';
+import type React from 'react';
+import { useState } from 'react';
 import {
-  MaterialTabItemProps,
-  TabBarProps,
+  Dimensions,
+  type Falsy,
+  Pressable,
+  type RecursiveArray,
+  type RegisteredStyle,
+  type StyleProp,
+  StyleSheet,
+  Text,
+  type TextStyle,
+  View,
+  type ViewStyle,
+  useColorScheme,
+} from 'react-native';
+import {
+  type MaterialTabItemProps,
+  type TabBarProps,
   Tabs,
 } from 'react-native-collapsible-tab-view';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import userData from '@/src/assets/userData';
-import { useLocalSearchParams } from 'expo-router';
 import { MaterialTabBar } from 'react-native-collapsible-tab-view';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { AnimatedStyle } from 'react-native-reanimated';
-import { useTheme } from '@/src/contexts/ColorThemeContext';
+import type { AnimatedStyle } from 'react-native-reanimated';
 
 const width = Dimensions.get('window').width;
 const backgroundColors = [
@@ -145,7 +146,7 @@ const UserListScreen = (): JSX.Element => {
             >;
         TabItemComponent?:
           | ((
-              props: MaterialTabItemProps<string>
+              props: MaterialTabItemProps<string>,
             ) => React.ReactElement<
               any,
               string | React.JSXElementConstructor<any>
@@ -167,7 +168,7 @@ const UserListScreen = (): JSX.Element => {
         activeColor?: string | undefined;
         inactiveColor?: string | undefined;
         keepActiveTabCentered?: boolean | undefined;
-      }
+      },
   ) => (
     <MaterialTabBar
       {...props}

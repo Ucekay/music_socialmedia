@@ -1,46 +1,46 @@
-import { useState } from 'react';
-import { Stack, useNavigation } from 'expo-router';
 import {
-  View,
+  CoreBridge,
+  RichText,
+  TenTapStartKit,
+  Toolbar,
+  useEditorBridge,
+  useEditorContent,
+} from '@10play/tentap-editor';
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { Stack, useNavigation } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
+import {
   Button,
-  StyleSheet,
+  KeyboardAvoidingView,
   Platform,
-  useColorScheme,
   Pressable,
   ScrollView,
-  KeyboardAvoidingView,
+  StyleSheet,
+  View,
+  useColorScheme,
 } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import PagerView from 'react-native-pager-view';
 import Animated, {
   FadeIn,
   FadeOut,
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import PagerView from 'react-native-pager-view';
-import {
-  RichText,
-  Toolbar,
-  useEditorBridge,
-  CoreBridge,
-  TenTapStartKit,
-  useEditorContent,
-} from '@10play/tentap-editor';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ArticleTag from '@/src/components/ArticleTag';
 import Color from '@/src/constants/Colors';
 
 import BgView from '@/src/components/ThemedSecondaryBgView';
 import Text from '@/src/components/ThemedText';
-import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import TrackEntry from '@/src/components/TrackEntry';
-import LiveInputField from '../components/LiveInputField';
+import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import EditorImagePicker from '../components/EditorImagePicker';
+import LiveInputField from '../components/LiveInputField';
 import { useTheme } from '../contexts/ColorThemeContext';
 
 const ArticleEditorModal = () => {
@@ -93,7 +93,7 @@ const ArticleEditorModal = () => {
           case 2:
             break;
         }
-      }
+      },
     );
   };
 
@@ -110,7 +110,7 @@ const ArticleEditorModal = () => {
         if (selectedIndex === 0) {
           console.log(content);
         }
-      }
+      },
     );
   };
 
@@ -158,10 +158,13 @@ const ArticleConfigScreen = () => {
   const secondaryTextColor = Color[colorScheme ?? 'light'].secondaryText;
 
   const opacityValues: { [key: string]: SharedValue<number> } =
-    articleTypes.reduce((acc, type) => {
-      acc[type] = useSharedValue(1);
-      return acc;
-    }, {} as { [key: string]: SharedValue<number> });
+    articleTypes.reduce(
+      (acc, type) => {
+        acc[type] = useSharedValue(1);
+        return acc;
+      },
+      {} as { [key: string]: SharedValue<number> },
+    );
 
   const handleTagPress = (type: string) => {
     if (selectedType === type) {

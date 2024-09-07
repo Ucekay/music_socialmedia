@@ -1,18 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  NativeSyntheticEvent,
-  Pressable,
-  TextInputSubmitEditingEventData,
-  View,
-  StyleSheet,
-  useWindowDimensions,
-  PressableAndroidRippleConfig,
-  StyleProp,
-  TextStyle,
-  ViewStyle,
-} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { BlurView } from 'expo-blur';
 import {
   Stack,
@@ -20,14 +7,38 @@ import {
   useFocusEffect,
   useLocalSearchParams,
 } from 'expo-router';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  type NativeSyntheticEvent,
+  Pressable,
+  type PressableAndroidRippleConfig,
+  type StyleProp,
+  StyleSheet,
+  type TextInputSubmitEditingEventData,
+  type TextStyle,
+  View,
+  type ViewStyle,
+  useWindowDimensions,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SearchBarCommands } from 'react-native-screens';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import type { SearchBarCommands } from 'react-native-screens';
 
+import articleData from '@/src/assets/articleData';
+import postData from '@/src/assets/postData';
+import todaySongData from '@/src/assets/todaySongData';
+import userData from '@/src/assets/userData';
+import ArticleCard from '@/src/components/ArticleCard';
+import PostCard from '@/src/components/PostCard';
+import SearchBar from '@/src/components/SearchBar';
+import SearchHistoryList from '@/src/components/SearchHistoryList';
 import BgView from '@/src/components/ThemedBgView';
 import Text from '@/src/components/ThemedText';
-import SearchBar from '@/src/components/SearchBar';
+import TodaySongsListItem from '@/src/components/TodaySongsListItem';
+import TracksListItem from '@/src/components/TracksListItem';
+import UsersListItem from '@/src/components/UsersListItem';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 import type {
   ArticleData,
@@ -37,32 +48,25 @@ import type {
   Track,
   UsersListItemProps,
 } from '@/src/types';
-import SearchHistoryList from '@/src/components/SearchHistoryList';
-import postData from '@/src/assets/postData';
-import articleData from '@/src/assets/articleData';
-import todaySongData from '@/src/assets/todaySongData';
-import userData from '@/src/assets/userData';
 import { FlashList } from '@shopify/flash-list';
-import ArticleCard from '@/src/components/ArticleCard';
-import PostCard from '@/src/components/PostCard';
-import TodaySongsListItem from '@/src/components/TodaySongsListItem';
-import UsersListItem from '@/src/components/UsersListItem';
-import TracksListItem from '@/src/components/TracksListItem';
 import {
-  NavigationState,
-  Route,
+  type NavigationState,
+  type Route,
   SceneMap,
-  SceneRendererProps,
+  type SceneRendererProps,
   TabBar,
-  TabBarIndicatorProps,
-  TabBarItemProps,
+  type TabBarIndicatorProps,
+  type TabBarItemProps,
   TabBarProps,
   TabView,
 } from 'react-native-tab-view';
-import { Scene, Event } from 'react-native-tab-view/lib/typescript/src/types';
+import type {
+  Event,
+  Scene,
+} from 'react-native-tab-view/lib/typescript/src/types';
 
 const fetchData = async (
-  type: 'post' | 'article' | 'today' | 'user' | 'music'
+  type: 'post' | 'article' | 'today' | 'user' | 'music',
 ) => {
   switch (type) {
     case 'post':
@@ -349,12 +353,12 @@ const SearchResultTabs = ({ query }: { query: string }) => {
         getTestID?: ((scene: Scene<Route>) => string | undefined) | undefined;
         renderLabel?:
           | ((
-              scene: Scene<Route> & { focused: boolean; color: string }
+              scene: Scene<Route> & { focused: boolean; color: string },
             ) => React.ReactNode)
           | undefined;
         renderIcon?:
           | ((
-              scene: Scene<Route> & { focused: boolean; color: string }
+              scene: Scene<Route> & { focused: boolean; color: string },
             ) => React.ReactNode)
           | undefined;
         renderBadge?: ((scene: Scene<Route>) => React.ReactNode) | undefined;
@@ -363,7 +367,7 @@ const SearchResultTabs = ({ query }: { query: string }) => {
           | undefined;
         renderTabBarItem?:
           | ((
-              props: TabBarItemProps<Route> & { key: string }
+              props: TabBarItemProps<Route> & { key: string },
             ) => React.ReactElement<
               any,
               string | React.JSXElementConstructor<any>
@@ -380,7 +384,7 @@ const SearchResultTabs = ({ query }: { query: string }) => {
         gap?: number | undefined;
         testID?: string | undefined;
         android_ripple?: PressableAndroidRippleConfig | undefined;
-      }
+      },
   ) => {
     const { colors } = useTheme();
     return (
@@ -493,7 +497,7 @@ const SearchResult = () => {
     setHistory((prev) => {
       let newHistory = [...prev];
       const existingIndex = newHistory.findIndex(
-        (item) => item.query === query
+        (item) => item.query === query,
       );
 
       if (existingIndex !== -1) {
@@ -514,7 +518,7 @@ const SearchResult = () => {
   };
 
   const handleSearchButtonPress = (
-    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
   ) => {
     const query = e.nativeEvent.text;
     handleSearch(query);

@@ -1,3 +1,6 @@
+import { Image } from 'expo-image';
+import { Link } from 'expo-router';
+import { Message, Xmark } from 'iconoir-react-native';
 import React, {
   useCallback,
   useEffect,
@@ -5,18 +8,22 @@ import React, {
   useState,
 } from 'react';
 import {
-  View,
+  Dimensions,
+  type GestureResponderEvent,
+  Modal,
   Pressable,
   Image as RNImage,
   StyleSheet,
-  Dimensions,
-  Modal,
-  GestureResponderEvent,
+  View,
 } from 'react-native';
-import { Image } from 'expo-image';
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 import Animated, {
   Extrapolation,
-  SharedValue,
+  type SharedValue,
   interpolate,
   runOnJS,
   useAnimatedRef,
@@ -26,13 +33,6 @@ import Animated, {
   withTiming,
   withSpring,
 } from 'react-native-reanimated';
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
-import { Link } from 'expo-router';
-import { Message, Xmark } from 'iconoir-react-native';
 import HeartIcon from './Icons/HeartIcon';
 import ShareIcon from './Icons/ShareIcon';
 
@@ -77,9 +77,9 @@ const PostImages = ({ imageUrls, postID }: PostImagesProps) => {
                   reject(new Error('Invalid image dimensions'));
                 }
               },
-              (error) => reject(error)
+              (error) => reject(error),
             );
-          }
+          },
         );
         setImageDimensions(dimensions);
       } catch (error) {
@@ -399,13 +399,13 @@ const ImageModal = ({
       savedTranslateY,
       resetImagePosition,
       onClose,
-    ]
+    ],
   );
 
   const backgroundStyle = useAnimatedStyle(() => {
     const index = Math.min(
       Math.max(Math.round(currentIndex.value), 0),
-      imageUrls.length - 1
+      imageUrls.length - 1,
     );
     const currentTranslateY = translateY[index]?.value ?? 0;
 
@@ -414,7 +414,7 @@ const ImageModal = ({
         currentTranslateY,
         [-SCREEN_HEIGHT, 0, SCREEN_HEIGHT],
         [0.5, 1, 0.5],
-        Extrapolation.CLAMP
+        Extrapolation.CLAMP,
       ),
     };
   });
@@ -424,7 +424,7 @@ const ImageModal = ({
       scrollX.value = event.contentOffset.x;
       currentIndex.value = Math.min(
         Math.max(Math.round(event.contentOffset.x / SCREEN_WIDTH), 0),
-        imageUrls.length - 1
+        imageUrls.length - 1,
       );
     },
   });
@@ -609,7 +609,7 @@ const ImageItem = React.memo(
         </Animated.View>
       </GestureDetector>
     );
-  }
+  },
 );
 
 const OptionModalUpper = (props: {

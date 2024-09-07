@@ -1,19 +1,20 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, useColorScheme, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
+import type React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Pressable, StyleSheet, View, useColorScheme } from 'react-native';
 import RNColorThief from 'react-native-color-thief';
 
 import BgView from './ThemedBgView';
 import Text from './ThemedText';
 
-import { rgbObjectToRgbaString } from '../utils/color/ColorModifier';
+import { TextInput } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated';
 import Colors from '../constants/Colors';
-import type { TodaySongDataType as SongData } from '../types';
 import { useTheme } from '../contexts/ColorThemeContext';
+import type { TodaySongDataType as SongData } from '../types';
+import { rgbObjectToRgbaString } from '../utils/color/ColorModifier';
 import TrackSearchField from './TrackSearchField';
-import { TextInput } from 'react-native-gesture-handler';
 
 type size = 'sm' | 'lg';
 
@@ -114,7 +115,7 @@ const TodaySongCard = ({
         setEndColor('');
       }
     },
-    []
+    [],
   );
 
   useEffect(() => {

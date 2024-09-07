@@ -1,25 +1,25 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BlurView } from 'expo-blur';
+import { Link, Stack, useFocusEffect, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-  NativeSyntheticEvent,
+  type NativeSyntheticEvent,
   Pressable,
+  type TextInputSubmitEditingEventData,
   View,
-  TextInputSubmitEditingEventData,
 } from 'react-native';
-import { Link, Stack, useFocusEffect, useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SearchBarCommands } from 'react-native-screens';
-import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { SearchBarCommands } from 'react-native-screens';
 
+import todaySongData from '@/src/assets/todaySongData';
+import SearchBar from '@/src/components/SearchBar';
+import SearchHistoryList from '@/src/components/SearchHistoryList';
 import BgView from '@/src/components/ThemedBgView';
 import SecondaryBgView from '@/src/components/ThemedSecondaryBgView';
-import todaySongData from '@/src/assets/todaySongData';
-import TodaySongCard from '@/src/components/TodaySongCard';
 import Text from '@/src/components/ThemedText';
+import TodaySongCard from '@/src/components/TodaySongCard';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
-import SearchBar from '@/src/components/SearchBar';
 import type { SearchHistoryItem } from '@/src/types';
-import SearchHistoryList from '@/src/components/SearchHistoryList';
 
 const Discover = () => {
   const router = useRouter();
@@ -83,7 +83,7 @@ const Discover = () => {
     setHistory((prev) => {
       let newHistory = [...prev];
       const existingIndex = newHistory.findIndex(
-        (item) => item.query === query
+        (item) => item.query === query,
       );
 
       if (existingIndex !== -1) {
@@ -104,7 +104,7 @@ const Discover = () => {
   };
 
   const handleSearchButtonPress = (
-    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
   ) => {
     const query = e.nativeEvent.text;
     handleSearch(query);

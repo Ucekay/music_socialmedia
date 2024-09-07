@@ -1,4 +1,4 @@
-import { Text, StyleSheet, Pressable } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 

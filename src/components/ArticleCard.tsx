@@ -1,13 +1,13 @@
-import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
+import React from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { useTheme } from '../contexts/ColorThemeContext';
-import ArticleTag from './ArticleTag';
-import ArticleCardSubhead from './ArticleCardSubhead';
 import type { ArticleData } from '../types';
+import ArticleCardSubhead from './ArticleCardSubhead';
+import ArticleTag from './ArticleTag';
 import { ArticleThumbnail } from './ArticleThumbnail';
 import Text from './ThemedText';
 

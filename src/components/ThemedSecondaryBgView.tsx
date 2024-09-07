@@ -1,4 +1,4 @@
-import { View, ViewProps } from 'react-native';
+import { View, type ViewProps } from 'react-native';
 import { useTheme } from '../contexts/ColorThemeContext';
 
 const SecondaryBgView = (props: ViewProps) => {

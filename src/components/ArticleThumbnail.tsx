@@ -1,13 +1,13 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
-import { MeshGradient } from './MeshGradient';
-import ArticleCardImage from './ArticleCardImage';
 import { usePalette } from '../hooks/usePallete';
 import { increaseSaturation } from '../utils/color/ColorModifier';
+import ArticleCardImage from './ArticleCardImage';
+import { MeshGradient } from './MeshGradient';
 
 export interface ArticleThumbnailProps {
   imageUrl: string;
@@ -25,8 +25,8 @@ export const ArticleThumbnail = ({
   if (articleType === 'review' || articleType === 'playlist') {
     const hexColors = usePalette(imageUrl);
 
-    let gradientColors: string[] = hexColors.map((color) =>
-      increaseSaturation(color, 2)
+    const gradientColors: string[] = hexColors.map((color) =>
+      increaseSaturation(color, 2),
     );
     if (gradientColors.length === 0) {
       return null;
@@ -40,8 +40,8 @@ export const ArticleThumbnail = ({
               padding: height
                 ? height / 25
                 : width
-                ? ((width / 16) * 9) / 25
-                : 0,
+                  ? ((width / 16) * 9) / 25
+                  : 0,
             },
           ]}
         >

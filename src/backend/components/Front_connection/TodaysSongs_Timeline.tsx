@@ -1,9 +1,10 @@
+import type { TodaysSongsData } from '@/src/types';
 import { supabase } from '../../lib/supabase';
-import { getInitialTodaysSongs,
-         getOlderTodaysSongs,
-         getNewerTodaysSongs
- } from '../DB_Access/TodaysSong'; 
-import { TodaysSongsData } from '@/src/types';
+import {
+  getInitialTodaysSongs,
+  getNewerTodaysSongs,
+  getOlderTodaysSongs,
+} from '../DB_Access/TodaysSong';
 import { getUserProfileforPosts } from '../DB_Access/profile';
 
 interface FetchPostsParams {
@@ -44,7 +45,7 @@ export const createPostDataset = async ({
 
   const todayssongsdata: TodaysSongsData[] = await Promise.all(
     TodaysSongs.map(async (todayssongs) => {
-      const userData= await getUserProfileforPosts(todayssongs.UserID)
+      const userData = await getUserProfileforPosts(todayssongs.UserID);
       const { data: likeData, error: likeError } = await supabase
         .from('PostLikes')
         .select('PostID')
@@ -67,8 +68,12 @@ export const createPostDataset = async ({
         IconImageUrl: userData.IconImageUrl,
         LiketoPost: liketopost,
       };
-    })
+    }),
   );
 
-  return { todayssongData: todayssongsdata, cursor: newCursor, latestcursor: newLatestcursor };
+  return {
+    todayssongData: todayssongsdata,
+    cursor: newCursor,
+    latestcursor: newLatestcursor,
+  };
 };

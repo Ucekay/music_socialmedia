@@ -1,21 +1,21 @@
+import { Image } from 'expo-image';
+import { Link } from 'expo-router';
+import { Message } from 'iconoir-react-native';
 import React, { useState } from 'react';
 import {
-  View,
-  StyleSheet,
-  Text,
-  Pressable,
   Dimensions,
   Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
   useColorScheme,
 } from 'react-native';
-import { Image } from 'expo-image';
-import { type PostDataType } from '../types';
-import { Link } from 'expo-router';
-import HeartIcon from './Icons/HeartIcon';
-import IconAntDesign from './Icons/AntDesign';
-import ShareIcon from './Icons/ShareIcon';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import { Message } from 'iconoir-react-native';
+import type { PostDataType } from '../types';
+import IconAntDesign from './Icons/AntDesign';
+import HeartIcon from './Icons/HeartIcon';
+import ShareIcon from './Icons/ShareIcon';
 import PostImages from './PostImages';
 
 import { formatCreatedAt } from '@/src/utils/date/formatCreatedAt';
@@ -47,7 +47,7 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
     colorScheme === 'light' ? { color: '#000000' } : { color: '#ffffff' };
 
   const { formattedDate, timeAgo, daysDifference } = formatCreatedAt(
-    post.createdAt
+    post.createdAt,
   );
 
   return (

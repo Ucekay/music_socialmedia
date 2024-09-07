@@ -1,11 +1,11 @@
+import { Image } from 'expo-image';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Image } from 'expo-image';
 
+import { useTheme } from '../contexts/ColorThemeContext';
+import type { Track } from '../types';
 import BgView from './ThemedBgView';
 import Text from './ThemedText';
-import { Track } from '../types';
-import { useTheme } from '../contexts/ColorThemeContext';
 
 const TracksListItem = (props: Track) => {
   const { colors } = useTheme();

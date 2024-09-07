@@ -1,23 +1,24 @@
-import React, { useCallback, useMemo, useRef } from 'react';
-import { EventArg } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { View, StyleSheet, Pressable } from 'react-native';
-import { Href, Link, Tabs } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
-import { BlurView } from 'expo-blur';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   BottomSheetBackdrop,
-  BottomSheetBackgroundProps,
+  type BottomSheetBackgroundProps,
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import {
-  type BottomSheetBackdropProps,
-  type BottomSheetDefaultBackdropProps,
+import type {
+  BottomSheetBackdropProps,
+  BottomSheetDefaultBackdropProps,
 } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
-import { MultiplePages, GoogleDocs, Voice } from 'iconoir-react-native';
-import { SvgProps } from 'react-native-svg';
+import type { EventArg } from '@react-navigation/native';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
+import { type Href, Link, Tabs } from 'expo-router';
+import { GoogleDocs, MultiplePages, Voice } from 'iconoir-react-native';
+import type React from 'react';
+import { useCallback, useMemo, useRef } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { SvgProps } from 'react-native-svg';
 
 import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 
@@ -51,7 +52,7 @@ export default function TabLayout() {
   const handleSheetChanges = useCallback((index: number) => {}, []);
   const renderBackdrop = useCallback(
     (
-      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps
+      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps,
     ) => (
       <BottomSheetBackdrop
         {...props}
@@ -59,7 +60,7 @@ export default function TabLayout() {
         disappearsOnIndex={-1}
       />
     ),
-    []
+    [],
   );
 
   const themedContentStyle = { backgroundColor: colors.secondaryBackground };

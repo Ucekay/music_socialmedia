@@ -1,12 +1,12 @@
-import { useHeaderHeight } from '@react-navigation/elements';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { StyleSheet } from 'react-native';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { FlashList } from '@shopify/flash-list';
+import { StyleSheet } from 'react-native';
 
-import BgView from '@/src/components/ThemedBgView';
 import articleData from '@/src/assets/articleData';
 import ArticleCard from '@/src/components/ArticleCard';
-import { ArticleData } from '@/src/types';
+import BgView from '@/src/components/ThemedBgView';
+import type { ArticleData } from '@/src/types';
 
 const ITEM_SIZE = 255;
 

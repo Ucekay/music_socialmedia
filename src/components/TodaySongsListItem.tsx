@@ -1,10 +1,10 @@
-import { View, StyleSheet } from 'react-native';
-import React from 'react';
-import { useTheme } from '../contexts/ColorThemeContext';
 import { Image } from 'expo-image';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useTheme } from '../contexts/ColorThemeContext';
 
-import Text from './ThemedText';
 import type { TodaySongsListItemProps } from '../types';
+import Text from './ThemedText';
 
 const TodaySongsListItem = ({
   artworkUrl,

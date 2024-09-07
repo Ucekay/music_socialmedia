@@ -1,12 +1,12 @@
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
-  NativeSyntheticEvent,
+  type NativeSyntheticEvent,
   Pressable,
   StyleSheet,
   TextInput,
-  TextInputChangeEventData,
-  TextInputProps,
-  TextStyle,
+  type TextInputChangeEventData,
+  type TextInputProps,
+  type TextStyle,
   View,
 } from 'react-native';
 import Animated, {
@@ -60,17 +60,17 @@ const AnimatedTextInput = (props: AnimatedTextInputProps) => {
   const animatedLabelStyle = useAnimatedStyle(
     () => ({
       top: withTiming(
-        interpolate(inputFocused.value, [0, 1], [0, -focusedLabelTop])
+        interpolate(inputFocused.value, [0, 1], [0, -focusedLabelTop]),
       ),
       fontSize: withTiming(
         interpolate(
           inputFocused.value,
           [0, 1],
-          [defaultLabelSize, focusedLabelSize]
-        )
+          [defaultLabelSize, focusedLabelSize],
+        ),
       ),
     }),
-    [defaultLabelSize, focusedLabelTop, focusedLabelSize]
+    [defaultLabelSize, focusedLabelTop, focusedLabelSize],
   );
 
   const handleChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {

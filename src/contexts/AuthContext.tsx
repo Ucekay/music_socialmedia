@@ -1,9 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { supabase } from '../backend/lib/supabase';
-import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Session, AuthChangeEvent } from '@supabase/supabase-js';
+import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import Constants from 'expo-constants';
+import * as SecureStore from 'expo-secure-store';
+import type React from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../backend/lib/supabase';
 
 const USER_ID_KEY = Constants.expoConfig?.extra?.USER_ID_KEY;
 const SECURE_STORE_KEY = Constants.exxpoConfig?.extra?.SECURE_STORE_KEY;
@@ -39,7 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (storedSession) {
         try {
           const { data, error } = await supabase.auth.refreshSession(
-            JSON.parse(storedSession).refresh_token
+            JSON.parse(storedSession).refresh_token,
           );
           if (error) {
             console.error('セッションの復元に失敗しました:', error);
@@ -72,7 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             await AsyncStorage.setItem(USER_ID_KEY, session.user.id);
             await SecureStore.setItemAsync(
               SECURE_STORE_KEY,
-              JSON.stringify({ refresh_token: session.refresh_token })
+              JSON.stringify({ refresh_token: session.refresh_token }),
             );
           } catch (error) {
             console.error('SecureStoreへの保存エラー:', error);
@@ -81,7 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           await AsyncStorage.removeItem(USER_ID_KEY);
           await SecureStore.deleteItemAsync(SECURE_STORE_KEY);
         }
-      }
+      },
     );
 
     return () => subscription.unsubscribe();

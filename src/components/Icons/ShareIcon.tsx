@@ -1,7 +1,7 @@
-import React from 'react';
-import IconAntDesign from './AntDesign';
 import { ShareIos } from 'iconoir-react-native';
-import { Share, Alert } from 'react-native';
+import type React from 'react';
+import { Alert, Share } from 'react-native';
+import IconAntDesign from './AntDesign';
 
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 
@@ -9,14 +9,14 @@ interface ShareIconProps {
   width: number;
   height: number;
   strokeWidth?: number;
-  color?: string
+  color?: string;
 }
 
 const ShareIcon: React.FC<ShareIconProps> = ({
   width,
   height,
   strokeWidth,
-  color
+  color,
 }) => {
   const { colors } = useTheme();
   const onShare = async () => {

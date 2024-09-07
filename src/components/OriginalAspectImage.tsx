@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { Image } from 'expo-image';
+import React, { useState } from 'react';
 import { Image as RNImage } from 'react-native';
 
 interface Props {

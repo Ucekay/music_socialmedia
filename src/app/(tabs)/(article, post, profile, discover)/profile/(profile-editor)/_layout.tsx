@@ -1,6 +1,6 @@
-import React from 'react';
-import { Stack } from 'expo-router';
 import { ProfileStateProvider } from '@/src/contexts/ProfileEditor';
+import { Stack } from 'expo-router';
+import React from 'react';
 
 const App = () => {
   return (

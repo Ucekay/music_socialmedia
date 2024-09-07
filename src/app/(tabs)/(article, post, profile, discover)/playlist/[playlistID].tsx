@@ -1,14 +1,14 @@
-import TracksListItem from '@/src/components/TracksListItem';
-import BgView from '@/src/components/ThemedBgView';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { Image } from 'expo-image';
-import React from 'react';
-import { FlatList, StyleSheet, Text, ScrollView, View } from 'react-native';
-import { useQueryClient } from '@tanstack/react-query';
-import { useLocalSearchParams } from 'expo-router';
-import { PlaylistDetailType } from '@/src/types';
 import { Button } from '@/src/components/Button';
+import BgView from '@/src/components/ThemedBgView';
+import TracksListItem from '@/src/components/TracksListItem';
+import type { PlaylistDetailType } from '@/src/types';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { useQueryClient } from '@tanstack/react-query';
+import { Image } from 'expo-image';
+import { useLocalSearchParams } from 'expo-router';
 import * as IconoirIcons from 'iconoir-react-native';
+import React from 'react';
+import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 const PlaylistDetailScreen = (): JSX.Element => {
   const { playlistID } = useLocalSearchParams();
@@ -18,7 +18,7 @@ const PlaylistDetailScreen = (): JSX.Element => {
     'playlists',
   ]);
   const selectedPlaylist = cachedPlaylists?.find(
-    (playlist) => playlist.playlistID === playlistID
+    (playlist) => playlist.playlistID === playlistID,
   );
   if (!selectedPlaylist) {
     return (

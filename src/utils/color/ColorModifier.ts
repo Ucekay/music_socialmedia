@@ -1,8 +1,8 @@
 export const increaseSaturation = (
   hexColor: string,
-  saturationFactor: number
+  saturationFactor: number,
 ): string => {
-  const rgb: number = parseInt(hexColor.slice(1), 16);
+  const rgb: number = Number.parseInt(hexColor.slice(1), 16);
   let r: number = (rgb >> 16) & 0xff;
   let g: number = (rgb >> 8) & 0xff;
   let b: number = rgb & 0xff;
@@ -13,8 +13,8 @@ export const increaseSaturation = (
   b /= 255;
   const max: number = Math.max(r, g, b);
   const min: number = Math.min(r, g, b);
-  let h: number = 0,
-    s: number = 0,
+  let h = 0,
+    s = 0,
     l: number = (max + min) / 2;
 
   if (max === min) {
@@ -39,8 +39,8 @@ export const increaseSaturation = (
   s = Math.min(s * saturationFactor, 1);
 
   // HSLをRGBに変換
-  let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-  let p = 2 * l - q;
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
   r = hue2rgb(p, q, h + 1 / 3);
   g = hue2rgb(p, q, h);
   b = hue2rgb(p, q, h - 1 / 3);
@@ -77,7 +77,7 @@ const hue2rgb = (p: number, q: number, t: number) => {
 };
 
 export const rgb2Hex = (
-  rgbArray: { r: number; g: number; b: number }[]
+  rgbArray: { r: number; g: number; b: number }[],
 ): string[] => {
   return rgbArray.map(({ r, g, b }) => {
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;

@@ -1,6 +1,6 @@
-import React from 'react';
 import type { CubicBezierHandle } from '@shopify/react-native-skia';
-import { Line, Paint, Circle } from '@shopify/react-native-skia';
+import { Circle, Line, Paint } from '@shopify/react-native-skia';
+import React from 'react';
 import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue } from 'react-native-reanimated';
 
@@ -16,12 +16,12 @@ export const Cubic = ({ mesh, index, color }: CubicProps) => {
   const c1 = useDerivedValue(() => mesh.value[index].c1, [mesh]);
   const c1S = useDerivedValue(
     () => symmetric(mesh.value[index].c1, mesh.value[index].pos),
-    [mesh]
+    [mesh],
   );
   const c2 = useDerivedValue(() => mesh.value[index].c2, [mesh]);
   const c2S = useDerivedValue(
     () => symmetric(mesh.value[index].c2, mesh.value[index].pos),
-    [mesh]
+    [mesh],
   );
   const pos = useDerivedValue(() => mesh.value[index].pos, [mesh]);
   return (

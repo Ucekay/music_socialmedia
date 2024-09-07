@@ -1,28 +1,24 @@
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  View,
-  TextInput,
-  StyleSheet,
-  Text,
-  ScrollView,
-  Platform,
-  Pressable,
+  ActivityIndicator,
   FlatList,
   Modal,
-  ActivityIndicator,
-  findNodeHandle,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
   UIManager,
+  View,
+  findNodeHandle,
 } from 'react-native';
-import userData from '../assets/userData';
-import { Image } from 'expo-image';
-import BgView from '../components/ThemedBgView';
-import IconAntDesign from '../components/Icons/AntDesign';
-import { useNavigation, useLocalSearchParams } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import Icon from 'react-native-vector-icons/AntDesign';
-import OriginalAspectImage from '../components/OriginalAspectImage';
-import { BlurView } from 'expo-blur';
-import * as ImagePicker from 'expo-image-picker';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Animated, {
   FadeIn,
@@ -31,7 +27,11 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useActionSheet } from '@expo/react-native-action-sheet';
+import Icon from 'react-native-vector-icons/AntDesign';
+import userData from '../assets/userData';
+import IconAntDesign from '../components/Icons/AntDesign';
+import OriginalAspectImage from '../components/OriginalAspectImage';
+import BgView from '../components/ThemedBgView';
 import { useTheme } from '../contexts/ColorThemeContext';
 
 type ImagePickerResult = ImagePicker.ImagePickerResult & {
@@ -83,7 +83,7 @@ const ReplyEditorModal = () => {
 
   const pickImage = async () => {
     setErrorMessage('');
-    let result = (await ImagePicker.launchImageLibraryAsync({
+    const result = (await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 4 - images.length,
@@ -176,13 +176,13 @@ const ReplyEditorModal = () => {
         freeStyleCropEnabled: true,
       });
       setImages(
-        images.map((images, index) => (index === num ? cropped.path : images))
+        images.map((images, index) => (index === num ? cropped.path : images)),
       );
     } catch (e: any) {
       console.log(e.message);
       if (e.message === 'User cancelled image selection') {
         setErrorMessage(
-          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。'
+          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。',
         );
       }
     } finally {
@@ -211,7 +211,7 @@ const ReplyEditorModal = () => {
           case 1:
             break;
         }
-      }
+      },
     );
   };
 
@@ -228,7 +228,7 @@ const ReplyEditorModal = () => {
         if (selectedIndex === 0) {
           handlePost;
         }
-      }
+      },
     );
   };
   const handleCropEditor = (num: number, uri: string) => {

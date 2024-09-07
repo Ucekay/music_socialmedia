@@ -1,15 +1,15 @@
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useState } from 'react';
 import {
-  StyleSheet,
+  type NativeSyntheticEvent,
   Pressable,
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
+  StyleSheet,
+  type TextInputChangeEventData,
 } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-import Text from '@/src/components/ThemedText';
 import EditorMetadataInput from '@/src/components/EditorMetadataInput';
+import Text from '@/src/components/ThemedText';
 import { useTheme } from '../contexts/ColorThemeContext';
 import AddOrCancelButtons from './AddOrCancelButtons';
 import TrackSearchField from './TrackSearchField';
@@ -45,13 +45,13 @@ const TrackEntry = () => {
   };
 
   const handleTrackChange = (
-    e: NativeSyntheticEvent<TextInputChangeEventData>
+    e: NativeSyntheticEvent<TextInputChangeEventData>,
   ) => {
     setTrackName(e.nativeEvent.text);
   };
 
   const handleArtistChange = (
-    e: NativeSyntheticEvent<TextInputChangeEventData>
+    e: NativeSyntheticEvent<TextInputChangeEventData>,
   ) => {
     setArtistName(e.nativeEvent.text);
   };

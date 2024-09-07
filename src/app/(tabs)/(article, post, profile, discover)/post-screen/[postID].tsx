@@ -1,26 +1,26 @@
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { useQueryClient } from '@tanstack/react-query';
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import { Link, Stack, useLocalSearchParams } from 'expo-router';
+import { ChatBubbleEmpty } from 'iconoir-react-native';
+import { useMemo } from 'react';
 import {
-  View,
-  StyleSheet,
-  ScrollView,
   Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
   useColorScheme,
 } from 'react-native';
-import { Link, Stack, useLocalSearchParams } from 'expo-router';
-import { useQueryClient } from '@tanstack/react-query';
-import { useMemo } from 'react';
-import { Image } from 'expo-image';
-import { BlurView } from 'expo-blur';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { ChatBubbleEmpty } from 'iconoir-react-native';
 
-import { useTheme } from '@/src/contexts/ColorThemeContext';
+import HeartIcon from '@/src/components/Icons/HeartIcon';
+import ShareIcon from '@/src/components/Icons/ShareIcon';
 import PostImages from '@/src/components/PostImages';
 import BgView from '@/src/components/ThemedBgView';
 import Text from '@/src/components/ThemedText';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
 import { formatCreatedAt } from '@/src/utils/date/formatCreatedAt';
-import HeartIcon from '@/src/components/Icons/HeartIcon';
-import ShareIcon from '@/src/components/Icons/ShareIcon';
 
 interface Post {
   ImageUrl: string[];
@@ -78,7 +78,7 @@ const PostDetailScreen = () => {
   }
 
   const { formattedDate, formattedTime } = formatCreatedAt(
-    selectedPost.createdAt
+    selectedPost.createdAt,
   );
 
   return (

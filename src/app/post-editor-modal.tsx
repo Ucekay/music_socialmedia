@@ -1,28 +1,23 @@
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 // PostScreen.js
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  View,
-  TextInput,
-  StyleSheet,
-  Text,
-  ScrollView,
-  Platform,
-  Pressable,
+  ActivityIndicator,
   FlatList,
   Modal,
-  ActivityIndicator,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
-import userData from '../assets/userData';
-import { Image } from 'expo-image';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BgView from '../components/ThemedBgView';
-import IconAntDesign from '../components/Icons/AntDesign';
-import { useNavigation } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import Icon from 'react-native-vector-icons/AntDesign';
-import ImageAspectKept from '../components/OriginalAspectImage';
-import { BlurView } from 'expo-blur';
-import * as ImagePicker from 'expo-image-picker';
 import Animated, {
   Easing,
   FadeIn,
@@ -31,9 +26,14 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { insertPost } from '../backend/components/DB_Access/post';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/AntDesign';
+import userData from '../assets/userData';
 import { uploadImage } from '../backend/components/DB_Access/Image';
-import { useActionSheet } from '@expo/react-native-action-sheet';
+import { insertPost } from '../backend/components/DB_Access/post';
+import IconAntDesign from '../components/Icons/AntDesign';
+import ImageAspectKept from '../components/OriginalAspectImage';
+import BgView from '../components/ThemedBgView';
 import { useTheme } from '../contexts/ColorThemeContext';
 
 type ImagePickerResult = ImagePicker.ImagePickerResult & {
@@ -54,7 +54,7 @@ const PostEditorModal = () => {
 
   const pickImage = async () => {
     setErrorMessage('');
-    let result = (await ImagePicker.launchImageLibraryAsync({
+    const result = (await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 4 - images.length,
@@ -158,7 +158,7 @@ const PostEditorModal = () => {
           case 2:
             break;
         }
-      }
+      },
     );
   };
 
@@ -175,17 +175,17 @@ const PostEditorModal = () => {
         if (selectedIndex === 0) {
           handlePost;
         }
-      }
+      },
     );
   };
 
   const handlePost = async () => {
     try {
       const ImageUrls = await Promise.all(
-        images.map((image) => uploadImage(image, 'PostImage'))
+        images.map((image) => uploadImage(image, 'PostImage')),
       );
       if (text) {
-        let data = { Body: text, ImageUrl: ImageUrls };
+        const data = { Body: text, ImageUrl: ImageUrls };
         const result = await insertPost(data);
         if (typeof result === 'boolean' && result) {
           // 記事の挿入に成功した場合の処理

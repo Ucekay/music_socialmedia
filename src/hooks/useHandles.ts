@@ -1,8 +1,8 @@
 import type { CubicBezierHandle, SkRect } from '@shopify/react-native-skia';
 import { isEdge, sub } from '@shopify/react-native-skia';
+import { Gesture } from 'react-native-gesture-handler';
 import type { SharedValue } from 'react-native-reanimated';
 import { useSharedValue } from 'react-native-reanimated';
-import { Gesture } from 'react-native-gesture-handler';
 
 import { inRadius, symmetric } from '../components/forMeshGradient/Math';
 
@@ -14,7 +14,7 @@ type TouchSelection = null | {
 export const useHandles = (
   mesh: SharedValue<CubicBezierHandle[]>,
   defaultMesh: CubicBezierHandle[],
-  window: SkRect
+  window: SkRect,
 ) => {
   const selection = useSharedValue<TouchSelection>(null);
   return Gesture.Pan()

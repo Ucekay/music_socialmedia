@@ -1,10 +1,10 @@
+import type { PostData } from '@/src/types';
 import { supabase } from '../../lib/supabase';
 import {
   getInitialPosts,
-  getOlderPosts,
   getNewerPosts,
+  getOlderPosts,
 } from '../DB_Access/post';
-import { PostData } from '@/src/types';
 import { getUserProfileforPosts } from '../DB_Access/profile';
 
 interface FetchPostsParams {
@@ -45,7 +45,7 @@ export const createPostDataset = async ({
 
   const postData: PostData[] = await Promise.all(
     posts.map(async (post) => {
-      const userData= await getUserProfileforPosts(post.UserID)
+      const userData = await getUserProfileforPosts(post.UserID);
       const { data: likeData, error: likeError } = await supabase
         .from('PostLikes')
         .select('PostID')
@@ -66,7 +66,7 @@ export const createPostDataset = async ({
         createdAt: post.created_at,
         LiketoPost: liketopost,
       };
-    })
+    }),
   );
 
   return { postData, cursor: newCursor, latestcursor: newLatestcursor };

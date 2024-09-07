@@ -1,3 +1,5 @@
+import { useNavigation } from 'expo-router';
+import { NavArrowLeft, Search, XmarkCircleSolid } from 'iconoir-react-native';
 import React, {
   useState,
   useRef,
@@ -5,25 +7,23 @@ import React, {
   useImperativeHandle,
 } from 'react';
 import {
-  View,
-  TextInput,
-  StyleSheet,
+  type LayoutChangeEvent,
+  type NativeSyntheticEvent,
   Pressable,
-  LayoutChangeEvent,
+  StyleSheet,
+  type TargetedEvent,
+  TextInput,
+  type TextInputSubmitEditingEventData,
+  View,
   useWindowDimensions,
-  NativeSyntheticEvent,
-  TargetedEvent,
-  TextInputSubmitEditingEventData,
 } from 'react-native';
-import { NavArrowLeft, Search, XmarkCircleSolid } from 'iconoir-react-native';
 import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { SearchBarCommands } from 'react-native-screens';
-import { useNavigation } from 'expo-router';
+import type { SearchBarCommands } from 'react-native-screens';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 import Text from './ThemedText';
@@ -35,7 +35,7 @@ interface SearchBarProps {
   onChangeText?: (text: string) => void;
   onFocus?: (e: NativeSyntheticEvent<TargetedEvent>) => void;
   onSearchButtonPress?: (
-    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+    e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
   ) => void;
   canBack: boolean;
 }
@@ -57,7 +57,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
     const [value, setValue] = useState('');
     const [isFocused, setIsFocused] = useState(false);
     const [initialWidth, setInitialWidth] = useState(
-      canBack ? width - 48 : width - 32
+      canBack ? width - 48 : width - 32,
     );
     const inputRef = useRef<TextInput>(null);
 
@@ -85,7 +85,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
           },
         };
       },
-      []
+      [],
     );
 
     const handleLayout = (event: LayoutChangeEvent) => {
@@ -132,7 +132,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
     };
 
     const handleSubmit = (
-      e: NativeSyntheticEvent<TextInputSubmitEditingEventData>
+      e: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
     ) => {
       onSearchButtonPress?.(e);
     };
@@ -257,7 +257,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
         </Animated.View>
       </View>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({

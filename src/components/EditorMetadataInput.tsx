@@ -1,4 +1,4 @@
-import { TextInput, TextInputProps, View, StyleSheet } from 'react-native';
+import { StyleSheet, TextInput, type TextInputProps, View } from 'react-native';
 
 interface EditorMetadataInputProps extends TextInputProps {
   borderColor: string;

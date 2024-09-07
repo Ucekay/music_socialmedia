@@ -1,32 +1,32 @@
-import React from 'react';
-import { Stack, useLocalSearchParams } from 'expo-router';
-import {
-  View,
-  Falsy,
-  RecursiveArray,
-  RegisteredStyle,
-  StyleProp,
-  TextStyle,
-  ViewStyle,
-} from 'react-native';
-import LoginUserProfileTop from '@/src/components/UserProfileTopOfLoginUser';
-import {
-  Tabs,
-  MaterialTabBar,
-  MaterialTabItemProps,
-  TabBarProps,
-} from 'react-native-collapsible-tab-view';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import PostCard from '@/src/components/PostCard';
-import ArticleCard from '@/src/components/ArticleCard';
 import postData from '@/src/assets/postData';
 import userArticleData from '@/src/assets/userArticleData';
+import ArticleCard from '@/src/components/ArticleCard';
+import PostCard from '@/src/components/PostCard';
 import BgView from '@/src/components/ThemedBgView';
 import UserProfileTop from '@/src/components/UserProfileTop';
-import { ArticleData } from '@/src/types';
-import { useHeaderHeight } from '@react-navigation/elements';
+import LoginUserProfileTop from '@/src/components/UserProfileTopOfLoginUser';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
-import { AnimatedStyle } from 'react-native-reanimated';
+import type { ArticleData } from '@/src/types';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { Stack, useLocalSearchParams } from 'expo-router';
+import type React from 'react';
+import {
+  type Falsy,
+  type RecursiveArray,
+  type RegisteredStyle,
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native';
+import {
+  MaterialTabBar,
+  type MaterialTabItemProps,
+  type TabBarProps,
+  Tabs,
+} from 'react-native-collapsible-tab-view';
+import type { AnimatedStyle } from 'react-native-reanimated';
 
 const Profile = () => {
   const { userID } = useLocalSearchParams();
@@ -56,7 +56,7 @@ const Profile = () => {
             >;
         TabItemComponent?:
           | ((
-              props: MaterialTabItemProps<string>
+              props: MaterialTabItemProps<string>,
             ) => React.ReactElement<
               any,
               string | React.JSXElementConstructor<any>
@@ -78,7 +78,7 @@ const Profile = () => {
         activeColor?: string | undefined;
         inactiveColor?: string | undefined;
         keepActiveTabCentered?: boolean | undefined;
-      }
+      },
   ) => {
     return (
       <MaterialTabBar

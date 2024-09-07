@@ -1,17 +1,17 @@
 import BgView from '@/src/components/ThemedBgView';
-import React, { useContext, useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  StyleSheet,
-  useColorScheme,
-} from 'react-native';
-import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
-import { useRouter } from 'expo-router';
 import Color from '@/src/constants/Colors';
 import Colors from '@/src/constants/Colors';
+import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
+import { useRouter } from 'expo-router';
+import React, { useContext, useState } from 'react';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  useColorScheme,
+} from 'react-native';
 
 const IdEditor = (): JSX.Element => {
   const context = useContext(ProfileEditorContext);
@@ -20,7 +20,7 @@ const IdEditor = (): JSX.Element => {
 
   if (!context) {
     throw new Error(
-      'NameEditorModal must be used within a ProfileEditorProvider'
+      'NameEditorModal must be used within a ProfileEditorProvider',
     );
   }
 

@@ -10,12 +10,13 @@
 		}
 	},
 	"formatter": {
-		"enabled": true
+		"enabled": true,
+		"indentStyle": "space"
 	},
-	"javascript":{
-		"formatter":{
+	"javascript": {
+		"formatter": {
 			"quoteStyle": "single",
-			"jsxQuoteStyle": "double"
+			"jsxQuoteStyle": "single"
 		}
 	}
 }

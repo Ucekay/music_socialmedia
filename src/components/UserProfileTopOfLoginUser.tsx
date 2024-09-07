@@ -1,19 +1,19 @@
-import {
-  View,
-  StyleSheet,
-  useColorScheme,
-  Pressable,
-  FlatList,
-  Dimensions,
-} from 'react-native';
-import { Link } from 'expo-router';
 import { Image } from 'expo-image';
+import { Link } from 'expo-router';
 import React from 'react';
+import {
+  Dimensions,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  View,
+  useColorScheme,
+} from 'react-native';
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
-import Text from './ThemedText';
-import BgView from './ThemedBgView';
 import { useTheme } from '../contexts/ColorThemeContext';
+import BgView from './ThemedBgView';
+import Text from './ThemedText';
 
 interface LoginUserProps {
   id: string;

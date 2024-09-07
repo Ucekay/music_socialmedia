@@ -1,28 +1,28 @@
+import BgView from '@/src/components/ThemedBgView';
+import Color from '@/src/constants/Colors';
+import Colors from '@/src/constants/Colors';
+import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import { Link, useNavigation, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 // PostScreen.js
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import {
-  View,
+  ActivityIndicator,
   Button,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  ScrollView,
+  Modal,
   Platform,
   Pressable,
-  Modal,
-  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useColorScheme,
 } from 'react-native';
-import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BgView from '@/src/components/ThemedBgView';
-import Color from '@/src/constants/Colors';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { useNavigation, useRouter, Link } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { BlurView } from 'expo-blur';
-import * as ImagePicker from 'expo-image-picker';
-import Colors from '@/src/constants/Colors';
-import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
 
 const ProfileEditorModal = () => {
   const context = useContext(ProfileEditorContext);
@@ -30,7 +30,7 @@ const ProfileEditorModal = () => {
 
   if (!context) {
     throw new Error(
-      'ProfileEditorModal must be used within a ProfileEditorProvider'
+      'ProfileEditorModal must be used within a ProfileEditorProvider',
     );
   }
 
@@ -48,7 +48,7 @@ const ProfileEditorModal = () => {
 
   const pickImage = async () => {
     setErrorMessage('');
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
@@ -117,7 +117,7 @@ const ProfileEditorModal = () => {
               <Pressable
                 onPress={() => {
                   router.push(
-                    '/(tabs)/profile/(profile-editor)/name-editor-modal'
+                    '/(tabs)/profile/(profile-editor)/name-editor-modal',
                   );
                 }}
               >
@@ -137,7 +137,7 @@ const ProfileEditorModal = () => {
               <Pressable
                 onPress={() => {
                   router.push(
-                    '/(tabs)/profile/(profile-editor)/id-editor-modal'
+                    '/(tabs)/profile/(profile-editor)/id-editor-modal',
                   );
                 }}
               >
@@ -156,7 +156,7 @@ const ProfileEditorModal = () => {
               <Pressable
                 onPress={() => {
                   router.push(
-                    '/(tabs)/profile/(profile-editor)/bio-editor-modal'
+                    '/(tabs)/profile/(profile-editor)/bio-editor-modal',
                   );
                 }}
               >
@@ -179,7 +179,7 @@ const ProfileEditorModal = () => {
               <Pressable
                 onPress={() => {
                   router.push(
-                    '/(tabs)/profile/(profile-editor)/favoriteArtists-editor-modal'
+                    '/(tabs)/profile/(profile-editor)/favoriteArtists-editor-modal',
                   );
                 }}
               >

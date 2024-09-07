@@ -1,10 +1,10 @@
-import { View, StyleSheet } from 'react-native';
-import React from 'react';
 import { Image } from 'expo-image';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 
+import { useTheme } from '../contexts/ColorThemeContext';
 import type { UsersListItemProps } from '../types';
 import Text from './ThemedText';
-import { useTheme } from '../contexts/ColorThemeContext';
 
 const UsersListItem = ({ userAvatarUrl, userID, user }: UsersListItemProps) => {
   const { colors } = useTheme();

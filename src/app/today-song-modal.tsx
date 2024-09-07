@@ -1,15 +1,15 @@
+import { FlashList } from '@shopify/flash-list';
 import React from 'react';
 import { View, useWindowDimensions } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
 
-import BgView from '../components/ThemedBgView';
-import SecondaryBgView from '../components/ThemedSecondaryBgView';
 import todaySongData from '@/src/assets/todaySongData';
 import TodaySongCard from '@/src/components/TodaySongCard';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Message, PlaySolid, ShareIos } from 'iconoir-react-native';
-import { useTheme } from '../contexts/ColorThemeContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import HeartIcon from '../components/Icons/HeartIcon';
+import BgView from '../components/ThemedBgView';
+import SecondaryBgView from '../components/ThemedSecondaryBgView';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 const TodaySongModal = () => {
   const { width } = useWindowDimensions();

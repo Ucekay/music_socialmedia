@@ -1,21 +1,21 @@
 import BgView from '@/src/components/ThemedBgView';
-import React, { useContext, useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  StyleSheet,
-  Dimensions,
-  useColorScheme,
-  FlatList,
-  Modal,
-} from 'react-native';
-import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
-import { useRouter } from 'expo-router';
 import Color from '@/src/constants/Colors';
 import Colors from '@/src/constants/Colors';
-import { Xmark, Plus, Search } from 'iconoir-react-native';
+import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
+import { useRouter } from 'expo-router';
+import { Plus, Search, Xmark } from 'iconoir-react-native';
+import React, { useContext, useState } from 'react';
+import {
+  Dimensions,
+  FlatList,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  useColorScheme,
+} from 'react-native';
 
 const FavoriteArtistsEditor = (): JSX.Element => {
   const context = useContext(ProfileEditorContext);
@@ -30,7 +30,7 @@ const FavoriteArtistsEditor = (): JSX.Element => {
 
   if (!context) {
     throw new Error(
-      'FavoriteArtistsEditorModal must be used within a ProfileEditorProvider'
+      'FavoriteArtistsEditorModal must be used within a ProfileEditorProvider',
     );
   }
 
