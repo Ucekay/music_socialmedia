@@ -157,7 +157,7 @@ const TodaySongCard = ({
           <Text style={styles[`${size}SongName`]}>
             {shouldShowPlaceholder ? 'タップして曲を選択' : getSongTitle()}
           </Text>
-          <Text style={styles[`${size}ArtistName`]}>{getArtistName()}</Text>
+          <Text style={styles[`${size}Artist`]}>{getArtistName()}</Text>
         </View>
       </Pressable>
     );
@@ -226,7 +226,7 @@ const TodaySongCard = ({
       return (
         <Animated.View
           entering={FadeIn}
-          exiting={FadeOut}
+          exiting={size !== 'sm' ? FadeOut : undefined}
           style={[
             styles.song,
             {
@@ -400,10 +400,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
   },
-  lgArtistName: {
+  lgArtist: {
     fontSize: 20,
   },
-  smArtistName: {
+  smArtist: {
     fontSize: 12,
   },
   lgSongInfo: {

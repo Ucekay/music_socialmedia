@@ -7,7 +7,6 @@ import {
   Text,
   ScrollView,
   Platform,
-  Animated as Animated1,
   Pressable,
   FlatList,
   Modal,
@@ -24,7 +23,14 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import ImageAspectKept from '../components/OriginalAspectImage';
 import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  FadeIn,
+  FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { insertPost } from '../backend/components/DB_Access/post';
 import { uploadImage } from '../backend/components/DB_Access/Image';
 import { useActionSheet } from '@expo/react-native-action-sheet';
@@ -43,7 +49,7 @@ const PostEditorModal = () => {
   const [loading, setLoading] = useState(false);
   const { colors } = useTheme();
   const navigation = useNavigation();
-  const animatedHeight = useRef(new Animated1.Value(0)).current;
+  const animatedHeight = useSharedValue(0);
   const [images, setImages] = useState<string[]>([]);
 
   const pickImage = async () => {
@@ -108,11 +114,10 @@ const PostEditorModal = () => {
     setPostHeight(height - 60); // Viewの高さを状態に保存
 
     // 高さをアニメーションで変更
-    Animated1.timing(animatedHeight, {
-      toValue: height,
-      duration: 300, // アニメーションの持続時間（ミリ秒）
-      useNativeDriver: false, // height のアニメーションには native driver は使えない
-    }).start();
+    animatedHeight.value = withTiming(height - 60, {
+      duration: 600,
+      easing: Easing.inOut(Easing.cubic),
+    });
   };
 
   const handleDeleteImage = (index: number) => {
@@ -121,13 +126,13 @@ const PostEditorModal = () => {
     setImages(newImages);
   };
 
-  const handleLayoutChangeLine = () => {
-    Animated1.timing(animatedHeight, {
-      toValue: postHeight,
-      duration: 100, // アニメーションの持続時間（ミリ秒）
-      useNativeDriver: false, // height のアニメーションには native driver は使えない
-    }).start();
-  };
+  const handleLayoutChangeLine = () => {};
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      height: animatedHeight.value,
+    };
+  });
 
   const onClose = () => {
     const title = '下書きに保存しまますか？';
@@ -232,13 +237,13 @@ const PostEditorModal = () => {
               source={userData[0].userAvatarUrl}
               style={styles.avatorimage}
             />
-            <Animated1.View
-              style={[styles.line, { height: animatedHeight }]}
+            <Animated.View
+              style={[styles.line, animatedStyle]}
               onLayout={handleLayoutChangeLine}
             />
           </View>
-          <Animated1.View
-            style={[{ flexDirection: 'column' }, { flex: 1 }]}
+          <View
+            style={[{ flexDirection: 'column', flex: 1 }]}
             onLayout={handleLayoutChange}
           >
             <View style={styles.headerLeft}>
@@ -308,7 +313,7 @@ const PostEditorModal = () => {
                 <IconAntDesign name='camerao' size={20} style={styles.Icon} />
               </View>
             )}
-          </Animated1.View>
+          </View>
         </View>
       </ScrollView>
       <BgView
