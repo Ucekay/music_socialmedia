@@ -1,11 +1,4 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": [
-    "evilmartians",
-    "gorhom",
-    "hugeicons",
-    "skia",
-    "socialmedia"
-  ],
-  "editor.indentSize": "tabSize"
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"editor.indentSize": "tabSize"
 }
