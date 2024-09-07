@@ -1,6 +1,5 @@
 import { decode } from 'base64-arraybuffer';
 import * as ImageManipulator from 'expo-image-manipulator';
-import * as FileSystem from 'react-native-fs';
 import { supabase } from '../../lib/supabase';
 import { checkAuth } from './checkAuth';
 

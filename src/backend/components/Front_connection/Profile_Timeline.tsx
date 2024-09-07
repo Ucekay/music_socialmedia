@@ -1,8 +1,5 @@
-import { PostDataType } from '@/src/types';
 import type { PostData } from '@/src/types';
-import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
-import { GetPost } from '../DB_Access/post';
 import {
   getInitialUsersPosts,
   getNewerUsersPosts,

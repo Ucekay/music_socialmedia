@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
 import type { Database } from '../../types/supabasetypes';
 import {
   getInitialArticleMetaData,
@@ -14,7 +12,6 @@ import { getLiveReport } from '../DB_Access/Article/LiveReport';
 import { getPlaylistArticle } from '../DB_Access/Article/PlaylistArticle';
 import { getReview } from '../DB_Access/Article/Review';
 import { checkAuth } from '../DB_Access/checkAuth';
-import { GetPost } from '../DB_Access/post';
 import { getUserProfileforPosts } from '../DB_Access/profile';
 
 export type ArticleMetaData = Database['public']['Tables']['Article']['Row'];

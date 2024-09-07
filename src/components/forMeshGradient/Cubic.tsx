@@ -1,6 +1,5 @@
 import type { CubicBezierHandle } from '@shopify/react-native-skia';
 import { Circle, Line, Paint } from '@shopify/react-native-skia';
-import React from 'react';
 import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue } from 'react-native-reanimated';
 

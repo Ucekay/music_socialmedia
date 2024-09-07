@@ -6,10 +6,10 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
-import { Link, useNavigation, useRouter } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 // PostScreen.js
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Button,

@@ -4,7 +4,7 @@ import Colors from '@/src/constants/Colors';
 import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
 import { useRouter } from 'expo-router';
 import { Plus, Search, Xmark } from 'iconoir-react-native';
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
   Dimensions,
   FlatList,

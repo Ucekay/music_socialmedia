@@ -11,9 +11,7 @@ import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  FlatList,
   type NativeSyntheticEvent,
-  Pressable,
   type PressableAndroidRippleConfig,
   type StyleProp,
   StyleSheet,
@@ -52,12 +50,10 @@ import { FlashList } from '@shopify/flash-list';
 import {
   type NavigationState,
   type Route,
-  SceneMap,
   type SceneRendererProps,
   TabBar,
   type TabBarIndicatorProps,
   type TabBarItemProps,
-  TabBarProps,
   TabView,
 } from 'react-native-tab-view';
 import type {

@@ -5,10 +5,7 @@ import {
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import type {
-  BottomSheetBackdropProps,
-  BottomSheetDefaultBackdropProps,
-} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
+import type { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
 import type { EventArg } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -16,7 +13,7 @@ import { type Href, Link, Tabs } from 'expo-router';
 import { GoogleDocs, MultiplePages, Voice } from 'iconoir-react-native';
 import type React from 'react';
 import { useCallback, useMemo, useRef } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { SvgProps } from 'react-native-svg';
 

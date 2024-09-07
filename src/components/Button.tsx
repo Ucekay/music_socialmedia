@@ -1,4 +1,3 @@
-import * as IconoirIcons from 'iconoir-react-native';
 import React from 'react';
 import {
   Pressable,

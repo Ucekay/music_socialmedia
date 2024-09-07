@@ -1,6 +1,5 @@
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
-import React from 'react';
 import {
   Dimensions,
   FlatList,

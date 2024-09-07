@@ -3,7 +3,7 @@ import Color from '@/src/constants/Colors';
 import Colors from '@/src/constants/Colors';
 import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
 import { useRouter } from 'expo-router';
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import {
   Pressable,
   StyleSheet,

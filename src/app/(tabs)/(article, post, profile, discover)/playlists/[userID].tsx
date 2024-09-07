@@ -4,7 +4,6 @@ import BgView from '@/src/components/ThemedBgView';
 import type { PlaylistDetailType } from '@/src/types';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
 import { FlatList } from 'react-native';
 
 const PlaylistScreen = (): JSX.Element => {

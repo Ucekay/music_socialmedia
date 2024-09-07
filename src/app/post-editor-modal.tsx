@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 // PostScreen.js
-import React, { useState, useRef, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,

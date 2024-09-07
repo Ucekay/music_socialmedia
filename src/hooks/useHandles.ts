@@ -47,19 +47,23 @@ export const useHandles = (
               mesh.value[index].c2 = sub(c2, delta);
               selection.value = { index, point: 'pos' };
               return false;
-            } else if (inRadius(pt, c1)) {
+            }
+            if (inRadius(pt, c1)) {
               mesh.value[index].c1 = pt;
               selection.value = { index, point: 'c1' };
               return false;
-            } else if (inRadius(pt, c2)) {
+            }
+            if (inRadius(pt, c2)) {
               mesh.value[index].c2 = pt;
               selection.value = { index, point: 'c2' };
               return false;
-            } else if (inRadius(pt, c3)) {
+            }
+            if (inRadius(pt, c3)) {
               mesh.value[index].c1 = symmetric(pt, mesh.value[index].pos);
               selection.value = { index, point: 'c3' };
               return false;
-            } else if (inRadius(pt, c4)) {
+            }
+            if (inRadius(pt, c4)) {
               mesh.value[index].c2 = symmetric(pt, mesh.value[index].pos);
               selection.value = { index, point: 'c4' };
               return false;

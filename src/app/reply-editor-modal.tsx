@@ -1,13 +1,15 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { set } from 'date-fns';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  type LayoutChangeEvent,
   Modal,
   Platform,
   Pressable,
@@ -144,7 +146,7 @@ const ReplyEditorModal = () => {
     console.log('Posted:', text, images);
   };
 
-  const handleLayoutChange = (event: any) => {
+  const handleLayoutChange = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
     setPostHeight(height - 60); // Viewの高さを状態に保存
     animatedHeight.value = withTiming(height, { duration: 300 });
@@ -167,27 +169,27 @@ const ReplyEditorModal = () => {
   });
 
   const openCropEditor = async (num: number, uri: string) => {
-    try {
-      setLoading(true);
-      const cropped = await ImageCropPicker.openCropper({
-        path: uri,
-        cropperToolbarTitle: '画像を編集',
-        mediaType: 'photo',
-        freeStyleCropEnabled: true,
-      });
-      setImages(
-        images.map((images, index) => (index === num ? cropped.path : images)),
-      );
-    } catch (e: any) {
-      console.log(e.message);
-      if (e.message === 'User cancelled image selection') {
-        setErrorMessage(
-          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。',
+    setLoading(true);
+    ImageCropPicker.openCropper({
+      path: uri,
+      cropperToolbarTitle: '画像を編集',
+      mediaType: 'photo',
+      freeStyleCropEnabled: true,
+    })
+      .then((cropped) => {
+        setImages(
+          images.map((images, index) =>
+            index === num ? cropped.path : images,
+          ),
         );
-      }
-    } finally {
-      setLoading(false);
-    }
+        setLoading(false);
+      })
+      .catch((error) => {
+        if (error.message === 'User cancelled image selection') {
+          setErrorMessage('画像の選択がキャンセルされました');
+        }
+        setLoading(false);
+      });
   };
 
   const onClose = () => {

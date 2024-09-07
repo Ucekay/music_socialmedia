@@ -10,7 +10,7 @@ import {
   useImage,
   vec,
 } from '@shopify/react-native-skia';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue, useSharedValue } from 'react-native-reanimated';

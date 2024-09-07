@@ -3,7 +3,7 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { FlashList } from '@shopify/flash-list';
 import { type InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { FlatList, StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
 import { createPostDataset } from '@/src/backend/components/Front_connection/post_timeline';
 import PostCard from '@/src/components/PostCard';

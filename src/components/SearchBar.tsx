@@ -1,11 +1,6 @@
 import { useNavigation } from 'expo-router';
 import { NavArrowLeft, Search, XmarkCircleSolid } from 'iconoir-react-native';
-import React, {
-  useState,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-} from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import {
   type LayoutChangeEvent,
   type NativeSyntheticEvent,

@@ -169,14 +169,14 @@ const ArticleConfigScreen = () => {
   const handleTagPress = (type: string) => {
     if (selectedType === type) {
       setSelectedType(null);
-      articleTypes.forEach((t) => {
+      for (const t of articleTypes) {
         opacityValues[t].value = withTiming(1);
-      });
+      }
     } else {
       setSelectedType(type);
-      articleTypes.forEach((t) => {
+      for (const t of articleTypes) {
         opacityValues[t].value = withTiming(t === type ? 1 : 0.3);
-      });
+      }
     }
   };
   return (

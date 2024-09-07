@@ -2,7 +2,7 @@ import { supabase } from '@/src/backend/lib/supabase';
 import BgView from '@/src/components/ThemedBgView';
 import { router } from 'expo-router';
 import { AppleMac, GoogleCircle } from 'iconoir-react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Alert,
   AppState,

@@ -7,7 +7,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import * as IconoirIcons from 'iconoir-react-native';
-import React from 'react';
 import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 const PlaylistDetailScreen = (): JSX.Element => {

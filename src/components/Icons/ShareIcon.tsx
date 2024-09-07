@@ -1,7 +1,6 @@
 import { ShareIos } from 'iconoir-react-native';
 import type React from 'react';
 import { Alert, Share } from 'react-native';
-import IconAntDesign from './AntDesign';
 
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 

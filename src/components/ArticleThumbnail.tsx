@@ -1,6 +1,5 @@
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
-import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
@@ -61,7 +60,8 @@ export const ArticleThumbnail = ({
         </View>
       </Animated.View>
     );
-  } else if (articleType === 'live report' || articleType === 'general') {
+  }
+  if (articleType === 'liveReport' || articleType === 'general') {
     return (
       <View style={styles.thumbnailContainer}>
         <ArticleCardImage

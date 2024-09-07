@@ -1,17 +1,15 @@
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { Message } from 'iconoir-react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Dimensions,
-  Modal,
   Pressable,
   StyleSheet,
   Text,
   View,
   useColorScheme,
 } from 'react-native';
-import ImageViewer from 'react-native-image-zoom-viewer';
 import type { PostDataType } from '../types';
 import IconAntDesign from './Icons/AntDesign';
 import HeartIcon from './Icons/HeartIcon';

@@ -1,11 +1,10 @@
-import { FlashList } from '@shopify/flash-list';
-import React from 'react';
-import { View, useWindowDimensions } from 'react-native';
-
 import todaySongData from '@/src/assets/todaySongData';
 import TodaySongCard from '@/src/components/TodaySongCard';
+import { FlashList } from '@shopify/flash-list';
 import { Message, PlaySolid, ShareIos } from 'iconoir-react-native';
+import { View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import HeartIcon from '../components/Icons/HeartIcon';
 import BgView from '../components/ThemedBgView';
 import SecondaryBgView from '../components/ThemedSecondaryBgView';
@@ -56,7 +55,7 @@ const TodaySongModal = () => {
           </SecondaryBgView>
           <View
             style={{ width: 1, borderColor: backgroundColor, borderWidth: 0.5 }}
-          ></View>
+          />
           <View style={{ padding: 12 }}>
             <Message color={backgroundColor} width={20} height={20} />
           </View>
@@ -85,9 +84,9 @@ const TodaySongModal = () => {
           </View>
           <View
             style={{ width: 1, borderColor: iconColor, borderWidth: 0.5 }}
-          ></View>
+          />
           <View>
-            <HeartIcon initialcolor={iconColor} width={20} height={20} />
+            <HeartIcon initialColor={iconColor} width={20} height={20} />
           </View>
         </SecondaryBgView>
       </View>

@@ -13,9 +13,9 @@ export const increaseSaturation = (
   b /= 255;
   const max: number = Math.max(r, g, b);
   const min: number = Math.min(r, g, b);
-  let h = 0,
-    s = 0,
-    l: number = (max + min) / 2;
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
 
   if (max === min) {
     h = s = 0;
@@ -55,24 +55,25 @@ export const increaseSaturation = (
 
   //一桁の場合は0を追加
   if (newR.length === 1) {
-    newR = '0' + newR;
+    newR = `0${newR}`;
   }
   if (newG.length === 1) {
-    newG = '0' + newG;
+    newG = `0${newG}`;
   }
   if (newB.length === 1) {
-    newB = '0' + newB;
+    newB = `0${newB}`;
   }
 
-  return '#' + newR + newG + newB;
+  return `#${newR}${newG}${newB}`;
 };
 
 const hue2rgb = (p: number, q: number, t: number) => {
-  if (t < 0) t += 1;
-  if (t > 1) t -= 1;
-  if (t < 1 / 6) return p + (q - p) * 6 * t;
-  if (t < 1 / 2) return q;
-  if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+  let adjustedT = t;
+  if (adjustedT < 0) adjustedT += 1;
+  if (adjustedT > 1) adjustedT -= 1;
+  if (adjustedT < 1 / 6) return p + (q - p) * 6 * adjustedT;
+  if (adjustedT < 1 / 2) return q;
+  if (adjustedT < 2 / 3) return p + (q - p) * (2 / 3 - adjustedT) * 6;
   return p;
 };
 

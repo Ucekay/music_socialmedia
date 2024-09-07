@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../contexts/ColorThemeContext';
 
@@ -9,32 +9,17 @@ type ArticleTagProps = {
 
 const ArticleTag = ({ type, size }: ArticleTagProps) => {
   const { tagColors } = useTheme();
-  let Color;
-  switch (type) {
-    case 'general':
-      Color = tagColors.general;
-      break;
-    case 'review':
-      Color = tagColors.review;
-      break;
-    case 'liveReport':
-      Color = tagColors.liveReport;
-      break;
-    case 'playlist':
-      Color = tagColors.playlist;
-      break;
-    default:
-      Color = tagColors.general;
-      break;
+  const [colors, setColors] = useState(tagColors[type]);
+  if (colors === undefined) {
+    setColors(tagColors.general);
   }
 
   function titleCase(style: string) {
     return style[0].toUpperCase() + style.slice(1).toLowerCase();
   }
   return (
-    <View style={[styles.container, { backgroundColor: Color.background }]}>
-      {/*<View style={[styles.dot, { backgroundColor: bgColor }]}></View>*/}
-      <Text style={{ color: Color.text, fontSize: size }}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={{ color: colors.text, fontSize: size }}>
         {titleCase(type)}
       </Text>
     </View>

@@ -1,5 +1,5 @@
 import { Button, Input } from '@rneui/themed';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, AppState, StyleSheet, View } from 'react-native';
 import { supabase } from '../lib/supabase';
 

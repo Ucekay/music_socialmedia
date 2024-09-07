@@ -1,5 +1,4 @@
 import { type SFSymbol, SymbolView } from 'expo-symbols';
-import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { TagColors } from '../constants/Colors';

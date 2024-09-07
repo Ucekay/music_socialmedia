@@ -1,6 +1,5 @@
 import { RichText, Toolbar, useEditorBridge } from '@10play/tentap-editor';
 import { Stack, useNavigation } from 'expo-router';
-import React from 'react';
 import {
   Button,
   KeyboardAvoidingView,
@@ -48,7 +47,7 @@ export default function ModalScreen() {
     </View>
   );
 }
-const initialContent = `<p>This is a basic example!</p>`;
+const initialContent = '<p>This is a basic example!</p>';
 const styles = StyleSheet.create({
   container: {
     flex: 1,

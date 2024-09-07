@@ -3,7 +3,6 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import * as IconoirIcons from 'iconoir-react-native';
-import React from 'react';
 import {
   ScrollView,
   StyleSheet,
