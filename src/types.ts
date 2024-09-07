@@ -137,21 +137,34 @@ export type PlaylistType = {
   playlistName: string;
 };
 
-export type SongTypeSimple = {
+export type Track = {
   musicID: string;
-  musicName: string;
+  songName: string;
   artistName: string;
-  artworkURL: string;
+  artworkUrl: string;
 };
 
 export type PlaylistDetailType = {
   playlistID: string;
   playlistName: string;
   ImageURL: string;
-  songs: SongTypeSimple[];
+  songs: Track[];
 };
 
 export interface SearchHistoryItem {
   query: string;
   timestamp: number;
 }
+
+export type TodaySongsListItemProps = {
+  artworkUrl: string;
+  songName: string;
+  artistName: string;
+  userID: string;
+};
+
+export type UsersListItemProps = {
+  userID: string;
+  user: string;
+  userAvatarUrl: string;
+};

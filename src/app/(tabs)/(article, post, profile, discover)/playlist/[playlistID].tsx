@@ -1,4 +1,4 @@
-import SongListCard from '@/src/components/SongListCard';
+import TracksListItem from '@/src/components/TracksListItem';
 import BgView from '@/src/components/ThemedBgView';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Image } from 'expo-image';
@@ -74,11 +74,13 @@ const PlaylistDetailScreen = (): JSX.Element => {
             />
           </View>
         </View>
-        <FlatList
-          data={selectedPlaylist.songs}
-          scrollEnabled={false}
-          renderItem={({ item }) => <SongListCard {...item} />}
-        />
+        <View style={{ flex: 1, width: '100%' }}>
+          <FlatList
+            data={selectedPlaylist.songs}
+            scrollEnabled={false}
+            renderItem={({ item }) => <TracksListItem {...item} />}
+          />
+        </View>
       </ScrollView>
     </BgView>
   );
