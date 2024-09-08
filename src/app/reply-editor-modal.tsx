@@ -1,8 +1,4 @@
-import { BlurView } from 'expo-blur';
-import { Image } from 'expo-image';
-import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -21,7 +17,10 @@ import {
 } from 'react-native';
 
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { set } from 'date-fns';
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import { StatusBar } from 'expo-status-bar';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Animated, {
   FadeIn,
@@ -72,6 +71,7 @@ const ReplyEditorModal = () => {
   const [postHeight2, setPostHeight2] = useState<number>(0);
   const postComponentRef = useRef(null);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (postComponentRef.current) {
       const handle = findNodeHandle(postComponentRef.current);

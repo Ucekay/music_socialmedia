@@ -9,9 +9,9 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
+
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
-
 import {
   MaterialTabBar,
   type MaterialTabItemProps,
@@ -61,8 +61,8 @@ const Profile = () => {
           | ((
               props: MaterialTabItemProps<string>,
             ) => React.ReactElement<
-              any,
-              string | React.JSXElementConstructor<any>
+              React.ReactNode,
+              string | React.ComponentType
             >)
           | undefined;
         getLabelText?: ((name: string) => string) | undefined;

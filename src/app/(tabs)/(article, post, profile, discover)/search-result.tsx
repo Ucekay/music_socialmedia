@@ -1,4 +1,3 @@
-import { BlurView } from 'expo-blur';
 import {
   Stack,
   router,
@@ -19,10 +18,11 @@ import {
   type ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { FlashList } from '@shopify/flash-list';
+import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   type NavigationState,
@@ -293,6 +293,17 @@ const TrackSearchResults = ({ query }: { query: string }) => {
 };
 
 const SearchResultTabs = ({ query }: { query: string }) => {
+  const { width } = useWindowDimensions();
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'article', title: 'Post' },
+    { key: 'post', title: 'Article' },
+    { key: 'today', title: 'Today' },
+    { key: 'user', title: 'User' },
+    { key: 'music', title: 'Music' },
+  ]);
+  const { colors } = useTheme();
+
   if (!query) {
     return null;
   }
@@ -317,17 +328,6 @@ const SearchResultTabs = ({ query }: { query: string }) => {
         return null;
     }
   };
-
-  const { width } = useWindowDimensions();
-
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    { key: 'article', title: 'Post' },
-    { key: 'post', title: 'Article' },
-    { key: 'today', title: 'Today' },
-    { key: 'user', title: 'User' },
-    { key: 'music', title: 'Music' },
-  ]);
 
   const renderTabBar = (
     props: React.JSX.IntrinsicAttributes &
@@ -367,8 +367,8 @@ const SearchResultTabs = ({ query }: { query: string }) => {
           | ((
               props: TabBarItemProps<Route> & { key: string },
             ) => React.ReactElement<
-              any,
-              string | React.JSXElementConstructor<any>
+              Route,
+              string | React.JSXElementConstructor<Route>
             >)
           | undefined;
         onTabPress?: ((scene: Scene<Route> & Event) => void) | undefined;
@@ -384,12 +384,14 @@ const SearchResultTabs = ({ query }: { query: string }) => {
         android_ripple?: PressableAndroidRippleConfig | undefined;
       },
   ) => {
-    const { colors } = useTheme();
     return (
       <TabBar
-        {...props}
         indicatorStyle={{ backgroundColor: colors.text }}
-        style={[styles.tabBar, { backgroundColor: colors.background }]}
+        style={[
+          styles.tabBar,
+          props.style,
+          { backgroundColor: colors.background },
+        ]}
         renderLabel={({ route }) => (
           <View
             style={[
@@ -408,6 +410,34 @@ const SearchResultTabs = ({ query }: { query: string }) => {
         )}
         scrollEnabled={true}
         tabStyle={{ width: 80 }}
+        navigationState={props.navigationState}
+        getLabelText={props.getLabelText}
+        getAccessible={props.getAccessible}
+        getAccessibilityLabel={props.getAccessibilityLabel}
+        getTestID={props.getTestID}
+        renderIcon={props.renderIcon}
+        renderBadge={props.renderBadge}
+        renderIndicator={props.renderIndicator}
+        renderTabBarItem={props.renderTabBarItem}
+        onTabPress={props.onTabPress}
+        onTabLongPress={props.onTabLongPress}
+        pressColor={props.pressColor}
+        pressOpacity={props.pressOpacity}
+        activeColor={props.activeColor}
+        inactiveColor={props.inactiveColor}
+        bounces={props.bounces}
+        contentContainerStyle={props.contentContainerStyle}
+        labelStyle={props.labelStyle}
+        indicatorContainerStyle={props.indicatorContainerStyle}
+        gap={props.gap}
+        testID={props.testID}
+        android_ripple={props.android_ripple}
+        layout={{
+          width: 0,
+          height: 0,
+        }}
+        position={props.position}
+        jumpTo={props.jumpTo}
       />
     );
   };
@@ -443,6 +473,7 @@ const SearchResult = () => {
     }
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const loadHistory = async () => {
       try {
@@ -472,6 +503,7 @@ const SearchResult = () => {
   };
 
   const searchRef = useRef<SearchBarCommands>(null);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     showCurrentQuery();
   }, []);
@@ -531,7 +563,7 @@ const SearchResult = () => {
               tint='systemUltraThinMaterial'
               intensity={100}
               style={{ height: insetsTop, paddingHorizontal: 16 }}
-            ></BlurView>
+            />
           ),
           headerTransparent: true,
         }}

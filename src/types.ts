@@ -91,7 +91,7 @@ export type ColorScheme = {
   secondaryText: string;
   background: string;
   secondaryBackground: string;
-  tabBarGradient: string[];
+  tabBarGradient: readonly [string, string, ...string[]];
   headerBackground: string;
   tint: string;
   border: string;

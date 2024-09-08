@@ -14,7 +14,6 @@ import {
 } from '@shopify/react-native-skia';
 import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 
-
 import { Cubic } from './forMeshGradient/Cubic';
 import { Curves } from './forMeshGradient/Curves';
 import { symmetric } from './forMeshGradient/Math';
@@ -181,10 +180,11 @@ export const MeshGradient = ({
       <Canvas style={{ width, height }}>
         <Group>
           <ImageShader image={image} tx='repeat' ty='repeat' />
-          {rects.map((r, i) => {
+          {rects.map((r) => {
+            const key = r.join('-');
             return (
               <RectPatch
-                key={i}
+                key={key}
                 r={r}
                 mesh={mesh}
                 debug={debug}
@@ -199,9 +199,10 @@ export const MeshGradient = ({
           if (sharedEdgePoints.value[index] || !handles) {
             return null;
           }
+          const uniqueKey = `${pos.x}-${pos.y}`;
           return (
             <Cubic
-              key={index}
+              key={uniqueKey}
               mesh={mesh}
               index={index}
               color={colors[index]}

@@ -20,7 +20,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-
 import { useTheme } from '../contexts/ColorThemeContext';
 
 import Text from './ThemedText';
@@ -84,7 +83,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
           },
         };
       },
-      [],
+      [onChangeText],
     );
 
     const handleLayout = (event: LayoutChangeEvent) => {
@@ -143,6 +142,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
     };
 
     const handleCancel = () => {
+      // eslint-disable-next-line react-compiler/react-compiler
       searchBoxWidth.value = withTiming(initialWidth, { duration: 300 });
       cancelButtonOpacity.value = withTiming(0, {
         duration: 300,

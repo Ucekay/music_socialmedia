@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   type NativeSyntheticEvent,
   Pressable,
@@ -37,25 +37,21 @@ const AnimatedTextInput = (props: AnimatedTextInputProps) => {
 
   const inputFocused = useSharedValue(0);
 
-  const { defaultLabelSize } = useMemo(() => {
-    let fontSize: number | undefined;
-    let fontWeight: TextStyle['fontWeight'] | undefined;
+  const [defaultLabelSize, setDefaultLabelSize] = useState(16);
 
+  useEffect(() => {
     if (Array.isArray(style)) {
-      style.forEach((s) => {
+      for (const s of style) {
         if (s && 'fontSize' in s) {
-          fontSize = (s as TextStyle).fontSize;
+          setDefaultLabelSize((s as TextStyle).fontSize ?? 16);
+          break;
         }
-      });
+      }
     } else if (style && typeof style === 'object') {
       if ('fontSize' in style) {
-        fontSize = (style as TextStyle).fontSize;
+        setDefaultLabelSize((style as TextStyle).fontSize ?? 16);
       }
     }
-
-    return {
-      defaultLabelSize: fontSize !== undefined ? fontSize : 16,
-    };
   }, [style]);
 
   const animatedLabelStyle = useAnimatedStyle(
@@ -78,16 +74,17 @@ const AnimatedTextInput = (props: AnimatedTextInputProps) => {
     setValue(e.nativeEvent.text);
   };
 
-  const handleFocus = useCallback(() => {
+  const handleFocus = () => {
+    // eslint-disable-next-line react-compiler/react-compiler
     inputFocused.value = 1;
-  }, []);
+  };
 
-  const handleBlur = useCallback(() => {
+  const handleBlur = () => {
     const trimmedValue = (value || '').trim();
     if (trimmedValue === '') {
       inputFocused.value = 0;
     }
-  }, [value]);
+  };
 
   const labelHandler = () => {
     inputFocused.value = 1;

@@ -1,29 +1,26 @@
-import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import type React from 'react';
 import { useState } from 'react';
 import {
-  Dimensions,
-  type Falsy,
   Pressable,
-  type RecursiveArray,
-  type RegisteredStyle,
-  type StyleProp,
   StyleSheet,
   Text,
-  type TextStyle,
   View,
-  type ViewStyle,
   useColorScheme,
 } from 'react-native';
+import type {
+  Falsy,
+  RecursiveArray,
+  RegisteredStyle,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
+
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
-
-import {
-  type MaterialTabItemProps,
-  type TabBarProps,
-  Tabs,
-} from 'react-native-collapsible-tab-view';
+import { Image } from 'expo-image';
+import { Tabs } from 'react-native-collapsible-tab-view';
 import { MaterialTabBar } from 'react-native-collapsible-tab-view';
 
 import userData from '@/src/assets/userData';
@@ -31,9 +28,12 @@ import BgView from '@/src/components/ThemedBgView';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 import type { UserListPropsType } from '@/src/types';
+import type {
+  MaterialTabItemProps,
+  TabBarProps,
+} from 'react-native-collapsible-tab-view';
 import type { AnimatedStyle } from 'react-native-reanimated';
 
-const width = Dimensions.get('window').width;
 const backgroundColors = [
   ['#F0F0F0', '#2E2E2E'],
   ['#D3D3D3', '#444444'],
@@ -151,8 +151,8 @@ const UserListScreen = (): JSX.Element => {
           | ((
               props: MaterialTabItemProps<string>,
             ) => React.ReactElement<
-              any,
-              string | React.JSXElementConstructor<any>
+              React.ReactNode,
+              string | React.ComponentType
             >)
           | undefined;
         getLabelText?: ((name: string) => string) | undefined;

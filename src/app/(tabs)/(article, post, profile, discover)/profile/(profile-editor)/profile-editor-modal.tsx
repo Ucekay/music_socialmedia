@@ -1,8 +1,4 @@
-import { BlurView } from 'expo-blur';
-import { Image } from 'expo-image';
-import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useContext, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -18,6 +14,10 @@ import {
 } from 'react-native';
 
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import BgView from '@/src/components/ThemedBgView';
@@ -181,13 +181,13 @@ const ProfileEditorModal = () => {
                 <View style={{ marginHorizontal: 10, paddingTop: 16, gap: 8 }}>
                   <ThemedText style={styles.label}>favorite artists</ThemedText>
                   <View style={{ flexWrap: 'wrap', flexDirection: 'row' }}>
-                    {tag.map((item, index) => (
+                    {tag.map((item) => (
                       <View
                         style={[
                           styles.item,
                           { marginBottom: 4, flexDirection: 'row' },
                         ]}
-                        key={index}
+                        key={item}
                       >
                         <Text style={{ color: '#c0c0c0' }}>#</Text>
                         <ThemedText> {item}</ThemedText>

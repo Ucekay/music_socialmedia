@@ -1,5 +1,6 @@
-import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
+
+import { Image } from 'expo-image';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 

@@ -25,6 +25,7 @@ export const useHandles = (
         const { pos, c1, c2 } = mesh.value[index];
         if (point === 'pos') {
           const delta = sub(pos, pt);
+          // eslint-disable-next-line react-compiler/react-compiler
           mesh.value[index].pos = pt;
           mesh.value[index].c1 = sub(c1, delta);
           mesh.value[index].c2 = sub(c2, delta);

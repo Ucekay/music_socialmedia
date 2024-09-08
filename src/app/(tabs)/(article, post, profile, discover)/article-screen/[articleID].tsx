@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import {
   ScrollView,
@@ -6,9 +5,10 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
-
+import { Image } from 'expo-image';
 import * as IconoirIcons from 'iconoir-react-native';
 
 import articleData from '@/src/assets/articleData';
@@ -26,6 +26,9 @@ const ArticleDetailsScreen = () => {
   const { colors } = useTheme();
   const screenWidth = useWindowDimensions().width;
   const { articleID } = useLocalSearchParams();
+  const headerHeight = useHeaderHeight();
+  const tabBarHeight = useBottomTabBarHeight();
+
   const article = articleData.find(
     (article) => article.articleID === articleID,
   );
@@ -36,9 +39,6 @@ const ArticleDetailsScreen = () => {
       </View>
     );
   }
-
-  const headerHeight = useHeaderHeight();
-  const tabBarHeight = useBottomTabBarHeight();
 
   const thumbnailHeight = ((screenWidth - 32) / 16) * 9;
 

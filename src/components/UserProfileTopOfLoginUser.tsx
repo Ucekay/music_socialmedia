@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import {
   Dimensions,
@@ -8,6 +7,8 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
+
+import { Image } from 'expo-image';
 
 import userData from '../assets/userData';
 import Colors from '../constants/Colors';
@@ -72,7 +73,8 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
           </Text>
         </View>
       );
-    } else if (item.type === 'tags') {
+    }
+    if (item.type === 'tags') {
       return (
         <View
           style={[
@@ -80,13 +82,13 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
             { flexWrap: 'wrap', flexDirection: 'row' },
           ]}
         >
-          {userInfo.tag?.map((item, index) => (
+          {userInfo.tag?.map((item) => (
             <View
               style={[
                 styles.item,
                 { backgroundColor: TagColor, marginBottom: 8 },
               ]}
-              key={index}
+              key={item}
             >
               <Text style={{ fontWeight: '500', fontSize: 12 }}>{item}</Text>
             </View>

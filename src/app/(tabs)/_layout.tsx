@@ -1,29 +1,30 @@
-import { BlurView } from 'expo-blur';
-import { LinearGradient } from 'expo-linear-gradient';
-import { type Href, Link, Tabs } from 'expo-router';
+import type { Href } from 'expo-router';
+import { Link, Tabs } from 'expo-router';
 import type React from 'react';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
-import type { EventArg } from '@react-navigation/native';
 
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   BottomSheetBackdrop,
-  type BottomSheetBackgroundProps,
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import { GoogleDocs, MultiplePages, Voice } from 'iconoir-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-
 
 import Text from '@/src/components/ThemedText';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 
 import type { ColorScheme } from '@/src/types';
-import type { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
+import type {
+  BottomSheetBackdropProps,
+  BottomSheetBackgroundProps,
+} from '@gorhom/bottom-sheet';
+import type { EventArg } from '@react-navigation/native';
 import type { SvgProps } from 'react-native-svg';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -44,16 +45,13 @@ export default function TabLayout() {
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const snapPoints = useMemo(() => [bottomSheetHeight], []);
+  const snapPoints = [bottomSheetHeight];
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
-  const handleSheetChanges = useCallback((index: number) => {}, []);
   const renderBackdrop = useCallback(
-    (
-      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps,
-    ) => (
+    (props: React.JSX.IntrinsicAttributes & BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
         appearsOnIndex={0}
@@ -62,8 +60,6 @@ export default function TabLayout() {
     ),
     [],
   );
-
-  const themedContentStyle = { backgroundColor: colors.secondaryBackground };
 
   return (
     <View style={styles.screen}>
@@ -151,7 +147,6 @@ export default function TabLayout() {
       <BottomSheetModal
         ref={bottomSheetModalRef}
         snapPoints={snapPoints}
-        onChange={handleSheetChanges}
         enablePanDownToClose
         backdropComponent={renderBackdrop}
         handleIndicatorStyle={{ backgroundColor: colors.border }}
@@ -178,7 +173,7 @@ const BottomSheetBackground: React.FC<BottomSheetBackgroundProps> = ({
       tint='systemUltraThinMaterial'
       intensity={100}
       style={containerStyle}
-    ></BlurView>
+    />
   );
 };
 

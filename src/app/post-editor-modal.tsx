@@ -1,9 +1,4 @@
-import { BlurView } from 'expo-blur';
-import { Image } from 'expo-image';
-import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-// PostScreen.js
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -17,8 +12,13 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import type { LayoutChangeEvent } from 'react-native';
 
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import { StatusBar } from 'expo-status-bar';
 import Animated, {
   Easing,
   FadeIn,
@@ -111,7 +111,7 @@ const PostEditorModal = () => {
 
   const BOTTOM_TAB_HEIGHT = 96.7;
 
-  const handleLayoutChange = (event: any) => {
+  const handleLayoutChange = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
     setPostHeight(height - 60); // Viewの高さを状態に保存
 
@@ -326,7 +326,7 @@ const PostEditorModal = () => {
             paddingTop: 12,
           },
         ]}
-      ></BgView>
+      />
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
   );

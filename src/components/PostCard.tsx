@@ -1,52 +1,28 @@
-import { Image } from 'expo-image';
 import { Link } from 'expo-router';
-import { useState } from 'react';
-import {
-  Dimensions,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  useColorScheme,
-} from 'react-native';
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 
+import { Image } from 'expo-image';
 import { Message } from 'iconoir-react-native';
 
 import { formatCreatedAt } from '@/src/utils/date/formatCreatedAt';
+
+import { useTheme } from '../contexts/ColorThemeContext';
 
 import IconAntDesign from './Icons/AntDesign';
 import HeartIcon from './Icons/HeartIcon';
 import ShareIcon from './Icons/ShareIcon';
 import PostImages from './PostImages';
-
+import Text from './ThemedText';
 
 import type { PostDataType } from '../types';
-
 const screen = Dimensions.get('screen');
 
 const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
-  const [modalStatus, setModalStatus] = useState(false);
-  const [imageUrl, setImageUrl] = useState([{ url: '' }]);
-  const [initialIndex, setInitialIndex] = useState(0);
-
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
 
   const ImageUrlRow = JSON.stringify(post.ImageUrl);
 
-  const onClose = () => {
-    setModalStatus(false);
-  };
-
-  const HandleImage = (n: number) => {
-    if (post?.ImageUrl) {
-      setImageUrl(post.ImageUrl.map((url) => ({ url })));
-    }
-    setInitialIndex(n);
-    setModalStatus(true);
-  };
-
-  const themeTextColor =
-    colorScheme === 'light' ? { color: '#000000' } : { color: '#ffffff' };
+  const textColor = colors.text;
 
   const { formattedDate, timeAgo, daysDifference } = formatCreatedAt(
     post.createdAt,
@@ -66,33 +42,21 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
               ]}
             >
               <View>
-                <Text style={[styles.text1, themeTextColor]}>{post.user}</Text>
+                <Text style={styles.text1}>{post.user}</Text>
               </View>
               <View style={styles.headerRight}>
-                <Text style={themeTextColor}>
-                  {daysDifference > 3 ? formattedDate : timeAgo}
-                </Text>
-                <IconAntDesign
-                  name='ellipsis1'
-                  size={16}
-                  style={{ themeTextColor }}
-                />
+                <Text>{daysDifference > 3 ? formattedDate : timeAgo}</Text>
+                <IconAntDesign name='ellipsis1' size={16} color={textColor} />
               </View>
             </View>
             <View>
-              <Text style={[styles.postContent, themeTextColor]}>
-                {post.postContent}
-              </Text>
+              <Text style={styles.postContent}>{post.postContent}</Text>
               <PostImages imageUrls={post.ImageUrl} postID={post.postID} />
             </View>
           </View>
         </View>
         <View style={styles.Icons}>
-          <HeartIcon
-            width={16}
-            height={16}
-            initialcolor={themeTextColor.color}
-          />
+          <HeartIcon width={16} height={16} initialColor={textColor} />
           <Link
             href={{
               pathname: '/reply-editor-modal',
@@ -109,9 +73,9 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
             }}
             asChild
           >
-            <Message width={16} height={16} color={themeTextColor.color} />
+            <Message width={16} height={16} color={textColor} />
           </Link>
-          <ShareIcon width={16} height={16} color={themeTextColor.color} />
+          <ShareIcon width={16} height={16} color={textColor} />
         </View>
         <View
           style={[

@@ -7,7 +7,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import todaySongData from '@/src/assets/todaySongData';
 import TodaySongCard from '@/src/components/TodaySongCard';
 
-
 import HeartIcon from '../components/Icons/HeartIcon';
 import BgView from '../components/ThemedBgView';
 import SecondaryBgView from '../components/ThemedSecondaryBgView';

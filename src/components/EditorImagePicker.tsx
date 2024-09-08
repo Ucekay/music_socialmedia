@@ -1,6 +1,3 @@
-import { BlurView } from 'expo-blur';
-import { Image } from 'expo-image';
-import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import {
   ActivityIndicator,
@@ -10,6 +7,9 @@ import {
   useWindowDimensions,
 } from 'react-native';
 
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
@@ -58,12 +58,14 @@ const EditorImagePicker = () => {
       });
       setImage(cropped.path);
       setImageEdited(true);
-    } catch (e: any) {
-      console.log(e.message);
-      if (e.message === 'User cancelled image selection') {
-        setErrorMessage(
-          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。',
-        );
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        console.log(e.message);
+        if (e.message === 'User cancelled image selection') {
+          setErrorMessage(
+            '画像のクロップがキャンセルされたので、画像を読み込めませんでした。',
+          );
+        }
       }
     } finally {
       setLoading(false);

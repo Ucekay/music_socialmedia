@@ -1,10 +1,15 @@
 // https://docs.expo.dev/guides/using-eslint/
 module.exports = {
-  extends: ['expo', 'plugin:import/recommended'],
-  plugins: ['import', 'react-native-style-order'],
+  extends: ['expo', 'plugin:import/recommended', 'prettier'],
+  plugins: [
+    'import',
+    'react-native-style-order',
+    'eslint-plugin-react-compiler',
+  ],
   rules: {
+    'react-compiler/react-compiler': 'error',
     'import/order': [
-      'error',
+      'warn',
       {
         alphabetize: {
           caseInsensitive: true,
@@ -23,12 +28,7 @@ module.exports = {
         'newlines-between': 'always',
         pathGroups: [
           {
-            pattern: 'expo',
-            group: 'builtin',
-            position: 'before',
-          },
-          {
-            pattern: 'expo-*',
+            pattern: 'expo-router',
             group: 'builtin',
             position: 'before',
           },
@@ -39,11 +39,6 @@ module.exports = {
           },
           {
             pattern: 'react-native',
-            group: 'builtin',
-            position: 'before',
-          },
-          {
-            pattern: '@react-navigation/*',
             group: 'builtin',
             position: 'before',
           },

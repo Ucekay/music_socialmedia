@@ -1,6 +1,7 @@
-import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+
+import { Image } from 'expo-image';
 
 import userData from '../assets/userData';
 import { useTheme } from '../contexts/ColorThemeContext';
@@ -11,7 +12,7 @@ import Text from './ThemedText';
 const UserProfileTop = () => {
   const { colors } = useTheme();
 
-  // stateをuseLoaclSearchParamsで取得したuserIDで変更するとrenderが多数走るためエラーを引き起こす
+  // stateをuseLocalSearchParamsで取得したuserIDで変更するとrenderが多数走るためエラーを引き起こす
   const { userID } = useLocalSearchParams();
 
   const themeTextColor = {

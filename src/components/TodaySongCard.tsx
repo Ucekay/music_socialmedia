@@ -1,9 +1,9 @@
-import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
 import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View, useColorScheme } from 'react-native';
 
+import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 import RNColorThief from 'react-native-color-thief';
 import { TextInput } from 'react-native-gesture-handler';
 import Animated, { FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated';
@@ -84,10 +84,11 @@ const TodaySongCard = ({
     return text.length + newlineCount * 19;
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setContentCharCount?.(calculateAdjustedCount(editorContent || ''));
     prevNewlineCountRef.current = (editorContent?.match(/\n/g) || []).length;
-  }, [editorContent, calculateAdjustedCount]);
+  }, [editorContent, setContentCharCount]);
 
   const onChangeEditorContent = (newText: string) => {
     const newAdjustedCount = calculateAdjustedCount(newText);
@@ -167,27 +168,6 @@ const TodaySongCard = ({
   };
 
   const bodyInputRef = useRef<TextInput>(null);
-
-  const renderBody = () => (
-    <View>
-      {isEditing ? (
-        <TextInput
-          ref={bodyInputRef}
-          value={editorContent}
-          onChangeText={(text) => onChangeEditorContent(text)}
-          placeholder='本文を入力'
-          placeholderTextColor={colors.secondaryText}
-          multiline
-          numberOfLines={8}
-          maxLength={150}
-          readOnly={!isSongInfoVisible}
-          style={{ color: colors.text }}
-        />
-      ) : size === 'lg' ? (
-        <Text>{todaySong?.body || ''}</Text>
-      ) : null}
-    </View>
-  );
 
   const renderImage = () => {
     if (!isSongInfoVisible) return null;
@@ -276,7 +256,7 @@ const TodaySongCard = ({
         )}
         {isEditing && (
           <View style={styles.userInfo}>
-            <View style={styles.avatar}></View>
+            <View style={styles.avatar} />
           </View>
         )}
         <View
@@ -301,7 +281,23 @@ const TodaySongCard = ({
               />
             </Animated.View>
           )}
-          {renderBody()}
+          <View>
+            {isEditing ? (
+              <TextInput
+                value={editorContent}
+                onChangeText={(text) => onChangeEditorContent(text)}
+                placeholder='本文を入力'
+                placeholderTextColor={colors.secondaryText}
+                multiline
+                numberOfLines={8}
+                maxLength={150}
+                readOnly={!isSongInfoVisible}
+                style={{ color: colors.text }}
+              />
+            ) : size === 'lg' ? (
+              <Text>{todaySong?.body || ''}</Text>
+            ) : null}
+          </View>
         </View>
       </Pressable>
     </View>

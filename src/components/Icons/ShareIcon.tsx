@@ -34,8 +34,12 @@ const ShareIcon: React.FC<ShareIconProps> = ({
       } else if (result.action === Share.dismissedAction) {
         // dismissed
       }
-    } catch (error: any) {
-      Alert.alert(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+      } else {
+        Alert.alert('An unknown error occurred');
+      }
     }
   };
 

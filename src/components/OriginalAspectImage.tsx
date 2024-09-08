@@ -1,12 +1,14 @@
-import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Image as RNImage } from 'react-native';
+import type { ImageStyle, StyleProp } from 'react-native';
+
+import { Image } from 'expo-image';
 
 interface Props {
   uri: string;
   height: number;
   children: JSX.Element;
-  style?: any;
+  style?: StyleProp<ImageStyle>;
 }
 
 const OriginalAspectImage = (props: Props): JSX.Element => {

@@ -1,5 +1,4 @@
 import { Stack, useNavigation } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import {
   Button,
@@ -11,7 +10,6 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
-import { useHeaderHeight } from '@react-navigation/elements';
 
 import {
   CoreBridge,
@@ -22,11 +20,12 @@ import {
   useEditorContent,
 } from '@10play/tentap-editor';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { StatusBar } from 'expo-status-bar';
 import PagerView from 'react-native-pager-view';
 import Animated, {
   FadeIn,
   FadeOut,
-  type SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -43,6 +42,8 @@ import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import EditorImagePicker from '../components/EditorImagePicker';
 import LiveInputField from '../components/LiveInputField';
 import { useTheme } from '../contexts/ColorThemeContext';
+
+import type { SharedValue } from 'react-native-reanimated';
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
@@ -153,19 +154,49 @@ const ArticleConfigScreen = () => {
 
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
-  const articleTypes = ['general', 'review', 'liveReport', 'playlist'];
+  const articleTypes: ('general' | 'review' | 'liveReport' | 'playlist')[] = [
+    'general',
+    'review',
+    'liveReport',
+    'playlist',
+  ];
 
   const textColor = Color[colorScheme ?? 'light'].text;
   const secondaryTextColor = Color[colorScheme ?? 'light'].secondaryText;
 
-  const opacityValues: { [key: string]: SharedValue<number> } =
-    articleTypes.reduce(
-      (acc, type) => {
-        acc[type] = useSharedValue(1);
-        return acc;
-      },
-      {} as { [key: string]: SharedValue<number> },
-    );
+  const opacityValues: {
+    [key in (typeof articleTypes)[number]]: SharedValue<number>;
+  } = {
+    general: useSharedValue(1),
+    review: useSharedValue(1),
+    liveReport: useSharedValue(1),
+    playlist: useSharedValue(1),
+  };
+
+  const animatedStyles: {
+    [key in (typeof articleTypes)[number]]: ReturnType<typeof useAnimatedStyle>;
+  } = {
+    general: useAnimatedStyle(() => {
+      return {
+        opacity: opacityValues.general.value,
+      };
+    }),
+    review: useAnimatedStyle(() => {
+      return {
+        opacity: opacityValues.review.value,
+      };
+    }),
+    liveReport: useAnimatedStyle(() => {
+      return {
+        opacity: opacityValues.liveReport.value,
+      };
+    }),
+    playlist: useAnimatedStyle(() => {
+      return {
+        opacity: opacityValues.playlist.value,
+      };
+    }),
+  };
 
   const handleTagPress = (type: string) => {
     if (selectedType === type) {
@@ -198,25 +229,17 @@ const ArticleConfigScreen = () => {
           <View style={styles.articleTagWrapper}>
             <Text style={styles.articlePickerText}>Articleの種類</Text>
             <View style={styles.articleTagContainer}>
-              {articleTypes.map((type) => {
-                const animatedStyle = useAnimatedStyle(() => {
-                  return {
-                    opacity: opacityValues[type].value,
-                  };
-                });
-
-                return (
-                  <Pressable
-                    key={type}
-                    onPress={() => handleTagPress(type)}
-                    style={styles.articleTag}
-                  >
-                    <Animated.View style={animatedStyle}>
-                      <ArticleTag type={type} size={17} />
-                    </Animated.View>
-                  </Pressable>
-                );
-              })}
+              {articleTypes.map((type) => (
+                <Pressable
+                  key={type}
+                  onPress={() => handleTagPress(type)}
+                  style={styles.articleTag}
+                >
+                  <Animated.View style={animatedStyles[type]}>
+                    <ArticleTag type={type} size={17} />
+                  </Animated.View>
+                </Pressable>
+              ))}
             </View>
           </View>
           {selectedType === 'general' && (

@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import type React from 'react';
 import { useEffect, useLayoutEffect, useState } from 'react';
@@ -12,6 +11,7 @@ import {
   View,
 } from 'react-native';
 
+import { Image } from 'expo-image';
 import { Message, Xmark } from 'iconoir-react-native';
 import {
   Gesture,
@@ -340,12 +340,42 @@ const ImageModal = ({
   const flatListRef = useAnimatedRef<Animated.FlatList<string>>();
   const [OptionVisible, setOptionVisible] = useState(false);
   const scrollX = useSharedValue(0);
-  const scales = imageUrls.map(() => useSharedValue(1));
-  const savedScales = imageUrls.map(() => useSharedValue(1));
-  const translateX = imageUrls.map(() => useSharedValue(0));
-  const translateY = imageUrls.map(() => useSharedValue(0));
-  const savedTranslateX = imageUrls.map(() => useSharedValue(0));
-  const savedTranslateY = imageUrls.map(() => useSharedValue(0));
+  const scales = [
+    useSharedValue(1),
+    useSharedValue(1),
+    useSharedValue(1),
+    useSharedValue(1),
+  ];
+  const savedScales = [
+    useSharedValue(1),
+    useSharedValue(1),
+    useSharedValue(1),
+    useSharedValue(1),
+  ];
+  const translateX = [
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+  ];
+  const translateY = [
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+  ];
+  const savedTranslateX = [
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+  ];
+  const savedTranslateY = [
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+  ];
   const currentIndex = useSharedValue(initialIndex);
 
   const resetImagePosition = (index: number) => {
@@ -366,6 +396,7 @@ const ImageModal = ({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useLayoutEffect(() => {
     if (visible) {
+      // eslint-disable-next-line react-compiler/react-compiler
       currentIndex.value = initialIndex;
       resetAllImagePositions();
       if (flatListRef.current) {
@@ -492,6 +523,7 @@ const ImageItem = ({
   useEffect(() => {
     if (index === 0) {
       return () => {
+        // eslint-disable-next-line react-compiler/react-compiler
         scale.value = 1;
         savedScale.value = 1;
         translateX.value = 0;

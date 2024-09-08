@@ -1,5 +1,3 @@
-import { BlurView } from 'expo-blur';
-import { Image } from 'expo-image';
 import { Link, Stack, useLocalSearchParams } from 'expo-router';
 import { useMemo } from 'react';
 import {
@@ -9,10 +7,12 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
+
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
-
 import { useQueryClient } from '@tanstack/react-query';
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
 import { ChatBubbleEmpty } from 'iconoir-react-native';
 
 import HeartIcon from '@/src/components/Icons/HeartIcon';
@@ -136,7 +136,7 @@ const PostDetailScreen = () => {
               height={20}
               isPost
               id={selectedPost.postID}
-              initialcolor={themeIconColor}
+              initialColor={themeIconColor}
             />
             <ChatBubbleEmpty width={20} height={20} color={themeIconColor} />
             <ShareIcon width={20} height={20} color={themeIconColor} />
