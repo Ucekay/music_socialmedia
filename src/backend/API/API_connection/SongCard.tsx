@@ -1,6 +1,6 @@
-import { requireNativeModule } from 'expo-modules-core'
+import { GetInformationDetails } from '../swift/NativeModules';
 
-interface SongDetails {
+export interface SongDetails {
     title: string;
     artistName: string;
     albumName: string;
@@ -11,7 +11,6 @@ interface SongDetails {
 //IDから情報を取得する関数
 export const GetMusicInformation = async (songId: string): Promise<SongDetails | undefined> => {
     try {
-      const GetInformationDetails = requireNativeModule("GetInformationDetails")
       const songDetails = await new Promise<SongDetails>((resolve, reject) => {
         GetInformationDetails(songId, resolve, reject); 
       });

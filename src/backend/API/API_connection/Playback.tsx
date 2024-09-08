@@ -1,11 +1,13 @@
-import { requireNativeModule } from "expo-modules-core";
+import { Play } from "../swift/NativeModules";
+import { Stop } from "../swift/NativeModules";
+import { NextTrack } from "../swift/NativeModules";
+import { Previous } from "../swift/NativeModules";
 
-//再生する関数
+//再生する関数(Onpressで発火)
 export const PlayMusic = async (musicid:string): Promise<boolean> =>{
     try{
-        const play = requireNativeModule("play")
         const playmusic = await new Promise<boolean>((resolve, reject)=> {
-            play(musicid, resolve, reject)
+            Play(musicid, resolve, reject)
         });
         return true
       } catch(error){
@@ -14,12 +16,11 @@ export const PlayMusic = async (musicid:string): Promise<boolean> =>{
       } 
     };
 
-//停止する関数
+//停止する関数(Onpressで発火)
 export const StopMusic = async (): Promise<boolean> => {
     try{
-        const stop = requireNativeModule("stop")
         const stopmusic = await new Promise<boolean>((resolve, reject)=> {
-            stop(resolve, reject)
+            Stop(resolve, reject)
         });
         return true
       } catch(error){
@@ -28,12 +29,11 @@ export const StopMusic = async (): Promise<boolean> => {
       }
     };
 
-//次の曲を再生する関数
+//次の曲を再生する関数(Onpressで発火)
 export const SkipToNextMusic = async(): Promise<boolean> => {
     try{
-        const NextMusic = requireNativeModule("nextTrack")
         const nextmusic = await new Promise<boolean>((resolve, reject) => {
-            NextMusic(resolve, reject)
+            NextTrack(resolve, reject)
         });
         return true
       } catch(error){
@@ -42,12 +42,11 @@ export const SkipToNextMusic = async(): Promise<boolean> => {
       }
     }
 
-//前の曲に戻るor曲の最初に戻る関数
+//前の曲に戻るor曲の最初に戻る関数(Onpressで発火)
 export const BackToPrevious = async(): Promise<boolean> => {
     try{
-        const PreviousMusic = requireNativeModule("previous")
         const previousmusic = await new Promise<boolean>((resolve,reject) => {
-            PreviousMusic(resolve, reject)
+            Previous(resolve, reject)
         });
         return true
       } catch(error){

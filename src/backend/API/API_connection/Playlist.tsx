@@ -1,11 +1,11 @@
-import { requireNativeModule } from 'expo-modules-core'
+import { CreatePlaylist } from '../swift/NativeModules';
+import { AddMusicToPlaylist } from '../swift/NativeModules';
+import { GetPlaylists } from '../swift/NativeModules';
 
-
-//プレイリストを作成する関数
+//プレイリストを作成する関数(音楽も同時に追加)
 export const CreateNewPlaylist = async (name: string,  musicids:string[] ,description?: string): Promise<boolean> =>{
     try{
-        const CreatePlaylist = requireNativeModule("createPlaylist")
-        const createPlaylist = await new Promise<boolean>((resolve, reject) =>{
+        const reatePlaylist = await new Promise<boolean>((resolve, reject) =>{
             let des:string = ""
             if(description){
                 des = description
@@ -19,12 +19,11 @@ export const CreateNewPlaylist = async (name: string,  musicids:string[] ,descri
     }
 }
 
-//プレイリストに追加する関数
-export const AddToPlaylist = async (songId:string): Promise<boolean> => {
+//プレイリストに追加する関数(単数音楽追加)
+export const AddMusic = async (songId:string): Promise<boolean> => {
     try{
-      const addMusic = requireNativeModule("addMusicToPlaylist")
       const AddMusic = await  new Promise<boolean>((resolve, reject) => {
-        addMusic(songId, resolve, reject);
+        AddMusicToPlaylist(songId, resolve, reject);
     });
     return true
   } catch (error) {
@@ -33,10 +32,27 @@ export const AddToPlaylist = async (songId:string): Promise<boolean> => {
   }
 }
 
+export const AddMusicsToPlaylist = async (songIds: string[]): Promise<boolean> => {
+    for (const songId of songIds) {
+      try {
+        const success = await AddMusicToPlaylist(songId); // AddMusicToPlaylistの戻り値を確認
+        if (!success) {
+          // AddMusicToPlaylist が失敗した場合
+          console.error(`楽曲 ${songId} の追加に失敗しました`);
+          return false;
+        }
+      } catch (error) {
+        console.error(`楽曲 ${songId} の追加に失敗しました:`, error);
+        return false;
+      }
+    }
+    return true;
+  };
+  
+
 //AppleMusicからプレイリストを取得する関数
 export const GetPlaylistFormAppleMusic = async (): Promise<boolean> => {
     try{
-        const GetPlaylists = requireNativeModule("getPlaylists")
         const getplaylists = await new Promise<boolean>((resolve, reject)=>{
             GetPlaylists(resolve, reject);
         });
