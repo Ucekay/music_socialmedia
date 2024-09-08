@@ -1,13 +1,8 @@
 // https://docs.expo.dev/guides/using-eslint/
 module.exports = {
   extends: ['expo', 'plugin:import/recommended', 'prettier'],
-  plugins: [
-    'import',
-    'react-native-style-order',
-    'eslint-plugin-react-compiler',
-  ],
+  plugins: ['import', 'react-native-style-order'],
   rules: {
-    'react-compiler/react-compiler': 'error',
     'import/order': [
       'warn',
       {

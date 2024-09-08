@@ -396,7 +396,6 @@ const ImageModal = ({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useLayoutEffect(() => {
     if (visible) {
-      // eslint-disable-next-line react-compiler/react-compiler
       currentIndex.value = initialIndex;
       resetAllImagePositions();
       if (flatListRef.current) {
@@ -523,7 +522,6 @@ const ImageItem = ({
   useEffect(() => {
     if (index === 0) {
       return () => {
-        // eslint-disable-next-line react-compiler/react-compiler
         scale.value = 1;
         savedScale.value = 1;
         translateX.value = 0;

@@ -75,7 +75,6 @@ const AnimatedTextInput = (props: AnimatedTextInputProps) => {
   };
 
   const handleFocus = () => {
-    // eslint-disable-next-line react-compiler/react-compiler
     inputFocused.value = 1;
   };
 

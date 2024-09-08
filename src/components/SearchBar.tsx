@@ -142,7 +142,6 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
     };
 
     const handleCancel = () => {
-      // eslint-disable-next-line react-compiler/react-compiler
       searchBoxWidth.value = withTiming(initialWidth, { duration: 300 });
       cancelButtonOpacity.value = withTiming(0, {
         duration: 300,

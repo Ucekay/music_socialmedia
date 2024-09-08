@@ -2,7 +2,6 @@ import { Stack, useNavigation } from 'expo-router';
 import { useState } from 'react';
 import {
   Button,
-  KeyboardAvoidingView,
   Platform,
   Pressable,
   ScrollView,
@@ -13,9 +12,7 @@ import {
 
 import {
   CoreBridge,
-  RichText,
   TenTapStartKit,
-  Toolbar,
   useEditorBridge,
   useEditorContent,
 } from '@10play/tentap-editor';
@@ -39,6 +36,7 @@ import TrackEntry from '@/src/components/TrackEntry';
 import Color from '@/src/constants/Colors';
 
 import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
+import ArticleEditor from '../components/ArticleEditor';
 import EditorImagePicker from '../components/EditorImagePicker';
 import LiveInputField from '../components/LiveInputField';
 import { useTheme } from '../contexts/ColorThemeContext';
@@ -131,16 +129,17 @@ const ArticleEditorModal = () => {
           <ArticleConfigScreen />
         </View>
         <View key={2}>
-          <View style={styles.editorContainer}>
-            <RichText editor={editor} style={styles.editor} />
+          <BgView style={styles.editorContainer}>
+            {/*<RichText editor={editor} style={styles.editor} />
             <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               style={styles.keyboardAvoidingView}
               keyboardVerticalOffset={keyboardVerticalOffset}
             >
               <Toolbar editor={editor} />
-            </KeyboardAvoidingView>
-          </View>
+            </KeyboardAvoidingView>*/}
+            <ArticleEditor />
+          </BgView>
         </View>
       </PagerView>
       {/* Use a light status bar on iOS to account for the black space above the modal */}
