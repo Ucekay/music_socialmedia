@@ -1,6 +1,5 @@
-import * as ImageManipulator from 'expo-image-manipulator';
-
 import { decode } from 'base64-arraybuffer';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 import { supabase } from '../../lib/supabase';
 
@@ -10,7 +9,7 @@ export const uploadImage = async (imageUri: string, storageName: string) => {
   try {
     // 1. 画像データを base64 エンコードされた文字列として読み込む
 
-    const actions: any[] = [];
+    const actions: ImageManipulator.Action[] = [];
     const saveOptions = {
       base64: true,
     };

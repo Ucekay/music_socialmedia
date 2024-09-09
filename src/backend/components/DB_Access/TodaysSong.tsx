@@ -21,7 +21,7 @@ export const insertTodaysSongs = async (
       .insert({ ...Data, UserID: userId });
 
     if (error) {
-      throw new Error('データの挿入エラー: ' + error.message);
+      throw new Error(`データの挿入エラー: ${error.message}`);
     }
 
     return true;
@@ -46,7 +46,7 @@ export const getInitialTodaysSongs = async (): Promise<{
       .limit(LIMIT);
 
     if (error) {
-      throw new Error('データの取得エラー: ' + error.message);
+      throw new Error(`データの取得エラー: ${error.message}`);
     }
     const cursor =
       TodaysSongs.length > 0
