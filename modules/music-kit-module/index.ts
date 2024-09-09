@@ -5,3 +5,5 @@ import MusicKitModule from './src/MusicKitModule';
 export const requestMusicAuthorization = async () => {
   return MusicKitModule.requestMusicAuthorization();
 };
+
+export default MusicKitModule;
