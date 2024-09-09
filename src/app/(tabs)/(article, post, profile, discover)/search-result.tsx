@@ -110,7 +110,9 @@ type TrackSearchResultsProps = {
 const ArticleSearchResults = ({ query }: { query: string }) => {
   const bottomTabBarHeight = useBottomTabBarHeight();
   const { colors } = useTheme();
-  const [data, setData] = useState<ArticleData[]>([]);
+  //バックエンドのからのデータの型がわからないany型を使用
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -149,6 +151,8 @@ const ArticleSearchResults = ({ query }: { query: string }) => {
 const PostSearchResults = ({ query }: { query: string }) => {
   const bottomTabBarHeight = useBottomTabBarHeight();
   const { colors } = useTheme();
+  //バックエンドのからのデータの型がわからないany型を使用
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -186,6 +190,8 @@ const PostSearchResults = ({ query }: { query: string }) => {
 const TodaySongSearchResults = ({ query }: { query: string }) => {
   const bottomTabBarHeight = useBottomTabBarHeight();
   const { colors } = useTheme();
+  //バックエンドのからのデータの型がわからないany型を使用
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -223,6 +229,8 @@ const TodaySongSearchResults = ({ query }: { query: string }) => {
 const UserSearchResults = ({ query }: { query: string }) => {
   const bottomTabBarHeight = useBottomTabBarHeight();
   const { colors } = useTheme();
+  //バックエンドのからのデータの型がわからないany型を使用
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -259,6 +267,8 @@ const UserSearchResults = ({ query }: { query: string }) => {
 const TrackSearchResults = ({ query }: { query: string }) => {
   const bottomTabBarHeight = useBottomTabBarHeight();
   const { colors } = useTheme();
+  //バックエンドのからのデータの型がわからないany型を使用
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
