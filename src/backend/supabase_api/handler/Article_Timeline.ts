@@ -2,14 +2,14 @@ import {
   getInitialArticleMetaData,
   getNewerMetaData,
   getOlderArticleMetaData,
-} from '../dao/Article/Article';
+} from '../dao/article/Article';
 import {
   type GetGetArticleContent,
   getGeneral,
-} from '../dao/Article/General';
-import { getLiveReport } from '../dao/Article/LiveReport';
-import { getPlaylistArticle } from '../dao/Article/PlaylistArticle';
-import { getReview } from '../dao/Article/Review';
+} from '../dao/article/General';
+import { getLiveReport } from '../dao/article/LiveReport';
+import { getPlaylistArticle } from '../dao/article/PlaylistArticle';
+import { getReview } from '../dao/article/Review';
 import { checkAuth } from '../dao/checkAuth';
 import { getUserProfileforPosts } from '../dao/profile';
 

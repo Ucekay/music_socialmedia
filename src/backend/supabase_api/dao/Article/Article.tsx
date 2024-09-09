@@ -1,30 +1,36 @@
 import { supabase } from '../../../lib/supabase';
-import { checkAuth } from '../checkAuth';
-
 import type { Database } from '../../../schema/supabasetypes';
 
-export type Article = Database['public']['Tables']['Article']['Insert'];
-type UpdateArticle = Omit<
-  Database['public']['Tables']['Article']['Update'],
-  'ArticleID' | 'UserID'
->;
-type GetArticle = Database['public']['Tables']['Article']['Row'];
+export type Article = Database['public']['Tables']['article']['Insert'];
+
+type CreateArticleParams = Omit<Article, 'article_id' | 'crated_at'>
+
+type UpdateArticleParams = Omit<
+  Database['public']['Tables']['article']['Update'],
+  'article_id' | 'user_id'
+  >;
+
+type GetArticleRes = Database['public']['Tables']['article']['Row'];
 
 //データ挿入関数
-export const insertArticleMetaData = async (
-  Data: Omit<Article, 'ArticleID' | 'UserID' | 'crated_at'>,
-): Promise<boolean> => {
+export const CreateArticleMetaData = async (
+  Data: CreateArticleParams,
+): Promise<number> => {
   try {
-    const userId = await checkAuth();
-    const { error } = await supabase
-      .from('Article')
-      .insert({ ...Data, UserID: userId });
+    const { data, error } = await supabase
+      .from('article')
+      .insert({ ...Data })
+      .select('article_id');
 
     if (error) {
       throw new Error('データの挿入エラー: ' + error.message);
     }
 
-    return true;
+    if (data === null || data.length !== 1) {
+      throw new Error('データの挿入エラー');
+    }
+
+    return data[0].article_id;
   } catch (error) {
     console.error('データの挿入中にエラーが発生しました:', error);
     throw error;
@@ -32,15 +38,14 @@ export const insertArticleMetaData = async (
 };
 
 //データ削除関数
-export const deleteArticleMetaData = async (
-  articleId: number,
+export const DeleteArticleMetaData = async (
+  articleId: number, userId: string
 ): Promise<boolean> => {
   try {
-    const userId = await checkAuth();
     const { error } = await supabase
-      .from('Article')
+      .from('article')
       .delete()
-      .match({ ArticleID: articleId, UserID: userId });
+      .match({ article_id: articleId, user_id: userId });
 
     if (error) {
       throw new Error('データの削除エラー: ' + error.message);
@@ -54,17 +59,17 @@ export const deleteArticleMetaData = async (
 };
 
 //データ更新関数
-export const updateArticleMetaData = async (
+export const UpdateArticleMetaData = async (
   articleId: number,
-  updateData: Partial<UpdateArticle>,
+  userId: string,
+  updateData: Partial<UpdateArticleParams>,
 ): Promise<boolean> => {
   try {
-    const userId = await checkAuth();
 
     const { data, error } = await supabase
-      .from('Article')
+      .from('article')
       .update(updateData)
-      .match({ ArticleID: articleId, UserID: userId });
+      .match({ article_id: articleId, user_id: userId });
 
     if (error) {
       throw new Error('データの更新エラー: ' + error.message);
@@ -78,15 +83,15 @@ export const updateArticleMetaData = async (
 };
 
 //データ取得関数
-export const getInitialArticleMetaData = async (): Promise<{
-  posts: GetArticle[];
+export const GetInitialArticleMetaData = async (): Promise<{
+  posts: GetArticleRes[];
   cursor: string | null;
   latestcursor: string | null;
 }> => {
   try {
     const LIMIT = 10;
     const { data: posts, error } = await supabase // UserIDによる絞り込みを削除
-      .from('Article') // テーブル名を修正
+      .from('article') 
       .select('*')
       .order('created_at', { ascending: false })
       .limit(LIMIT);
@@ -104,13 +109,13 @@ export const getInitialArticleMetaData = async (): Promise<{
   }
 };
 
-export const getOlderArticleMetaData = async (
+export const GetOlderArticleMetaData = async (
   cursor: string,
-): Promise<{ posts: GetArticle[]; cursor: string | null }> => {
+): Promise<{ posts: GetArticleRes[]; cursor: string | null }> => {
   try {
     const LIMIT = 10;
     const { data: nextArticles, error } = await supabase
-      .from('Article')
+      .from('article')
       .select('*')
       .order('created_at', { ascending: false })
       .lt('created_at', cursor)
@@ -135,13 +140,13 @@ export const getOlderArticleMetaData = async (
   }
 };
 
-export const getNewerMetaData = async (
+export const GetNewerMetaData = async (
   latestcursor: string,
-): Promise<{ posts: GetArticle[]; latestcursor: string | null }> => {
+): Promise<{ posts: GetArticleRes[]; latestcursor: string | null }> => {
   try {
     const LIMIT = 10;
     const { data: nextArticles, error } = await supabase
-      .from('Article')
+      .from('article')
       .select('*')
       .order('created_at', { ascending: false })
       .gt('created_at', latestcursor)
