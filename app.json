@@ -40,7 +40,7 @@
         }
       ],
       "expo-font",
-      "./modules/music-kit-module/plugin/app.plugin.js"
+      "./modules/music-kit-module/app.plugin.js"
     ],
     "experiments": {
       "typedRoutes": true
