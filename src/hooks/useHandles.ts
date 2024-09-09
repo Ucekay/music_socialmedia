@@ -1,10 +1,11 @@
-import type { CubicBezierHandle, SkRect } from '@shopify/react-native-skia';
 import { isEdge, sub } from '@shopify/react-native-skia';
-import type { SharedValue } from 'react-native-reanimated';
-import { useSharedValue } from 'react-native-reanimated';
 import { Gesture } from 'react-native-gesture-handler';
+import { useSharedValue } from 'react-native-reanimated';
 
 import { inRadius, symmetric } from '../components/forMeshGradient/Math';
+
+import type { CubicBezierHandle, SkRect } from '@shopify/react-native-skia';
+import type { SharedValue } from 'react-native-reanimated';
 
 type TouchSelection = null | {
   index: number;
@@ -14,7 +15,7 @@ type TouchSelection = null | {
 export const useHandles = (
   mesh: SharedValue<CubicBezierHandle[]>,
   defaultMesh: CubicBezierHandle[],
-  window: SkRect
+  window: SkRect,
 ) => {
   const selection = useSharedValue<TouchSelection>(null);
   return Gesture.Pan()
@@ -47,19 +48,23 @@ export const useHandles = (
               mesh.value[index].c2 = sub(c2, delta);
               selection.value = { index, point: 'pos' };
               return false;
-            } else if (inRadius(pt, c1)) {
+            }
+            if (inRadius(pt, c1)) {
               mesh.value[index].c1 = pt;
               selection.value = { index, point: 'c1' };
               return false;
-            } else if (inRadius(pt, c2)) {
+            }
+            if (inRadius(pt, c2)) {
               mesh.value[index].c2 = pt;
               selection.value = { index, point: 'c2' };
               return false;
-            } else if (inRadius(pt, c3)) {
+            }
+            if (inRadius(pt, c3)) {
               mesh.value[index].c1 = symmetric(pt, mesh.value[index].pos);
               selection.value = { index, point: 'c3' };
               return false;
-            } else if (inRadius(pt, c4)) {
+            }
+            if (inRadius(pt, c4)) {
               mesh.value[index].c2 = symmetric(pt, mesh.value[index].pos);
               selection.value = { index, point: 'c4' };
               return false;

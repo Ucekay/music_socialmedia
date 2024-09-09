@@ -1,29 +1,31 @@
-import React, { useMemo } from 'react';
-import type { CubicBezierHandle } from '@shopify/react-native-skia';
+import { useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
+
 import {
-  Skia,
-  Group,
-  add,
   Canvas,
+  Group,
   ImageShader,
   Patch,
-  vec,
-  useImage,
+  Skia,
+  add,
   useClock,
+  useImage,
+  vec,
 } from '@shopify/react-native-skia';
-import { View, StyleSheet } from 'react-native';
-import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 
-import { createNoise2D } from './forMeshGradient/SimpleNoise';
 
-import { symmetric } from './forMeshGradient/Math';
 import { Cubic } from './forMeshGradient/Cubic';
 import { Curves } from './forMeshGradient/Curves';
+import { symmetric } from './forMeshGradient/Math';
+import { createNoise2D } from './forMeshGradient/SimpleNoise';
+
+import type { CubicBezierHandle } from '@shopify/react-native-skia';
+import type { SharedValue } from 'react-native-reanimated';
 
 const rectToTexture = (
   vertices: CubicBezierHandle[],
-  [tl, tr, br, bl]: number[]
+  [tl, tr, br, bl]: number[],
 ) =>
   [
     vertices[tl].pos,
@@ -41,7 +43,7 @@ const rectToColors = (colors: string[], [tl, tr, br, bl]: number[]) => [
 
 const useRectToPatch = (
   mesh: SharedValue<CubicBezierHandle[]>,
-  indices: number[]
+  indices: number[],
 ): SharedValue<
   [CubicBezierHandle, CubicBezierHandle, CubicBezierHandle, CubicBezierHandle]
 > =>
@@ -99,7 +101,7 @@ export const MeshGradient = ({
 }: MeshGradient) => {
   const window = useMemo(
     () => Skia.XYWHRect(0, 0, width, height),
-    [height, width]
+    [height, width],
   );
 
   const clock = useClock();
@@ -109,33 +111,27 @@ export const MeshGradient = ({
   const C = dx / 3;
 
   const defaultMesh = useMemo(() => {
-    return new Array(rows + 1)
-      .fill(0)
-      .map((_, row) =>
-        new Array(cols + 1).fill(0).map((_, col) => {
-          const pos = vec(col * dx, row * dy);
-          return {
-            pos,
-            c1: add(pos, vec(C, 0)),
-            c2: add(pos, vec(0, C)),
-          };
-        })
-      )
-      .flat();
+    return new Array(rows + 1).fill(0).flatMap((_, row) =>
+      new Array(cols + 1).fill(0).map((_, col) => {
+        const pos = vec(col * dx, row * dy);
+        return {
+          pos,
+          c1: add(pos, vec(C, 0)),
+          c2: add(pos, vec(0, C)),
+        };
+      }),
+    );
   }, [rows, cols, dx, dy, C]);
-  const rects = new Array(rows)
-    .fill(0)
-    .map((_r, row) =>
-      new Array(cols).fill(0).map((_c, col) => {
-        const l = cols + 1;
-        const tl = row * l + col;
-        const tr = tl + 1;
-        const bl = (row + 1) * l + col;
-        const br = bl + 1;
-        return [tl, tr, br, bl];
-      })
-    )
-    .flat();
+  const rects = new Array(rows).fill(0).flatMap((_r, row) =>
+    new Array(cols).fill(0).map((_c, col) => {
+      const l = cols + 1;
+      const tl = row * l + col;
+      const tr = tl + 1;
+      const bl = (row + 1) * l + col;
+      const br = bl + 1;
+      return [tl, tr, br, bl];
+    }),
+  );
   const noises = defaultMesh.map(() => [
     createNoise2D(),
     createNoise2D(),
@@ -163,16 +159,16 @@ export const MeshGradient = ({
           pt.pos,
           vec(
             A * noisePos(clock.value / F, 0),
-            A * noisePos(0, clock.value / F)
-          )
+            A * noisePos(0, clock.value / F),
+          ),
         ),
         c1: add(
           pt.c1,
-          vec(A * noiseC1(clock.value / F, 0), A * noiseC1(0, clock.value / F))
+          vec(A * noiseC1(clock.value / F, 0), A * noiseC1(0, clock.value / F)),
         ),
         c2: add(
           pt.c1,
-          vec(A * noiseC2(clock.value / F, 0), A * noiseC2(0, clock.value / F))
+          vec(A * noiseC2(clock.value / F, 0), A * noiseC2(0, clock.value / F)),
         ),
       };
     });

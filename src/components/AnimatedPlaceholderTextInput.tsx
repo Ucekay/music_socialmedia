@@ -1,23 +1,23 @@
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
-  NativeSyntheticEvent,
+  type NativeSyntheticEvent,
   Pressable,
   StyleSheet,
-  Text,
   TextInput,
-  TextInputChangeEventData,
-  TextInputProps,
-  TextStyle,
+  type TextInputChangeEventData,
+  type TextInputProps,
+  type TextStyle,
   View,
-  useColorScheme,
 } from 'react-native';
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   interpolate,
 } from 'react-native-reanimated';
-import Colors from '../constants/Colors';
+
+import { useTheme } from '../contexts/ColorThemeContext';
 
 interface AnimatedTextInputProps extends TextInputProps {
   focusedLabelTop: number;
@@ -29,8 +29,8 @@ const AnimatedTextInput = (props: AnimatedTextInputProps) => {
   const { label, style, focusedLabelTop, focusedLabelSize, ...otherProps } =
     props;
 
-  const colorScheme = useColorScheme();
-  const placeholderColor = Colors[colorScheme ?? 'light'].placeholder;
+  const { colors } = useTheme();
+  const placeholderColor = colors.placeholder;
 
   const [value, setValue] = useState('');
   const inputRef = useRef<TextInput>(null);
@@ -61,17 +61,17 @@ const AnimatedTextInput = (props: AnimatedTextInputProps) => {
   const animatedLabelStyle = useAnimatedStyle(
     () => ({
       top: withTiming(
-        interpolate(inputFocused.value, [0, 1], [0, -focusedLabelTop])
+        interpolate(inputFocused.value, [0, 1], [0, -focusedLabelTop]),
       ),
       fontSize: withTiming(
         interpolate(
           inputFocused.value,
           [0, 1],
-          [defaultLabelSize, focusedLabelSize]
-        )
+          [defaultLabelSize, focusedLabelSize],
+        ),
       ),
     }),
-    [defaultLabelSize, focusedLabelTop, focusedLabelSize]
+    [defaultLabelSize, focusedLabelTop, focusedLabelSize],
   );
 
   const handleChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
@@ -128,10 +128,10 @@ export default AnimatedTextInput;
 const styles = StyleSheet.create({
   textInputLabelWrapper: {
     position: 'absolute',
-    left: 10,
     zIndex: 10,
-    bottom: 0,
     top: 0,
+    bottom: 0,
+    left: 10,
     justifyContent: 'center',
     padding: 0,
   },

@@ -1,16 +1,19 @@
 import { useState } from 'react';
 import {
-  StyleSheet,
+  type NativeSyntheticEvent,
   Pressable,
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
+  StyleSheet,
+  type TextInputChangeEventData,
 } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-import Text from '@/src/components/ThemedText';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+
 import EditorMetadataInput from '@/src/components/EditorMetadataInput';
+import Text from '@/src/components/ThemedText';
+
 import { useTheme } from '../contexts/ColorThemeContext';
+
 import AddOrCancelButtons from './AddOrCancelButtons';
 import TrackSearchField from './TrackSearchField';
 
@@ -45,13 +48,13 @@ const TrackEntry = () => {
   };
 
   const handleTrackChange = (
-    e: NativeSyntheticEvent<TextInputChangeEventData>
+    e: NativeSyntheticEvent<TextInputChangeEventData>,
   ) => {
     setTrackName(e.nativeEvent.text);
   };
 
   const handleArtistChange = (
-    e: NativeSyntheticEvent<TextInputChangeEventData>
+    e: NativeSyntheticEvent<TextInputChangeEventData>,
   ) => {
     setArtistName(e.nativeEvent.text);
   };
@@ -135,8 +138,8 @@ const styles = StyleSheet.create({
   },
   inputInner: {
     padding: 12,
-    borderRadius: 12,
     borderCurve: 'continuous',
+    borderRadius: 12,
     borderWidth: 1,
   },
   inputText: {
@@ -144,19 +147,19 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   option: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
     padding: 12,
-    borderRadius: 12,
     borderCurve: 'continuous',
+    borderRadius: 12,
     borderWidth: 1,
   },
   optionText: {
     fontSize: 16,
   },
   icon: {
-    borderWidth: 1,
     borderRadius: 100,
+    borderWidth: 1,
   },
 });

@@ -1,13 +1,9 @@
-import { useTheme } from '@/src/contexts/ColorThemeContext';
-import { BlurView } from 'expo-blur';
 import { Stack } from 'expo-router';
-import { StyleSheet } from 'react-native';
+
+import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 export default function DynamicLayout({ segment }: { segment: string }) {
   const { colors } = useTheme();
-  const themedContainerStyle = {
-    backgroundColor: colors.headerBackground,
-  };
 
   switch (segment) {
     case '(article)':
@@ -16,11 +12,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           screenOptions={{
             title: 'Article',
             headerTransparent: true,
-            headerStyle: { ...themedContainerStyle },
-            headerBlurEffect: 'regular',
-            //headerBackground: () => (
-            //  <BlurView tint='regular' style={StyleSheet.absoluteFill} />
-            //),
+            headerBlurEffect: 'systemUltraThinMaterial',
             headerTintColor: colors.text,
           }}
         >
@@ -45,10 +37,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           screenOptions={{
             title: 'Post',
             headerTransparent: true,
-            headerStyle: { ...themedContainerStyle },
-            headerBackground: () => (
-              <BlurView tint='regular' style={StyleSheet.absoluteFill} />
-            ),
+            headerBlurEffect: 'systemUltraThinMaterial',
             headerTintColor: colors.text,
           }}
         >
@@ -73,10 +62,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           screenOptions={{
             title: 'Profile',
             headerTransparent: true,
-            headerStyle: { ...themedContainerStyle },
-            headerBackground: () => (
-              <BlurView tint='regular' style={StyleSheet.absoluteFill} />
-            ),
+            headerBlurEffect: 'systemUltraThinMaterial',
             headerTintColor: colors.text,
           }}
         >
@@ -89,10 +75,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           screenOptions={{
             title: 'Discover',
             headerTransparent: true,
-            headerStyle: { ...themedContainerStyle },
-            headerBackground: () => (
-              <BlurView tint='regular' style={StyleSheet.absoluteFill} />
-            ),
+            headerBlurEffect: 'systemUltraThinMaterial',
             headerTintColor: colors.text,
           }}
         >

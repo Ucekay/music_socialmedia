@@ -1,24 +1,24 @@
-import React from 'react';
+import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import {
   ScrollView,
+  StyleSheet,
   View,
   useWindowDimensions,
-  StyleSheet,
 } from 'react-native';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { Image } from 'expo-image';
+import { useHeaderHeight } from '@react-navigation/elements';
+
 import * as IconoirIcons from 'iconoir-react-native';
 
 import articleData from '@/src/assets/articleData';
-import SecondaryBgView from '@/src/components/ThemedSecondaryBgView';
-import { ArticleThumbnail } from '@/src/components/ArticleThumbnail';
-import Text from '@/src/components/ThemedText';
 import ArticleCardSubhead from '@/src/components/ArticleCardSubhead';
-import { useTheme } from '@/src/contexts/ColorThemeContext';
-import HeartIcon from '@/src/components/Icons/HeartIcon';
+import { ArticleThumbnail } from '@/src/components/ArticleThumbnail';
 import { Button } from '@/src/components/Button';
+import HeartIcon from '@/src/components/Icons/HeartIcon';
+import SecondaryBgView from '@/src/components/ThemedSecondaryBgView';
+import Text from '@/src/components/ThemedText';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 const BgView = SecondaryBgView;
 
@@ -27,7 +27,7 @@ const ArticleDetailsScreen = () => {
   const screenWidth = useWindowDimensions().width;
   const { articleID } = useLocalSearchParams();
   const article = articleData.find(
-    (article) => article.articleID === articleID
+    (article) => article.articleID === articleID,
   );
   if (!article) {
     return (
@@ -131,8 +131,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    gap: 24,
     padding: 16,
+    gap: 24,
   },
   thumbnailContainer: {
     width: '100%',
@@ -145,8 +145,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   authorContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     gap: 4,
   },
   authorAvatar: {

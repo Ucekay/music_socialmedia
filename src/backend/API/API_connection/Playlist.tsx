@@ -25,12 +25,12 @@ export const AddMusic = async (songId:string): Promise<boolean> => {
       const AddMusic = await  new Promise<boolean>((resolve, reject) => {
         AddMusicToPlaylist(songId, resolve, reject);
     });
-    return true
+    return true;
   } catch (error) {
-    console.error("楽曲情報の取得に失敗しました:", error);
+    console.error('楽曲情報の取得に失敗しました:', error);
     return false;
   }
-}
+};
 
 export const AddMusicsToPlaylist = async (songIds: string[]): Promise<boolean> => {
     for (const songId of songIds) {

@@ -1,46 +1,41 @@
 import { useState } from 'react';
 import {
-  View,
+  type NativeSyntheticEvent,
   StyleSheet,
-  Pressable,
-  useColorScheme,
-  NativeSyntheticEvent,
-  TextInputChangeEventData,
   TextInput,
+  type TextInputChangeEventData,
+  View,
 } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
-import { Text } from './Themed';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+
+import { useTheme } from '../contexts/ColorThemeContext';
+
+import AddOrCancelButtons from './AddOrCancelButtons';
 import EditorMetadataInput from './EditorMetadataInput';
 import EditorOptionButton from './EditorOptionButton';
-import Colors, { TagColors } from '../constants/Colors';
-import AddOrCancelButtons from './AddOrCancelButtons';
-import EditorImagePicker from './EditorImagePicker';
 
 const LiveInputField = () => {
   const [liveName, setLiveName] = useState('');
   const [artistName, setArtistName] = useState('');
   const [manualInput, setManualInput] = useState(false);
 
-  const colorScheme = useColorScheme();
-  const textColor = Colors[colorScheme ?? 'light'].text;
-  const secondaryTextColor = Colors[colorScheme ?? 'light'].secondaryText;
-  const liveNameInputBgColor =
-    TagColors.liveReport[colorScheme ?? 'light'].background;
-  const liveNameInputTextColor =
-    TagColors.liveReport[colorScheme ?? 'light'].text;
-  const artistInputBgColor = Colors[colorScheme ?? 'light'].appleMusicBg;
-  const artistInputTextColor = Colors[colorScheme ?? 'light'].appleMusicText;
+  const { colors, tagColors } = useTheme();
+  const textColor = colors.text;
+  const secondaryTextColor = colors.secondaryText;
+  const liveNameInputBgColor = tagColors.liveReport.background;
+  const liveNameInputTextColor = tagColors.liveReport.text;
+  const artistInputBgColor = colors.appleMusicBg;
+  const artistInputTextColor = colors.appleMusicText;
 
   const handleLiveNameChange = (
-    e: NativeSyntheticEvent<TextInputChangeEventData>
+    e: NativeSyntheticEvent<TextInputChangeEventData>,
   ) => {
     setLiveName(e.nativeEvent.text);
   };
 
   const handleArtistNameChange = (
-    e: NativeSyntheticEvent<TextInputChangeEventData>
+    e: NativeSyntheticEvent<TextInputChangeEventData>,
   ) => {
     setArtistName(e.nativeEvent.text);
   };
@@ -153,8 +148,8 @@ const styles = StyleSheet.create({
   },
   inputInner: {
     padding: 12,
-    borderRadius: 12,
     borderCurve: 'continuous',
+    borderRadius: 12,
     borderWidth: 1,
   },
   inputText: {
@@ -162,7 +157,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   icon: {
-    borderWidth: 1,
     borderRadius: 100,
+    borderWidth: 1,
   },
 });

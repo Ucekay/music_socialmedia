@@ -1,37 +1,42 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect, useRef, useState } from 'react';
 import {
-  View,
-  TextInput,
-  Button,
+  ActivityIndicator,
+  FlatList,
+  type LayoutChangeEvent,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
   StyleSheet,
   Text,
-  useColorScheme,
-  ScrollView,
-  Platform,
-  Animated as Animated1,
-  Pressable,
-  FlatList,
-  Modal,
-  ActivityIndicator,
-  findNodeHandle,
+  TextInput,
   UIManager,
+  View,
+  findNodeHandle,
 } from 'react-native';
-import userData from '../assets/userData';
-import { Image } from 'expo-image';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BgView from '../components/ThemedBgView';
-import IconAntDesign from '../components/Icons/AntDesign';
-import Color from '@/src/constants/Colors';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { useNavigation, useLocalSearchParams } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import Icon from 'react-native-vector-icons/AntDesign';
-import OriginalAspectImage from '../components/OriginalAspectImage';
-import { BlurView } from 'expo-blur';
-import * as ImagePicker from 'expo-image-picker';
-import ImageCropPicker from 'react-native-image-crop-picker';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { set } from 'date-fns';
+import ImageCropPicker from 'react-native-image-crop-picker';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import Icon from 'react-native-vector-icons/AntDesign';
+
+import userData from '../assets/userData';
+import IconAntDesign from '../components/Icons/AntDesign';
+import OriginalAspectImage from '../components/OriginalAspectImage';
+import BgView from '../components/ThemedBgView';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 type ImagePickerResult = ImagePicker.ImagePickerResult & {
   assets?: ImagePicker.ImagePickerAsset[];
@@ -39,14 +44,13 @@ type ImagePickerResult = ImagePicker.ImagePickerResult & {
 
 const ReplyEditorModal = () => {
   const [text, setText] = useState('');
-  const insets = useSafeAreaInsets();
   const [inputHeight, setInputHeight] = useState(40); // 初期の高さを設定
   const [postHeight, setPostHeight] = useState(60);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
-  const animatedHeight = useRef(new Animated1.Value(0)).current;
+  const animatedHeight = useSharedValue(0);
 
   const params = useLocalSearchParams();
   const post = params;
@@ -83,7 +87,7 @@ const ReplyEditorModal = () => {
 
   const pickImage = async () => {
     setErrorMessage('');
-    let result = (await ImagePicker.launchImageLibraryAsync({
+    const result = (await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 4 - images.length,
@@ -131,8 +135,8 @@ const ReplyEditorModal = () => {
     }
   };
 
-  const textColor = Color[colorScheme ?? 'light'].text;
-  const secondaryTextColor = Color[colorScheme ?? 'light'].secondaryText;
+  const textColor = colors.text;
+  const secondaryTextColor = colors.secondaryText;
 
   const BOTTOM_TAB_HEIGHT = 96.7;
 
@@ -144,16 +148,10 @@ const ReplyEditorModal = () => {
     console.log('Posted:', text, images);
   };
 
-  const handleLayoutChange = (event: any) => {
+  const handleLayoutChange = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
     setPostHeight(height - 60); // Viewの高さを状態に保存
-
-    // 高さをアニメーションで変更
-    Animated1.timing(animatedHeight, {
-      toValue: height,
-      duration: 300, // アニメーションの持続時間（ミリ秒）
-      useNativeDriver: false, // height のアニメーションには native driver は使えない
-    }).start();
+    animatedHeight.value = withTiming(height, { duration: 300 });
   };
 
   const handleDeleteImage = (index: number) => {
@@ -163,35 +161,37 @@ const ReplyEditorModal = () => {
   };
 
   const handleLayoutChangeLine = () => {
-    Animated1.timing(animatedHeight, {
-      toValue: postHeight,
-      duration: 100, // アニメーションの持続時間（ミリ秒）
-      useNativeDriver: false, // height のアニメーションには native driver は使えない
-    }).start();
+    animatedHeight.value = withTiming(postHeight, { duration: 100 });
   };
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      height: animatedHeight.value,
+    };
+  });
+
   const openCropEditor = async (num: number, uri: string) => {
-    try {
-      setLoading(true);
-      const cropped = await ImageCropPicker.openCropper({
-        path: uri,
-        cropperToolbarTitle: '画像を編集',
-        mediaType: 'photo',
-        freeStyleCropEnabled: true,
-      });
-      setImages(
-        images.map((images, index) => (index === num ? cropped.path : images))
-      );
-    } catch (e: any) {
-      console.log(e.message);
-      if (e.message === 'User cancelled image selection') {
-        setErrorMessage(
-          '画像のクロップがキャンセルされたので、画像を読み込めませんでした。'
+    setLoading(true);
+    ImageCropPicker.openCropper({
+      path: uri,
+      cropperToolbarTitle: '画像を編集',
+      mediaType: 'photo',
+      freeStyleCropEnabled: true,
+    })
+      .then((cropped) => {
+        setImages(
+          images.map((images, index) =>
+            index === num ? cropped.path : images,
+          ),
         );
-      }
-    } finally {
-      setLoading(false);
-    }
+        setLoading(false);
+      })
+      .catch((error) => {
+        if (error.message === 'User cancelled image selection') {
+          setErrorMessage('画像の選択がキャンセルされました');
+        }
+        setLoading(false);
+      });
   };
 
   const onClose = () => {
@@ -215,7 +215,7 @@ const ReplyEditorModal = () => {
           case 1:
             break;
         }
-      }
+      },
     );
   };
 
@@ -232,7 +232,7 @@ const ReplyEditorModal = () => {
         if (selectedIndex === 0) {
           handlePost;
         }
-      }
+      },
     );
   };
   const handleCropEditor = (num: number, uri: string) => {
@@ -272,7 +272,7 @@ const ReplyEditorModal = () => {
       >
         <View style={styles.editorHeader}>
           <View style={{ flexDirection: 'column' }}>
-            <Image source={post.userAvatarUrl} style={styles.avatorimage} />
+            <Image source={post.userAvatarUrl} style={styles.avatarImage} />
             <View style={[styles.line, { height: postHeight2 - 10 }]} />
           </View>
           <View
@@ -325,14 +325,14 @@ const ReplyEditorModal = () => {
           <View style={{ flexDirection: 'column' }}>
             <Image
               source={userData[0].userAvatarUrl}
-              style={styles.avatorimage}
+              style={styles.avatarImage}
             />
-            <Animated1.View
-              style={[styles.line, { height: animatedHeight }]}
+            <Animated.View
+              style={[styles.line, animatedStyle]}
               onLayout={handleLayoutChangeLine}
             />
           </View>
-          <Animated1.View
+          <Animated.View
             style={[{ flexDirection: 'column' }, { flex: 1 }]}
             onLayout={handleLayoutChange}
           >
@@ -410,7 +410,7 @@ const ReplyEditorModal = () => {
                 <IconAntDesign name='camerao' size={20} style={styles.Icon} />
               </View>
             )}
-          </Animated1.View>
+          </Animated.View>
         </View>
       </ScrollView>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
@@ -422,46 +422,46 @@ export default ReplyEditorModal;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
     flex: 1,
+    paddingTop: 20,
   },
   header: {
     alignItems: 'center',
-    borderBottomWidth: 1,
-    paddingBottom: 20,
-    borderBottomColor: '#ddd',
     flexDirection: 'row',
+    paddingBottom: 20,
     paddingHorizontal: 16,
+    borderBottomColor: '#ddd',
+    borderBottomWidth: 1,
   },
   headerItem: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
   },
   text2: {
     fontSize: 16,
     fontWeight: '600',
   },
-  headertitle: {
+  headerTitle: {
     fontSize: 18,
     fontWeight: '700',
   },
   line: {
-    borderLeftWidth: 2,
-    borderLeftColor: '#ddd',
     marginLeft: 31,
     marginTop: 10,
+    borderLeftColor: '#ddd',
+    borderLeftWidth: 2,
   },
   editorHeader: {
-    flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: 20,
     flex: 1,
+    flexDirection: 'row',
+    marginTop: 20,
   },
   editorHeader2: {
-    flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: 8,
     flex: 1,
+    flexDirection: 'row',
+    marginTop: 8,
   },
   text1: {
     fontSize: 14,
@@ -470,26 +470,26 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 14,
-    marginTop: 10,
     textAlignVertical: 'top',
     marginRight: 20,
+    marginTop: 10,
   },
-  avatorimage: {
+  avatarImage: {
     width: 30,
     height: 30,
-    borderRadius: 15,
     marginLeft: 16,
     marginRight: 12,
-    borderWidth: 0.3,
     borderColor: '#000000',
+    borderRadius: 15,
+    borderWidth: 0.3,
   },
   Icon: {
-    color: '#808080',
     marginBottom: 20,
+    color: '#808080',
   },
   headerLeft: {
-    flexDirection: 'row',
     alignItems: 'baseline',
+    flexDirection: 'row',
     gap: 8,
   },
   status: {
@@ -499,8 +499,8 @@ const styles = StyleSheet.create({
   },
   image: {
     marginBottom: 20,
-    borderRadius: 10,
     marginRight: 10,
+    borderRadius: 10,
   },
   bottomButtonWrapper: {
     position: 'absolute',
@@ -512,40 +512,40 @@ const styles = StyleSheet.create({
   bottomButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 8,
     marginHorizontal: 16,
     paddingTop: 12,
     borderTopWidth: 1,
+    gap: 8,
   },
   deleteButton: {
     position: 'absolute',
     top: 5,
     right: 5,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 12,
     padding: 5,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   buttonContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    flexDirection: 'row',
     paddingHorizontal: 16,
+    gap: 4,
   },
   dialog: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
   },
   dialogInner: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '70%',
     paddingHorizontal: 20,
     paddingVertical: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    borderRadius: 16,
     borderCurve: 'continuous',
-    overflow: 'hidden',
+    borderRadius: 16,
+    gap: 12,
   },
   text: {
     fontSize: 17,

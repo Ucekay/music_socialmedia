@@ -1,15 +1,13 @@
-import { Text, StyleSheet, Pressable } from 'react-native';
-import { useColorScheme } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 
-import Colors from '@/src/constants/Colors';
-import { Link } from 'expo-router';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 const FollowButton = ({ isMyAccount }: { isMyAccount: boolean }) => {
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
   const backgroundColor = {
-    backgroundColor: Colors[colorScheme ?? 'light'].followButtonBg,
+    backgroundColor: colors.followButtonBg,
   };
-  const textColor = { color: Colors[colorScheme ?? 'light'].followButtonText };
+  const textColor = { color: colors.followButtonText };
 
   if (isMyAccount) {
     return (
@@ -30,11 +28,11 @@ export default FollowButton;
 
 const styles = StyleSheet.create({
   button: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
-    paddingVertical: 8,
     paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 100,
   },
   text: {

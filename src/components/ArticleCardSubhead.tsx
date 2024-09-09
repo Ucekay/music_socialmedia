@@ -1,9 +1,9 @@
-import React from 'react';
-import { View, Text, StyleSheet, useColorScheme } from 'react-native';
-import { SymbolView, SFSymbol } from 'expo-symbols';
+import { type SFSymbol, SymbolView } from 'expo-symbols';
+import { StyleSheet, Text, View } from 'react-native';
 
-import Colors from '../constants/Colors';
 import { TagColors } from '../constants/Colors';
+import { useTheme } from '../contexts/ColorThemeContext';
+
 import type { ArticleData } from '../types';
 
 type SubheadSize = 'sm' | 'md';
@@ -14,13 +14,9 @@ interface ArticleSubheadProps {
 }
 
 const ArticleSubhead = ({ article, size = 'sm' }: ArticleSubheadProps) => {
-  const colorScheme = useColorScheme();
-  const primaryTextColor =
-    colorScheme === 'dark' ? Colors.dark.text : Colors.light.text;
-  const secondaryTextColor =
-    colorScheme === 'dark'
-      ? Colors.dark.secondaryText
-      : Colors.light.secondaryText;
+  const { colors } = useTheme();
+  const primaryTextColor = colors.text;
+  const secondaryTextColor = colors.secondaryText;
   const { articleBody, songName, artistName, songCount, eventName, type } =
     article;
 
@@ -88,14 +84,14 @@ const ReviewSubhead = ({
       iconName='waveform'
       text={songTitle}
       textColor={primaryTextColor}
-      tintColor={TagColors.review.tint}
+      tintColor={TagColors.light.review.tint}
       styles={styles}
     />
     <SubheadRow
       iconName='music.mic'
       text={artistName}
       textColor={secondaryTextColor}
-      tintColor={TagColors.review.tint}
+      tintColor={TagColors.light.review.tint}
       styles={styles}
     />
   </View>
@@ -119,14 +115,14 @@ const LiveReportSubhead = ({
       iconName='music.mic'
       text={artistName}
       textColor={primaryTextColor}
-      tintColor={TagColors.liveReport.tint}
+      tintColor={TagColors.light.liveReport.tint}
       styles={styles}
     />
     <SubheadRow
       iconName='mappin.and.ellipse'
       text={eventName}
       textColor={secondaryTextColor}
-      tintColor={TagColors.liveReport.tint}
+      tintColor={TagColors.light.liveReport.tint}
       styles={styles}
     />
   </View>
@@ -168,14 +164,14 @@ const PlaylistSubhead = ({
       iconName='music.mic'
       text={artistName}
       textColor={primaryTextColor}
-      tintColor={TagColors.playlist.tint}
+      tintColor={TagColors.light.playlist.tint}
       styles={styles}
     />
     <SubheadRow
       iconName='list.bullet'
       text={songCount}
       textColor={secondaryTextColor}
-      tintColor={TagColors.playlist.tint}
+      tintColor={TagColors.light.playlist.tint}
       styles={styles}
     />
   </View>

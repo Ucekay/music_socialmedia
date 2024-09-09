@@ -1,13 +1,12 @@
 import React from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
   Pressable,
-  ViewStyle,
-  TextStyle,
+  StyleSheet,
+  Text,
+  type TextStyle,
+  View,
+  type ViewStyle,
 } from 'react-native';
-import * as IconoirIcons from 'iconoir-react-native';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 
@@ -156,9 +155,9 @@ export const Button: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 100,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 100,
     borderWidth: 1,
     gap: 8,
   },
@@ -184,8 +183,8 @@ const styles = StyleSheet.create({
     opacity: 0.8,
   },
   contentContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'center',
   },
   text: {
@@ -202,8 +201,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   textContainer: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   },
 });

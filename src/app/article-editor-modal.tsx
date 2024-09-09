@@ -1,46 +1,48 @@
-import { useState } from 'react';
 import { Stack, useNavigation } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 import {
-  View,
   Button,
-  StyleSheet,
+  KeyboardAvoidingView,
   Platform,
-  useColorScheme,
   Pressable,
   ScrollView,
-  KeyboardAvoidingView,
+  StyleSheet,
+  View,
+  useColorScheme,
 } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useHeaderHeight } from '@react-navigation/elements';
+
+import {
+  CoreBridge,
+  RichText,
+  TenTapStartKit,
+  Toolbar,
+  useEditorBridge,
+  useEditorContent,
+} from '@10play/tentap-editor';
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import PagerView from 'react-native-pager-view';
 import Animated, {
   FadeIn,
   FadeOut,
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import PagerView from 'react-native-pager-view';
-import {
-  RichText,
-  Toolbar,
-  useEditorBridge,
-  CoreBridge,
-  TenTapStartKit,
-  useEditorContent,
-} from '@10play/tentap-editor';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ArticleTag from '@/src/components/ArticleTag';
-import Color from '@/src/constants/Colors';
-
 import BgView from '@/src/components/ThemedSecondaryBgView';
 import Text from '@/src/components/ThemedText';
-import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import TrackEntry from '@/src/components/TrackEntry';
-import LiveInputField from '../components/LiveInputField';
+import Color from '@/src/constants/Colors';
+
+import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import EditorImagePicker from '../components/EditorImagePicker';
+import LiveInputField from '../components/LiveInputField';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
@@ -48,9 +50,10 @@ const ArticleEditorModal = () => {
   const { top } = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const keyboardVerticalOffset = headerHeight + top;
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
   const { showActionSheetWithOptions } = useActionSheet();
-  const textColor = Color[colorScheme ?? 'light'].text;
+
+  const textColor = colors.text;
 
   const editorStyle = `
   *{
@@ -91,7 +94,7 @@ const ArticleEditorModal = () => {
           case 2:
             break;
         }
-      }
+      },
     );
   };
 
@@ -108,7 +111,7 @@ const ArticleEditorModal = () => {
         if (selectedIndex === 0) {
           console.log(content);
         }
-      }
+      },
     );
   };
 
@@ -156,22 +159,25 @@ const ArticleConfigScreen = () => {
   const secondaryTextColor = Color[colorScheme ?? 'light'].secondaryText;
 
   const opacityValues: { [key: string]: SharedValue<number> } =
-    articleTypes.reduce((acc, type) => {
-      acc[type] = useSharedValue(1);
-      return acc;
-    }, {} as { [key: string]: SharedValue<number> });
+    articleTypes.reduce(
+      (acc, type) => {
+        acc[type] = useSharedValue(1);
+        return acc;
+      },
+      {} as { [key: string]: SharedValue<number> },
+    );
 
   const handleTagPress = (type: string) => {
     if (selectedType === type) {
       setSelectedType(null);
-      articleTypes.forEach((t) => {
+      for (const t of articleTypes) {
         opacityValues[t].value = withTiming(1);
-      });
+      }
     } else {
       setSelectedType(type);
-      articleTypes.forEach((t) => {
+      for (const t of articleTypes) {
         opacityValues[t].value = withTiming(t === type ? 1 : 0.3);
-      });
+      }
     }
   };
   return (
@@ -281,18 +287,18 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   articleTagContainer: {
-    paddingHorizontal: 12,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    paddingHorizontal: 12,
   },
   articleTag: {
     width: '45%',
     marginVertical: 8,
   },
   imagePickerText: {
-    marginTop: 8,
     fontSize: 17,
+    marginTop: 8,
   },
   imagePickerContainer: {
     width: '100%',
@@ -309,16 +315,16 @@ const styles = StyleSheet.create({
   bottomButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 8,
     marginHorizontal: 16,
     paddingTop: 12,
     borderTopWidth: 1,
+    gap: 8,
   },
   buttonContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    flexDirection: 'row',
     paddingHorizontal: 16,
+    gap: 4,
   },
   editorContainer: {
     flex: 1,
@@ -329,7 +335,7 @@ const styles = StyleSheet.create({
   },
   keyboardAvoidingView: {
     position: 'absolute',
-    width: '100%',
     bottom: 0,
+    width: '100%',
   },
 });

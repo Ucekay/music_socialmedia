@@ -1,21 +1,23 @@
+import { Stack, useNavigation } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import {
-  View,
-  Platform,
   Button,
-  Text,
   KeyboardAvoidingView,
+  Platform,
   StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
 } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import { Stack, useNavigation } from 'expo-router';
-import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useHeaderHeight } from '@react-navigation/elements';
+
+import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useTheme } from '../contexts/ColorThemeContext';
 import SecondaryBackgroundView from '../components/ThemedSecondaryBgView';
 import TodaySongCard from '../components/TodaySongCard';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 interface Song {
   id: string;
@@ -30,6 +32,7 @@ const SongEditorModal = () => {
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [editorContent, setEditorContent] = useState('');
   const [isSongSearchActive, setIsSongSearchActive] = useState(false);
@@ -57,7 +60,7 @@ const SongEditorModal = () => {
           case 2:
             break;
         }
-      }
+      },
     );
   };
 
@@ -74,7 +77,7 @@ const SongEditorModal = () => {
         if (selectedIndex === 0) {
           // Publish logic here
         }
-      }
+      },
     );
   };
 
@@ -99,7 +102,7 @@ const SongEditorModal = () => {
             ),
           }}
         />
-        <View style={styles.editorContainer}>
+        <View style={[styles.editorContainer, { width }]}>
           <TodaySongCard
             isEditing
             onSongInfoPress={() => setIsSongSearchActive(true)}
@@ -133,21 +136,34 @@ const CharacterCountIndicator = ({
   colors: any;
 }) => (
   <View style={styles.characterCountContainer}>
-    <Text style={[styles.characterCountText, { color: colors.text }]}>
-      {currentCount}/{maxCount}文字
-    </Text>
+    <View style={{ flex: 1 }}></View>
     <View
-      style={[styles.progressBarBackground, { backgroundColor: colors.border }]}
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}
     >
+      <Text style={[styles.characterCountText, { color: colors.text }]}>
+        {currentCount}/{maxCount}文字
+      </Text>
       <View
         style={[
-          styles.progressBar,
-          {
-            width: `${Math.min((currentCount / maxCount) * 100, 100)}%`,
-            backgroundColor: currentCount > maxCount ? 'red' : colors.tint,
-          },
+          styles.progressBarBackground,
+          { backgroundColor: colors.border },
         ]}
-      />
+      >
+        <View
+          style={[
+            styles.progressBar,
+            {
+              width: `${Math.min((currentCount / maxCount) * 100, 100)}%`,
+              backgroundColor: currentCount >= maxCount ? 'red' : colors.tint,
+            },
+          ]}
+        />
+      </View>
     </View>
   </View>
 );
@@ -160,21 +176,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   editorContainer: {
-    paddingTop: 32,
     justifyContent: 'flex-end',
+    paddingHorizontal: 16,
+    paddingTop: 32,
   },
   characterCountContainer: {
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    flexDirection: 'row',
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'space-between',
+    padding: 16,
   },
   characterCountText: {
     fontSize: 14,
   },
   progressBarBackground: {
-    width: '60%',
+    width: '50%',
     height: 4,
     borderRadius: 2,
   },

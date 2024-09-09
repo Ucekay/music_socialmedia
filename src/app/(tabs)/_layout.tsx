@@ -1,25 +1,30 @@
-import React, { useCallback, useMemo, useRef } from 'react';
-import { EventArg } from '@react-navigation/native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { View, StyleSheet, Pressable } from 'react-native';
-import { Href, Link, Tabs } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { type Href, Link, Tabs } from 'expo-router';
+import type React from 'react';
+import { useCallback, useMemo, useRef } from 'react';
+import { StyleSheet, View } from 'react-native';
+import type { EventArg } from '@react-navigation/native';
+
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   BottomSheetBackdrop,
+  type BottomSheetBackgroundProps,
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import { MultiplePages, GoogleDocs, Voice } from 'iconoir-react-native';
-import { SvgProps } from 'react-native-svg';
+import { GoogleDocs, MultiplePages, Voice } from 'iconoir-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
+
 
 import Text from '@/src/components/ThemedText';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
+import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
+
 import type { ColorScheme } from '@/src/types';
-import { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
+import type { BottomSheetDefaultBackdropProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
+import type { SvgProps } from 'react-native-svg';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -33,21 +38,21 @@ export default function TabLayout() {
   const { colors } = useTheme();
   const themeContainerStyle = colors.tabBarGradient;
 
-  const insets = useSafeAreaInsets();
+  const insetsBottom = useSafeAreaInsets().bottom;
+
+  const bottomSheetHeight = 222 + insetsBottom;
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  // variables
-  const snapPoints = useMemo(() => [220 + insets.bottom], []);
+  const snapPoints = useMemo(() => [bottomSheetHeight], []);
 
-  // callbacks
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
   const handleSheetChanges = useCallback((index: number) => {}, []);
   const renderBackdrop = useCallback(
     (
-      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps
+      props: React.JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps,
     ) => (
       <BottomSheetBackdrop
         {...props}
@@ -55,7 +60,7 @@ export default function TabLayout() {
         disappearsOnIndex={-1}
       />
     ),
-    []
+    [],
   );
 
   const themedContentStyle = { backgroundColor: colors.secondaryBackground };
@@ -149,12 +154,12 @@ export default function TabLayout() {
         onChange={handleSheetChanges}
         enablePanDownToClose
         backdropComponent={renderBackdrop}
-        backgroundStyle={themedContentStyle}
         handleIndicatorStyle={{ backgroundColor: colors.border }}
-        maxDynamicContentSize={220 + insets.bottom}
+        maxDynamicContentSize={bottomSheetHeight}
+        backgroundComponent={BottomSheetBackground}
       >
         <BottomSheetView style={styles.contentContainer}>
-          <View style={[styles.content, { marginBottom: 16 + insets.bottom }]}>
+          <View style={[styles.content, { marginBottom: 16 + insetsBottom }]}>
             <CreateContentList colors={colors} />
           </View>
         </BottomSheetView>
@@ -162,6 +167,20 @@ export default function TabLayout() {
     </View>
   );
 }
+
+const BottomSheetBackground: React.FC<BottomSheetBackgroundProps> = ({
+  style,
+  animatedIndex,
+}) => {
+  const containerStyle = [styles.bottomSheetBackground, style];
+  return (
+    <BlurView
+      tint='systemUltraThinMaterial'
+      intensity={100}
+      style={containerStyle}
+    ></BlurView>
+  );
+};
 
 type CreateItemData = {
   id: string;
@@ -237,14 +256,14 @@ const CreateContentListItem = ({
           styles.listItemContainer,
           {
             borderColor: colors.border,
-            borderTopWidth: showBorder ? 0.5 : 0,
-            borderBottomWidth: showBorder ? 0.5 : 0,
+            borderTopWidth: showBorder ? 1 : 0,
+            borderBottomWidth: showBorder ? 1 : 0,
           },
         ]}
       >
         <View>{icon}</View>
-        <View style={{ width: 174.3 }}>
-          <Text style={{ fontSize: 20 }}>{text}</Text>
+        <View style={styles.listTextContainer}>
+          <Text style={styles.listText}>{text}</Text>
         </View>
         <View>
           <MultiplePages width={28} height={28} color={'transparent'} />
@@ -256,47 +275,60 @@ const CreateContentListItem = ({
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'transparent',
   },
   screen: {
+    alignContent: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignContent: 'center',
   },
   actionContainer: {
+    position: 'absolute',
     width: 60,
     height: 60,
     borderRadius: 30,
     backgroundColor: 'red',
-    position: 'absolute',
   },
   contentContainer: {
+    alignItems: 'center',
     flex: 1,
     padding: 16,
     paddingTop: 0,
-    alignItems: 'center',
   },
   content: {
     flex: 1,
   },
   list: {
-    flex: 1,
-    justifyContent: 'flex-start',
     alignContent: 'center',
     alignSelf: 'flex-start',
-    borderRadius: 12,
+    flex: 1,
+    justifyContent: 'flex-start',
+    height: 182,
     borderCurve: 'continuous',
+    borderRadius: 12,
     borderWidth: 1,
   },
   listItemContainer: {
+    alignItems: 'center',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     width: '100%',
     padding: 16,
     gap: 16,
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  },
+  listTextContainer: {
+    width: 174.3,
+  },
+  listText: {
+    fontSize: 20,
+  },
+  bottomSheetBackground: {
+    overflow: 'hidden',
+    borderCurve: 'continuous',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 });

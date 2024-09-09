@@ -1,21 +1,23 @@
-import BgView from '@/src/components/ThemedBgView';
-import React, { useContext, useState } from 'react';
+import { useRouter } from 'expo-router';
+import { useContext, useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  StyleSheet,
   Dimensions,
-  useColorScheme,
   FlatList,
   Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  useColorScheme,
 } from 'react-native';
-import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
-import { useNavigation, useRouter } from 'expo-router';
+
+import { Plus, Search, Xmark } from 'iconoir-react-native';
+
+import BgView from '@/src/components/ThemedBgView';
 import Color from '@/src/constants/Colors';
 import Colors from '@/src/constants/Colors';
-import { Xmark, Plus, Search } from 'iconoir-react-native';
+import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
 
 const FavoriteArtistsEditor = (): JSX.Element => {
   const context = useContext(ProfileEditorContext);
@@ -30,7 +32,7 @@ const FavoriteArtistsEditor = (): JSX.Element => {
 
   if (!context) {
     throw new Error(
-      'FavoriteArtistsEditorModal must be used within a ProfileEditorProvider'
+      'FavoriteArtistsEditorModal must be used within a ProfileEditorProvider',
     );
   }
 
@@ -275,22 +277,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    height: 60,
-    width: '100%',
     alignItems: 'center',
-    paddingHorizontal: 16,
     flexDirection: 'row',
+    width: '100%',
+    height: 60,
+    paddingHorizontal: 16,
   },
   headerItem: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
   },
   Editor: {
+    height: 100,
     marginHorizontal: 16,
     padding: 16,
-    borderWidth: 0.3,
     borderRadius: 20,
-    height: 100,
+    borderWidth: 0.3,
     gap: 8,
   },
   text1: {
@@ -302,8 +304,8 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     height: 40,
-    borderRadius: 15,
     paddingLeft: 10,
+    borderRadius: 15,
     backgroundColor: '#f0f0f0',
   },
 });

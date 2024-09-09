@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, useColorScheme } from 'react-native';
-import React from 'react';
-import { TagColors } from '../constants/Colors';
+import { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+
+import { useTheme } from '../contexts/ColorThemeContext';
 
 type ArticleTagProps = {
   type: string;
@@ -8,40 +9,18 @@ type ArticleTagProps = {
 };
 
 const ArticleTag = ({ type, size }: ArticleTagProps) => {
-  const colorScheme = useColorScheme();
-  let Color;
-  switch (type) {
-    case 'general':
-      Color = TagColors.general;
-      break;
-    case 'review':
-      Color = TagColors.review;
-      break;
-    case 'liveReport':
-      Color = TagColors.liveReport;
-      break;
-    case 'playlist':
-      Color = TagColors.playlist;
-      break;
-    default:
-      Color = TagColors.general;
-      break;
+  const { tagColors } = useTheme();
+  const [colors, setColors] = useState(tagColors[type]);
+  if (colors === undefined) {
+    setColors(tagColors.general);
   }
 
   function titleCase(style: string) {
     return style[0].toUpperCase() + style.slice(1).toLowerCase();
   }
   return (
-    <View
-      style={[
-        styles.container,
-        { backgroundColor: Color[colorScheme ?? 'light'].background },
-      ]}
-    >
-      {/*<View style={[styles.dot, { backgroundColor: bgColor }]}></View>*/}
-      <Text
-        style={{ color: Color[colorScheme ?? 'light'].text, fontSize: size }}
-      >
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={{ color: colors.text, fontSize: size }}>
         {titleCase(type)}
       </Text>
     </View>
@@ -52,14 +31,14 @@ export default ArticleTag;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'flex-start',
-    gap: 8,
+    flexDirection: 'row',
+    justifyContent: 'center',
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 8,
     borderCurve: 'continuous',
+    borderRadius: 8,
+    gap: 8,
   },
 });

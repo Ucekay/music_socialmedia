@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
+import { Image } from 'expo-image';
+import { Link } from 'expo-router';
+import { useState } from 'react';
 import {
-  View,
+  Dimensions,
+  Pressable,
   StyleSheet,
   Text,
-  Pressable,
-  Dimensions,
-  Modal,
+  View,
   useColorScheme,
 } from 'react-native';
-import { Image } from 'expo-image';
-import { type PostDataType } from '../types';
-import { Link } from 'expo-router';
-import HeartIcon from './Icons/HeartIcon';
-import IconAntDesign from './Icons/AntDesign';
-import ShareIcon from './Icons/ShareIcon';
-import ImageViewer from 'react-native-image-zoom-viewer';
+
 import { Message } from 'iconoir-react-native';
-import PostImages from './PostImages';
 
 import { formatCreatedAt } from '@/src/utils/date/formatCreatedAt';
+
+import IconAntDesign from './Icons/AntDesign';
+import HeartIcon from './Icons/HeartIcon';
+import ShareIcon from './Icons/ShareIcon';
+import PostImages from './PostImages';
+
+
+import type { PostDataType } from '../types';
 
 const screen = Dimensions.get('screen');
 
@@ -47,11 +49,11 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
     colorScheme === 'light' ? { color: '#000000' } : { color: '#ffffff' };
 
   const { formattedDate, timeAgo, daysDifference } = formatCreatedAt(
-    post.createdAt
+    post.createdAt,
   );
 
   return (
-    <Link href={`/postsScreen/${post.postID}`} asChild>
+    <Link href={`./post-screen/${post.postID}`} asChild>
       <Pressable style={styles.postContainer}>
         <View style={styles.postHeader}>
           <Image source={post.userAvatarUrl} style={styles.image} />
@@ -129,14 +131,14 @@ const styles = StyleSheet.create({
   postContainer: {
     flex: 1,
     marginHorizontal: 16,
-    borderBottomWidth: 0.3,
     borderBottomColor: 'rgba(67, 80, 96, 0.3)',
+    borderBottomWidth: 0.3,
   },
   postHeader: {
-    flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: 8,
     flex: 1,
+    flexDirection: 'row',
+    marginTop: 8,
   },
   text1: {
     fontSize: 14,
@@ -146,8 +148,8 @@ const styles = StyleSheet.create({
   image: {
     width: 30,
     height: 30,
-    borderRadius: 15,
     marginRight: 12,
+    borderRadius: 15,
   },
   postContent: {
     fontSize: 14,
@@ -158,44 +160,44 @@ const styles = StyleSheet.create({
   Icons: {
     alignItems: 'center',
     flexDirection: 'row',
+    marginBottom: 12,
     marginLeft: 56,
     gap: 24,
-    marginBottom: 12,
   },
   headerRight: {
-    flexDirection: 'row',
     alignItems: 'baseline',
+    flexDirection: 'row',
     gap: 8,
   },
   postImage: {
     width: screen.width - 74,
     height: 150,
-    borderRadius: 10,
     marginBottom: 16,
+    borderRadius: 10,
   },
   imageContainer: {
-    height: 150,
-    width: screen.width - 74,
-    borderRadius: 12,
-    marginBottom: 16,
-    flexDirection: 'row',
-    objectFit: 'cover',
     overflow: 'hidden',
+    flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 2
+    width: screen.width - 74,
+    height: 150,
+    marginBottom: 16,
+    borderRadius: 12,
+    objectFit: 'cover',
+    gap: 2,
   },
   Image2: {
+    width: screen.width / 2 - 38,
     height: 150,
-    width: screen.width/2 - 38
   },
-  imageContainer2:{
+  imageContainer2: {
+    width: screen.width / 2 - 38,
     height: 150,
-    width: screen.width/2 - 38,
-    gap: 2
+    gap: 2,
   },
   Image3: {
+    width: '100%',
     height: 78,
-    width: '100%'
   },
   imageModal: {
     flex: 1,
@@ -203,20 +205,20 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
+    zIndex: 1,
     top: 40,
     right: 20,
-    zIndex: 1,
     padding: 10,
-    backgroundColor: 'black',
     borderRadius: 5,
+    backgroundColor: 'black',
   },
   closeButtonText: {
     color: '#ffffff',
   },
   modalOverlay: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
 });

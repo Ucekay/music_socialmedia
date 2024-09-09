@@ -1,10 +1,11 @@
-import { View, ViewProps, useColorScheme } from 'react-native';
-import Colors from '../constants/Colors';
+import { View, type ViewProps } from 'react-native';
+
+import { useTheme } from '../contexts/ColorThemeContext';
 
 const BgView = (props: ViewProps) => {
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
   const { style, ...otherProps } = props;
-  const backgroundColor = Colors[colorScheme ?? 'light'].background;
+  const backgroundColor = colors.background;
   return <View style={[{ backgroundColor }, style]} {...otherProps} />;
 };
 

@@ -1,5 +1,6 @@
 import palette from '@evilmartians/harmony/dist/base';
 import chroma from 'chroma-js';
+
 import type { ColorScheme } from '@/src/types';
 
 const tintColorLight = chroma(palette.sky['500']).hex();
@@ -14,7 +15,7 @@ const Colors: {
   dark: ColorScheme;
 } = {
   light: {
-    text: chroma(palette.zinc['900']).hex(),
+    text: '#000',
     secondaryText: chroma(palette.zinc['600']).hex(),
     background: '#fff',
     secondaryBackground: chroma(palette.zinc['100']).hex(),
@@ -39,9 +40,10 @@ const Colors: {
     buttonGhostText: chroma(palette.zinc['900']).hex(),
     buttonDisabled: chroma(palette.zinc['300']).hex(),
     buttonDisabledText: chroma(palette.zinc['500']).hex(),
+    searchBar: chroma(palette.zinc['400']).alpha(0.25).hex(),
   },
   dark: {
-    text: chroma(palette.zinc['100']).hex(),
+    text: '#fff',
     secondaryText: chroma(palette.zinc['400']).hex(),
     background: '#000',
     secondaryBackground: chroma(palette.zinc['900']).hex(),
@@ -66,55 +68,71 @@ const Colors: {
     buttonGhostText: chroma(palette.zinc['100']).hex(),
     buttonDisabled: chroma(palette.zinc['700']).hex(),
     buttonDisabledText: chroma(palette.zinc['500']).hex(),
+    searchBar: chroma(palette.gray['700']).alpha(0.25).hex(),
   },
 };
 
 export default Colors;
 
-export const TagColors = {
-  general: {
-    light: {
+export const TagColors: {
+  light: {
+    [key: string]: {
+      background: string;
+      text: string;
+      tint: string;
+    };
+  };
+  dark: {
+    [key: string]: {
+      background: string;
+      text: string;
+      tint: string;
+    };
+  };
+} = {
+  light: {
+    general: {
       background: chroma(palette.purple['200']).hex(),
       text: chroma(palette.purple['700']).hex(),
+      tint: chroma(palette.purple['500']).hex(),
     },
-    dark: {
-      background: chroma(palette.purple['800']).hex(),
-      text: chroma(palette.purple['300']).hex(),
-    },
-    tint: chroma(palette.purple['500']).hex(),
-  },
-  review: {
-    light: {
+    review: {
       background: chroma(palette.blue['200']).hex(),
       text: chroma(palette.blue['700']).hex(),
+      tint: chroma(palette.blue['500']).hex(),
     },
-    dark: {
-      background: chroma(palette.blue['800']).hex(),
-      text: chroma(palette.blue['300']).hex(),
-    },
-    tint: chroma(palette.blue['500']).hex(),
-  },
-  liveReport: {
-    light: {
+    liveReport: {
       background: chroma(palette.amber['200']).hex(),
       text: chroma(palette.amber['700']).hex(),
+      tint: chroma(palette.amber['500']).hex(),
     },
-    dark: {
-      background: chroma(palette.amber['800']).hex(),
-      text: chroma(palette.amber['300']).hex(),
-    },
-    tint: chroma(palette.amber['500']).hex(),
-  },
-  playlist: {
-    light: {
+    playlist: {
       background: chroma(palette.rose['200']).hex(),
       text: chroma(palette.rose['700']).hex(),
+      tint: chroma(palette.rose['500']).hex(),
     },
-    dark: {
+  },
+  dark: {
+    general: {
+      background: chroma(palette.purple['800']).hex(),
+      text: chroma(palette.purple['300']).hex(),
+      tint: chroma(palette.purple['500']).hex(),
+    },
+    review: {
+      background: chroma(palette.blue['800']).hex(),
+      text: chroma(palette.blue['300']).hex(),
+      tint: chroma(palette.blue['500']).hex(),
+    },
+    liveReport: {
+      background: chroma(palette.amber['800']).hex(),
+      text: chroma(palette.amber['300']).hex(),
+      tint: chroma(palette.amber['500']).hex(),
+    },
+    playlist: {
       background: chroma(palette.rose['800']).hex(),
       text: chroma(palette.rose['300']).hex(),
+      tint: chroma(palette.rose['500']).hex(),
     },
-    tint: chroma(palette.rose['500']).hex(),
   },
 };
 

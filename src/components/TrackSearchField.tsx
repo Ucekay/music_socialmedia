@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, FlatList, Pressable } from 'react-native';
-import { useTheme } from '../contexts/ColorThemeContext';
 import { Image } from 'expo-image';
+import type React from 'react';
+import { useState } from 'react';
+import { FlatList, Pressable, StyleSheet, TextInput, View } from 'react-native';
+
+import { useTheme } from '../contexts/ColorThemeContext';
 
 import Text from './ThemedText';
 interface Song {
@@ -159,8 +161,8 @@ const TrackSearchField: React.FC<SearchFieldProps> = ({
 const styles = StyleSheet.create({
   inputInner: {
     padding: 12,
-    borderRadius: 12,
     borderCurve: 'continuous',
+    borderRadius: 12,
     borderWidth: 1,
   },
   inputText: {

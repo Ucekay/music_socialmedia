@@ -1,25 +1,24 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  useColorScheme,
-  useWindowDimensions,
-  Pressable,
-} from 'react-native';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
+import type React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Pressable, StyleSheet, View, useColorScheme } from 'react-native';
+
 import RNColorThief from 'react-native-color-thief';
+import { TextInput } from 'react-native-gesture-handler';
+import Animated, { FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated';
+
+import Colors from '../constants/Colors';
+import { useTheme } from '../contexts/ColorThemeContext';
+import { rgbObjectToRgbaString } from '../utils/color/ColorModifier';
 
 import BgView from './ThemedBgView';
 import Text from './ThemedText';
-
-import { rgbObjectToRgbaString } from '../utils/color/ColorModifier';
-import Animated, { FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated';
-import Colors from '../constants/Colors';
-import type { TodaySongDataType as SongData } from '../types';
-import { useTheme } from '../contexts/ColorThemeContext';
 import TrackSearchField from './TrackSearchField';
-import { TextInput } from 'react-native-gesture-handler';
+
+import type { TodaySongDataType as SongData } from '../types';
+
+type size = 'sm' | 'lg';
 
 interface Song {
   id: string;
@@ -29,7 +28,7 @@ interface Song {
 }
 
 type SongEditorCardProps = {
-  currentSong?: SongData;
+  todaySong?: SongData;
   isEditing: boolean;
   isSongInfoVisible: boolean;
   onSongInfoPress?: () => void;
@@ -39,6 +38,7 @@ type SongEditorCardProps = {
   setSelectedSong?: React.Dispatch<React.SetStateAction<Song | null>>;
   setIsSongSearchActive?: React.Dispatch<React.SetStateAction<boolean>>;
   setContentCharCount?: (count: number) => void;
+  size?: size;
 };
 
 const extractColorFromUrl = async (url: string) => {
@@ -50,7 +50,7 @@ const extractColorFromUrl = async (url: string) => {
 };
 
 const TodaySongCard = ({
-  currentSong,
+  todaySong,
   isEditing,
   isSongInfoVisible,
   onSongInfoPress,
@@ -60,8 +60,8 @@ const TodaySongCard = ({
   setSelectedSong,
   setIsSongSearchActive,
   setContentCharCount,
+  size = 'lg',
 }: SongEditorCardProps) => {
-  const { width } = useWindowDimensions();
   const colorScheme = useColorScheme();
   const backgroundColor =
     colorScheme === 'dark'
@@ -117,17 +117,17 @@ const TodaySongCard = ({
         setEndColor('');
       }
     },
-    []
+    [],
   );
 
   useEffect(() => {
     const artworkUrl = isEditing
       ? selectedSong?.coverArtUrl
-      : currentSong?.artworkUrl;
+      : todaySong?.artworkUrl;
     updateGradientColors(artworkUrl);
   }, [
     isEditing,
-    currentSong?.artworkUrl,
+    todaySong?.artworkUrl,
     selectedSong?.coverArtUrl,
     updateGradientColors,
   ]);
@@ -141,14 +141,14 @@ const TodaySongCard = ({
       if (isEditing) {
         return selectedSong?.title || 'タップして曲を選択';
       }
-      return currentSong?.songName || '';
+      return todaySong?.songName || '';
     };
 
     const getArtistName = () => {
       if (isEditing) {
         return selectedSong?.artist || '';
       }
-      return currentSong?.artistName || '';
+      return todaySong?.artistName || '';
     };
 
     const shouldShowPlaceholder =
@@ -156,11 +156,11 @@ const TodaySongCard = ({
 
     return (
       <Pressable onPress={isEditing ? onSongInfoPress : undefined}>
-        <View style={styles.songInfo}>
-          <Text style={styles.songName}>
+        <View style={styles[`${size}SongInfo`]}>
+          <Text style={styles[`${size}SongName`]}>
             {shouldShowPlaceholder ? 'タップして曲を選択' : getSongTitle()}
           </Text>
-          <Text style={styles.artistName}>{getArtistName()}</Text>
+          <Text style={styles[`${size}Artist`]}>{getArtistName()}</Text>
         </View>
       </Pressable>
     );
@@ -183,9 +183,9 @@ const TodaySongCard = ({
           readOnly={!isSongInfoVisible}
           style={{ color: colors.text }}
         />
-      ) : (
-        <Text>{currentSong?.body || ''}</Text>
-      )}
+      ) : size === 'lg' ? (
+        <Text>{todaySong?.body || ''}</Text>
+      ) : null}
     </View>
   );
 
@@ -196,7 +196,7 @@ const TodaySongCard = ({
       if (isEditing) {
         return selectedSong?.coverArtUrl;
       }
-      return currentSong?.artworkUrl;
+      return todaySong?.artworkUrl;
     };
 
     const imageSource = getImageSource();
@@ -205,7 +205,7 @@ const TodaySongCard = ({
       return (
         <View
           style={[
-            styles.imageContainer,
+            styles[`${size}ImageContainer`],
             styles.editingImageContainer,
             { backgroundColor: colors.border },
           ]}
@@ -215,8 +215,8 @@ const TodaySongCard = ({
 
     if (imageSource) {
       return (
-        <BgView style={styles.imageContainer}>
-          <Image source={{ uri: imageSource }} style={styles.image} />
+        <BgView style={styles[`${size}ImageContainer`]}>
+          <Image source={{ uri: imageSource }} style={styles[`${size}Image`]} />
         </BgView>
       );
     }
@@ -227,7 +227,17 @@ const TodaySongCard = ({
   const renderSong = () => {
     if (isSongInfoVisible) {
       return (
-        <Animated.View entering={FadeIn} exiting={FadeOut} style={styles.song}>
+        <Animated.View
+          entering={FadeIn}
+          exiting={size !== 'sm' ? FadeOut : undefined}
+          style={[
+            styles.song,
+            {
+              height: size === 'lg' ? 300 : undefined,
+              gap: size === 'lg' ? 28 : 12,
+            },
+          ]}
+        >
           {renderImage()}
           {renderSongInfo()}
         </Animated.View>
@@ -242,7 +252,7 @@ const TodaySongCard = ({
   };
 
   return (
-    <View style={[styles.cardContainer, { width }]}>
+    <View style={[styles.cardContainer]}>
       <Pressable
         onPress={dismissKeyboard}
         style={[styles.card, { backgroundColor, shadowColor }]}
@@ -255,13 +265,13 @@ const TodaySongCard = ({
             />
           </Animated.View>
         )}
-        {!isEditing && (
+        {!isEditing && size === 'lg' && (
           <View style={styles.userInfo}>
             <Image
-              source={{ uri: currentSong?.userAvatarUrl }}
+              source={{ uri: todaySong?.userAvatarUrl }}
               style={styles.avatar}
             />
-            <Text>{currentSong?.userID || ''}</Text>
+            <Text>{todaySong?.userID || ''}</Text>
           </View>
         )}
         {isEditing && (
@@ -269,7 +279,12 @@ const TodaySongCard = ({
             <View style={styles.avatar}></View>
           </View>
         )}
-        <View style={styles.todaySongInner}>
+        <View
+          style={[
+            styles.todaySongInner,
+            { paddingHorizontal: size === 'lg' ? 4 : 0 },
+          ]}
+        >
           {renderSong()}
           {!isSongInfoVisible && (
             <Animated.View
@@ -278,7 +293,6 @@ const TodaySongCard = ({
               style={{
                 width: '100%',
                 height: 300,
-                paddingBottom: 4,
               }}
             >
               <TrackSearchField
@@ -298,38 +312,37 @@ export default TodaySongCard;
 
 const styles = StyleSheet.create({
   cardContainer: {
-    paddingHorizontal: 16,
+    width: '100%',
   },
   card: {
-    borderRadius: 16,
-    borderCurve: 'continuous',
-    paddingTop: 16,
+    flexGrow: 1,
+    paddingBottom: 16,
     paddingHorizontal: 12,
-    paddingBottom: 20,
-    gap: 40,
+    paddingTop: 12,
+    borderCurve: 'continuous',
+    borderRadius: 16,
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
+    gap: 16,
   },
   gradient: {
-    borderRadius: 16,
     borderCurve: 'continuous',
+    borderRadius: 16,
   },
   userInfo: {
-    flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
-    gap: 8,
+    flexDirection: 'row',
     marginHorizontal: 4,
+    marginTop: 4,
+    gap: 8,
   },
   todaySongInner: {
-    gap: 32,
-    paddingHorizontal: 4,
+    gap: 28,
   },
   avatar: {
     width: 32,
@@ -338,14 +351,12 @@ const styles = StyleSheet.create({
   },
   song: {
     alignItems: 'center',
-    gap: 28,
-    height: 300,
   },
-  imageContainer: {
+  lgImageContainer: {
     width: 220,
     height: 220,
-    borderRadius: 16,
     borderCurve: 'continuous',
+    borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -353,36 +364,65 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
   },
-  image: {
+  smImageContainer: {
+    width: 100,
+    height: 100,
+    borderCurve: 'continuous',
+    borderRadius: 4,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  lgImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 16,
     borderCurve: 'continuous',
+    borderRadius: 16,
   },
-  songName: {
+  smImage: {
+    width: '100%',
+    height: '100%',
+    borderCurve: 'continuous',
+    borderRadius: 4,
+  },
+  lgSongName: {
     fontSize: 22,
     fontWeight: '500',
   },
-  artistName: {
+  smSongName: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  lgArtist: {
     fontSize: 20,
   },
-  songInfo: {
+  smArtist: {
+    fontSize: 12,
+  },
+  lgSongInfo: {
     alignItems: 'center',
     gap: 8,
+  },
+  smSongInfo: {
+    alignItems: 'center',
   },
   buttonContainer: {
     justifyContent: 'flex-end',
     paddingTop: 16,
   },
   playButtonContainer: {
-    justifyContent: 'center',
     alignSelf: 'center',
-    borderRadius: 100,
+    justifyContent: 'center',
     paddingHorizontal: 36,
     paddingVertical: 8,
+    borderRadius: 100,
     backgroundColor: 'white',
     shadowColor: '#000',
     shadowOffset: {
@@ -391,11 +431,10 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-
     elevation: 5,
   },
   editingImageContainer: {
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
 });

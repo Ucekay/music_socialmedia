@@ -1,37 +1,42 @@
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 // PostScreen.js
-import React, { useState, useRef, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  View,
-  TextInput,
-  Button,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  ScrollView,
-  Platform,
-  Animated as Animated1,
-  Pressable,
+  ActivityIndicator,
   FlatList,
   Modal,
-  ActivityIndicator,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
-import userData from '../assets/userData';
-import { Image } from 'expo-image';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import BgView from '../components/ThemedBgView';
-import IconAntDesign from '../components/Icons/AntDesign';
-import Color from '@/src/constants/Colors';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { useNavigation, Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import Icon from 'react-native-vector-icons/AntDesign';
-import ImageAspectKept from '../components/OriginalAspectImage';
-import { BlurView } from 'expo-blur';
-import * as ImagePicker from 'expo-image-picker';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { insertPost } from '../backend/components/DB_Access/post';
-import { uploadImage } from '../backend/components/DB_Access/Image';
+
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import Animated, {
+  Easing,
+  FadeIn,
+  FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/AntDesign';
+
+import userData from '../assets/userData';
+import { uploadImage } from '../backend/components/DB_Access/Image';
+import { insertPost } from '../backend/components/DB_Access/post';
+import IconAntDesign from '../components/Icons/AntDesign';
+import ImageAspectKept from '../components/OriginalAspectImage';
+import BgView from '../components/ThemedBgView';
+import { useTheme } from '../contexts/ColorThemeContext';
 
 type ImagePickerResult = ImagePicker.ImagePickerResult & {
   assets?: ImagePicker.ImagePickerAsset[];
@@ -44,14 +49,14 @@ const PostEditorModal = () => {
   const [postHeight, setPostHeight] = useState(60);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
-  const colorScheme = useColorScheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
-  const animatedHeight = useRef(new Animated1.Value(0)).current;
+  const animatedHeight = useSharedValue(0);
   const [images, setImages] = useState<string[]>([]);
 
   const pickImage = async () => {
     setErrorMessage('');
-    let result = (await ImagePicker.launchImageLibraryAsync({
+    const result = (await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 4 - images.length,
@@ -101,8 +106,8 @@ const PostEditorModal = () => {
 
   const { showActionSheetWithOptions } = useActionSheet();
 
-  const textColor = Color[colorScheme ?? 'light'].text;
-  const secondaryTextColor = Color[colorScheme ?? 'light'].secondaryText;
+  const textColor = colors.text;
+  const secondaryTextColor = colors.secondaryText;
 
   const BOTTOM_TAB_HEIGHT = 96.7;
 
@@ -111,11 +116,10 @@ const PostEditorModal = () => {
     setPostHeight(height - 60); // Viewの高さを状態に保存
 
     // 高さをアニメーションで変更
-    Animated1.timing(animatedHeight, {
-      toValue: height,
-      duration: 300, // アニメーションの持続時間（ミリ秒）
-      useNativeDriver: false, // height のアニメーションには native driver は使えない
-    }).start();
+    animatedHeight.value = withTiming(height - 60, {
+      duration: 600,
+      easing: Easing.inOut(Easing.cubic),
+    });
   };
 
   const handleDeleteImage = (index: number) => {
@@ -124,13 +128,13 @@ const PostEditorModal = () => {
     setImages(newImages);
   };
 
-  const handleLayoutChangeLine = () => {
-    Animated1.timing(animatedHeight, {
-      toValue: postHeight,
-      duration: 100, // アニメーションの持続時間（ミリ秒）
-      useNativeDriver: false, // height のアニメーションには native driver は使えない
-    }).start();
-  };
+  const handleLayoutChangeLine = () => {};
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      height: animatedHeight.value,
+    };
+  });
 
   const onClose = () => {
     const title = '下書きに保存しまますか？';
@@ -156,7 +160,7 @@ const PostEditorModal = () => {
           case 2:
             break;
         }
-      }
+      },
     );
   };
 
@@ -173,17 +177,17 @@ const PostEditorModal = () => {
         if (selectedIndex === 0) {
           handlePost;
         }
-      }
+      },
     );
   };
 
   const handlePost = async () => {
     try {
       const ImageUrls = await Promise.all(
-        images.map((image) => uploadImage(image, 'PostImage'))
+        images.map((image) => uploadImage(image, 'PostImage')),
       );
       if (text) {
-        let data = { Body: text, ImageUrl: ImageUrls };
+        const data = { Body: text, ImageUrl: ImageUrls };
         const result = await insertPost(data);
         if (typeof result === 'boolean' && result) {
           // 記事の挿入に成功した場合の処理
@@ -235,13 +239,13 @@ const PostEditorModal = () => {
               source={userData[0].userAvatarUrl}
               style={styles.avatorimage}
             />
-            <Animated1.View
-              style={[styles.line, { height: animatedHeight }]}
+            <Animated.View
+              style={[styles.line, animatedStyle]}
               onLayout={handleLayoutChangeLine}
             />
           </View>
-          <Animated1.View
-            style={[{ flexDirection: 'column' }, { flex: 1 }]}
+          <View
+            style={[{ flexDirection: 'column', flex: 1 }]}
             onLayout={handleLayoutChange}
           >
             <View style={styles.headerLeft}>
@@ -311,7 +315,7 @@ const PostEditorModal = () => {
                 <IconAntDesign name='camerao' size={20} style={styles.Icon} />
               </View>
             )}
-          </Animated1.View>
+          </View>
         </View>
       </ScrollView>
       <BgView
@@ -332,20 +336,20 @@ export default PostEditorModal;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
     flex: 1,
+    paddingTop: 20,
   },
   header: {
     alignItems: 'center',
-    borderBottomWidth: 1,
-    paddingBottom: 20,
-    borderBottomColor: '#ddd',
     flexDirection: 'row',
+    paddingBottom: 20,
     paddingHorizontal: 16,
+    borderBottomColor: '#ddd',
+    borderBottomWidth: 1,
   },
   headerItem: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
   },
   text2: {
     fontSize: 16,
@@ -356,16 +360,16 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   line: {
-    borderLeftWidth: 2,
-    borderLeftColor: '#ddd',
     marginLeft: 31,
     marginTop: 10,
+    borderLeftColor: '#ddd',
+    borderLeftWidth: 2,
   },
   editorHeader: {
-    flexDirection: 'row',
     alignItems: 'flex-start',
-    marginTop: 20,
     flex: 1,
+    flexDirection: 'row',
+    marginTop: 20,
   },
   text1: {
     fontSize: 14,
@@ -374,26 +378,26 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 14,
-    marginTop: 10,
     textAlignVertical: 'top',
     marginRight: 20,
+    marginTop: 10,
   },
   avatorimage: {
     width: 30,
     height: 30,
-    borderRadius: 15,
     marginLeft: 16,
     marginRight: 12,
-    borderWidth: 0.3,
     borderColor: '#000000',
+    borderRadius: 15,
+    borderWidth: 0.3,
   },
   Icon: {
-    color: '#808080',
     marginBottom: 20,
+    color: '#808080',
   },
   headerLeft: {
-    flexDirection: 'row',
     alignItems: 'baseline',
+    flexDirection: 'row',
     gap: 8,
   },
   status: {
@@ -403,8 +407,8 @@ const styles = StyleSheet.create({
   },
   image: {
     marginBottom: 20,
-    borderRadius: 10,
     marginRight: 10,
+    borderRadius: 10,
   },
   bottomButtonWrapper: {
     position: 'absolute',
@@ -416,40 +420,40 @@ const styles = StyleSheet.create({
   bottomButtonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 8,
     marginHorizontal: 16,
     paddingTop: 12,
     borderTopWidth: 1,
+    gap: 8,
   },
   deleteButton: {
     position: 'absolute',
     top: 5,
     right: 5,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 12,
     padding: 5,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   buttonContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    flexDirection: 'row',
     paddingHorizontal: 16,
+    gap: 4,
   },
   dialog: {
-    flex: 1,
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
   },
   dialogInner: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: '70%',
     paddingHorizontal: 20,
     paddingVertical: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    borderRadius: 16,
     borderCurve: 'continuous',
-    overflow: 'hidden',
+    borderRadius: 16,
+    gap: 12,
   },
   text: {
     fontSize: 17,
