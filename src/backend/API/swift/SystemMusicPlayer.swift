@@ -63,7 +63,7 @@ public class MusicPlayerModule: NSObject, ExpoModule {
 
         // 次の曲へ進む
         @ExpoMethod
-        Function("nextTrack"){(resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) -> Void in
+        Function("NextTrack"){(resolver: @escaping RCTPromiseResolveBlock, rejecter: @escaping RCTPromiseRejectBlock) -> Void in
             let player = SystemMusicPlayer.shared
             player.skipToNextEntry { [weak self] error in 
                 guard let self = self else { return }
