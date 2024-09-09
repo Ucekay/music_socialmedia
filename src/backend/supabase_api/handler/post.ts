@@ -3,8 +3,13 @@ import {
   getInitialPosts,
   getNewerPosts,
   getOlderPosts,
+<<<<<<< HEAD:src/backend/supabase_api/handler/post.ts
 } from '../dbdriver/post';
 import { getUserProfileforPosts } from '../dbdriver/profile';
+=======
+} from '../dao/post';
+import { getUserProfileforPosts } from '../dao/profile';
+>>>>>>> b75c286 (めっちゃ途中):src/backend/components/Front_connection/post_timeline.tsx
 
 import type { PostData } from '@/src/types';
 

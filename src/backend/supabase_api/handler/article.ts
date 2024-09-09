@@ -1,10 +1,12 @@
-import { ArticleApplication } from '../application/article';
-import { BadRequestError } from '../../schema/error';
-import { Article, ArticleAdditionalData, CUArticleDataParams } from '../../schema/supabase_api';
+import { insertArticleMetaData } from '../dao/Article/Article';
+import { insertGeneral } from '../dao/Article/General';
+import { insertLiveReport } from '../dao/Article/LiveReport';
+import { insertPlaylistArticle } from '../dao/Article/PlaylistArticle';
+import { insertReview } from '../dao/Article/Review';
 
-const articleApplication = new ArticleApplication();
-
-export const CreateArticleHandler = async (
+//メタデータを挿入した後に記事データを挿入する関数
+export const InsertArticle = async (
+  ArticleTypes: string[],
   userId: string,
   thumbnailUrl: string,
   type: string,
@@ -14,88 +16,50 @@ export const CreateArticleHandler = async (
   body: string,
   playlistId?: number | null,
 ): Promise<boolean | string> => {
-
-  if (!userId || !thumbnailUrl || !type || !title || !body) {
-    throw BadRequestError
+  if (!ArticleTypes.includes(type)) {
+    throw new Error('無効な記事タイプです。');
   }
 
-  const ArticleDataTypes = ['general', 'review', 'liveReport', 'playlist']
-
-  if (!ArticleDataTypes.includes(type)) {
-    throw BadRequestError
-  }
-
-  const ArticleData: CUArticleDataParams = {
-    user_id: userId,
-    thumbnail_url: thumbnailUrl,
-    type: type,
-    title: title,
-    info_1: info1,
-    info_2: info2,
-    body: body,
-    playlist_id: playlistId,
-  }
+  const ArticleMetaData = {
+    ThumbnailURL: thumbnailUrl,
+    Type: type,
+    Title: title,
+    Info1: info1,
+    Info2: info2,
+  };
 
   try {
-    const result = await articleApplication.createArticle(ArticleData, userId);
+    // メタデータの挿入
+    const MetaData = await insertArticleMetaData(ArticleMetaData);
+
+    // メタデータが正常に挿入された後
+    let result: boolean | string = false;
+
+    switch (type) {
+      case 'general':
+        const GeneralData = { Body: body, PlaylistID: playlistId };
+        result = await insertGeneral(GeneralData);
+        break;
+      case 'review':
+        const ReviewData = { Body: body, PlaylistID: playlistId };
+        result = await insertReview(ReviewData);
+        break;
+      case 'liveReport':
+        const LiveReportData = { Body: body, PlaylistID: playlistId };
+        result = await insertLiveReport(LiveReportData);
+        break;
+      case 'playlist':
+        const PlaylistData = { Body: body, PlaylistID: playlistId };
+        result = await insertPlaylistArticle(PlaylistData);
+        break;
+      default:
+        throw new Error('予期せぬエラーが発生しました。');
+    }
+
     return result;
   } catch (error) {
-    throw error; //ここでは基本的にInternalErrorが投げられる
+    // エラーハンドリング
+    console.error('記事の挿入中にエラーが発生しました:', error);
+    throw error; // 必要に応じてエラーを再スロー
   }
 };
-
-export const DeleteArticleHandler = async(
-  articleId: number, userId: string, type: string
-): Promise<boolean> => {
-  if (!articleId || !userId || !type) {
-    throw BadRequestError;
-  }
-  try {
-    const result = await articleApplication.deleteArticle(articleId, userId, type);
-    return result;
-  } catch (error) {
-    throw error;
-  }
-}
-
-export const UpdateArticleHandler = async(
-  articleId: number,
-  userId: string,
-  updateData: Partial<CUArticleDataParams>
-): Promise<boolean> => {
-  try {
-    const result = await articleApplication.updateArticle(articleId, userId, updateData);
-    return result;
-  } catch (error) {
-    throw error;
-  }
-}
-
-export const GetArticlesHandler = async(
-  prevcursor: string | null,
-  latest: boolean | null
-): Promise<{
-  articlemetaData: Article[];
-  cursor: string | null;
-  latestcursor: string | null;
-}> => {
-  try {
-    const result = await articleApplication.getArticles(prevcursor, latest);
-    return result;
-  } catch (error) {
-    throw error;
-  }
-}
-
-export const GetArticleHandler = async(
-  articleId: number,
-  type: string
-): Promise<{ content: ArticleAdditionalData, likeStatus: boolean }> => {
-  try {
-    const result = await articleApplication.getArticle(articleId, type);
-    return result;
-  } catch (error) {
-    throw error;
-  }
-}
-

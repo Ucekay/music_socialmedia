@@ -1,13 +1,8 @@
 import { supabase } from '../../../lib/supabase';
 import { checkAuth } from '../checkAuth';
 
-<<<<<<< HEAD:src/backend/components/DB_Access/Article/LiveReport.tsx
+import type { GetGetArticleContent } from './General';
 import type { Database } from '../../../types/supabasetypes';
-import type { GetGetArticleContent } from './General';
-=======
-import type { GetGetArticleContent } from './General';
-import type { Database } from '../../../schema/supabasetypes';
->>>>>>> b75c286 (めっちゃ途中):src/backend/supabase_api/dao/Article/LiveReport.tsx
 
 type LiveReport = Database['public']['Tables']['LiveReport']['Insert'];
 type UpdateLiveReport = Omit<

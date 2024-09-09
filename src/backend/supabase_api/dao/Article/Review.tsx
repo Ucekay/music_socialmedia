@@ -1,6 +1,7 @@
 import { supabase } from '../../../lib/supabase';
 import { checkAuth } from '../checkAuth';
 
+<<<<<<< HEAD:src/backend/supabase_api/dao/Article/Review.tsx
 <<<<<<< HEAD:src/backend/components/DB_Access/Article/Review.tsx
 import type { Database } from '../../../types/supabasetypes';
 import type { GetGetArticleContent } from './General';
@@ -8,6 +9,10 @@ import type { GetGetArticleContent } from './General';
 import type { GetGetArticleContent } from './General';
 import type { Database } from '../../../schema/supabasetypes';
 >>>>>>> b75c286 (めっちゃ途中):src/backend/supabase_api/dao/Article/Review.tsx
+=======
+import type { GetGetArticleContent } from './General';
+import type { Database } from '../../../schema/supabasetypes';
+>>>>>>> b75c286 (めっちゃ途中):src/backend/components/DB_Access/Article/Review.tsx
 
 type Review = Database['public']['Tables']['Review']['Insert'];
 type UpdateReview = Omit<
