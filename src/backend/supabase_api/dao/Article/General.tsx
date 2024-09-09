@@ -1,7 +1,7 @@
 import { supabase } from '../../../lib/supabase';
 import { checkAuth } from '../checkAuth';
 
-import type { Database } from '../../../types/supabasetypes';
+import type { Database } from '../../../schema/supabasetypes';
 
 type General = Database['public']['Tables']['General']['Insert'];
 type UpdateGeneral = Omit<

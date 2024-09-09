@@ -3,8 +3,8 @@ import {
   getInitialPosts,
   getNewerPosts,
   getOlderPosts,
-} from '../DB_Access/post';
-import { getUserProfileforPosts } from '../DB_Access/profile';
+} from '../dao/post';
+import { getUserProfileforPosts } from '../dao/profile';
 
 import type { PostData } from '@/src/types';
 
