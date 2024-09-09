@@ -6,7 +6,6 @@ import chroma from 'chroma-js';
 import { Heart } from 'iconoir-react-native';
 
 import Colors from '@/src/constants/Colors';
-import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 type HeartIconProps = {
   width: number;
@@ -30,7 +29,6 @@ const HeartIcon = ({
   initialColor,
 }: HeartIconProps) => {
   const colorScheme = useColorScheme();
-  const { colors } = useTheme();
   const [color, setColor] = useState<string>(
     colorScheme === 'light'
       ? Colors.light.secondaryText

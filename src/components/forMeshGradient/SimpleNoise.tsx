@@ -119,7 +119,8 @@ export function createNoise2D(random: RandomFn = Math.random): NoiseFunction2D {
     const y0 = y - Y0;
     // For the 2D case, the simplex shape is an equilateral triangle.
     // Determine which simplex we are in.
-    let i1, j1; // Offsets for second (middle) corner of simplex in (i,j) coords
+    let i1: number;
+    let j1: number; // Offsets for second (middle) corner of simplex in (i,j) coords
     if (x0 > y0) {
       i1 = 1;
       j1 = 0;
@@ -197,7 +198,10 @@ export function createNoise3D(random: RandomFn = Math.random): NoiseFunction3D {
   const permGrad3z = new Float64Array(perm).map((v) => grad3[(v % 12) * 3 + 2]);
   return function noise3D(x: number, y: number, z: number): number {
     'worklet';
-    let n0, n1, n2, n3; // Noise contributions from the four corners
+    let n0: number;
+    let n1: number;
+    let n2: number;
+    let n3: number; // Noise contributions from the four corners
     // Skew the input space to determine which simplex cell we're in
     const s = (x + y + z) * F3; // Very nice and simple skew factor for 3D
     const i = fastFloor(x + s);
@@ -212,8 +216,12 @@ export function createNoise3D(random: RandomFn = Math.random): NoiseFunction3D {
     const z0 = z - Z0;
     // For the 3D case, the simplex shape is a slightly irregular tetrahedron.
     // Determine which simplex we are in.
-    let i1, j1, k1; // Offsets for second corner of simplex in (i,j,k) coords
-    let i2, j2, k2; // Offsets for third corner of simplex in (i,j,k) coords
+    let i1: number;
+    let j1: number;
+    let k1: number; // Offsets for second corner of simplex in (i,j,k) coords
+    let i2: number;
+    let j2: number;
+    let k2: number; // Offsets for third corner of simplex in (i,j,k) coords
     if (x0 >= y0) {
       if (y0 >= z0) {
         i1 = 1;
@@ -366,7 +374,11 @@ export function createNoise4D(random: RandomFn = Math.random): NoiseFunction4D {
   const permGrad4w = new Float64Array(perm).map((v) => grad4[(v % 32) * 4 + 3]);
   return function noise4D(x: number, y: number, z: number, w: number): number {
     'worklet';
-    let n0, n1, n2, n3, n4; // Noise contributions from the five corners
+    let n0: number;
+    let n1: number;
+    let n2: number;
+    let n3: number;
+    let n4: number; // Noise contributions from the five corners
     // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in
     const s = (x + y + z + w) * F4; // Factor for 4D skewing
     const i = fastFloor(x + s);

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import {
   Canvas,
@@ -242,10 +242,3 @@ const RectPatch = ({
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {},
-  blur: {
-    position: 'absolute',
-  },
-});
