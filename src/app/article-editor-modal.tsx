@@ -1,5 +1,4 @@
 import { Stack, useNavigation } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import {
   Button,
@@ -11,7 +10,6 @@ import {
   View,
   useColorScheme,
 } from 'react-native';
-import { useHeaderHeight } from '@react-navigation/elements';
 
 import {
   CoreBridge,
@@ -22,6 +20,8 @@ import {
   useEditorContent,
 } from '@10play/tentap-editor';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { StatusBar } from 'expo-status-bar';
 import PagerView from 'react-native-pager-view';
 import Animated, {
   FadeIn,

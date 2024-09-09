@@ -1,6 +1,7 @@
-import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+
+import { Image } from 'expo-image';
 
 import userData from '../assets/userData';
 import { useTheme } from '../contexts/ColorThemeContext';

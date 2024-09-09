@@ -1,9 +1,7 @@
-import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import type React from 'react';
 import { useState } from 'react';
 import {
-  Dimensions,
   type Falsy,
   Pressable,
   type RecursiveArray,
@@ -16,9 +14,10 @@ import {
   type ViewStyle,
   useColorScheme,
 } from 'react-native';
+
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
-
+import { Image } from 'expo-image';
 import {
   type MaterialTabItemProps,
   type TabBarProps,
@@ -33,7 +32,6 @@ import { useTheme } from '@/src/contexts/ColorThemeContext';
 import type { UserListPropsType } from '@/src/types';
 import type { AnimatedStyle } from 'react-native-reanimated';
 
-const width = Dimensions.get('window').width;
 const backgroundColors = [
   ['#F0F0F0', '#2E2E2E'],
   ['#D3D3D3', '#444444'],
@@ -151,8 +149,8 @@ const UserListScreen = (): JSX.Element => {
           | ((
               props: MaterialTabItemProps<string>,
             ) => React.ReactElement<
-              any,
-              string | React.JSXElementConstructor<any>
+              React.ReactElement,
+              string | React.JSXElementConstructor<JSX.Element>
             >)
           | undefined;
         getLabelText?: ((name: string) => string) | undefined;

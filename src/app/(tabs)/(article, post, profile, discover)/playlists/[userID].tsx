@@ -1,6 +1,6 @@
 import { FlatList } from 'react-native';
-import { useHeaderHeight } from '@react-navigation/elements';
 
+import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
 
 import playlistsData from '@/src/assets/playlistsData';

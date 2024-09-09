@@ -130,7 +130,8 @@ export const Button: React.FC<ButtonProps> = ({
           })}
         </View>
       );
-    } else if (React.isValidElement(icon)) {
+    }
+    if (React.isValidElement(icon)) {
       return icon;
     }
     return null;

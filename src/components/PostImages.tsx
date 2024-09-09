@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import type React from 'react';
 import { useEffect, useLayoutEffect, useState } from 'react';
@@ -12,6 +11,7 @@ import {
   View,
 } from 'react-native';
 
+import { Image } from 'expo-image';
 import { Message, Xmark } from 'iconoir-react-native';
 import {
   Gesture,

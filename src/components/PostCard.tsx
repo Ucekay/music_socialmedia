@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -10,6 +9,7 @@ import {
   useColorScheme,
 } from 'react-native';
 
+import { Image } from 'expo-image';
 import { Message } from 'iconoir-react-native';
 
 import { formatCreatedAt } from '@/src/utils/date/formatCreatedAt';
@@ -18,7 +18,6 @@ import IconAntDesign from './Icons/AntDesign';
 import HeartIcon from './Icons/HeartIcon';
 import ShareIcon from './Icons/ShareIcon';
 import PostImages from './PostImages';
-
 
 import type { PostDataType } from '../types';
 
@@ -91,7 +90,7 @@ const PostCard = ({ post }: { post: PostDataType }): JSX.Element => {
           <HeartIcon
             width={16}
             height={16}
-            initialcolor={themeTextColor.color}
+            initialColor={themeTextColor.color}
           />
           <Link
             href={{

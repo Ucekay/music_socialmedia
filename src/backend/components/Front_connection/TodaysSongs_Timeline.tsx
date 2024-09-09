@@ -1,10 +1,10 @@
 import { supabase } from '../../lib/supabase';
-import { getUserProfileforPosts } from '../DB_Access/profile';
 import {
   getInitialTodaysSongs,
   getNewerTodaysSongs,
   getOlderTodaysSongs,
 } from '../DB_Access/TodaysSong';
+import { getUserProfileforPosts } from '../DB_Access/profile';
 
 import type { TodaysSongsData } from '@/src/types';
 

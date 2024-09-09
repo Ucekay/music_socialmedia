@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
+
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
-
 import { FlashList } from '@shopify/flash-list';
 
 import articleData from '@/src/assets/articleData';

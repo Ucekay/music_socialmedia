@@ -1,5 +1,4 @@
 import { Stack, useNavigation } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import {
   Button,
@@ -10,14 +9,17 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import { useHeaderHeight } from '@react-navigation/elements';
 
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import SecondaryBackgroundView from '../components/ThemedSecondaryBgView';
 import TodaySongCard from '../components/TodaySongCard';
 import { useTheme } from '../contexts/ColorThemeContext';
+
+import type { ColorScheme } from '../types';
 
 interface Song {
   id: string;
@@ -133,10 +135,10 @@ const CharacterCountIndicator = ({
 }: {
   currentCount: number;
   maxCount: number;
-  colors: any;
+  colors: ColorScheme;
 }) => (
   <View style={styles.characterCountContainer}>
-    <View style={{ flex: 1 }}></View>
+    <View style={{ flex: 1 }} />
     <View
       style={{
         flex: 1,

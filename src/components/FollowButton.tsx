@@ -15,13 +15,12 @@ const FollowButton = ({ isMyAccount }: { isMyAccount: boolean }) => {
         <Text style={styles.text}>編集</Text>
       </Pressable>
     );
-  } else {
-    return (
-      <Pressable style={[styles.button, backgroundColor]}>
-        <Text style={[styles.text, textColor]}>フォロー</Text>
-      </Pressable>
-    );
   }
+  return (
+    <Pressable style={[styles.button, backgroundColor]}>
+      <Text style={[styles.text, textColor]}>フォロー</Text>
+    </Pressable>
+  );
 };
 
 export default FollowButton;

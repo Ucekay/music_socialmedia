@@ -1,8 +1,8 @@
 import { supabase } from '../../../lib/supabase';
 import { checkAuth } from '../checkAuth';
 
-import type { GetGetArticleContent } from './General';
 import type { Database } from '../../../types/supabasetypes';
+import type { GetGetArticleContent } from './General';
 
 type Review = Database['public']['Tables']['Review']['Insert'];
 type UpdateReview = Omit<

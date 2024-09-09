@@ -1,9 +1,9 @@
-import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
 import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useHeaderHeight } from '@react-navigation/elements';
 
+import { useHeaderHeight } from '@react-navigation/elements';
 import { useQueryClient } from '@tanstack/react-query';
+import { Image } from 'expo-image';
 import * as IconoirIcons from 'iconoir-react-native';
 
 import { Button } from '@/src/components/Button';
@@ -11,7 +11,6 @@ import BgView from '@/src/components/ThemedBgView';
 import TracksListItem from '@/src/components/TracksListItem';
 
 import type { PlaylistDetailType } from '@/src/types';
-
 
 const PlaylistDetailScreen = (): JSX.Element => {
   const { playlistID } = useLocalSearchParams();

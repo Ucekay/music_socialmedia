@@ -36,22 +36,26 @@ export const InsertArticle = async (
     let result: boolean | string = false;
 
     switch (type) {
-      case 'general':
+      case 'general': {
         const GeneralData = { Body: body, PlaylistID: playlistId };
         result = await insertGeneral(GeneralData);
         break;
-      case 'review':
+      }
+      case 'review': {
         const ReviewData = { Body: body, PlaylistID: playlistId };
         result = await insertReview(ReviewData);
         break;
-      case 'liveReport':
+      }
+      case 'liveReport': {
         const LiveReportData = { Body: body, PlaylistID: playlistId };
         result = await insertLiveReport(LiveReportData);
         break;
-      case 'playlist':
+      }
+      case 'playlist': {
         const PlaylistData = { Body: body, PlaylistID: playlistId };
         result = await insertPlaylistArticle(PlaylistData);
         break;
+      }
       default:
         throw new Error('予期せぬエラーが発生しました。');
     }

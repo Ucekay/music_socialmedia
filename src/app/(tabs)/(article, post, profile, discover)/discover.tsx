@@ -1,4 +1,3 @@
-import { BlurView } from 'expo-blur';
 import { Link, Stack, useFocusEffect, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
@@ -9,8 +8,8 @@ import {
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 
 import todaySongData from '@/src/assets/todaySongData';
 import SearchBar from '@/src/components/SearchBar';
@@ -36,6 +35,7 @@ const Discover = () => {
   const translateX = -100 * Math.cos((105 * Math.PI) / 180);
   const translateY = 66 * Math.sin((15 * Math.PI) / 180);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const loadHistory = async () => {
       try {
@@ -130,7 +130,7 @@ const Discover = () => {
               tint='systemUltraThinMaterial'
               intensity={100}
               style={{ height: insetsTop }}
-            ></BlurView>
+            />
           ),
         }}
       />

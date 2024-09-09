@@ -20,7 +20,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-
 import { useTheme } from '../contexts/ColorThemeContext';
 
 import Text from './ThemedText';
@@ -84,7 +83,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
           },
         };
       },
-      [],
+      [onChangeText],
     );
 
     const handleLayout = (event: LayoutChangeEvent) => {

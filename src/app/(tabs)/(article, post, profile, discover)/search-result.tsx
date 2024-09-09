@@ -1,4 +1,3 @@
-import { BlurView } from 'expo-blur';
 import {
   Stack,
   router,
@@ -19,10 +18,11 @@ import {
   type ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { FlashList } from '@shopify/flash-list';
+import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   type NavigationState,
@@ -110,7 +110,7 @@ type TrackSearchResultsProps = {
 const ArticleSearchResults = ({ query }: { query: string }) => {
   const bottomTabBarHeight = useBottomTabBarHeight();
   const { colors } = useTheme();
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<ArticleData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -367,8 +367,8 @@ const SearchResultTabs = ({ query }: { query: string }) => {
           | ((
               props: TabBarItemProps<Route> & { key: string },
             ) => React.ReactElement<
-              any,
-              string | React.JSXElementConstructor<any>
+              Route,
+              string | React.JSXElementConstructor<Route>
             >)
           | undefined;
         onTabPress?: ((scene: Scene<Route> & Event) => void) | undefined;
@@ -443,6 +443,7 @@ const SearchResult = () => {
     }
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const loadHistory = async () => {
       try {
@@ -472,6 +473,7 @@ const SearchResult = () => {
   };
 
   const searchRef = useRef<SearchBarCommands>(null);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     showCurrentQuery();
   }, []);
@@ -531,7 +533,7 @@ const SearchResult = () => {
               tint='systemUltraThinMaterial'
               intensity={100}
               style={{ height: insetsTop, paddingHorizontal: 16 }}
-            ></BlurView>
+            />
           ),
           headerTransparent: true,
         }}

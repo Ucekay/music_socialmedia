@@ -1,6 +1,7 @@
-import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { Dimensions, StyleSheet, Text, useColorScheme } from 'react-native';
+
+import { Image } from 'expo-image';
 
 import BgView from './ThemedBgView';
 

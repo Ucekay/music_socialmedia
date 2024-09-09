@@ -1,7 +1,7 @@
-import { BlurView } from 'expo-blur';
-import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
 
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { usePalette } from '../hooks/usePallete';

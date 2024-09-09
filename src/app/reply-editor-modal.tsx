@@ -1,8 +1,4 @@
-import { BlurView } from 'expo-blur';
-import { Image } from 'expo-image';
-import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -21,7 +17,10 @@ import {
 } from 'react-native';
 
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { set } from 'date-fns';
+import { BlurView } from 'expo-blur';
+import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import { StatusBar } from 'expo-status-bar';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import Animated, {
   FadeIn,
@@ -46,7 +45,7 @@ const ReplyEditorModal = () => {
   const [text, setText] = useState('');
   const [inputHeight, setInputHeight] = useState(40); // 初期の高さを設定
   const [postHeight, setPostHeight] = useState(60);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [_errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const { colors } = useTheme();
   const navigation = useNavigation();
@@ -72,11 +71,12 @@ const ReplyEditorModal = () => {
   const [postHeight2, setPostHeight2] = useState<number>(0);
   const postComponentRef = useRef(null);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (postComponentRef.current) {
       const handle = findNodeHandle(postComponentRef.current);
       if (handle) {
-        UIManager.measure(handle, (x, y, width, height) => {
+        UIManager.measure(handle, (height) => {
           setPostHeight2(height - 30);
         });
       }
@@ -230,7 +230,7 @@ const ReplyEditorModal = () => {
       },
       (selectedIndex) => {
         if (selectedIndex === 0) {
-          handlePost;
+          handlePost();
         }
       },
     );
@@ -299,7 +299,7 @@ const ReplyEditorModal = () => {
                 <FlatList
                   horizontal
                   data={ImageUrl}
-                  keyExtractor={(item, index) => index.toString()}
+                  keyExtractor={(index) => index.toString()}
                   renderItem={({ item, index }) => (
                     <Animated.View entering={FadeIn} exiting={FadeOut}>
                       <OriginalAspectImage
@@ -363,11 +363,11 @@ const ReplyEditorModal = () => {
                 <FlatList
                   horizontal
                   data={images}
-                  keyExtractor={(item, index) => index.toString()}
+                  keyExtractor={(index) => index.toString()}
                   renderItem={({ item, index }) => (
                     <Animated.View entering={FadeIn} exiting={FadeOut}>
                       <Pressable
-                        onPress={(e) => {
+                        onPress={() => {
                           handleCropEditor(index, item);
                         }}
                       >

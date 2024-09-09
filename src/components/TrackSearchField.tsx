@@ -1,7 +1,8 @@
-import { Image } from 'expo-image';
 import type React from 'react';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, TextInput, View } from 'react-native';
+
+import { Image } from 'expo-image';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 
@@ -35,7 +36,7 @@ const SONGS = [
   },
   {
     id: '3',
-    title: `少年少女よ`,
+    title: '少年少女よ',
     artist: 'Organic Call',
     coverArtUrl:
       'https://pimg.awa.io/v2/jacket/22cecc9d6d12dce69595.w630.h630.v1724018957.jpg',

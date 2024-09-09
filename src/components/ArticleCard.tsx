@@ -1,7 +1,7 @@
-import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { Image } from 'expo-image';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { useTheme } from '../contexts/ColorThemeContext';

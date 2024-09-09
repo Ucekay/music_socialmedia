@@ -7,7 +7,6 @@ module.exports = {
       'error',
       {
         alphabetize: {
-          caseInsensitive: true,
           order: 'asc',
         },
         groups: [
@@ -28,7 +27,7 @@ module.exports = {
             position: 'before',
           },
           {
-            pattern: 'expo-*',
+            pattern: 'expo-router',
             group: 'builtin',
             position: 'before',
           },
@@ -39,11 +38,6 @@ module.exports = {
           },
           {
             pattern: 'react-native',
-            group: 'builtin',
-            position: 'before',
-          },
-          {
-            pattern: '@react-navigation/*',
             group: 'builtin',
             position: 'before',
           },
