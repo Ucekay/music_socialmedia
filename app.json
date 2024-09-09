@@ -39,7 +39,8 @@
           }
         }
       ],
-      "expo-font"
+      "expo-font",
+      "./modules/music-kit-module/plugin/app.plugin.js"
     ],
     "experiments": {
       "typedRoutes": true
