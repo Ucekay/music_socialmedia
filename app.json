@@ -39,7 +39,8 @@
           }
         }
       ],
-      "expo-font"
+      "expo-font",
+      "./app.plugin.js"
     ],
     "experiments": {
       "typedRoutes": true
