@@ -1,7 +1,7 @@
 import { supabase } from '../../../lib/supabase';
 import { checkAuth } from '../checkAuth';
 
-import type { Database } from '../../../types/supabasetypes';
+import type { Database } from '../../../schema/supabasetypes';
 
 export type Article = Database['public']['Tables']['Article']['Insert'];
 type UpdateArticle = Omit<

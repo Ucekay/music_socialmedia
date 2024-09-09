@@ -1,28 +1,32 @@
 import { supabase } from '../../../lib/supabase';
 import { checkAuth } from '../checkAuth';
 
+<<<<<<< HEAD:src/backend/components/DB_Access/Article/Review.tsx
 import type { Database } from '../../../types/supabasetypes';
 import type { GetGetArticleContent } from './General';
+=======
+import type { GetGetArticleContent } from './General';
+import type { Database } from '../../../schema/supabasetypes';
+>>>>>>> b75c286 (めっちゃ途中):src/backend/supabase_api/dao/Article/Review.tsx
 
-type PlaylistArticle =
-  Database['public']['Tables']['PlaylistArticle']['Insert'];
+type Review = Database['public']['Tables']['Review']['Insert'];
 type UpdateReview = Omit<
-  Database['public']['Tables']['PlaylistArticle']['Update'],
+  Database['public']['Tables']['Review']['Update'],
   'ArticleID' | 'UserID'
 >;
-type GetPlaylistArticle = Omit<
-  Database['public']['Tables']['PlaylistArticle']['Row'],
+type Getreview = Omit<
+  Database['public']['Tables']['Review']['Row'],
   'ArticleID' | 'UserID'
 >;
 
 //データ挿入関数
-export const insertPlaylistArticle = async (
-  Data: Omit<PlaylistArticle, 'ArticleID' | 'UserID' | 'likes' | 'view'>,
+export const insertReview = async (
+  Data: Omit<Review, 'ReviewID' | 'UserID' | 'likes' | 'view'>,
 ): Promise<boolean> => {
   try {
     const userId = await checkAuth();
     const { error } = await supabase
-      .from('PlaylistArticle')
+      .from('Review')
       .insert({ ...Data, UserID: userId });
 
     if (error) {
@@ -37,16 +41,16 @@ export const insertPlaylistArticle = async (
 };
 
 //データ取得関数
-export const getPlaylistArticle = async (
+export const getReview = async (
   articleId: number,
   userID: string,
 ): Promise<{
-  PlaylistArticleData: GetGetArticleContent;
+  ReviewData: GetGetArticleContent;
   LikeToArticle: boolean;
 } | null> => {
   try {
     const { data, error } = await supabase // UserIDによる絞り込みを削除
-      .from('PlaylistArticle') // テーブル名を修正
+      .from('Review') // テーブル名を修正
       .select('*')
       .match({ ArticleID: articleId })
       .single();
@@ -69,7 +73,7 @@ export const getPlaylistArticle = async (
       throw error;
     }
 
-    return { PlaylistArticleData: data, LikeToArticle: liketoarticle };
+    return { ReviewData: data, LikeToArticle: liketoarticle };
   } catch (error) {
     console.error('データの取得中にエラーが発生しました:', error);
     throw error;
