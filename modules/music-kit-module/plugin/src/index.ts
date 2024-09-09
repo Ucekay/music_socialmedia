@@ -1,7 +1,16 @@
-import type { ConfigPlugin } from 'expo/config-plugins';
+import { type ConfigPlugin, IOSConfig } from 'expo/config-plugins';
 
-const withMusicKitModule: ConfigPlugin = (config) => {
-  console.log('MusikKitModule plugin');
+const withMusicKitModule: ConfigPlugin<
+  // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
+  { appleMusicPermission?: string | false } | void
+> = (config, { appleMusicPermission } = {}) => {
+  console.log('MusicKitModule plugin');
+  IOSConfig.Permissions.createPermissionsPlugin({
+    NSAppleMusicUsageDescription:
+      'Allow $(PRODUCT_NAME) to access your Apple Music library',
+  })(config, {
+    NSAppleMusicUsageDescription: appleMusicPermission,
+  });
   return config;
 };
 
