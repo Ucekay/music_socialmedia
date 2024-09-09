@@ -6,7 +6,7 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { FlashList } from '@shopify/flash-list';
 import { type InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 
-import { createPostDataset } from '@/src/backend/components/Front_connection/post_timeline';
+import { createPostDataset } from '@/src/backend/supabase_api/handler/post';
 import PostCard from '@/src/components/PostCard';
 import BgView from '@/src/components/ThemedBgView';
 

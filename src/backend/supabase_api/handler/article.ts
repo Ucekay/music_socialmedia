@@ -1,8 +1,8 @@
-import { insertArticleMetaData } from '../DB_Access/Article/Article';
-import { insertGeneral } from '../DB_Access/Article/General';
-import { insertLiveReport } from '../DB_Access/Article/LiveReport';
-import { insertPlaylistArticle } from '../DB_Access/Article/PlaylistArticle';
-import { insertReview } from '../DB_Access/Article/Review';
+import { insertArticleMetaData } from '../dao/Article/Article';
+import { insertGeneral } from '../dao/Article/General';
+import { insertLiveReport } from '../dao/Article/LiveReport';
+import { insertPlaylistArticle } from '../dao/Article/PlaylistArticle';
+import { insertReview } from '../dao/Article/Review';
 
 //メタデータを挿入した後に記事データを挿入する関数
 export const InsertArticle = async (

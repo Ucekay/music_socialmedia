@@ -1,27 +1,33 @@
 import { supabase } from '../../../lib/supabase';
 import { checkAuth } from '../checkAuth';
 
+<<<<<<< HEAD:src/backend/components/DB_Access/Article/PlaylistArticle.tsx
 import type { Database } from '../../../types/supabasetypes';
 import type { GetGetArticleContent } from './General';
+=======
+import type { GetGetArticleContent } from './General';
+import type { Database } from '../../../schema/supabasetypes';
+>>>>>>> feature/remote_linter-formater:src/backend/supabase_api/dao/Article/PlaylistArticle.tsx
 
-type LiveReport = Database['public']['Tables']['LiveReport']['Insert'];
-type UpdateLiveReport = Omit<
-  Database['public']['Tables']['LiveReport']['Update'],
+type PlaylistArticle =
+  Database['public']['Tables']['PlaylistArticle']['Insert'];
+type UpdateReview = Omit<
+  Database['public']['Tables']['PlaylistArticle']['Update'],
   'ArticleID' | 'UserID'
 >;
-type GetLiveReport = Omit<
-  Database['public']['Tables']['LiveReport']['Row'],
+type GetPlaylistArticle = Omit<
+  Database['public']['Tables']['PlaylistArticle']['Row'],
   'ArticleID' | 'UserID'
 >;
 
 //データ挿入関数
-export const insertLiveReport = async (
-  Data: Omit<LiveReport, 'LiveReportID' | 'UserID' | 'likes' | 'view'>,
+export const insertPlaylistArticle = async (
+  Data: Omit<PlaylistArticle, 'ArticleID' | 'UserID' | 'likes' | 'view'>,
 ): Promise<boolean> => {
   try {
     const userId = await checkAuth();
     const { error } = await supabase
-      .from('Livereport')
+      .from('PlaylistArticle')
       .insert({ ...Data, UserID: userId });
 
     if (error) {
@@ -35,37 +41,17 @@ export const insertLiveReport = async (
   }
 };
 
-//データ削除関数
-export const deleteLiveReport = async (articleId: number): Promise<boolean> => {
-  try {
-    const userId = await checkAuth();
-    const { error } = await supabase
-      .from('LiveReport')
-      .delete()
-      .match({ ArticleID: articleId, UserID: userId });
-
-    if (error) {
-      throw new Error('データの削除エラー: ' + error.message);
-    }
-
-    return true;
-  } catch (error) {
-    console.error('データの削除中にエラーが発生しました:', error);
-    throw error;
-  }
-};
-
 //データ取得関数
-export const getLiveReport = async (
+export const getPlaylistArticle = async (
   articleId: number,
   userID: string,
 ): Promise<{
-  LiveReportData: GetGetArticleContent;
+  PlaylistArticleData: GetGetArticleContent;
   LikeToArticle: boolean;
 } | null> => {
   try {
     const { data, error } = await supabase // UserIDによる絞り込みを削除
-      .from('LiveReport') // テーブル名を修正
+      .from('PlaylistArticle') // テーブル名を修正
       .select('*')
       .match({ ArticleID: articleId })
       .single();
@@ -88,7 +74,7 @@ export const getLiveReport = async (
       throw error;
     }
 
-    return { LiveReportData: data, LikeToArticle: liketoarticle };
+    return { PlaylistArticleData: data, LikeToArticle: liketoarticle };
   } catch (error) {
     console.error('データの取得中にエラーが発生しました:', error);
     throw error;
