@@ -1,8 +1,13 @@
 import { supabase } from '../../../lib/supabase';
 import { checkAuth } from '../checkAuth';
 
+<<<<<<< HEAD:src/backend/components/DB_Access/Article/PlaylistArticle.tsx
 import type { Database } from '../../../types/supabasetypes';
 import type { GetGetArticleContent } from './General';
+=======
+import type { GetGetArticleContent } from './General';
+import type { Database } from '../../../schema/supabasetypes';
+>>>>>>> b75c286 (めっちゃ途中):src/backend/supabase_api/dao/Article/PlaylistArticle.tsx
 
 type PlaylistArticle =
   Database['public']['Tables']['PlaylistArticle']['Insert'];
