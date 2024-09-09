@@ -3,25 +3,27 @@ import { checkAuth } from '../checkAuth';
 
 import type { Database } from '../../../schema/supabasetypes';
 
-type General = Database['public']['Tables']['General']['Insert'];
-type UpdateGeneral = Omit<
-  Database['public']['Tables']['General']['Update'],
-  'ArticleID' | 'UserID'
+type General = Database['public']['Tables']['general']['Insert'];
+
+type CreateGeneralParams = Omit<General, 'likes' | 'view'>;
+
+type UpdateGeneralParams = Omit<
+  Database['public']['Tables']['general']['Update'],
+  'article_id' | 'user_id'
 >;
-export type GetGetArticleContent = Omit<
-  Database['public']['Tables']['General']['Row'],
-  'ArticleID' | 'UserID'
+export type GetGeneralDetailRes = Omit<
+  Database['public']['Tables']['general']['Row'],
+  'article_id' | 'user_id'
 >;
 
 //データ挿入関数
-export const insertGeneral = async (
-  Data: Omit<General, 'ArticleID' | 'UserID' | 'likes' | 'view'>,
+export const CreateGeneral = async (
+  Data: CreateGeneralParams
 ): Promise<boolean> => {
   try {
-    const userId = await checkAuth();
     const { error } = await supabase
-      .from('General')
-      .insert({ ...Data, UserID: userId });
+      .from('general')
+      .insert({ ...Data });
 
     if (error) {
       throw new Error('データの挿入エラー: ' + error.message);
@@ -35,13 +37,12 @@ export const insertGeneral = async (
 };
 
 //データ削除関数
-export const deleteGeneral = async (articleId: number): Promise<boolean> => {
+export const DeleteGeneral = async (articleId: number, userId: string): Promise<boolean> => {
   try {
-    const userId = await checkAuth();
     const { error } = await supabase
-      .from('General')
+      .from('general')
       .delete()
-      .match({ ArticleID: articleId, UserID: userId });
+      .match({ article_id: articleId, user_id: userId });
 
     if (error) {
       throw new Error('データの削除エラー: ' + error.message);
@@ -55,17 +56,17 @@ export const deleteGeneral = async (articleId: number): Promise<boolean> => {
 };
 
 //データ更新関数
-export const updateGeneral = async (
+export const UpdateGeneral = async (
   articleId: number,
-  updateData: Partial<UpdateGeneral>,
+  userId: string,
+  updateData: Partial<UpdateGeneralParams>,
 ): Promise<boolean> => {
   try {
-    const userId = await checkAuth();
 
     const { data, error } = await supabase
-      .from('General')
+      .from('general')
       .update(updateData)
-      .match({ ArticleID: articleId, UserID: userId });
+      .match({ article_id: articleId, user_id: userId });
 
     if (error) {
       throw new Error('データの更新エラー: ' + error.message);
@@ -79,18 +80,18 @@ export const updateGeneral = async (
 };
 
 //データ取得関数
-export const getGeneral = async (
+export const GetGeneral = async (
   articleId: number,
   userID: string,
 ): Promise<{
-  GeneralData: GetGetArticleContent;
+  GeneralData: GetGeneralDetailRes;
   LikeToArticle: boolean;
 } | null> => {
   try {
     const { data, error } = await supabase // UserIDによる絞り込みを削除
-      .from('General') // テーブル名を修正
+      .from('general') 
       .select('*')
-      .match({ ArticleID: articleId })
+      .match({ article_id: articleId })
       .single();
 
     if (error) {
@@ -99,10 +100,10 @@ export const getGeneral = async (
     let liketoarticle = true;
     try {
       const { data: Like, error: likeerror } = await supabase
-        .from('ArticleLikes')
-        .select('PostID')
-        .eq('UserID', userID)
-        .eq('PostID', articleId)
+        .from('article_likes')
+        .select('post_id')
+        .eq('user_id', userID)
+        .eq('article_id', articleId)
         .single();
     } catch (likeerror) {
       liketoarticle = false;

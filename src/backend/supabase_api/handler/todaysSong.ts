@@ -4,7 +4,7 @@ import {
   getInitialTodaysSongs,
   getNewerTodaysSongs,
   getOlderTodaysSongs,
-} from '../dao/TodaysSong';
+} from '../dao/todaysSong';
 
 import type { TodaysSongsData } from '@/src/types';
 
