@@ -16,8 +16,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { supabase } from '@/src/backend/lib/supabase';
 import BgView from '@/src/components/ThemedBgView';
-
-import * as MusicKit from '../../../modules/music-kit-module';
+import * as MusicKit from 'music-kit-module';
 
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
@@ -32,8 +31,16 @@ export default function TabIndex() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const musicAuthState = MusicKit.requestMusicAuthorization();
-  console.log(musicAuthState);
+  const handleMusicAuth = async () => {
+    const musicAuthState = await MusicKit.requestMusicAuthorization();
+    console.log(musicAuthState);
+  };
+
+  handleMusicAuth();
+
+  //MusicKit.requestMusicAuthorization().then((authState) => {
+  //  console.log(authState);
+  //});
 
   const HandleGoogle = () => {
     router.replace('/(tabs)/(article)');

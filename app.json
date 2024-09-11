@@ -40,7 +40,12 @@
         }
       ],
       "expo-font",
-      "./modules/music-kit-module/app.plugin.js"
+      [
+        "./modules/music-kit-module/app.plugin.js",
+        {
+          "appleMusicPermission": "We need access to your Apple Music library to provide personalized music recommendations."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
