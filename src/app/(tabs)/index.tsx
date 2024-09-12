@@ -77,6 +77,22 @@ export default function TabIndex() {
     setLoading(false);
   }
 
+  const handlePress = () => {
+    MusicKit.checkSubscription().then(
+      ({
+        canPlayCatarogContent,
+        canBecomeSubscriber,
+        hasCloudLibraryEnabled,
+      }) => {
+        console.log(
+          canPlayCatarogContent,
+          canBecomeSubscriber,
+          hasCloudLibraryEnabled,
+        );
+      },
+    );
+  };
+
   return (
     <BgView style={styles.screenContainer}>
       <Animated.View entering={FadeIn} style={[styles.container]}>
@@ -165,6 +181,7 @@ export default function TabIndex() {
           </View>
         </Pressable>
       </Animated.View>
+      <Button title='MusicKit' onPress={handlePress} />
     </BgView>
   );
 }

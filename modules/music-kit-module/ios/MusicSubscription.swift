@@ -14,6 +14,7 @@ class MusicSubscriptionManager: NSObject {
         var musicSubscription: MusicSubscription?
         for await subscripton in MusicSubscription.subscriptionUpdates {
             musicSubscription = subscripton
+            break
         }
         let canPlayCatarogContent = musicSubscription?.canPlayCatalogContent ?? false
         let canBecomeSubscriber = musicSubscription?.canBecomeSubscriber ?? false
