@@ -6,4 +6,8 @@ export const requestMusicAuthorization = async () => {
   return MusicKitModule.requestMusicAuthorization();
 };
 
+export const checkSubscription = async () => {
+  return MusicKitModule.checkSubscription();
+};
+
 export default MusicKitModule;
