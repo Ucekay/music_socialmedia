@@ -77,10 +77,7 @@ export default function TabIndex() {
     setLoading(false);
   }
 
-  const handlePress = () => {
-    const recommendations = MusicKit.getPersonalizedRecommendations();
-    console.log(recommendations);
-  };
+  const handlePress = () => {};
 
   return (
     <BgView style={styles.screenContainer}>
