@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_plugins_1 = require("expo/config-plugins");
 const withMusicKitModule = (config, { appleMusicPermission } = {}) => {
-    console.log('MusicKitModule plugin');
     config_plugins_1.IOSConfig.Permissions.createPermissionsPlugin({
         NSAppleMusicUsageDescription: 'Allow $(PRODUCT_NAME) to access your Apple Music library',
     })(config, {
