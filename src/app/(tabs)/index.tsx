@@ -78,19 +78,8 @@ export default function TabIndex() {
   }
 
   const handlePress = () => {
-    MusicKit.checkSubscription().then(
-      ({
-        canPlayCatarogContent,
-        canBecomeSubscriber,
-        hasCloudLibraryEnabled,
-      }) => {
-        console.log(
-          canPlayCatarogContent,
-          canBecomeSubscriber,
-          hasCloudLibraryEnabled,
-        );
-      },
-    );
+    const recommendations = MusicKit.getPersonalizedRecommendations();
+    console.log(recommendations);
   };
 
   return (

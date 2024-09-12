@@ -10,4 +10,8 @@ export const checkSubscription = async () => {
   return await MusicKitModule.checkSubscription();
 };
 
+export const getPersonalizedRecommendations = async () => {
+  return await MusicKitModule.getPersonalizedRecommendations();
+};
+
 export default MusicKitModule;
