@@ -4,7 +4,6 @@ const withMusicKitModule: ConfigPlugin<
   // biome-ignore lint/suspicious/noConfusingVoidType: <explanation>
   { appleMusicPermission?: string | false } | void
 > = (config, { appleMusicPermission } = {}) => {
-  console.log('MusicKitModule plugin');
   IOSConfig.Permissions.createPermissionsPlugin({
     NSAppleMusicUsageDescription:
       'Allow $(PRODUCT_NAME) to access your Apple Music library',
