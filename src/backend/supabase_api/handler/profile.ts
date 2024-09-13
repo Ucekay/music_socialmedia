@@ -3,7 +3,7 @@ import {
   getInitialUsersPosts,
   getNewerUsersPosts,
   getOlderUsersPosts,
-} from '../dao/post';
+} from '../dbdriver/post';
 
 import type { PostData } from '@/src/types';
 
