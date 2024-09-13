@@ -120,66 +120,66 @@ export class ArticleDao implements ArticleRepsitory {
 		}
 	}
 
-	  // データ取得関数 (最初)
-  public async getInitialData(): Promise<{
-    posts: GetArticleRes[];
-  }> {
-    try {
-      const LIMIT = 10;
-      const { data: posts, error } = await supabase
-        .from(this.tableNameArticle)
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(LIMIT);
+	// データ取得関数 (最初)
+	public async getInitialData(): Promise<{
+		posts: GetArticleRes[];
+	}> {
+		try {
+			const LIMIT = 10;
+			const { data: posts, error } = await supabase
+				.from(this.tableNameArticle)
+				.select('*')
+				.order('created_at', { ascending: false })
+				.limit(LIMIT);
 
-      if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
-      }
+			if (error) {
+				throw new Error('データの取得エラー: ' + error.message);
+			}
 
-      return { posts };
-    } catch (error) {
-      console.error('データの取得中にエラーが発生しました:', error);
-      throw error;
-    }
-  }  
+			return { posts };
+		} catch (error) {
+			console.error('データの取得中にエラーが発生しました:', error);
+			throw error;
+		}
+	}
 
 	public async getOlderData(
-    cursor: string
-  ): Promise<{ posts: GetArticleRes[], err: Error | null }> {
-      const LIMIT = 10;
-      const { data: nextArticles, error } = await supabase
-        .from(this.tableNameArticle)
-        .select('*')
-        .order('created_at', { ascending: false })
-        .lt('created_at', cursor)
-        .limit(LIMIT);
+		cursor: string
+	): Promise<{ posts: GetArticleRes[], err: Error | null }> {
+		const LIMIT = 10;
+		const { data: nextArticles, error } = await supabase
+			.from(this.tableNameArticle)
+			.select('*')
+			.order('created_at', { ascending: false })
+			.lt('created_at', cursor)
+			.limit(LIMIT);
 
-      if (error) {
-        console.error('Error fetching more posts:', error);
-        return { posts: [], err: Error(error.message) };
-	  }
+		if (error) {
+			console.error('Error fetching more posts:', error);
+			return { posts: [], err: Error(error.message) };
+		}
 		
-      return { posts: nextArticles, err: null };
+		return { posts: nextArticles, err: null };
 	}
 	
 	public async getNewerData(
 		latestCursor: string
-  ): Promise<{ posts: GetArticleRes[], err: Error | null }> {
-      const LIMIT = 10;
-      const { data: nextArticles, error } = await supabase
-        .from(this.tableNameArticle)
-        .select('*')
-        .order('created_at', { ascending: false })
-        .gt('created_at', latestCursor)
-        .limit(LIMIT);
+	): Promise<{ posts: GetArticleRes[], err: Error | null }> {
+		const LIMIT = 10;
+		const { data: nextArticles, error } = await supabase
+			.from(this.tableNameArticle)
+			.select('*')
+			.order('created_at', { ascending: false })
+			.gt('created_at', latestCursor)
+			.limit(LIMIT);
 
-      if (error) {
-        console.error('Error fetching more posts:', error);
-        return { posts: [], err: Error(error.message) };
-      }
+		if (error) {
+			console.error('Error fetching more posts:', error);
+			return { posts: [], err: Error(error.message) };
+		}
 
-      return { posts: nextArticles, err: null };
-  }
+		return { posts: nextArticles, err: null };
+	}
 
 	// general
 	// データ挿入関数
@@ -497,7 +497,7 @@ export class ArticleDao implements ArticleRepsitory {
 			const { error } = await supabase
 				.from(this.tableNamePlaylistArticle)
 				.delete()
-				.match({ article_id: articleId , user_id: userId });
+				.match({ article_id: articleId, user_id: userId });
 
 			if (error) {
 				throw new Error('データの削除エラー: ' + error.message);
@@ -558,30 +558,30 @@ export class ArticleDao implements ArticleRepsitory {
 	}
 
 	public async getLikeStatus(
-    articleId: number,
-    userId: string
-  ): Promise<boolean> {
-    try {
-      const { count, error } = await supabase
-		.from(this.tableNameArticleLikes)
-        .select('id', { count: 'exact' })
-        .match({ article_id: articleId, user_id: userId });
+		articleId: number,
+		userId: string
+	): Promise<boolean> {
+		try {
+			const { count, error } = await supabase
+				.from(this.tableNameArticleLikes)
+				.select('id', { count: 'exact' })
+				.match({ article_id: articleId, user_id: userId });
 
-      if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
-      }
+			if (error) {
+				throw new Error('データの取得エラー: ' + error.message);
+			}
 
-      if (count === 0) {
-        return false;
-      } else if (count === 1) {
-        return true;
-      } else {
-        throw new Error('データの取得エラー');
-      }
-    } catch (error) {
-      console.error('データの取得中にエラーが発生しました:', error);
-      throw error;
-    }
+			if (count === 0) {
+				return false;
+			} else if (count === 1) {
+				return true;
+			} else {
+				throw new Error('データの取得エラー');
+			}
+		} catch (error) {
+			console.error('データの取得中にエラーが発生しました:', error);
+			throw error;
+		}
 	}
 	
 	public async getUserProfile(userId: string): Promise<{
@@ -590,22 +590,22 @@ export class ArticleDao implements ArticleRepsitory {
 		UserName: string;
 	}> {
 		try {
-    const { data, error } = await supabase // UserIDによる絞り込みを削除
-      .from('users') // テーブル名を修正
-      .select('icon_image_url, user_name, profile_id')
-      .eq('user_id', userId)
-      .single();
+			const { data, error } = await supabase // UserIDによる絞り込みを削除
+				.from('users') // テーブル名を修正
+				.select('icon_image_url, user_name, profile_id')
+				.eq('user_id', userId)
+				.single();
 
-    if (error) {
-      throw new Error('データの取得エラー: ' + error.message);
-    }
+			if (error) {
+				throw new Error('データの取得エラー: ' + error.message);
+			}
 
-    return {IconImageUrl: data.icon_image_url, ProfileID: data.profile_id, UserName: data.user_name};
-  } catch (error) {
-    console.error('データの取得中にエラーが発生しました:', error);
-    throw error;
-  }
+			return { IconImageUrl: data.icon_image_url, ProfileID: data.profile_id, UserName: data.user_name };
+		} catch (error) {
+			console.error('データの取得中にエラーが発生しました:', error);
+			throw error;
+		}
+
+	}
 
 }
-
-
