@@ -1,8 +1,9 @@
-import { BadRequestError, InternalError } from "../../schema/error";
+import { BadRequestError, GetArticleError, InternalError } from "../../schema/error";
 import { Article, ArticleAdditionalData, type CUArticleDataParams } from "../../schema/supabase_api";
 import { checkAuth } from "../dbdriver/checkAuth";
-import { ArticleDao } from "../dao/article";
+import { ArticleDao, ArticleRepsitory } from "../dao/article";
 import { getUserProfileforPosts } from "../dbdriver/profile";
+import { G } from "react-native-svg";
 
 export interface IArticleApplication {
   createArticle(articleData: CUArticleDataParams, userId: string): Promise<boolean | string>;
@@ -17,10 +18,13 @@ export interface IArticleApplication {
   getArticle(articleId: number, type: string): Promise<{ content: ArticleAdditionalData, likeStatus: boolean } >;
 }
 
-const articleDao = new ArticleDao();
-
 //アプリケーション層classにすることで保守性の向上を図る
 export class ArticleApplication implements IArticleApplication {
+  private articleDao: ArticleRepsitory;
+  constructor(articleRepository: ArticleRepsitory) {
+    this.articleDao = articleRepository;
+  }
+
   async createArticle(articleData: CUArticleDataParams, userId: string): Promise<boolean | string> {
     try {
       const ArticleMetaData = {
@@ -32,26 +36,26 @@ export class ArticleApplication implements IArticleApplication {
         user_id: userId,
       };
 
-      const articleId = await articleDao.createArticleData(ArticleMetaData);
+      const articleId = await this.articleDao.createArticleData(ArticleMetaData);
 
       let result: boolean | string = false;
 
       switch (articleData.type) {
         case 'general':
           const GeneralData = { body: articleData.body, playlist_id: articleData.playlist_id, article_id: articleId };
-          result = await articleDao.createGeneralData(GeneralData);
+          result = await this.articleDao.createGeneralData(GeneralData);
           break;
         case 'review':
           const ReviewData = { body: articleData.body, playlist_id: articleData.playlist_id, article_id: articleId };
-          result = await articleDao.createReviewData(ReviewData);
+          result = await this.articleDao.createReviewData(ReviewData);
           break;
         case 'liveReport':
           const LiveReportData = { body: articleData.body, playlist_id: articleData.playlist_id, article_id: articleId };
-          result = await articleDao.createLiveReportData(LiveReportData);
+          result = await this.articleDao.createLiveReportData(LiveReportData);
           break;
         case 'playlist':
           const PlaylistData = { body: articleData.body, playlist_id: articleData.playlist_id, article_id: articleId };
-          result = await articleDao.createPlaylistArticleData(PlaylistData);
+          result = await this.articleDao.createPlaylistArticleData(PlaylistData);
           break;
         default:
           throw new Error('Invalid type');
@@ -71,17 +75,17 @@ export class ArticleApplication implements IArticleApplication {
         throw BadRequestError;
       }
 
-        const _deleteMetaResult = await articleDao.deleteArticleData(articleId, userId);
+        const _deleteMetaResult = await this.articleDao.deleteArticleData(articleId, userId);
 
         switch (type) {
           case 'general':
-            return await articleDao.deleteGeneralData(articleId, userId);
+            return await this.articleDao.deleteGeneralData(articleId, userId);
           case 'review':
-            return await articleDao.deleteReviewData(articleId, userId);
+            return await this.articleDao.deleteReviewData(articleId, userId);
           case 'liveReport':
-                return await articleDao.deleteLiveReportData(articleId, userId);
+                return await this.articleDao.deleteLiveReportData(articleId, userId);
           case 'playlist':
-            return await articleDao.deletePlaylistArticleData(articleId, userId);
+            return await this.articleDao.deletePlaylistArticleData(articleId, userId);
           default:
             throw new Error('Invalid type');
         }
@@ -101,17 +105,17 @@ export class ArticleApplication implements IArticleApplication {
         throw BadRequestError;
       }
 
-      const _updateMetaResult = await articleDao.updateArticleData(articleId, updateData);
+      const _updateMetaResult = await this.articleDao.updateArticleData(articleId, updateData);
 
       switch (updateData.type) {
         case 'general':
-          return await articleDao.updateGeneralData(articleId, updateData);
+          return await this.articleDao.updateGeneralData(articleId, updateData);
         case 'review':
-          return await articleDao.updateReviewData(articleId, updateData);
+          return await this.articleDao.updateReviewData(articleId, updateData);
         case 'liveReport':
-            return await articleDao.updateLiveReportData(articleId, updateData);
+            return await this.articleDao.updateLiveReportData(articleId, updateData);
         case 'playlist':
-            return await articleDao.updatePlaylistArticleData(articleId, updateData);
+            return await this.articleDao.updatePlaylistArticleData(articleId, updateData);
         default:
           throw new Error('Invalid type');
       }
@@ -129,18 +133,21 @@ export class ArticleApplication implements IArticleApplication {
     cursor: string | null;
     latestcursor: string | null;
     }> {
-    let metadata;
+    let metadata;[]
     let cursor: string | null = null;
     let latestcursor: string | null = null;
 
     try {
     if (prevcursor == null) {
-        const result = await articleDao.getInitialData();
+      const result = await this.articleDao.getInitialData();
+      if (result.posts == null) {
+        throw GetArticleError;
+      }
         metadata = result.posts;
         cursor = metadata.length > 0 ? metadata[metadata.length - 1].created_at : null;
         latestcursor = metadata.length > 0 ? metadata[0].created_at : null;
     } else if (latest == false) {
-        const result = await articleDao.getOlderData(prevcursor);
+        const result = await this.articleDao.getOlderData(prevcursor);
         metadata = result.posts;
         cursor = metadata.length > 0
         ? metadata[metadata.length - 1].created_at
@@ -149,12 +156,12 @@ export class ArticleApplication implements IArticleApplication {
         throw result.err;
         }
     } else {
-        const result = await articleDao.getNewerData(prevcursor);
+        const result = await this.articleDao.getNewerData(prevcursor);
         metadata = result.posts;
         latestcursor = metadata.length > 0 ? metadata[0].created_at : null;
     }
     } catch (error) {
-        throw InternalError;
+      throw GetArticleError;
     }
 
   try {
@@ -196,26 +203,26 @@ export class ArticleApplication implements IArticleApplication {
             let res;
             switch (type) {
                 case 'general':
-                    res = await articleDao.getGeneralData(articleId);
+                    res = await this.articleDao.getGeneralData(articleId);
                     if (res) {result.content = res;}
                     break;
                 case 'review':
-                    res = await articleDao.getReviewData(articleId);
+                    res = await this.articleDao.getReviewData(articleId);
                     if (res) {result.content = res;}    
                     break;
                 case 'liveReport':
-                    res = await articleDao.getLiveReportData(articleId);
+                    res = await this.articleDao.getLiveReportData(articleId);
                     if (res) {result.content = res;}
                     break;
                 case 'playlist':
-                    res = await articleDao.getPlaylistArticleData(articleId);
+                    res = await this.articleDao.getPlaylistArticleData(articleId);
                     if (res) {result.content = res;}
                     break;
                 default:
                     throw BadRequestError
             }
             if (result.content) {
-                result.likeStatus = await articleDao.getLikeStatus(articleId, userId);
+                result.likeStatus = await this.articleDao.getLikeStatus(articleId, userId);
             }
 
             if (!result.content) {
