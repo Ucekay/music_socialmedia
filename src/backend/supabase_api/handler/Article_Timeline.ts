@@ -2,7 +2,10 @@ import {
   getInitialArticleMetaData,
   getNewerMetaData,
   getOlderArticleMetaData,
+<<<<<<< HEAD
 <<<<<<< HEAD:src/backend/supabase_api/handler/Article_Timeline.ts
+=======
+>>>>>>> ad591c0 (feat/backend/architecture)
 } from '../dbdriver/Article';
 import {
   type GetGetArticleContent,
@@ -13,6 +16,7 @@ import { getPlaylistArticle } from '../dbdriver/PlaylistArticle';
 import { getReview } from '../dbdriver/Review';
 import { checkAuth } from '../dbdriver/checkAuth';
 import { getUserProfileforPosts } from '../dbdriver/profile';
+<<<<<<< HEAD
 =======
 } from '../dao/Article/Article';
 import {
@@ -25,6 +29,8 @@ import { getReview } from '../dao/Article/Review';
 import { checkAuth } from '../dao/checkAuth';
 import { getUserProfileforPosts } from '../dao/profile';
 >>>>>>> b75c286 (めっちゃ途中):src/backend/components/Front_connection/Article_Timeline.tsx
+=======
+>>>>>>> ad591c0 (feat/backend/architecture)
 
 import type { Database } from '../../schema/supabasetypes';
 

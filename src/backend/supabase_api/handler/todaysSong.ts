@@ -1,18 +1,10 @@
 import { supabase } from '../../lib/supabase';
-<<<<<<< HEAD:src/backend/supabase_api/handler/todaysSong.ts
-import { getUserProfileforPosts } from '../dbdriver/profile';
-=======
 import { getUserProfileforPosts } from '../dao/profile';
->>>>>>> b75c286 (めっちゃ途中):src/backend/components/Front_connection/TodaysSongs_Timeline.tsx
 import {
   getInitialTodaysSongs,
   getNewerTodaysSongs,
   getOlderTodaysSongs,
-<<<<<<< HEAD:src/backend/supabase_api/handler/todaysSong.ts
-} from '../dbdriver/todaysSong';
-=======
-} from '../dao/TodaysSong';
->>>>>>> b75c286 (めっちゃ途中):src/backend/components/Front_connection/TodaysSongs_Timeline.tsx
+} from '../dao/todaysSong';
 
 import type { TodaysSongsData } from '@/src/types';
 
