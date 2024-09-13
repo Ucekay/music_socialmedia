@@ -2,16 +2,16 @@ import {
   getInitialArticleMetaData,
   getNewerMetaData,
   getOlderArticleMetaData,
-} from '../dao/article/Article';
+} from '../dbdriver/Article';
 import {
   type GetGetArticleContent,
   getGeneral,
-} from '../dao/article/General';
-import { getLiveReport } from '../dao/article/LiveReport';
-import { getPlaylistArticle } from '../dao/article/PlaylistArticle';
-import { getReview } from '../dao/article/Review';
-import { checkAuth } from '../dao/checkAuth';
-import { getUserProfileforPosts } from '../dao/profile';
+} from '../dbdriver/General';
+import { getLiveReport } from '../dbdriver/LiveReport';
+import { getPlaylistArticle } from '../dbdriver/PlaylistArticle';
+import { getReview } from '../dbdriver/Review';
+import { checkAuth } from '../dbdriver/checkAuth';
+import { getUserProfileforPosts } from '../dbdriver/profile';
 
 import type { Database } from '../../schema/supabasetypes';
 
