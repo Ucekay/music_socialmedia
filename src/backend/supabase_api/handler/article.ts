@@ -1,8 +1,10 @@
 import { ArticleApplication } from '../application/article';
 import { BadRequestError } from '../../schema/error';
 import { Article, ArticleAdditionalData, CUArticleDataParams } from '../../schema/supabase_api';
+import { ArticleDao } from '../dao/article';
 
-const articleApplication = new ArticleApplication();
+const articleDao = new ArticleDao();
+const articleApplication = new ArticleApplication(articleDao);
 
 export const CreateArticleHandler = async (
   userId: string,
@@ -40,7 +42,7 @@ export const CreateArticleHandler = async (
     const result = await articleApplication.createArticle(ArticleData, userId);
     return result;
   } catch (error) {
-    throw error; //ここでは基本的にInternalErrorが投げられる
+    throw error;
   }
 };
 
