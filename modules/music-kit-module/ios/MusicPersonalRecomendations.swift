@@ -9,14 +9,11 @@ import MusicKit
 @available(iOS 16.0, *)
 class MusicPersonalRecommendationsManager {
     
-    func getMusicPersonalRecommendations() async -> Result<[[String: Any]], Error> {
+    func getMusicPersonalRecommendations() async throws -> [[String: Any]] {
         let request = MusicPersonalRecommendationsRequest()
-        do {
-            let response = try await request.response()
-            return .success(response.recommendations.map(convertRecommendation))
-        } catch {
-            return .failure(error)
-        }
+
+        let response = try await request.response()
+        return response.recommendations.map(convertRecommendation)
     }
     
     private func convertRecommendation(_ recommendation: MusicPersonalRecommendation) -> [String: Any] {

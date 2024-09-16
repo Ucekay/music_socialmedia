@@ -78,7 +78,7 @@ export default function TabIndex() {
   }
 
   const handlePress = async () => {
-    const rec = await MusicKit.getPersonalizedRecommendations();
+    const rec = await MusicKit.getUserLibraryPlaylists();
     console.log(rec);
   };
 
