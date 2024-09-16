@@ -14,9 +14,9 @@ import {
 import { AppleMac, GoogleCircle } from 'iconoir-react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
+import * as MusicKit from '@/modules/music-kit-module/src';
 import { supabase } from '@/src/backend/lib/supabase';
 import BgView from '@/src/components/ThemedBgView';
-import * as MusicKit from 'music-kit-module';
 
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
@@ -78,9 +78,9 @@ export default function TabIndex() {
   }
 
   const handlePress = async () => {
-    const personalizedRecommendations =
+    const userLibraryPlaylists =
       await MusicKit.getPersonalizedRecommendations();
-    console.log(personalizedRecommendations[0].playlist);
+    console.log(userLibraryPlaylists);
   };
 
   return (
