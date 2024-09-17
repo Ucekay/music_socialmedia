@@ -31,8 +31,10 @@ export const getPersonalizedRecommendations =
     return await MusicKitModule.getPersonalizedRecommendations();
   };
 
-export const getUserLibraryPlaylists = async (): Promise<Playlist[]> => {
-  return await MusicKitModule.getUserLibraryPlaylists();
+export const getUserLibraryPlaylists = async ({
+  forceRefresh,
+}: { forceRefresh: boolean }): Promise<Playlist[]> => {
+  return await MusicKitModule.getUserLibraryPlaylists(forceRefresh);
 };
 
 export default MusicKitModule;
