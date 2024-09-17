@@ -33,8 +33,8 @@ public class MusicKitModule: Module {
           return try await musicPersonalRecommendations.getMusicPersonalRecommendations()
       }
         
-      AsyncFunction("getUserLibraryPlaylists") {() async throws -> [[String: Any]] in
-          let userLibraryPlaylists = try await musicUserLibrary.getUserLibraryPlaylists()
+        AsyncFunction("getUserLibraryPlaylists") {(forceRefresh:Bool) async throws -> [[String: Any]] in
+          let userLibraryPlaylists = try await musicUserLibrary.getUserLibraryPlaylists(forceRefresh: forceRefresh)
           let convertedPlaylists = userLibraryPlaylists.items.map{Utilities.convertPlaylist($0)}
           return convertedPlaylists
         }
