@@ -3,15 +3,15 @@ import { FlatList } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useQuery } from '@tanstack/react-query';
 
-import playlistsData from '@/src/assets/playlistsData';
 import PlaylistCard from '@/src/components/PlaylistCard';
 import BgView from '@/src/components/ThemedBgView';
+import * as MusicKit from 'music-kit-module';
 
-import type { PlaylistDetailType } from '@/src/types';
+import type { Playlist } from '@/modules/music-kit-module/src/MusicKit.types';
 
 const PlaylistScreen = (): JSX.Element => {
-  const getLocalPlaylists = async (): Promise<PlaylistDetailType[]> => {
-    return playlistsData;
+  const getLocalPlaylists = async (): Promise<Playlist[]> => {
+    return MusicKit.getUserLibraryPlaylists();
   };
   const { data, error, isLoading } = useQuery({
     queryKey: ['playlists'],
@@ -25,13 +25,7 @@ const PlaylistScreen = (): JSX.Element => {
       <FlatList
         data={data}
         numColumns={2}
-        renderItem={({ item }) => (
-          <PlaylistCard
-            playlistName={item.playlistName}
-            ImageURL={item.ImageURL}
-            playlistID={item.playlistID}
-          />
-        )}
+        renderItem={({ item }) => <PlaylistCard {...item} />}
         columnWrapperStyle={{ gap: 16 }}
       />
     </BgView>

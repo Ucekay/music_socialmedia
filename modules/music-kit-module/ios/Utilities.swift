@@ -5,9 +5,11 @@
 //  Created by 木村優介 on 9/17/24.
 //
 import MusicKit
+import _MusicKit_SwiftUI
 
 @available(iOS 16.0, *)
 class Utilities {
+    
     static func convertArtwork(_ artwork: Artwork?) -> [String: Any] {
         guard let artwork = artwork else {return [:]}
         return [
@@ -39,6 +41,7 @@ class Utilities {
         
         return convertedPlaylist
     }
+    
     static func convertStation(_ station: Station) -> [String: Any] {
         var convertedStation:[String: Any] = [
             "type": "station",
@@ -65,4 +68,5 @@ class Utilities {
             ]
         }
     }
+    
 }

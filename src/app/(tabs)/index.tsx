@@ -14,9 +14,9 @@ import {
 import { AppleMac, GoogleCircle } from 'iconoir-react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-import * as MusicKit from '@/modules/music-kit-module/src';
 import { supabase } from '@/src/backend/lib/supabase';
 import BgView from '@/src/components/ThemedBgView';
+import * as MusicKit from 'music-kit-module';
 
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {

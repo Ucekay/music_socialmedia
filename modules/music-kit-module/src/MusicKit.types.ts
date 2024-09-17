@@ -3,6 +3,14 @@ type ArtworkObject = {
   url: string;
 };
 
+export type Playlist = {
+  artwork: ArtworkObject;
+  curatorName?: string;
+  id: string;
+  name: string;
+  type: 'playlist';
+};
+
 type Item = {
   artwork: ArtworkObject;
   id: string;
