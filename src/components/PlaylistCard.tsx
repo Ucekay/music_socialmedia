@@ -1,9 +1,13 @@
 import { Link } from 'expo-router';
-import { Dimensions, StyleSheet, Text, useColorScheme } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
-import { Image } from 'expo-image';
+import { LibraryPlaylistArtworkView } from '@/modules/music-kit-module';
+
+import { useTheme } from '../contexts/ColorThemeContext';
 
 import BgView from './ThemedBgView';
+
+import type { Playlist } from '@/modules/music-kit-module/src/MusicKit.types';
 
 interface PlaylistProps {
   ImageURL?: string;
@@ -13,25 +17,23 @@ interface PlaylistProps {
 
 const width = Dimensions.get('window').width;
 
-const PlaylistCard = (playlist: PlaylistProps): JSX.Element => {
+const PlaylistCard = (playlist: Playlist) => {
   const defaultImageURL = 'https://picsum.photos/200?grayscale';
-  const colorScheme = useColorScheme();
-  const themeTextColor =
-    colorScheme === 'light' ? { color: '#000000' } : { color: '#ffffff' };
+  const { colors } = useTheme();
+  const themeTextColor = { color: colors.text };
+
+  const { id, name, curatorName: _curatorName, artwork } = playlist;
 
   return (
-    <Link
-      href={{
-        pathname: '/playlist/[playlistID]',
-        params: { playlistID: playlist.playlistID },
-      }}
-    >
+    <Link href={`/playlist/${id}`}>
       <BgView style={styles.container}>
-        <Image
-          source={{ uri: playlist.ImageURL || defaultImageURL }}
-          style={styles.image}
-        />
-        <Text style={themeTextColor}>{playlist.playlistName}</Text>
+        <View style={styles.image}>
+          <LibraryPlaylistArtworkView
+            height={styles.image.height}
+            playlistId={id}
+          />
+        </View>
+        <Text style={themeTextColor}>{name}</Text>
       </BgView>
     </Link>
   );
