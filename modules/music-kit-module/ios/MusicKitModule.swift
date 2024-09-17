@@ -17,7 +17,7 @@ public class MusicKitModule: Module {
     Name("MusicKitModule")
 
       AsyncFunction("requestMusicAuthorization") {() -> String in
-          let currentAuthStatus = musicAuth.getAuthorizationStatus()
+          let currentAuthStatus = MusicAuthorization.currentStatus
           if currentAuthStatus == .authorized {
               return "authorized"
           } else {
