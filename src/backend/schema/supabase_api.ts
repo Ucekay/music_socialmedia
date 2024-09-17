@@ -1,4 +1,4 @@
-// イメージとしてはdaoではsuoabaaseのスキーマをつkクァっているが、DBの都合上必須としたいデータを必須とできていない
+// イメージとしてはdaoではsupabaseのスキーマを使っているが、DBの都合上必須としたいデータを必須とできていない
 // したがってhandler。applicationで用いるのはこのファイルのスキーマとして、必須paramsを担保する
 
 import { Json } from "./supabasetypes";
