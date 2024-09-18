@@ -4,13 +4,13 @@ import ExpoModulesCore
 
 @available(iOS 16.0, *)
 class UserLibraryManager {
-    private var playlisyCache: MusicLibraryResponse<Playlist>?
+    private var playlistCache: MusicLibraryResponse<Playlist>?
     private var lastFetchTime: Date?
     private let cacheDuration: TimeInterval = 300
     
     func getUserLibraryPlaylists(forceRefresh: Bool) async throws -> MusicLibraryResponse<Playlist> {
         if !forceRefresh,
-           let cache = playlisyCache,
+           let cache = playlistCache,
            let lastFetch = lastFetchTime,
            Date().timeIntervalSince(lastFetch) < cacheDuration {
             return cache
@@ -18,7 +18,7 @@ class UserLibraryManager {
         let request = MusicLibraryRequest<Playlist>()
         let response = try await request.response()
         
-        playlisyCache = response
+        playlistCache = response
         lastFetchTime = Date()
         
         return response
@@ -33,7 +33,7 @@ class UserLibraryManager {
 
 @available(iOS 16.0, *)
 class LibraryPlaylistArtworkView: ExpoView {
-    private var hostingController: UIHostingController<LibraryPlaylistArtwork>?
+    private var hostingController: UIHostingController<AnyView>?
     private(set) var playlistId: String?
     private var height: CGFloat = 100
     private let userLibrary = UserLibraryManager()
@@ -41,6 +41,21 @@ class LibraryPlaylistArtworkView: ExpoView {
     required init(appContext: AppContext? = nil) {
         super.init(appContext: appContext)
         clipsToBounds = true
+        setupInitialView()
+    }
+    
+    private func setupInitialView() {
+        let placeholderView = AnyView(Color.clear.frame(width: height, height: height))
+        let hostingController = UIHostingController(rootView: placeholderView)
+        self.hostingController = hostingController
+        addSubview(hostingController.view)
+        hostingController.view.frame = bounds
+        hostingController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        hostingController?.view.frame = bounds
     }
     
     func loadArtwork(for playlistId: String, forceRefresh: Bool = false) {
@@ -52,33 +67,43 @@ class LibraryPlaylistArtworkView: ExpoView {
     
     func updateHeight(_ newHeight: CGFloat) {
         height = newHeight
-        Task {
-            await updateArtwork()
-        }
+        updateArtworkView()
     }
     
     private func updateArtwork(forceRefresh: Bool = false) async {
-        guard let playlistId = playlistId else { return }
-        do {
-            if let playlist = try await userLibrary.getPlaylist(id: playlistId, forceRefresh: forceRefresh),
-               let artwork = playlist.artwork {
-                let artworkView = LibraryPlaylistArtwork(artwork: artwork, height: height)
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    if let hostingController = self.hostingController {
-                        hostingController.rootView = artworkView
-                    } else {
-                        let newHostingController = UIHostingController(rootView: artworkView)
-                        self.hostingController = newHostingController
-                        self.addSubview(newHostingController.view)
-                        newHostingController.view.frame = self.bounds
-                        newHostingController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-                    }
-                }
-            }
-        } catch {
-            print("Error loading playlist artwork: \(error)")
-        }
+         guard let playlistId = playlistId else { return }
+         do {
+             if let playlist = try await userLibrary.getPlaylist(id: playlistId, forceRefresh: forceRefresh),
+                let artwork = playlist.artwork {
+                 DispatchQueue.main.async { [weak self] in
+                     self?.updateArtworkView(with: artwork)
+                 }
+             }
+         } catch {
+             print("Error loading playlist artwork: \(error)")
+         }
+     }
+     
+     private func updateArtworkView(with artwork: Artwork? = nil) {
+         let artworkView: AnyView
+         if let artwork = artwork {
+             artworkView = AnyView(
+                 ArtworkImage(artwork, width: height)
+                     .frame(width: height, height: height)
+             )
+         } else {
+             artworkView = AnyView(Color.clear.frame(width: height, height: height))
+         }
+         
+         if let hostingController = hostingController {
+             hostingController.rootView = artworkView
+         } else {
+             let newHostingController = UIHostingController(rootView: artworkView)
+             hostingController = newHostingController
+             addSubview(newHostingController.view)
+             newHostingController.view.frame = bounds
+             newHostingController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+         }
     }
 }
 
