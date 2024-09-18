@@ -78,7 +78,7 @@ export default function TabIndex() {
   }
 
   const handlePress = async () => {
-    const rec = await MusicKit.getUserLibraryPlaylists();
+    const rec = await MusicKit.getUserLibraryPlaylists({ forceRefresh: true });
     console.log(rec);
   };
 
