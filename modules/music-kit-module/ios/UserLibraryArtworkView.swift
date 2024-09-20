@@ -22,7 +22,7 @@ class UserLibararyPlaylistArtworkView: ExpoView {
     }
     
     private func setUpInitialView() {
-        let placeHolderView = AnyView(Color.clear.frame(width: width, height: width))
+        let placeHolderView = AnyView(Color.red.frame(width: width, height: width))
         let hostingController = UIHostingController(rootView: placeHolderView)
         self.hostingController = hostingController
         addSubview(hostingController.view)
