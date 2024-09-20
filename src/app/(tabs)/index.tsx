@@ -82,6 +82,11 @@ export default function TabIndex() {
     console.log(rec);
   };
 
+  const handleCachePress = async () => {
+    const res = await MusicKit.getUserLibraryPlaylists({ forceRefresh: false });
+    console.log(res);
+  };
+
   return (
     <BgView style={styles.screenContainer}>
       <Animated.View entering={FadeIn} style={[styles.container]}>
@@ -171,6 +176,7 @@ export default function TabIndex() {
         </Pressable>
       </Animated.View>
       <Button title='MusicKit' onPress={handlePress} />
+      <Button title='Cache' onPress={handleCachePress} />
     </BgView>
   );
 }
