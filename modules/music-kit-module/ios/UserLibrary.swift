@@ -6,8 +6,8 @@ class UserLibraryManager {
     private var lastFetchTime: Date?
     private let cacheDuration: TimeInterval = 300
     
-    func getUserLibraryPlaylists(forceRefresh: Bool) async throws -> MusicLibraryResponse<Playlist> {
-        if !forceRefresh,
+    func getUserLibraryPlaylists(refreshCache: Bool) async throws -> MusicLibraryResponse<Playlist> {
+        if !refreshCache,
            let cache = playlistCache,
            let lastFetch = lastFetchTime,
            Date().timeIntervalSince(lastFetch) < cacheDuration {
@@ -22,8 +22,8 @@ class UserLibraryManager {
         return response
     }
     
-    func getPlaylist(id: String, forceRefresh: Bool = false) async throws -> Playlist? {
-        let playlists = try await getUserLibraryPlaylists(forceRefresh: forceRefresh)
+    func getPlaylist(id: String, refreshCache: Bool = false) async throws -> Playlist? {
+        let playlists = try await getUserLibraryPlaylists(refreshCache: refreshCache)
         return playlists.items.first {$0.id.rawValue == id}
     }
 }

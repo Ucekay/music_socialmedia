@@ -9,26 +9,23 @@ import BgView from './ThemedBgView';
 
 import type { Playlist } from '@/modules/music-kit-module/src/MusicKit.types';
 
-interface PlaylistProps {
-  ImageURL?: string;
-  playlistName: string;
-  playlistID: string;
-}
-
 const width = Dimensions.get('window').width;
 
 const PlaylistCard = (playlist: Playlist) => {
-  const defaultImageURL = 'https://picsum.photos/200?grayscale';
   const { colors } = useTheme();
   const themeTextColor = { color: colors.text };
 
-  const { id, name, curatorName: _curatorName, artwork } = playlist;
+  const { id, name } = playlist;
 
   return (
     <Link href={`/playlist/${id}`}>
       <BgView style={styles.container}>
         <View style={styles.image}>
-          <LibraryPlaylistArtworkView />
+          <LibraryPlaylistArtworkView
+            musicItemId={id}
+            width={styles.image.height}
+            refreshCache={true}
+          />
         </View>
         <Text style={themeTextColor}>{name}</Text>
       </BgView>
