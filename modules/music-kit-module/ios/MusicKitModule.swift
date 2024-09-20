@@ -33,14 +33,22 @@ public class MusicKitModule: Module {
             return try await musicPersonalRecommendations.getMusicPersonalRecommendations()
         }
           
-        AsyncFunction("getUserLibraryPlaylists") {(forceRefresh:Bool) async throws -> [[String: Any]] in
-            let userLibraryPlaylists = try await musicUserLibrary.getUserLibraryPlaylists(forceRefresh: forceRefresh)
+        AsyncFunction("getUserLibraryPlaylists") {(refreshCache:Bool) async throws -> [[String: Any]] in
+            let userLibraryPlaylists = try await musicUserLibrary.getUserLibraryPlaylists(refreshCache: refreshCache)
             let convertedPlaylists = userLibraryPlaylists.items.map{Utilities.convertPlaylist($0)}
             return convertedPlaylists
         }
         
         View(UserLibraryPlaylistArtworkView.self) {
-            
+            Prop("musicItemId") { (view: UserLibraryPlaylistArtworkView, musicItemId: String) in
+                view.setMusicItemId(musicItemId)
+            }
+            Prop("width") { (view: UserLibraryPlaylistArtworkView, width: CGFloat) in
+                view.setWidth(width)
+            }
+            Prop("refreshCache") { (view: UserLibraryPlaylistArtworkView, refreshCache: Bool) in
+                view.setRefreshCache(refreshCache)
+            }
         }
     }
 }

@@ -10,11 +10,13 @@ import MusicKit
 import ExpoModulesCore
 
 @available(iOS 16.0, *)
-class UserLibararyPlaylistArtworkView: ExpoView {
+class UserLibraryPlaylistArtworkView: ExpoView {
     private var musicItemId: String?
     private var width: CGFloat = 100
-    private var forceRefresh: Bool = true
+    private var refreshCache: Bool?
     private var hostingController: UIHostingController<AnyView>?
+    
+    private var userLibrary = UserLibraryManager()
     
     required init(appContext: AppContext? = nil) {
         super.init(appContext: appContext)
@@ -22,7 +24,7 @@ class UserLibararyPlaylistArtworkView: ExpoView {
     }
     
     private func setUpInitialView() {
-        let placeHolderView = AnyView(Color.red.frame(width: width, height: width))
+        let placeHolderView = AnyView(Color.red.frame(width: self.width, height: self.width))
         let hostingController = UIHostingController(rootView: placeHolderView)
         self.hostingController = hostingController
         addSubview(hostingController.view)
@@ -35,7 +37,43 @@ class UserLibararyPlaylistArtworkView: ExpoView {
         hostingController?.view.frame = bounds
     }
     
-    private func setMusicItemId(_ musicItemId: String) {
+    func setMusicItemId(_ musicItemId: String) {
         self.musicItemId = musicItemId
+        Task {
+            await renderArtwork()
+        }
+    }
+    
+    func setWidth(_ width: CGFloat) {
+        self.width = width
+        Task {
+            await renderArtwork()
+        }
+    }
+    
+    func setRefreshCache(_ refreshCache: Bool) {
+        self.refreshCache = refreshCache
+        Task {
+            await renderArtwork()
+        }
+    }
+    
+    private func renderArtwork() async {
+        if let musicItemId = self.musicItemId, let refreshCachce = self.refreshCache, let appContext {
+            do {
+                let playlist = try await userLibrary.getPlaylist(id: musicItemId, refreshCache: refreshCache!)
+                let artworkImage = AnyView(ArtworkImage((playlist?.artwork)!, width: self.width))
+                hostingController?.rootView = artworkImage
+                setNeedsLayout()
+            } catch {
+                let placeHolderView = AnyView(Text("Artwork not available."))
+                hostingController?.rootView = placeHolderView
+                setNeedsLayout()
+            }
+        } else {
+            let placeHolderView = AnyView(Color.clear)
+            hostingController?.rootView = placeHolderView
+            setNeedsLayout()
+        }
     }
 }

@@ -17,9 +17,9 @@ export const getPersonalizedRecommendations =
   };
 
 export const getUserLibraryPlaylists = async ({
-  forceRefresh,
-}: { forceRefresh: boolean }): Promise<Playlist[]> => {
-  return await MusicKitModule.getUserLibraryPlaylists(forceRefresh);
+  refreshCache,
+}: { refreshCache: boolean }): Promise<Playlist[]> => {
+  return await MusicKitModule.getUserLibraryPlaylists(refreshCache);
 };
 
 export { LibraryPlaylistArtworkView };

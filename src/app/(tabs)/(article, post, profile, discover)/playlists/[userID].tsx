@@ -11,7 +11,7 @@ import type { Playlist } from '@/modules/music-kit-module/src/MusicKit.types';
 
 const PlaylistScreen = (): JSX.Element => {
   const getLocalPlaylists = async (): Promise<Playlist[]> => {
-    return MusicKit.getUserLibraryPlaylists({ forceRefresh: true });
+    return MusicKit.getUserLibraryPlaylists({ refreshCache: true });
   };
   const { data, error, isLoading } = useQuery({
     queryKey: ['playlists'],
