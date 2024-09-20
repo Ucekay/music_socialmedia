@@ -59,7 +59,7 @@ class UserLibraryPlaylistArtworkView: ExpoView {
     }
     
     private func renderArtwork() async {
-        if let musicItemId = self.musicItemId, let refreshCachce = self.refreshCache, let appContext {
+        if let musicItemId = self.musicItemId, let refreshCache = self.refreshCache, let appContext {
             do {
                 let playlist = try await userLibrary.getPlaylist(id: musicItemId, refreshCache: refreshCache!)
                 let artworkImage = AnyView(ArtworkImage((playlist?.artwork)!, width: self.width))
