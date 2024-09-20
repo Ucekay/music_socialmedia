@@ -23,7 +23,7 @@ const PlaylistCard = (playlist: Playlist) => {
         <View style={styles.image}>
           <LibraryPlaylistArtworkView
             musicItemId={id}
-            width={styles.image.height}
+            width={styles.image.width}
             refreshCache={true}
           />
         </View>
