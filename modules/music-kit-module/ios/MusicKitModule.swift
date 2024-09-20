@@ -39,7 +39,7 @@ public class MusicKitModule: Module {
             return convertedPlaylists
         }
         
-        View(UserLibararyPlaylistArtworkView.self) {
+        View(UserLibraryPlaylistArtworkView.self) {
             
         }
     }

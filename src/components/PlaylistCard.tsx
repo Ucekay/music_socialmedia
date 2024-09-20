@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
-import { LibraryPlaylistArtworkView } from '@/modules/music-kit-module';
+import { LibraryPlaylistArtworkView } from 'music-kit-module';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 
@@ -28,10 +28,7 @@ const PlaylistCard = (playlist: Playlist) => {
     <Link href={`/playlist/${id}`}>
       <BgView style={styles.container}>
         <View style={styles.image}>
-          <LibraryPlaylistArtworkView
-            height={styles.image.height}
-            playlistId={id}
-          />
+          <LibraryPlaylistArtworkView />
         </View>
         <Text style={themeTextColor}>{name}</Text>
       </BgView>
