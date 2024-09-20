@@ -1,5 +1,5 @@
 import { Link } from 'expo-router';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text } from 'react-native';
 
 import { LibraryPlaylistArtworkView } from 'music-kit-module';
 
@@ -20,13 +20,12 @@ const PlaylistCard = (playlist: Playlist) => {
   return (
     <Link href={`/playlist/${id}`}>
       <BgView style={styles.container}>
-        <View style={styles.image}>
-          <LibraryPlaylistArtworkView
-            musicItemId={id}
-            width={styles.image.width}
-            refreshCache={true}
-          />
-        </View>
+        <LibraryPlaylistArtworkView
+          musicItemId={id}
+          width={styles.image.width}
+          refreshCache={false}
+          style={styles.image}
+        />
         <Text style={themeTextColor}>{name}</Text>
       </BgView>
     </Link>
@@ -38,14 +37,16 @@ export default PlaylistCard;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     width: width / 2 - 24,
     paddingVertical: 8,
     gap: 4,
   },
   image: {
+    overflow: 'hidden',
     width: width / 2 - 24,
     height: width / 2 - 24,
+    borderCurve: 'continuous',
     borderRadius: 8,
   },
 });

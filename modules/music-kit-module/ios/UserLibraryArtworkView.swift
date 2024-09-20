@@ -24,7 +24,7 @@ class UserLibraryPlaylistArtworkView: ExpoView {
     }
     
     private func setUpInitialView() {
-        let placeHolderView = AnyView(Color.red.frame(width: self.width, height: self.width))
+        let placeHolderView = AnyView(Color.clear)
         let hostingController = UIHostingController(rootView: placeHolderView)
         self.hostingController = hostingController
         addSubview(hostingController.view)
@@ -59,21 +59,19 @@ class UserLibraryPlaylistArtworkView: ExpoView {
     }
     
     private func renderArtwork() async {
-        if let musicItemId = self.musicItemId, let refreshCache = self.refreshCache, let appContext {
+        if let musicItemId = self.musicItemId, let refreshCache = self.refreshCache {
             do {
-                let playlist = try await userLibrary.getPlaylist(id: musicItemId, refreshCache: refreshCache!)
+                let playlist = try await userLibrary.getPlaylist(id: musicItemId, refreshCache: refreshCache)
                 let artworkImage = AnyView(ArtworkImage((playlist?.artwork)!, width: self.width))
                 hostingController?.rootView = artworkImage
-                setNeedsLayout()
             } catch {
                 let placeHolderView = AnyView(Text("Artwork not available."))
                 hostingController?.rootView = placeHolderView
-                setNeedsLayout()
             }
         } else {
             let placeHolderView = AnyView(Color.clear)
             hostingController?.rootView = placeHolderView
-            setNeedsLayout()
         }
+        setNeedsLayout()
     }
 }
