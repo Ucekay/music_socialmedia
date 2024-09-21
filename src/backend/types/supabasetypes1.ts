@@ -35,419 +35,452 @@ export type Database = {
   }
   public: {
     Tables: {
-      Article: {
+      article: {
         Row: {
-          ArticleID: number
+          article_id: number
           created_at: string
-          Info1: string | null
-          Info2: string | null
-          ThumbnailURL: string
-          Title: string
-          Type: string
-          UserID: string
+          info_1: string | null
+          info_2: string | null
+          thumbnail_url: string
+          title: string
+          type: string
+          user_id: string
         }
         Insert: {
-          ArticleID?: number
+          article_id?: number
           created_at?: string
-          Info1?: string | null
-          Info2?: string | null
-          ThumbnailURL: string
-          Title: string
-          Type: string
-          UserID?: string
+          info_1?: string | null
+          info_2?: string | null
+          thumbnail_url: string
+          title: string
+          type: string
+          user_id?: string
         }
         Update: {
-          ArticleID?: number
+          article_id?: number
           created_at?: string
-          Info1?: string | null
-          Info2?: string | null
-          ThumbnailURL?: string
-          Title?: string
-          Type?: string
-          UserID?: string
+          info_1?: string | null
+          info_2?: string | null
+          thumbnail_url?: string
+          title?: string
+          type?: string
+          user_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "Article_UserID_fkey"
-            columns: ["UserID"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      ArticleComment: {
+      article_comment: {
         Row: {
-          ArticleCommentID: number
-          Body: string
+          article_comment_id: number
+          body: string
           created_at: string
-          ParentID: number
+          parent_id: number
           type: string
-          UserID: string
+          user_id: string
         }
         Insert: {
-          ArticleCommentID?: number
-          Body: string
+          article_comment_id?: number
+          body: string
           created_at?: string
-          ParentID: number
+          parent_id: number
           type: string
-          UserID?: string
+          user_id?: string
         }
         Update: {
-          ArticleCommentID?: number
-          Body?: string
+          article_comment_id?: number
+          body?: string
           created_at?: string
-          ParentID?: number
+          parent_id?: number
           type?: string
-          UserID?: string
+          user_id?: string
         }
         Relationships: [
           {
+            foreignKeyName: "article_comment_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "article"
+            referencedColumns: ["article_id"]
+          },
+          {
             foreignKeyName: "ArticleComment_UserID_fkey"
-            columns: ["UserID"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      ArticleLikes: {
+      article_likes: {
         Row: {
-          ArticleID: number
+          article_id: number
           created_at: string
-          Type: string
-          UserID: string
+          user_id: string
         }
         Insert: {
-          ArticleID?: number
+          article_id?: number
           created_at?: string
-          Type: string
-          UserID?: string
+          user_id?: string
         }
         Update: {
-          ArticleID?: number
+          article_id?: number
           created_at?: string
-          Type?: string
-          UserID?: string
+          user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "article_likes_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "article"
+            referencedColumns: ["article_id"]
+          },
+          {
+            foreignKeyName: "article_likes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      Blocks: {
+      blocks: {
         Row: {
-          BlockedID: string
-          BlockerID: string
+          blocked_id: string
+          blocker_id: string
           created_at: string
         }
         Insert: {
-          BlockedID: string
-          BlockerID?: string
+          blocked_id: string
+          blocker_id?: string
           created_at?: string
         }
         Update: {
-          BlockedID?: string
-          BlockerID?: string
+          blocked_id?: string
+          blocker_id?: string
           created_at?: string
         }
         Relationships: [
           {
             foreignKeyName: "Blocks_BlockedID_fkey"
-            columns: ["BlockedID"]
+            columns: ["blocked_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "Blocks_BlockerID_fkey"
-            columns: ["BlockerID"]
+            columns: ["blocker_id"]
             isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      Follows: {
+      follows: {
         Row: {
           created_at: string
-          FollowedID: string
-          FollowerID: string
+          followed_id: string
+          follower_id: string
         }
         Insert: {
           created_at?: string
-          FollowedID: string
-          FollowerID?: string
+          followed_id: string
+          follower_id?: string
         }
         Update: {
           created_at?: string
-          FollowedID?: string
-          FollowerID?: string
+          followed_id?: string
+          follower_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "Follows_FollowedID_fkey"
-            columns: ["FollowedID"]
+            columns: ["followed_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "Follows_FollowerID_fkey"
-            columns: ["FollowerID"]
+            columns: ["follower_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      General: {
+      general: {
         Row: {
-          ArticleID: number
-          Body: Json
+          article_id: number
+          body: Json
           likes: number
-          PlaylistID: number | null
-          UserID: string
+          playlist_id: number | null
+          user_id: string
           view: number
         }
         Insert: {
-          ArticleID?: number
-          Body: Json
+          article_id?: number
+          body: Json
           likes?: number
-          PlaylistID?: number | null
-          UserID?: string
+          playlist_id?: number | null
+          user_id?: string
           view?: number
         }
         Update: {
-          ArticleID?: number
-          Body?: Json
+          article_id?: number
+          body?: Json
           likes?: number
-          PlaylistID?: number | null
-          UserID?: string
+          playlist_id?: number | null
+          user_id?: string
           view?: number
         }
         Relationships: [
           {
-            foreignKeyName: "General_ArticleID_fkey"
-            columns: ["ArticleID"]
+            foreignKeyName: "general_article_id_fkey"
+            columns: ["article_id"]
             isOneToOne: true
-            referencedRelation: "Article"
-            referencedColumns: ["ArticleID"]
+            referencedRelation: "article"
+            referencedColumns: ["article_id"]
           },
           {
-            foreignKeyName: "General_PlaylistID_fkey"
-            columns: ["PlaylistID"]
+            foreignKeyName: "general_playlist_id_fkey"
+            columns: ["playlist_id"]
             isOneToOne: false
-            referencedRelation: "Playlist"
-            referencedColumns: ["PlaylistID"]
+            referencedRelation: "playlist"
+            referencedColumns: ["playlist_id"]
           },
           {
             foreignKeyName: "General_UserID_fkey"
-            columns: ["UserID"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      LiveReport: {
+      live_report: {
         Row: {
-          Body: Json
+          body: Json
           likes: number
-          LiveReportID: number
-          PlaylistID: number | null
-          UserID: string
+          live_report_id: number
+          playlist_id: number | null
+          user_id: string
           view: number
         }
         Insert: {
-          Body: Json
+          body: Json
           likes?: number
-          LiveReportID?: number
-          PlaylistID?: number | null
-          UserID?: string
+          live_report_id?: number
+          playlist_id?: number | null
+          user_id?: string
           view?: number
         }
         Update: {
-          Body?: Json
+          body?: Json
           likes?: number
-          LiveReportID?: number
-          PlaylistID?: number | null
-          UserID?: string
+          live_report_id?: number
+          playlist_id?: number | null
+          user_id?: string
           view?: number
         }
         Relationships: [
           {
-            foreignKeyName: "LiveReport_PlaylistID_fkey"
-            columns: ["PlaylistID"]
+            foreignKeyName: "live_report_live_report_id_fkey"
+            columns: ["live_report_id"]
+            isOneToOne: true
+            referencedRelation: "article"
+            referencedColumns: ["article_id"]
+          },
+          {
+            foreignKeyName: "live_report_playlist_id_fkey"
+            columns: ["playlist_id"]
             isOneToOne: false
-            referencedRelation: "Playlist"
-            referencedColumns: ["PlaylistID"]
+            referencedRelation: "playlist"
+            referencedColumns: ["playlist_id"]
           },
           {
             foreignKeyName: "LiveReport_UserID_fkey"
-            columns: ["UserID"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      Playlist: {
+      playlist: {
         Row: {
           created_at: string
-          PlaylistID: number
-          PlaylistTitle: string | null
-          UserID: string
+          playlist_id: number
+          playlist_title: string | null
+          user_id: string
         }
         Insert: {
           created_at?: string
-          PlaylistID?: number
-          PlaylistTitle?: string | null
-          UserID?: string
+          playlist_id?: number
+          playlist_title?: string | null
+          user_id?: string
         }
         Update: {
           created_at?: string
-          PlaylistID?: number
-          PlaylistTitle?: string | null
-          UserID?: string
+          playlist_id?: number
+          playlist_title?: string | null
+          user_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "Playlist_UserID_fkey"
-            columns: ["UserID"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      PlaylistArticle: {
+      playlist_article: {
         Row: {
-          ArticleID: number
-          Body: Json
+          article_id: number
+          body: Json
           likes: number
-          PlaylistID: number | null
-          UserID: string
+          playlist_id: number | null
+          user_id: string
           view: number
         }
         Insert: {
-          ArticleID?: number
-          Body: Json
+          article_id?: number
+          body: Json
           likes?: number
-          PlaylistID?: number | null
-          UserID?: string
+          playlist_id?: number | null
+          user_id?: string
           view?: number
         }
         Update: {
-          ArticleID?: number
-          Body?: Json
+          article_id?: number
+          body?: Json
           likes?: number
-          PlaylistID?: number | null
-          UserID?: string
+          playlist_id?: number | null
+          user_id?: string
           view?: number
         }
         Relationships: [
           {
-            foreignKeyName: "PlaylistArticle_PlaylistID_fkey"
-            columns: ["PlaylistID"]
+            foreignKeyName: "playlist_article_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: true
+            referencedRelation: "article"
+            referencedColumns: ["article_id"]
+          },
+          {
+            foreignKeyName: "playlist_article_playlist_id_fkey"
+            columns: ["playlist_id"]
             isOneToOne: false
-            referencedRelation: "Playlist"
-            referencedColumns: ["PlaylistID"]
+            referencedRelation: "playlist"
+            referencedColumns: ["playlist_id"]
           },
           {
             foreignKeyName: "PlaylistArticle_UserID_fkey"
-            columns: ["UserID"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      PlaylistSongs: {
+      playlist_songs: {
         Row: {
-          PlaylistID: number
-          SongID: string
+          playlist_id: number
+          song_id: string
         }
         Insert: {
-          PlaylistID?: number
-          SongID: string
+          playlist_id?: number
+          song_id: string
         }
         Update: {
-          PlaylistID?: number
-          SongID?: string
+          playlist_id?: number
+          song_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "PlaylistSongs_PlaylistID_fkey"
-            columns: ["PlaylistID"]
+            foreignKeyName: "playlist_songs_playlist_id_fkey"
+            columns: ["playlist_id"]
             isOneToOne: false
-            referencedRelation: "Playlist"
-            referencedColumns: ["PlaylistID"]
+            referencedRelation: "playlist"
+            referencedColumns: ["playlist_id"]
           },
         ]
       }
-      Post: {
+      post: {
         Row: {
-          Body: string
+          body: string
           created_at: string
-          EntryID: number
-          ImageUrl: Json
+          entry_id: number
+          image_url: Json
           likes: number
-          UserID: string
+          user_id: string
           view: number
         }
         Insert: {
-          Body: string
+          body: string
           created_at?: string
-          EntryID?: number
-          ImageUrl?: Json
+          entry_id?: number
+          image_url?: Json
           likes?: number
-          UserID?: string
+          user_id?: string
           view?: number
         }
         Update: {
-          Body?: string
+          body?: string
           created_at?: string
-          EntryID?: number
-          ImageUrl?: Json
+          entry_id?: number
+          image_url?: Json
           likes?: number
-          UserID?: string
+          user_id?: string
           view?: number
         }
         Relationships: [
           {
             foreignKeyName: "PostAndComment_UserID_fkey"
-            columns: ["UserID"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      PostLikes: {
+      post_likes: {
         Row: {
-          PostID: number
-          UserID: string
+          post_id: number
+          user_id: string
         }
         Insert: {
-          PostID: number
-          UserID?: string
+          post_id: number
+          user_id?: string
         }
         Update: {
-          PostID?: number
-          UserID?: string
+          post_id?: number
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "Likes_PostID_fkey"
-            columns: ["PostID"]
-            isOneToOne: false
-            referencedRelation: "Post"
-            referencedColumns: ["EntryID"]
-          },
-          {
             foreignKeyName: "Likes_UserID_fkey"
-            columns: ["UserID"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "post"
+            referencedColumns: ["entry_id"]
           },
         ]
       }
@@ -472,172 +505,202 @@ export type Database = {
         }
         Relationships: []
       }
-      Reply: {
+      reply: {
         Row: {
-          Body: string
+          body: string
           created_at: string
-          EntryID: number
-          ImageUrl: Json | null
+          entry_id: number
+          image_url: Json | null
           likes: number
-          ParentID: number
-          UserID: string
+          parent_id: number
+          user_id: string
           view: number
         }
         Insert: {
-          Body: string
+          body: string
           created_at?: string
-          EntryID?: number
-          ImageUrl?: Json | null
+          entry_id?: number
+          image_url?: Json | null
           likes?: number
-          ParentID: number
-          UserID?: string
+          parent_id: number
+          user_id?: string
           view?: number
         }
         Update: {
-          Body?: string
+          body?: string
           created_at?: string
-          EntryID?: number
-          ImageUrl?: Json | null
+          entry_id?: number
+          image_url?: Json | null
           likes?: number
-          ParentID?: number
-          UserID?: string
+          parent_id?: number
+          user_id?: string
           view?: number
         }
         Relationships: [
           {
-            foreignKeyName: "Reply_ParentID_fkey"
-            columns: ["ParentID"]
+            foreignKeyName: "reply_parent_id_fkey"
+            columns: ["parent_id"]
             isOneToOne: false
-            referencedRelation: "Post"
-            referencedColumns: ["EntryID"]
+            referencedRelation: "post"
+            referencedColumns: ["entry_id"]
           },
           {
             foreignKeyName: "Reply_UserID_fkey"
-            columns: ["UserID"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      Review: {
+      review: {
         Row: {
-          Body: Json
+          body: Json
           likes: number
-          PlaylistID: number | null
-          ReviewID: number
-          UserID: string
+          playlist_id: number | null
+          review_id: number
+          user_id: string
           view: number
         }
         Insert: {
-          Body: Json
+          body: Json
           likes?: number
-          PlaylistID?: number | null
-          ReviewID?: number
-          UserID?: string
+          playlist_id?: number | null
+          review_id?: number
+          user_id?: string
           view?: number
         }
         Update: {
-          Body?: Json
+          body?: Json
           likes?: number
-          PlaylistID?: number | null
-          ReviewID?: number
-          UserID?: string
+          playlist_id?: number | null
+          review_id?: number
+          user_id?: string
           view?: number
         }
         Relationships: [
           {
-            foreignKeyName: "Review_PlaylistID_fkey"
-            columns: ["PlaylistID"]
+            foreignKeyName: "review_playlist_id_fkey"
+            columns: ["playlist_id"]
             isOneToOne: false
-            referencedRelation: "Playlist"
-            referencedColumns: ["PlaylistID"]
+            referencedRelation: "playlist"
+            referencedColumns: ["playlist_id"]
           },
           {
             foreignKeyName: "Review_UserID_fkey"
-            columns: ["UserID"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      TodaysSong: {
+      todays_song: {
         Row: {
-          Body: string
+          body: string
           created_at: string
           likes: number
-          SongID: string
-          TodaysSongID: number
-          UserID: string
+          song_id: string
+          todays_song_id: number
+          user_id: string
           view: number
         }
         Insert: {
-          Body: string
+          body: string
           created_at?: string
           likes?: number
-          SongID: string
-          TodaysSongID?: number
-          UserID?: string
+          song_id: string
+          todays_song_id?: number
+          user_id?: string
           view?: number
         }
         Update: {
-          Body?: string
+          body?: string
           created_at?: string
           likes?: number
-          SongID?: string
-          TodaysSongID?: number
-          UserID?: string
+          song_id?: string
+          todays_song_id?: number
+          user_id?: string
           view?: number
         }
         Relationships: [
           {
             foreignKeyName: "Today'sSong_UserID_fkey"
-            columns: ["UserID"]
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
       }
-      Users: {
+      todays_song_likes: {
         Row: {
-          Bio: string
-          crreated_at: string
-          FavArtist: Json | null
-          Follow: number
-          Followed: number
-          IconImageUrl: string
-          ProfileID: string
-          UserID: string
-          UserName: string
+          todays_song_id: number
+          user_id: string
         }
         Insert: {
-          Bio: string
-          crreated_at?: string
-          FavArtist?: Json | null
-          Follow?: number
-          Followed?: number
-          IconImageUrl: string
-          ProfileID: string
-          UserID?: string
-          UserName: string
+          todays_song_id: number
+          user_id?: string
         }
         Update: {
-          Bio?: string
-          crreated_at?: string
-          FavArtist?: Json | null
-          Follow?: number
-          Followed?: number
-          IconImageUrl?: string
-          ProfileID?: string
-          UserID?: string
-          UserName?: string
+          todays_song_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "todays_song_likes_todays_song_id_fkey"
+            columns: ["todays_song_id"]
+            isOneToOne: false
+            referencedRelation: "todays_song"
+            referencedColumns: ["todays_song_id"]
+          },
+          {
+            foreignKeyName: "TodaysSongLikes_UserID_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          bio: string
+          created_at: string
+          fav_artist: Json | null
+          follow: number
+          followed: number
+          icon_image_url: string
+          profile_id: string
+          user_id: string
+          user_name: string
+        }
+        Insert: {
+          bio: string
+          created_at?: string
+          fav_artist?: Json | null
+          follow?: number
+          followed?: number
+          icon_image_url: string
+          profile_id: string
+          user_id?: string
+          user_name: string
+        }
+        Update: {
+          bio?: string
+          created_at?: string
+          fav_artist?: Json | null
+          follow?: number
+          followed?: number
+          icon_image_url?: string
+          profile_id?: string
+          user_id?: string
+          user_name?: string
         }
         Relationships: [
           {
             foreignKeyName: "Users_UserID_fkey"
-            columns: ["UserID"]
+            columns: ["user_id"]
             isOneToOne: true
             referencedRelation: "users"
             referencedColumns: ["id"]

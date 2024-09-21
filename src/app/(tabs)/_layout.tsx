@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { EventArg } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Dimensions, useWindowDimensions } from 'react-native';
 import { Tabs } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -21,6 +21,9 @@ import Text from '@/src/components/ThemedText';
 import { useTabAction } from '@/src/contexts/ActionButtonContext';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 import type { ColorScheme } from '@/src/types';
+import MusicBar from '@/src/components/MusicBar';
+import MusicPlayerModal from '@/src/components/MusicModal';
+import { Sheet } from 'react-modal-sheet'  
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -34,19 +37,36 @@ export default function TabLayout() {
   const { colors } = useTheme();
   const themeContainerStyle = colors.tabBarGradient;
 
+  const {height} = useWindowDimensions()
+
   const insets = useSafeAreaInsets();
 
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const musicBottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const createBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  // variables
-  const snapPoints = useMemo(() => [220 + insets.bottom], []);
+  const musicSnapPoints = useMemo(() => [height + insets.top], [height + insets.top])
+  const createSnapPoints = useMemo(() => [220 + insets.bottom], []);
 
   // callbacks
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
+  const handlePresentCreateModalPress = useCallback(() => {
+    createBottomSheetModalRef.current?.present();
   }, []);
-  const handleSheetChanges = useCallback((index: number) => {}, []);
-  const renderBackdrop = useCallback(
+  const handlePresentMusicModalPress = useCallback(() => {
+    musicBottomSheetModalRef.current?.present();
+  }, []);
+  const handleCreateSheetChanges = useCallback((index: number) => {}, []);
+  const handleMusicSheetChanges = useCallback((index: number) => {}, []);
+  const renderCreateBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    []
+  );
+  const renderMusicBackdrop = useCallback(
     (props) => (
       <BottomSheetBackdrop
         {...props}
@@ -95,7 +115,7 @@ export default function TabLayout() {
             const pressedTab = e.target?.split('-')[0];
             if (pressedTab === 'create/index') {
               e.preventDefault();
-              handlePresentModalPress();
+              handlePresentCreateModalPress();
             }
           },
         }}
@@ -142,12 +162,29 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
+      <MusicBar openModal={handlePresentMusicModalPress}/>
       <BottomSheetModal
-        ref={bottomSheetModalRef}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}
+        key={"musicModal"}
+        ref ={musicBottomSheetModalRef}
+        snapPoints={musicSnapPoints}
+        onChange={handleMusicSheetChanges}
         enablePanDownToClose
-        backdropComponent={renderBackdrop}
+        backdropComponent={renderMusicBackdrop}
+        backgroundStyle={themedContentStyle}
+        handleIndicatorStyle={styles.handleIndicator}
+      >
+        <BottomSheetView >
+          <View style={[styles.content, { height: height + insets.top }]}>
+            <MusicPlayerModal/>
+          </View>
+        </BottomSheetView>
+      </BottomSheetModal>
+      <BottomSheetModal
+        ref={createBottomSheetModalRef}
+        snapPoints={createSnapPoints}
+        onChange={handleCreateSheetChanges}
+        enablePanDownToClose
+        backdropComponent={renderCreateBackdrop}
         backgroundStyle={themedContentStyle}
         handleIndicatorStyle={{ backgroundColor: colors.border }}
         maxDynamicContentSize={220 + insets.bottom}
@@ -308,5 +345,12 @@ const styles = StyleSheet.create({
     gap: 16,
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  handleIndicator: {
+    backgroundColor: 'gray',
+    width: 40,
+    height: 5,
+    borderRadius: 2.5,
+    marginTop: 20, // インジケーターの位置を下げる
   },
 });
