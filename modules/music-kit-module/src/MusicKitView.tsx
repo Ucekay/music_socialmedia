@@ -3,8 +3,7 @@ import type { ViewProps } from 'react-native';
 import { requireNativeViewManager } from 'expo-modules-core';
 
 export type LibraryPlaylistArtworkViewProps = {
-  musicItemId: string;
-  width: number;
+  artworkUrl: URL;
 } & ViewProps;
 const NativeView: React.ComponentType<LibraryPlaylistArtworkViewProps> =
   requireNativeViewManager('MusicKitModule');

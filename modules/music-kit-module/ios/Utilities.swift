@@ -14,7 +14,7 @@ class Utilities {
         guard let artwork = artwork else {return [:]}
         return [
             "url": artwork.url(width: 400, height: 400)?.absoluteString ?? "",
-            "backgroundColor": artwork.backgroundColor?.toHexString() ?? ""
+            "backgroundColor": artwork.backgroundColor?.toHexString() ?? "",
         ]
     }
     
@@ -36,6 +36,7 @@ class Utilities {
             "id": playlist.id.rawValue,
             "name": playlist.name,
             "curatorName": playlist.curatorName ?? "",
+            "discription": playlist.description,
         ]
         convertedPlaylist["artwork"] = convertArtwork(playlist.artwork)
         
