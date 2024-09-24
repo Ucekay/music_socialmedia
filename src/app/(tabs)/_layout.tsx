@@ -23,7 +23,6 @@ import { useTheme } from '@/src/contexts/ColorThemeContext';
 import type { ColorScheme } from '@/src/types';
 import MusicBar from '@/src/components/MusicBar';
 import MusicPlayerModal from '@/src/components/MusicModal';
-import { Sheet } from 'react-modal-sheet'  
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {

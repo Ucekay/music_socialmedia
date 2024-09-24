@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   Pressable,
+  useWindowDimensions
 } from 'react-native';
 import {Image} from 'expo-image'
 import {
@@ -18,8 +19,10 @@ import {
   PlaylistPlay,
   Shuffle,
   SoundHighSolid,
-  SoundMinSolid 
+  SoundMinSolid, 
+  Play
 } from 'iconoir-react-native';
+import { FontWidth } from '@shopify/react-native-skia';
 
 
 export const MusicPlayerModal = () => {
@@ -39,81 +42,146 @@ export const MusicPlayerModal = () => {
   const handleArtist = () => {
     setArtistName(artistName)
   }
+  const { width, height} = useWindowDimensions();
 
   return (
-    <View style={styles.container}>
+    <View style={{
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 20,
+      marginBottom: 20,
+    }}>
       {/* ジャケット写真 */}
-      <Artwork value={artworkUrl} handle={handleArtwork}/>
+      <Artwork value={artworkUrl} handle={handleArtwork}
+      style={{
+        width: 0.65*width,
+        height: 0.65*width,
+        marginBottom: 0.02*height,
+        borderRadius: 0.02*width,
+        marginTop: 0.065*height,
+      }}/>
 
       {/* 曲情報 */}
       <TrackInfo songValue={songName} artistValue={artistName}
-        songHandle={handleSong} artistHandle={handleArtist} />
+        songHandle={handleSong} artistHandle={handleArtist}
+        style={{trackInfo: {
+          width:'90%',
+          alignItems:"flex-start",
+          marginTop: 0.05*height},
+          title: {
+            fontSize: 0.055*width,
+            color: 'white',
+            fontWeight: 'bold',
+            textAlign: 'left', 
+          },
+          artist: {
+            fontSize: 0.055*width,
+            color: 'white',
+            textAlign: 'left', 
+            opacity: 0.7
+          },
+          }}/>
 
       {/* スライダー */}
       
       <View style={styles.bar}/>
-      <View style={styles.times}>
-        <Text style={styles.timestamp}>{"0:00"}</Text>
-        <Text style={styles.timestamp}>{"-4:37"}</Text>
+      <View style={{
+          width: "90%",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginTop: 0.015*height,
+          marginBottom: 0.02*height,
+          marginLeft: 5,
+          marginRight: 5,
+        }}>
+        <Text style={{
+            color: 'white',
+            fontSize: 0.0175*height,
+            opacity: 0.7
+          }}>{"0:00"}</Text>
+        <Text style={{
+            color: 'white',
+            fontSize: 0.0175*height,
+            opacity: 0.7
+          }}>{"-4:37"}</Text>
       </View>
 
 
       {/* 再生/一時停止・スキップボタン */}
-      <View style={styles.controls}>
+      <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          width: '80%',
+          marginBottom: 0.03*height,
+        }}>
         <Pressable style={styles.controlButton}>
             <SkipPrevSolid
-              width={40}
-              height={40}
+              width={0.12*width}
+              height={0.12*width}
               color="white"
             />
         </Pressable>
 
-        <MusicControl value={isPlaying} handle={handlePlaying}/>
+        <MusicControl value={isPlaying} handle={handlePlaying}
+          width={0.13*width}/>
 
         <Pressable style={styles.controlButton}>
             <SkipNextSolid
-              width={40}
-              height={40}
+              width={0.12*width}
+              height={0.12*width}
               color="white"
             />
         </Pressable>
       </View>
 
       {/* 音量調節バー */}
-      <View style={styles.volumeControl}>
+      <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          width: '90%',
+          marginBottom: 0.045*height,
+        }}>
             <SoundMinSolid
-              width={15}
-              height={15}
+              width={0.04*width}
+              height={0.04*width}
               color="white"
             />
             <View style={styles.soundbar}/>
             <SoundHighSolid
-              width={15}
-              height={15}
+              width={0.04*width}
+              height={0.04*width}
               color="white"
             />
       </View>
 
       {/* プレイリストボタン */}
-      <View style={styles.controls}>
+      <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          width: '90%',
+          marginBottom: 0.03*height,
+        }}>
             <Shuffle
-            width={24}
-            height={24}
+            width={0.065*width}
+            height={0.065*width}
             color="white"
             />
             <Repeat
-            width={24}
-            height={24}
+            width={0.065*width}
+            height={0.065*width}
             color="white"
             />
             <Infinite
-            width={24}
-            height={24}
+            width={0.065*width}
+            height={0.065*width}
             color="white"
             />
             <PlaylistPlay
-            width={24}
-            height={24}
+            width={0.065*width}
+            height={0.065*width}
             color="white"
             />
       </View>
@@ -121,39 +189,45 @@ export const MusicPlayerModal = () => {
   );
 };
 
-const Artwork = memo(({value, handle}) =>{
+const Artwork = memo(({value, handle, style}) =>{
   return(
-    <Image source={require("../assets/images/ikuokukonen.jpg")} style={styles.artwork} />
+    <Image source={require("../assets/images/ikuokukonen.jpg")} style={style} />
   )
 }
 )
 
-const MusicControl = memo(({value,handle}) => {
+const MusicControl = memo(({value,handle, width}) => {
     return(
   <Pressable style={styles.playPauseButton}
   onPress={handle}>
     {value?
       <PauseSolid
-        width={40}
-        height={40}
+        width={width}
+        height={width}
         color="white"/>
         :
         <PlaySolid
-        width={40}
-        height={40}
+        width={width}
+        height={width}
         color="white"/>}
   </Pressable>
   )
 })
-const TrackInfo = memo(({songValue, artistValue, songHandle, artistHandle}) => {
+const TrackInfo = memo(({songValue, artistValue, songHandle, artistHandle, style}) => {
   return(
-    <View style={styles.trackInfo}>
-    <Text style={styles.title}>{"幾億光年"}</Text>
-    <Text style={styles.artist}>{"Omoinotake"}</Text>
+    <View style={style.trackInfo}>
+    <Text style={style.title}>{"幾億光年"}</Text>
+    <Text style={style.artist}>{"Omoinotake"}</Text>
   </View>
 
   )
 })
+const getWimdowDimensions = () => {
+  const dimensions = useWindowDimensions()
+  return(
+    dimensions
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -163,8 +237,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   artwork: {
-    width: 240,
-    height: 240,
+    width: 0.7*getWimdowDimensions.width,
+    height: "70%",
     marginBottom: 20,
     borderRadius: 10,
     marginTop: 45,
@@ -174,12 +248,14 @@ const styles = StyleSheet.create({
     width: "90%", 
     height: 5, 
     backgroundColor: 'black',
+    borderRadius: 5,
     marginTop: 6
   },
   soundbar: {
     width: "80%",
     height: 5,
     backgroundColor: 'black',
+    borderRadius: 5,
     marginLeft: 5,
     marginRight: 5
   },
@@ -221,10 +297,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   controlButton: {
-    padding: 10,
+    padding: 0,
   },
   playPauseButton: {
-    padding: 10,
+    padding: 0,
   },
   volumeControl: {
     flexDirection: 'row',
