@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 
-import { LibraryPlaylistArtworkView } from 'music-kit-module';
+import { LibraryItemArtworkView } from 'music-kit-module';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 
@@ -28,7 +28,7 @@ const PlaylistCard = (playlist: Playlist) => {
   return (
     <Link href={`/playlist/${id}`}>
       <View style={imageContainerStyle}>
-        <LibraryPlaylistArtworkView
+        <LibraryItemArtworkView
           artworkUrl={playlist.artwork.url}
           style={imageStyle}
         />

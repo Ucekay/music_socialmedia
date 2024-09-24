@@ -1,20 +1,29 @@
 import { useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import * as IconoirIcons from 'iconoir-react-native';
 
 import { Button } from '@/src/components/Button';
 import BgView from '@/src/components/ThemedBgView';
 import Text from '@/src/components/ThemedText';
-import { LibraryPlaylistArtworkView } from 'music-kit-module';
+import TracksListItem from '@/src/components/TracksListItem';
+import { useTheme } from '@/src/contexts/ColorThemeContext';
+import { LibraryItemArtworkView } from 'music-kit-module';
+import * as MusicKit from 'music-kit-module';
 
-import type { Playlist } from '@/modules/music-kit-module/src/MusicKit.types';
+import type {
+  Playlist,
+  Track,
+} from '@/modules/music-kit-module/src/MusicKit.types';
 
 const PlaylistDetailScreen = (): JSX.Element => {
   const { playlistID } = useLocalSearchParams();
   const headerHeight = useHeaderHeight();
+  const bottomTabBarHeight = useBottomTabBarHeight();
+  const { colors } = useTheme();
   const queryClient = useQueryClient();
   const cachedPlaylists = queryClient.getQueryData<Playlist[]>(['playlists']);
 
@@ -28,6 +37,17 @@ const PlaylistDetailScreen = (): JSX.Element => {
       </BgView>
     );
   }
+
+  const {
+    data: playlistTracks,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ['playlistTracks', playlistID],
+    queryFn: async () => {
+      return MusicKit.getPlaylistTracks(playlistID as string);
+    },
+  });
 
   const renderIcon = ({
     name,
@@ -43,8 +63,16 @@ const PlaylistDetailScreen = (): JSX.Element => {
   };
 
   return (
-    <BgView style={[{ flex: 1, marginTop: headerHeight }]}>
-      <ScrollView contentContainerStyle={styles.container}>
+    <BgView>
+      <ScrollView
+        contentContainerStyle={[
+          styles.container,
+          {
+            paddingTop: headerHeight + 16,
+            paddingBottom: bottomTabBarHeight,
+          },
+        ]}
+      >
         <View
           style={{
             width: 250,
@@ -63,7 +91,7 @@ const PlaylistDetailScreen = (): JSX.Element => {
             elevation: 12,
           }}
         >
-          <LibraryPlaylistArtworkView
+          <LibraryItemArtworkView
             artworkUrl={playlist.artwork.url}
             style={styles.image}
           />
@@ -91,12 +119,13 @@ const PlaylistDetailScreen = (): JSX.Element => {
             />
           </View>
         </View>
-        <View style={{ flex: 1, width: '100%' }}>
-          {/*<FlatList
-            data={selectedPlaylist.songs}
-            scrollEnabled={false}
-            renderItem={({ item }) => <TracksListItem {...item} />}
-          />*/}
+        <Text secondary style={{ width: '100%', fontSize: 15 }}>
+          {playlist.description}
+        </Text>
+        <View style={{ width: '100%' }}>
+          {playlistTracks.map((track: Track) => (
+            <TracksListItem {...track} key={track.id} />
+          ))}
         </View>
       </ScrollView>
     </BgView>
@@ -108,8 +137,7 @@ export default PlaylistDetailScreen;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    flex: 1,
-    paddingTop: 16,
+    paddingHorizontal: 16,
     gap: 16,
   },
   image: {
@@ -131,7 +159,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     marginTop: 8,
-    paddingHorizontal: 16,
     gap: 8,
   },
   buttonWrapper: {

@@ -35,14 +35,17 @@ public class MusicKitModule: Module {
           
         AsyncFunction("getUserLibraryPlaylists") {() async throws -> [[String: Any]] in
             let userLibraryPlaylists = try await musicUserLibrary.getUserLibraryPlaylists()
-            let convertedPlaylists = userLibraryPlaylists.items.map{Utilities.convertPlaylist($0)}
-            return convertedPlaylists
+            return userLibraryPlaylists.items.map{Utilities.convertPlaylist($0)}
+        }
+        
+        AsyncFunction("getUserLibraryPlaylist") {(playlistId: String) async throws -> [String: Any] in
+            let userLibraryPlaylist = try await musicUserLibrary.getPlaylist(id: playlistId)
+            return Utilities.convertPlaylist(userLibraryPlaylist!)
         }
         
         AsyncFunction("getPlaylistTracks") {(playlistId: String) async throws -> [[String: Any]] in
             let playlistTracks = try await musicUserLibrary.getPlaylistTracks(id: playlistId)
-            let convertedPlaylistTracks = playlistTracks!.compactMap(Utilities.convertPlaylistTrack)
-            return convertedPlaylistTracks
+            return playlistTracks!.compactMap(Utilities.convertPlaylistTrack)
         }
         
         View(UserLibraryPlaylistArtworkView.self) {
