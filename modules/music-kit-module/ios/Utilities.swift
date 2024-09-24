@@ -53,6 +53,17 @@ class Utilities {
         return convertedStation
     }
     
+    static func convertSong(_ song: Song) -> [String: Any] {
+        var convertedSong:[String: Any] = [
+            "type": "song",
+            "id": song.id.rawValue,
+            "title": song.title,
+            "artistName": song.artistName,
+        ]
+        convertedSong["artwork"] = convertArtwork(song.artwork)
+        return convertedSong
+    }
+    
     static func convertItem(_ item: MusicPersonalRecommendation.Item) -> [String: Any] {
         switch item {
         case .album(let album):
@@ -61,6 +72,23 @@ class Utilities {
             return convertPlaylist(playlist)
         case .station(let station):
             return convertStation(station)
+        @unknown default:
+            return [
+                "type": "unknown",
+                "id": "unknown"
+            ]
+        }
+    }
+    
+    static func convertPlaylistTrack(_ track: Track) -> [String: Any] {
+        switch track {
+        case .song(let song):
+            return convertSong(song)
+        case .musicVideo(let musicVideo):
+            return [
+                "type": "musicVideo",
+                "id": musicVideo.id.rawValue
+            ]
         @unknown default:
             return [
                 "type": "unknown",

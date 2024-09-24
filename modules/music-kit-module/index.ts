@@ -16,10 +16,12 @@ export const getPersonalizedRecommendations =
     return await MusicKitModule.getPersonalizedRecommendations();
   };
 
-export const getUserLibraryPlaylists = async ({
-  refreshCache,
-}: { refreshCache: boolean }): Promise<Playlist[]> => {
-  return await MusicKitModule.getUserLibraryPlaylists(refreshCache);
+export const getUserLibraryPlaylists = async (): Promise<Playlist[]> => {
+  return await MusicKitModule.getUserLibraryPlaylists();
+};
+
+export const getPlaylistTracks = async (playlistId: string) => {
+  return await MusicKitModule.getPlaylistTracks(playlistId);
 };
 
 export { LibraryPlaylistArtworkView };

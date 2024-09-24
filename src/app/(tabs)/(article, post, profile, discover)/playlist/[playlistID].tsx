@@ -1,26 +1,25 @@
 import { useLocalSearchParams } from 'expo-router';
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useQueryClient } from '@tanstack/react-query';
-import { Image } from 'expo-image';
 import * as IconoirIcons from 'iconoir-react-native';
 
 import { Button } from '@/src/components/Button';
 import BgView from '@/src/components/ThemedBgView';
-import TracksListItem from '@/src/components/TracksListItem';
+import Text from '@/src/components/ThemedText';
+import { LibraryPlaylistArtworkView } from 'music-kit-module';
 
-import type { PlaylistDetailType } from '@/src/types';
+import type { Playlist } from '@/modules/music-kit-module/src/MusicKit.types';
 
 const PlaylistDetailScreen = (): JSX.Element => {
   const { playlistID } = useLocalSearchParams();
   const headerHeight = useHeaderHeight();
   const queryClient = useQueryClient();
-  const cachedPlaylists = queryClient.getQueryData<PlaylistDetailType[]>([
-    'playlists',
-  ]);
+  const cachedPlaylists = queryClient.getQueryData<Playlist[]>(['playlists']);
+
   const selectedPlaylist = cachedPlaylists?.find(
-    (playlist) => playlist.playlistID === playlistID,
+    (playlist) => playlist.id === playlistID,
   );
   if (!selectedPlaylist) {
     return (
@@ -29,31 +28,37 @@ const PlaylistDetailScreen = (): JSX.Element => {
       </BgView>
     );
   }
+
+  const renderIcon = ({
+    name,
+    size,
+    color,
+  }: { name: string; size: number; color: string }) => {
+    const IconComponent = IconoirIcons[
+      name as keyof typeof IconoirIcons
+    ] as React.ElementType;
+    return (
+      <IconComponent width={size} height={size} color={color} fill={color} />
+    );
+  };
+
   return (
     <BgView style={[{ flex: 1, marginTop: headerHeight }]}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Image
-          source={{ uri: selectedPlaylist.ImageURL }}
+        <LibraryPlaylistArtworkView
+          musicItemId={playlistID as string}
+          width={250}
           style={styles.image}
         />
-        <Text style={styles.name}>{selectedPlaylist.playlistName}</Text>
+        <Text style={styles.name}>{selectedPlaylist.name}</Text>
+        <Text style={styles.name}>{selectedPlaylist.curatorName}</Text>
         <View style={styles.buttonContainer}>
           <View style={styles.buttonWrapper}>
             <Button
               onPress={() => console.log('Button pressed')}
               text='再生'
               icon='Play'
-              renderIcon={({ name, size, color }) => {
-                const IconComponent = IconoirIcons[name];
-                return (
-                  <IconComponent
-                    width={size}
-                    height={size}
-                    color={color}
-                    fill={color}
-                  />
-                );
-              }}
+              renderIcon={renderIcon}
             />
           </View>
           <View style={styles.buttonWrapper}>
@@ -61,27 +66,17 @@ const PlaylistDetailScreen = (): JSX.Element => {
               onPress={() => console.log('Button pressed')}
               text='曲を追加'
               icon='Edit'
-              renderIcon={({ name, size, color }) => {
-                const IconComponent = IconoirIcons[name];
-                return (
-                  <IconComponent
-                    width={size}
-                    height={size}
-                    color={color}
-                    fill={color}
-                  />
-                );
-              }}
+              renderIcon={renderIcon}
               variant='outline'
             />
           </View>
         </View>
         <View style={{ flex: 1, width: '100%' }}>
-          <FlatList
+          {/*<FlatList
             data={selectedPlaylist.songs}
             scrollEnabled={false}
             renderItem={({ item }) => <TracksListItem {...item} />}
-          />
+          />*/}
         </View>
       </ScrollView>
     </BgView>
@@ -98,8 +93,10 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   image: {
+    overflow: 'hidden',
     width: 250,
     height: 250,
+    borderCurve: 'continuous',
     borderRadius: 8,
   },
   name: {
