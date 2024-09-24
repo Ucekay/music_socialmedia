@@ -1,6 +1,6 @@
 type ArtworkObject = {
   backgroundColor: string;
-  url: string;
+  url: URL;
 };
 
 export type Playlist = {

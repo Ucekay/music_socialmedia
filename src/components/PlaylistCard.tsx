@@ -24,13 +24,12 @@ const PlaylistCard = (playlist: Playlist) => {
   ];
 
   const { id, name, curatorName } = playlist;
-  console.log(id, name);
+
   return (
     <Link href={`/playlist/${id}`}>
       <View style={imageContainerStyle}>
         <LibraryPlaylistArtworkView
-          musicItemId={id}
-          width={imageSideLength}
+          artworkUrl={playlist.artwork.url}
           style={imageStyle}
         />
         <View>

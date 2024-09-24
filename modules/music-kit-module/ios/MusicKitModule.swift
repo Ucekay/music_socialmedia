@@ -46,11 +46,8 @@ public class MusicKitModule: Module {
         }
         
         View(UserLibraryPlaylistArtworkView.self) {
-            Prop("musicItemId") { (view: UserLibraryPlaylistArtworkView, musicItemId: String) in
-                view.setMusicItemId(musicItemId)
-            }
-            Prop("width") { (view: UserLibraryPlaylistArtworkView, width: CGFloat) in
-                view.setWidth(width)
+            Prop("artworkUrl") { (view, artworkUrl: URL) in
+                view.loadImage(from: artworkUrl)
             }
         }
     }

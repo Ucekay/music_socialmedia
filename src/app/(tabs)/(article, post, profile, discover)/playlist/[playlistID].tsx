@@ -18,10 +18,10 @@ const PlaylistDetailScreen = (): JSX.Element => {
   const queryClient = useQueryClient();
   const cachedPlaylists = queryClient.getQueryData<Playlist[]>(['playlists']);
 
-  const selectedPlaylist = cachedPlaylists?.find(
+  const playlist = cachedPlaylists?.find(
     (playlist) => playlist.id === playlistID,
   );
-  if (!selectedPlaylist) {
+  if (!playlist) {
     return (
       <BgView style={[styles.container, { marginTop: headerHeight }]}>
         <Text>エラーが発生しました</Text>
@@ -45,13 +45,33 @@ const PlaylistDetailScreen = (): JSX.Element => {
   return (
     <BgView style={[{ flex: 1, marginTop: headerHeight }]}>
       <ScrollView contentContainerStyle={styles.container}>
-        <LibraryPlaylistArtworkView
-          musicItemId={playlistID as string}
-          width={250}
-          style={styles.image}
-        />
-        <Text style={styles.name}>{selectedPlaylist.name}</Text>
-        <Text style={styles.name}>{selectedPlaylist.curatorName}</Text>
+        <View
+          style={{
+            width: 250,
+            height: 250,
+            borderCurve: 'continuous',
+            borderRadius: 8,
+            backgroundColor: playlist.artwork.backgroundColor,
+            shadowColor: playlist.artwork.backgroundColor,
+            shadowOffset: {
+              width: 0,
+              height: 6,
+            },
+            shadowOpacity: 0.37,
+            shadowRadius: 7.49,
+
+            elevation: 12,
+          }}
+        >
+          <LibraryPlaylistArtworkView
+            artworkUrl={playlist.artwork.url}
+            style={styles.image}
+          />
+        </View>
+        <View style={{ gap: 4, alignItems: 'center' }}>
+          <Text style={styles.name}>{playlist.name}</Text>
+          <Text style={styles.curatorName}>{playlist.curatorName}</Text>
+        </View>
         <View style={styles.buttonContainer}>
           <View style={styles.buttonWrapper}>
             <Button
@@ -100,6 +120,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   name: {
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  curatorName: {
     fontSize: 20,
     fontWeight: '500',
   },

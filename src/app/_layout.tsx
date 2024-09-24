@@ -12,13 +12,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { ThemeProvider } from '@/src/contexts/ColorThemeContext';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: Number.POSITIVE_INFINITY,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 export {
   // Catch any errors thrown by the Layout component.
