@@ -67,6 +67,30 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           }}
         >
           <Stack.Screen name='profile' />
+          <Stack.Screen
+            name='articles'
+            options={{
+              title: 'Article',
+            }}
+          />
+          <Stack.Screen
+            name='posts'
+            options={{
+              title: 'Post',
+            }}
+          />
+          <Stack.Screen
+            name='playlists/[userID]'
+            options={{
+              title: 'Playlists',
+            }}
+          />
+          <Stack.Screen
+            name='playlist/[playlistID]'
+            options={{
+              title: 'Playlist',
+            }}
+          />
         </Stack>
       );
     case '(discover)':

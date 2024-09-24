@@ -42,6 +42,19 @@ const ArticleDetailsScreen = () => {
 
   const thumbnailHeight = ((screenWidth - 32) / 16) * 9;
 
+  const renderIcon = ({
+    name,
+    size,
+    color,
+  }: { name: string; size: number; color: string }) => {
+    const IconComponent = IconoirIcons[
+      name as keyof typeof IconoirIcons
+    ] as React.ElementType;
+    return (
+      <IconComponent width={size} height={size} color={color} fill={color} />
+    );
+  };
+
   return (
     <BgView style={styles.container}>
       <ScrollView style={styles.scrollView}>
@@ -90,17 +103,7 @@ const ArticleDetailsScreen = () => {
                   onPress={() => console.log('Button pressed')}
                   text='曲を再生'
                   icon='Play'
-                  renderIcon={({ name, size, color }) => {
-                    const IconComponent = IconoirIcons[name];
-                    return (
-                      <IconComponent
-                        width={size}
-                        height={size}
-                        color={color}
-                        fill={color}
-                      />
-                    );
-                  }}
+                  renderIcon={renderIcon}
                 />
               </View>
               <View style={styles.buttonWrapper}>

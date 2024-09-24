@@ -33,10 +33,16 @@ public class MusicKitModule: Module {
             return try await musicPersonalRecommendations.getMusicPersonalRecommendations()
         }
           
-        AsyncFunction("getUserLibraryPlaylists") {(refreshCache:Bool) async throws -> [[String: Any]] in
-            let userLibraryPlaylists = try await musicUserLibrary.getUserLibraryPlaylists(refreshCache: refreshCache)
+        AsyncFunction("getUserLibraryPlaylists") {() async throws -> [[String: Any]] in
+            let userLibraryPlaylists = try await musicUserLibrary.getUserLibraryPlaylists()
             let convertedPlaylists = userLibraryPlaylists.items.map{Utilities.convertPlaylist($0)}
             return convertedPlaylists
+        }
+        
+        AsyncFunction("getPlaylistTracks") {(playlistId: String) async throws -> [[String: Any]] in
+            let playlistTracks = try await musicUserLibrary.getPlaylistTracks(id: playlistId)
+            let convertedPlaylistTracks = playlistTracks!.compactMap(Utilities.convertPlaylistTrack)
+            return convertedPlaylistTracks
         }
         
         View(UserLibraryPlaylistArtworkView.self) {
@@ -45,9 +51,6 @@ public class MusicKitModule: Module {
             }
             Prop("width") { (view: UserLibraryPlaylistArtworkView, width: CGFloat) in
                 view.setWidth(width)
-            }
-            Prop("refreshCache") { (view: UserLibraryPlaylistArtworkView, refreshCache: Bool) in
-                view.setRefreshCache(refreshCache)
             }
         }
     }

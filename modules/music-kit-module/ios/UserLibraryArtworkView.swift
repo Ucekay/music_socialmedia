@@ -13,7 +13,6 @@ import ExpoModulesCore
 class UserLibraryPlaylistArtworkView: ExpoView {
     private var musicItemId: String?
     private var width: CGFloat = 100
-    private var refreshCache: Bool?
     private var hostingController: UIHostingController<AnyView>?
     
     private var userLibrary = UserLibraryManager()
@@ -50,18 +49,11 @@ class UserLibraryPlaylistArtworkView: ExpoView {
             await renderArtwork()
         }
     }
-    
-    func setRefreshCache(_ refreshCache: Bool) {
-        self.refreshCache = refreshCache
-        Task {
-            await renderArtwork()
-        }
-    }
-    
+
     private func renderArtwork() async {
-        if let musicItemId = self.musicItemId, let refreshCache = self.refreshCache {
+        if let musicItemId = self.musicItemId {
             do {
-                let playlist = try await userLibrary.getPlaylist(id: musicItemId, refreshCache: refreshCache)
+                let playlist = try await userLibrary.getPlaylist(id: musicItemId)
                 let artworkImage = AnyView(ArtworkImage((playlist?.artwork)!, width: self.width))
                 hostingController?.rootView = artworkImage
             } catch {

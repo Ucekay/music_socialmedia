@@ -1,6 +1,6 @@
-import { FlatList } from 'react-native';
-
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
+import { FlashList } from '@shopify/flash-list';
 import { useQuery } from '@tanstack/react-query';
 
 import PlaylistCard from '@/src/components/PlaylistCard';
@@ -11,22 +11,30 @@ import type { Playlist } from '@/modules/music-kit-module/src/MusicKit.types';
 
 const PlaylistScreen = (): JSX.Element => {
   const getLocalPlaylists = async (): Promise<Playlist[]> => {
-    return MusicKit.getUserLibraryPlaylists({ refreshCache: true });
+    return MusicKit.getUserLibraryPlaylists();
   };
   const { data, error, isLoading } = useQuery({
     queryKey: ['playlists'],
     queryFn: getLocalPlaylists,
   });
   const headerHeight = useHeaderHeight();
+  const bottomTabBarHeight = useBottomTabBarHeight();
   return (
     <BgView
-      style={{ flex: 1, paddingTop: headerHeight, paddingHorizontal: 16 }}
+      style={{
+        flex: 1,
+      }}
     >
-      <FlatList
+      <FlashList
         data={data}
         numColumns={2}
         renderItem={({ item }) => <PlaylistCard {...item} />}
-        columnWrapperStyle={{ gap: 16 }}
+        estimatedItemSize={225.7}
+        contentContainerStyle={{
+          paddingTop: headerHeight + 16,
+          paddingBottom: bottomTabBarHeight + 16,
+          paddingHorizontal: 8,
+        }}
       />
     </BgView>
   );

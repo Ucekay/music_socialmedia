@@ -38,11 +38,4 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  button: {
-    position: 'absolute',
-    zIndex: 100,
-    bottom: 100,
-    left: 0,
-    backgroundColor: 'red',
-  },
 });
