@@ -36,7 +36,7 @@ class Utilities {
             "id": playlist.id.rawValue,
             "name": playlist.name,
             "curatorName": playlist.curatorName ?? "",
-            "discription": playlist.description,
+            "description": playlist.standardDescription ?? "",
         ]
         convertedPlaylist["artwork"] = convertArtwork(playlist.artwork)
         

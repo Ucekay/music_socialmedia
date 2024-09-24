@@ -2,14 +2,14 @@ import type { ViewProps } from 'react-native';
 
 import { requireNativeViewManager } from 'expo-modules-core';
 
-export type LibraryPlaylistArtworkViewProps = {
+export type LibraryItemArtworkViewProps = {
   artworkUrl: URL;
 } & ViewProps;
-const NativeView: React.ComponentType<LibraryPlaylistArtworkViewProps> =
+const NativeView: React.ComponentType<LibraryItemArtworkViewProps> =
   requireNativeViewManager('MusicKitModule');
 
-export default function LibraryPlaylistArtworkView(
-  props: LibraryPlaylistArtworkViewProps,
+export default function LibraryItemArtworkView(
+  props: LibraryItemArtworkViewProps,
 ) {
   return <NativeView {...props} />;
 }

@@ -1,5 +1,5 @@
 import MusicKitModule from './src/MusicKitModule';
-import LibraryPlaylistArtworkView from './src/MusicKitView';
+import LibraryItemArtworkView from './src/MusicKitView';
 
 import type { Playlist, Recommendations } from './src/MusicKit.types';
 
@@ -20,8 +20,12 @@ export const getUserLibraryPlaylists = async (): Promise<Playlist[]> => {
   return await MusicKitModule.getUserLibraryPlaylists();
 };
 
+export const getUserLibraryPlaylist = async (playlistId: string) => {
+  return await MusicKitModule.getUserLibraryPlaylist(playlistId);
+};
+
 export const getPlaylistTracks = async (playlistId: string) => {
   return await MusicKitModule.getPlaylistTracks(playlistId);
 };
 
-export { LibraryPlaylistArtworkView };
+export { LibraryItemArtworkView };
