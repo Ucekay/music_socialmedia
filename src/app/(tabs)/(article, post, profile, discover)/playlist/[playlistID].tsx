@@ -16,7 +16,7 @@ import * as MusicKit from 'music-kit-module';
 
 import type {
   Playlist,
-  Track,
+  Song,
 } from '@/modules/music-kit-module/src/MusicKit.types';
 
 const PlaylistDetailScreen = (): JSX.Element => {
@@ -115,7 +115,7 @@ const PlaylistDetailScreen = (): JSX.Element => {
       <FlashList
         data={playlistTracks}
         estimatedItemSize={60}
-        renderItem={({ item, index }: { item: Track; index: number }) => (
+        renderItem={({ item, index }: { item: Song; index: number }) => (
           <TracksListItem
             {...item}
             first={index === 0}

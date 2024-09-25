@@ -3,11 +3,12 @@ import { StyleSheet, View } from 'react-native';
 import { LibraryItemArtworkView } from 'music-kit-module';
 
 import { useTheme } from '../contexts/ColorThemeContext';
+
 import Text from './ThemedText';
 
-import type { Track } from '@/modules/music-kit-module/src/MusicKit.types';
+import type { Song } from '@/modules/music-kit-module/src/MusicKit.types';
 
-type Props = Track & {
+type Props = Song & {
   first?: boolean;
   last?: boolean;
 };
