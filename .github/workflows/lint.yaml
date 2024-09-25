@@ -1,0 +1,18 @@
+name: Biome linter check
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  lint:
+    name: Biome linter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v4
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: latest
+      - name: Run Biome linter
+        run: biome ci --formatter-enabled=false --linter-enabled=true --organize-imports-enabled=true --assists-enabled=true ./src/**/*.{js,jsx,ts,tsx} ./modules/**/*.{js,jsx,ts,tsx}

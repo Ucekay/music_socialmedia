@@ -1,0 +1,18 @@
+name: Biome formatter check
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  format:
+    name: Biome formatter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v4
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: latest
+      - name: Run Biome formatter
+        run: biome ci --formatter-enabled=true --linter-enabled=false --organize-imports-enabled=true --assists-enabled=true ./src/**/*.{js,jsx,ts,tsx} ./modules/**/*.{js,jsx,ts,tsx}

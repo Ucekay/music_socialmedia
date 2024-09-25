@@ -12,7 +12,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           screenOptions={{
             title: 'Article',
             headerTransparent: true,
-            headerBlurEffect: 'systemUltraThinMaterial',
+            headerBlurEffect: 'regular',
             headerTintColor: colors.text,
           }}
         >
@@ -37,7 +37,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           screenOptions={{
             title: 'Post',
             headerTransparent: true,
-            headerBlurEffect: 'systemUltraThinMaterial',
+            headerBlurEffect: 'regular',
             headerTintColor: colors.text,
           }}
         >
@@ -62,7 +62,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           screenOptions={{
             title: 'Profile',
             headerTransparent: true,
-            headerBlurEffect: 'systemUltraThinMaterial',
+            headerBlurEffect: 'regular',
             headerTintColor: colors.text,
           }}
         >
@@ -99,7 +99,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
           screenOptions={{
             title: 'Discover',
             headerTransparent: true,
-            headerBlurEffect: 'systemUltraThinMaterial',
+            headerBlurEffect: 'regular',
             headerTintColor: colors.text,
           }}
         >
