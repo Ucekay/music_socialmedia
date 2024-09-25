@@ -78,8 +78,7 @@ export default function TabIndex() {
   }
 
   const handlePress = async () => {
-    const res = await MusicKit.getPlaylistTracks('p.RB1ApzVsYvLEovv');
-    console.log(res);
+    await MusicKit.getCatalogSearchResult('Taylor Swift');
   };
 
   const handleCachePress = async () => {

@@ -28,4 +28,8 @@ export const getPlaylistTracks = async (playlistId: string) => {
   return await MusicKitModule.getPlaylistTracks(playlistId);
 };
 
+export const getCatalogSearchResult = async (term: string) => {
+  return await MusicKitModule.getCatalogSearchResult(term);
+};
+
 export { LibraryItemArtworkView };

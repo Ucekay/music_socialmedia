@@ -45,7 +45,6 @@ import SearchHistoryList from '@/src/components/SearchHistoryList';
 import BgView from '@/src/components/ThemedBgView';
 import Text from '@/src/components/ThemedText';
 import TodaySongsListItem from '@/src/components/TodaySongsListItem';
-import TracksListItem from '@/src/components/TracksListItem';
 import UsersListItem from '@/src/components/UsersListItem';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 
@@ -292,12 +291,12 @@ const TrackSearchResults = ({ query }: { query: string }) => {
   }
   return (
     <View style={styles.resultsContainer}>
-      <FlashList
+      {/*<FlashList
         data={data}
         renderItem={({ item }) => <TracksListItem {...item} />}
         estimatedItemSize={60.7}
         contentContainerStyle={{ paddingBottom: bottomTabBarHeight }}
-      />
+      />*/}
     </View>
   );
 };
