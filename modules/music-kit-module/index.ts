@@ -1,7 +1,11 @@
 import MusicKitModule from './src/MusicKitModule';
 import LibraryItemArtworkView from './src/MusicKitView';
 
-import type { Playlist, Recommendations } from './src/MusicKit.types';
+import type {
+  Playlist,
+  Recommendations,
+  TopSearchResult,
+} from './src/MusicKit.types';
 
 export const requestMusicAuthorization = async () => {
   return MusicKitModule.requestMusicAuthorization();
@@ -28,8 +32,11 @@ export const getPlaylistTracks = async (playlistId: string) => {
   return await MusicKitModule.getPlaylistTracks(playlistId);
 };
 
-export const getCatalogSearchResult = async (term: string) => {
-  return await MusicKitModule.getCatalogSearchResult(term);
+export const getTopSearchResults = async (
+  term: string,
+  offset: number,
+): Promise<TopSearchResult> => {
+  return await MusicKitModule.getTopSearchResults(term, offset);
 };
 
 export { LibraryItemArtworkView };

@@ -49,8 +49,9 @@ public class MusicKitModule: Module {
             return playlistTracks!.compactMap(Utilities.convertPlaylistTrack)
         }
         
-        AsyncFunction("getCatalogSearchResult") {(term: String) async throws in
-            try await musicCatalogSearch.search(term: term)
+        AsyncFunction("getTopSearchResults") {(term: String, offset: Int ) async throws -> [[String: Any]] in
+            let topResults = try await musicCatalogSearch.getTopSearchResults(term: term, offset: offset)
+            return topResults.map{Utilities.converTopSeatchResult($0)}
         }
         
         View(UserLibraryPlaylistArtworkView.self) {
