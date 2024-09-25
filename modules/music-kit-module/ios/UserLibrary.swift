@@ -20,7 +20,6 @@ class UserLibraryManager {
         request.filter(matching: \.id, equalTo: MusicItemID(rawValue: id))
         let playlist = try await request.response().items.first?.with([.tracks])
         let tracks = playlist?.tracks ?? []
-        print(tracks)
         return tracks
     }
 }

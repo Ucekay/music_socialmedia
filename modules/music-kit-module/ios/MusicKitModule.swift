@@ -9,6 +9,7 @@ public class MusicKitModule: Module {
     private let musicAuth = MusicAuthManager()
     private let musicPersonalRecommendations = MusicPersonalRecommendationsManager()
     private let musicUserLibrary = UserLibraryManager()
+    private let musicCatalogSearch = MusicCatalogSearchManager()
     
     public func definition() -> ModuleDefinition {
     // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
@@ -46,6 +47,10 @@ public class MusicKitModule: Module {
         AsyncFunction("getPlaylistTracks") {(playlistId: String) async throws -> [[String: Any]] in
             let playlistTracks = try await musicUserLibrary.getPlaylistTracks(id: playlistId)
             return playlistTracks!.compactMap(Utilities.convertPlaylistTrack)
+        }
+        
+        AsyncFunction("getCatalogSearchResult") {(term: String) async throws in
+            try await musicCatalogSearch.search(term: term)
         }
         
         View(UserLibraryPlaylistArtworkView.self) {
