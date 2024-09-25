@@ -8,6 +8,7 @@ export interface Playlist {
   curatorName?: string;
   description?: string;
   id: string;
+  lastModifiedDate: string;
   name: string;
   type: 'playlist';
 }

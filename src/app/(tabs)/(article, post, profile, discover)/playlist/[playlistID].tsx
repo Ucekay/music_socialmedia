@@ -1,8 +1,9 @@
 import { useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
+import { FlashList } from '@shopify/flash-list';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import * as IconoirIcons from 'iconoir-react-native';
 
@@ -10,7 +11,6 @@ import { Button } from '@/src/components/Button';
 import BgView from '@/src/components/ThemedBgView';
 import Text from '@/src/components/ThemedText';
 import TracksListItem from '@/src/components/TracksListItem';
-import { useTheme } from '@/src/contexts/ColorThemeContext';
 import { LibraryItemArtworkView } from 'music-kit-module';
 import * as MusicKit from 'music-kit-module';
 
@@ -23,7 +23,6 @@ const PlaylistDetailScreen = (): JSX.Element => {
   const { playlistID } = useLocalSearchParams();
   const headerHeight = useHeaderHeight();
   const bottomTabBarHeight = useBottomTabBarHeight();
-  const { colors } = useTheme();
   const queryClient = useQueryClient();
   const cachedPlaylists = queryClient.getQueryData<Playlist[]>(['playlists']);
 
@@ -62,34 +61,19 @@ const PlaylistDetailScreen = (): JSX.Element => {
     );
   };
 
-  return (
-    <BgView>
-      <ScrollView
-        contentContainerStyle={[
-          styles.container,
-          {
-            paddingTop: headerHeight + 16,
-            paddingBottom: bottomTabBarHeight,
-          },
-        ]}
-      >
-        <View
-          style={{
-            width: 250,
-            height: 250,
-            borderCurve: 'continuous',
-            borderRadius: 8,
-            backgroundColor: playlist.artwork.backgroundColor,
-            shadowColor: playlist.artwork.backgroundColor,
-            shadowOffset: {
-              width: 0,
-              height: 6,
-            },
-            shadowOpacity: 0.37,
-            shadowRadius: 7.49,
+  console.log(playlist.lastModifiedDate);
 
-            elevation: 12,
-          }}
+  const renderListHeaderComponent = () => {
+    return (
+      <View style={styles.container}>
+        <View
+          style={[
+            styles.imageContainer,
+            {
+              backgroundColor: playlist.artwork.backgroundColor,
+              shadowColor: playlist.artwork.backgroundColor,
+            },
+          ]}
         >
           <LibraryItemArtworkView
             artworkUrl={playlist.artwork.url}
@@ -122,12 +106,29 @@ const PlaylistDetailScreen = (): JSX.Element => {
         <Text secondary style={{ width: '100%', fontSize: 15 }}>
           {playlist.description}
         </Text>
-        <View style={{ width: '100%' }}>
-          {playlistTracks.map((track: Track) => (
-            <TracksListItem {...track} key={track.id} />
-          ))}
-        </View>
-      </ScrollView>
+      </View>
+    );
+  };
+
+  return (
+    <BgView style={{ flex: 1 }}>
+      <FlashList
+        data={playlistTracks}
+        estimatedItemSize={60}
+        renderItem={({ item, index }: { item: Track; index: number }) => (
+          <TracksListItem
+            {...item}
+            first={index === 0}
+            last={index === playlistTracks.length - 1}
+          />
+        )}
+        ListHeaderComponent={renderListHeaderComponent}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingTop: headerHeight,
+          paddingBottom: bottomTabBarHeight + 16,
+        }}
+      />
     </BgView>
   );
 };
@@ -137,13 +138,25 @@ export default PlaylistDetailScreen;
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingVertical: 16,
     gap: 16,
+  },
+  imageContainer: {
+    width: 240,
+    borderCurve: 'continuous',
+    borderRadius: 8,
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    aspectRatio: 1,
+    elevation: 12,
   },
   image: {
     overflow: 'hidden',
-    width: 250,
-    height: 250,
+    flex: 1,
     borderCurve: 'continuous',
     borderRadius: 8,
   },

@@ -3,30 +3,50 @@ import { StyleSheet, View } from 'react-native';
 import { LibraryItemArtworkView } from 'music-kit-module';
 
 import { useTheme } from '../contexts/ColorThemeContext';
-
-import BgView from './ThemedBgView';
 import Text from './ThemedText';
 
 import type { Track } from '@/modules/music-kit-module/src/MusicKit.types';
 
-const TracksListItem = (props: Track) => {
+type Props = Track & {
+  first?: boolean;
+  last?: boolean;
+};
+
+const TracksListItem = (props: Props) => {
   const { colors } = useTheme();
+  const { first, last, artwork } = props;
   return (
-    <BgView style={styles.container}>
-      <View style={{ paddingVertical: 8 }}>
-        <LibraryItemArtworkView
-          artworkUrl={props.artwork.url}
-          style={styles.image}
-        />
+    <View
+      style={[
+        styles.container,
+        {
+          borderColor: colors.border,
+          borderTopWidth: first ? 0.5 : 0,
+          borderBottomWidth: last ? 0.5 : 0,
+        },
+      ]}
+    >
+      <View
+        style={[
+          {
+            backgroundColor: artwork.backgroundColor,
+            borderWidth: 0.2,
+            borderColor: colors.border,
+          },
+          styles.image,
+        ]}
+      >
+        <LibraryItemArtworkView artworkUrl={artwork.url} style={styles.image} />
       </View>
       <View
         style={{
           gap: 2,
           flex: 1,
-          height: '100%',
+          height: 60,
+          justifyContent: 'space-evenly',
           paddingVertical: 8,
           borderBottomColor: colors.border,
-          borderBottomWidth: 0.5,
+          borderBottomWidth: last ? 0 : 0.5,
         }}
       >
         <Text style={styles.song}>{props.title}</Text>
@@ -34,7 +54,7 @@ const TracksListItem = (props: Track) => {
           {props.artistName}
         </Text>
       </View>
-    </BgView>
+    </View>
   );
 };
 
@@ -51,7 +71,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderCurve: 'continuous',
-    borderRadius: 8,
+    borderRadius: 4,
   },
   song: {
     fontSize: 16,
