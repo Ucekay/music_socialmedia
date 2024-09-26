@@ -1,13 +1,13 @@
 import { supabase } from '../../lib/supabase';
 import type { Database } from '../../schema/supabasetypes';
 
-export type ArticleDB = Database['public']['Tables']['article']['Insert'];
+export type Article = Database['public']['Tables']['article']['Row'];
 
-export type CreateArticleParams = Omit<ArticleDB, 'article_id' | 'created_at'>;
+export type CreateArticleParams = Omit<Article, 'article_id' | 'created_at'>;
 export type UpdateArticleParams = Omit<Database['public']['Tables']['article']['Update'], 'article_id' | 'user_id'>;
 export type GetArticleRes = Database['public']['Tables']['article']['Row'];
 
-export class Article {
+export class ArticleDao {
   private readonly tableName: string = 'article';
   private readonly likesTableName: string = 'article_likes';
 
