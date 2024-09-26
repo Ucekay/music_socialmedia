@@ -61,8 +61,6 @@ const PlaylistDetailScreen = (): JSX.Element => {
     );
   };
 
-  console.log(playlist.lastModifiedDate);
-
   const renderListHeaderComponent = () => {
     return (
       <View style={styles.container}>
