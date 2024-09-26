@@ -66,6 +66,12 @@ export interface Song {
   type: 'song';
 }
 
+export type Suggestion = {
+  displayTerm: string;
+  id: string;
+  searchTerm: string;
+};
+
 type RecommendationItem = Album | Playlist | Song;
 
 type TopSearchResultItem =
@@ -88,3 +94,8 @@ type Recommendation = {
 export type Recommendations = Recommendation[] | undefined;
 
 export type TopSearchResult = TopSearchResultItem[] | undefined;
+
+export type SearchSuggestions = {
+  suggestions: Suggestion[];
+  topResults: TopSearchResult;
+};

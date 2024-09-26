@@ -1,5 +1,6 @@
 import type React from 'react';
 import { FlatList, type FlatListProps, Pressable, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { Search, Xmark } from 'iconoir-react-native';
 
@@ -35,29 +36,21 @@ const SearchHistoryList = (props: SearchHistoryListProps) => {
   }
   const renderHistoryItem = ({ item }: { item: SearchHistoryItem }) => {
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
+      <View style={styles.itemContainer}>
         <Pressable
           onPress={() => handleItemPress(item.query)}
-          style={{ paddingVertical: 8, paddingHorizontal: 16 }}
+          style={styles.termContainer}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <View style={{ paddingVertical: 2, paddingHorizontal: 4 }}>
-              <Search color={colors.text} width={18} height={18} />
-            </View>
-            <View>
-              <Text>{item.query}</Text>
-            </View>
+          <View style={styles.searchIconContainer}>
+            <Search color={colors.text} width={18} height={18} />
+          </View>
+          <View>
+            <Text style={styles.body}>{item.query}</Text>
           </View>
         </Pressable>
         <Pressable
           onPress={() => handleClearHistory(item)}
-          style={{ paddingVertical: 8, paddingHorizontal: 16 }}
+          style={styles.xmarkContainer}
         >
           <Xmark color={colors.text} width={18} height={18} />
         </Pressable>
@@ -66,8 +59,8 @@ const SearchHistoryList = (props: SearchHistoryListProps) => {
   };
   return (
     <View>
-      <View style={{ padding: 16 }}>
-        <Text style={{ fontSize: 16 }}>履歴</Text>
+      <View style={styles.listHeader}>
+        <Text style={styles.body}>履歴</Text>
       </View>
       <View>
         <FlatList
@@ -87,3 +80,34 @@ const SearchHistoryList = (props: SearchHistoryListProps) => {
 };
 
 export default SearchHistoryList;
+
+const styles = StyleSheet.create({
+  listHeader: {
+    padding: 16,
+  },
+  itemContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  termContainer: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    gap: 8,
+  },
+  searchIconContainer: {
+    justifyContent: 'center',
+    height: '100%',
+  },
+  body: {
+    fontSize: 17,
+  },
+  xmarkContainer: {
+    justifyContent: 'center',
+    height: '100%',
+    paddingHorizontal: 16,
+  },
+});
