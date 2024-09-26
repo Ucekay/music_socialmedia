@@ -4,9 +4,9 @@ import { checkAuth } from './checkAuth';
 
 import type { Database } from '../../schema/supabasetypes';
 
-export type UserProfile = Database['public']['Tables']['Users']['Row'];
+export type UserProfile = Database['public']['Tables']['users']['Row'];
 export type UpdateUserProfile = Omit<
-  Database['public']['Tables']['Users']['Update'],
+  Database['public']['Tables']['users']['Update'],
   'UserID'
 >;
 export type UserProfileforPosts = {
@@ -24,7 +24,7 @@ export const getUserId = async (): Promise<string> => {
 export const getUserProfile = async (userId: string): Promise<UserProfile> => {
   try {
     const { data, error } = await supabase // UserIDによる絞り込みを削除
-      .from('Users') // テーブル名を修正
+      .from('users') // テーブル名を修正
       .select('*')
       .match({ UserID: userId })
       .single();
@@ -49,7 +49,7 @@ export const updateUserPofile = async (
     const userId = await checkAuth();
 
     const { data, error } = await supabase
-      .from('Users')
+      .from('users')
       .update(updateData)
       .match({ UserID: userId });
 
@@ -70,7 +70,7 @@ export const getUserProfileforPosts = async (
 ): Promise<UserProfileforPosts> => {
   try {
     const { data, error } = await supabase // UserIDによる絞り込みを削除
-      .from('Users') // テーブル名を修正
+      .from('users') // テーブル名を修正
       .select('IconImageUrl, UserName, ProfileID')
       .eq('UserID', userId)
       .single();

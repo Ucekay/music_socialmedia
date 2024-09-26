@@ -1,9 +1,7 @@
 import { BadRequestError, GetArticleError, InternalError } from "../../schema/error";
-import { Article, ArticleAdditionalData, type CUArticleDataParams } from "../../schema/supabase_api";
+import { type ArticleInteg, ArticleAdditionalData, type CUArticleDataParams } from "../../schema/supabase_api";
 import { checkAuth } from "../dbdriver/checkAuth";
-import { ArticleDao, ArticleRepsitory } from "../dao/article";
-import { getUserProfileforPosts } from "../dbdriver/profile";
-import { G } from "react-native-svg";
+import { ArticleRepsitory } from "../dao/article";
 
 export interface IArticleApplication {
   createArticle(articleData: CUArticleDataParams, userId: string): Promise<boolean | string>;
@@ -11,7 +9,7 @@ export interface IArticleApplication {
   updateArticle(articleId: number, userId: string, updateData: Partial<CUArticleDataParams>): Promise<boolean>;
   getArticles(prevcursor: string | null, latest: boolean | null,
     ): Promise<{
-        articlemetaData: Article[];
+        articlemetaData: ArticleInteg[];
         cursor: string | null;
         latestcursor: string | null;
     }>;
@@ -129,7 +127,7 @@ export class ArticleApplication implements IArticleApplication {
     prevcursor: string | null,
     latest: boolean | null,
     ): Promise<{
-    articlemetaData: Article[];
+    articlemetaData: ArticleInteg[];
     cursor: string | null;
     latestcursor: string | null;
     }> {
@@ -165,21 +163,26 @@ export class ArticleApplication implements IArticleApplication {
     }
 
   try {
-    const articlemetaData: Article[] = await Promise.all(
+    const articlemetaData: ArticleInteg[] = await Promise.all(
       metadata.map(async (Data) => {
-        const data = await getUserProfileforPosts(Data.user_id);
+        const data = await this.articleDao.getUserProfile(Data.user_id);
 
         return {
-          ArticleID: Data.article_id,
-          Title: Data.title,
-          ThumbnailUrl: Data.thumbnail_url,
-          userID: data.ProfileID,
-          user: data.UserName,
-          userAvatarUrl: data.IconImageUrl,
-          Info1: Data.info_1,
-          Info2: Data.info_2,
-          Type: Data.type,
-          createdAt: Data.created_at,
+          article: {
+            ArticleID: Data.article_id,
+            Title: Data.title,
+            ThumbnailUrl: Data.thumbnail_url,
+            userID: data.ProfileID,
+            Info1: Data.info_1,
+            Info2: Data.info_2,
+            Type: Data.type,
+            createdAt: Data.created_at,
+          },
+          user: {
+            userId: data.ProfileID,
+            userName: data.UserName,
+            userAvatarUrl: data.IconImageUrl,
+          }
         };
       }),
     );

@@ -1,74 +1,69 @@
-import { supabase } from '../../lib/supabase';
-import {
-  getInitialPosts,
-  getNewerPosts,
-  getOlderPosts,
-} from '../dbdriver/post';
-import { getUserProfileforPosts } from '../dbdriver/profile';
+import { supabase } from "../../lib/supabase";
+import { PostInteg } from "../../schema/supabase_api";
+import { PostApplication } from "../application/post";
+import { PostDao } from "../dao/post";
 
-import type { PostData } from '@/src/types';
+const postDao = new PostDao(supabase);
+const postApplication = new PostApplication(postDao);
 
-interface FetchPostsParams {
-  cursor: string | null;
-  isForward: boolean | null;
+export const CreatePost = async (
+    userId: string,
+    body: string,
+    image_url: string[]
+): Promise<boolean> => {
+    if (!userId || !body || !image_url) {
+        return false;
+    }
+
+    const postData = {
+        user_id: userId,
+        body: body,
+        image_url: image_url,
+    };
+
+    try {
+        const result = await postApplication.createPost(postData);
+        return result;
+    } catch (error) {
+        throw error;
+    }
 }
 
-interface PostsResult {
-  postData: PostData[];
-  cursor: string | null;
-  latestcursor: string | null;
+export const DeletePost = async(
+    postId: number,
+    userId: string
+): Promise<boolean> => {
+    try {
+        const result = await postApplication.deletePost(postId, userId);
+        return result;
+    } catch (error) {
+        throw error;
+    }
 }
 
-export const createPostDataset = async ({
-  cursor,
-  isForward,
-}: FetchPostsParams): Promise<PostsResult> => {
-  let posts;
-  let newCursor: string | null = null;
-  let newLatestcursor: string | null = null;
+export const GetPosts = async (
+    prevcursor: string,
+    latest: boolean
+): Promise<{
+    posts: PostInteg[],
+    cursor: string | null,
+    latestcursor: string | null
+    }> => {
+    try {
+        const result = await postApplication.getPosts(prevcursor, latest);
+        return result
+    } catch (error) {
+        throw error;
+    }
+}
 
-  if (cursor === null) {
-    const result = await getInitialPosts();
-    posts = result.posts;
-    newCursor = result.cursor;
-    newLatestcursor = result.latestcursor;
-  } else if (isForward === false) {
-    const result = await getOlderPosts(cursor);
-    posts = result.posts;
-    newCursor = result.cursor;
-  } else if (isForward === true) {
-    const result = await getNewerPosts(cursor);
-    posts = result.posts;
-    newLatestcursor = result.latestcursor;
-  } else {
-    throw new Error('Invalid parameters');
-  }
-
-  const postData: PostData[] = await Promise.all(
-    posts.map(async (post) => {
-      const userData = await getUserProfileforPosts(post.UserID);
-      const { data: likeData, error: likeError } = await supabase
-        .from('PostLikes')
-        .select('PostID')
-        .eq('UserID', post.UserID)
-        .eq('PostID', post.EntryID)
-        .single();
-
-      const liketopost = !likeError;
-
-      return {
-        postID: post.EntryID,
-        postContent: post.Body,
-        ImageUrl: post.ImageUrl as string[],
-        userID: userData.ProfileID,
-        user: userData.UserName,
-        userAvatarUrl: userData.IconImageUrl,
-        likes: post.likes,
-        createdAt: post.created_at,
-        LiketoPost: liketopost,
-      };
-    }),
-  );
-
-  return { postData, cursor: newCursor, latestcursor: newLatestcursor };
-};
+export const GetPost = async (
+    postId: number
+): Promise<PostInteg> => {
+    try {
+        const result = await postApplication.getPost(postId);
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}

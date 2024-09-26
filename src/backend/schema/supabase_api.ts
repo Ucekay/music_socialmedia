@@ -29,17 +29,114 @@ export type Article = {
   Title: string;
   ThumbnailUrl: string;
   userID: string;
-  user: string;
-  userAvatarUrl: string;
   Info1: string | null;
   Info2: string | null;
   Type: string;
   createdAt: string;
 };
 
+export type ArticleInteg = {
+    article: Article;
+    user: profileSummary;
+}
+
 export type ArticleAdditionalData = {
     body: Json;
     playlist_id: number | null;
     likes: number;
     view: number;
+}
+
+export type CProfileDataParams = {
+    icon_image_url: string;
+    user_name: string;
+    profile_id: string;
+    bio: string;
+}
+
+export type UProfileDataParams = {
+    icon_image_url?: string;
+    user_name?: string;
+    profile_id?: string;
+    bio?: string;
+    user_id: string;
+}
+
+export type Profile = {
+    bio: string;
+    createdAt: string;
+    follow: number;
+    followed: number;
+    iconImageUrl: string;
+    profileId: string;
+    userId: string;
+    userName: string;
+    favArtist: { artistId: string; artistName: string }[];
+}
+
+export type GetProfileRes = {
+    bio: string;
+    createdAt: string;
+    follow: number;
+    followed: number;
+    iconImageUrl: string;
+    profileId: string;
+    userId: string;
+    userName: string;
+}
+
+export type Post = {
+    body: string;
+    createdAt: string;
+    entryId: number;
+    imageUrl: string[];
+    likes: number;
+    userId: string;
+    view: number;
+}
+
+type profileSummary = {
+    userAvatarUrl: string;
+    userName: string;
+    userId: string;
+}
+
+type likeStatus = {
+    status: boolean;
+}
+
+export type PostInteg = {
+    post: Post;
+    user: profileSummary;
+    like: likeStatus;
+}
+
+export type CUPostDataParams = {
+    body: string;
+    image_url: string[];
+    user_id: string;
+}
+
+export type Reply = {
+    body: string;
+    createdAt: string;
+    entryId: number;
+    imageUrl: string[];
+    likes: number;
+    parentId: number;
+    userId: string;
+    view: number;
+}
+
+export type ReplyInteg = {
+    reply: Reply;
+    user: profileSummary;
+    like: likeStatus;
+}
+
+export type CUReplyDataParams = {
+    body: string;
+    image_url: string[];
+    user_id: string;
+    parent_id: number;
 }

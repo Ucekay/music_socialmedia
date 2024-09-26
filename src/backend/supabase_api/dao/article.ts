@@ -2,7 +2,7 @@ import { GetGeneralDetailRes, CreateGeneralParams, UpdateGeneralParams } from ".
 import { CreateReviewParams, GetReviewDetailRes, UpdateReviewParams } from "../dbdriver/Review";
 import { CreateLiveReportParams, GetLiveReportDetailRes, UpdateLiveReportParams } from "../dbdriver/LiveReport";
 import { CreatePlaylistArticleParams, GetPlaylistArticleDetailRes, UpdatePlaylistArticleParams } from "../dbdriver/PlaylistArticle";
-import { CreateArticleParams, GetArticleRes } from "../dbdriver/Article";
+import { CreateArticleParams, Article, GetArticleRes } from "../dbdriver/Article";
 import { supabase } from "../../lib/supabase";
 
 
@@ -10,9 +10,9 @@ export interface ArticleRepsitory {
 	createArticleData(articleData: CreateArticleParams): Promise<number>;
 	deleteArticleData(articleId: number, userId: string): Promise<boolean>;
 	updateArticleData(articleId: number, updateData: Partial<CreateArticleParams>): Promise<boolean>;
-	getInitialData(): Promise<{ posts: GetArticleRes[] | null; }>
-	getOlderData(cursor: string): Promise<{ posts: GetArticleRes[], err: Error | null }>
-	getNewerData(latestCursor: string): Promise<{ posts: GetArticleRes[], err: Error | null }>
+	getInitialData(): Promise<{ posts: Article[] | null; }>
+	getOlderData(cursor: string): Promise<{ posts: Article[], err: Error | null }>
+	getNewerData(latestCursor: string): Promise<{ posts: Article[], err: Error | null }>
 	
 	createGeneralData(generalData: CreateGeneralParams ): Promise<boolean>;
 	deleteGeneralData(articleId: number, userId: string): Promise<boolean>;

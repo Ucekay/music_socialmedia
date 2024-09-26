@@ -1,10 +1,12 @@
 import { ArticleApplication } from '../application/article';
 import { BadRequestError } from '../../schema/error';
-import { Article, ArticleAdditionalData, CUArticleDataParams } from '../../schema/supabase_api';
+import { ArticleAdditionalData, ArticleInteg, CUArticleDataParams } from '../../schema/supabase_api';
 import { ArticleDao } from '../dao/article';
 
 const articleDao = new ArticleDao();
 const articleApplication = new ArticleApplication(articleDao);
+
+//handlerまでclassで定義してしまえば、constructorで初期化して依存関係を注入したものを一つのファイルからエクスポートすれば暑あいやすい？
 
 export const CreateArticleHandler = async (
   userId: string,
@@ -77,7 +79,7 @@ export const GetArticlesHandler = async(
   prevcursor: string | null,
   latest: boolean | null
 ): Promise<{
-  articlemetaData: Article[];
+  articlemetaData: ArticleInteg[];
   cursor: string | null;
   latestcursor: string | null;
 }> => {
