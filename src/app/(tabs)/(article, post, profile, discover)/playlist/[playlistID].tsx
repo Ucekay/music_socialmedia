@@ -1,4 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
+import { memo, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -6,6 +7,7 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { FlashList } from '@shopify/flash-list';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import * as IconoirIcons from 'iconoir-react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { Button } from '@/src/components/Button';
 import BgView from '@/src/components/ThemedBgView';
@@ -19,24 +21,80 @@ import type {
   Song,
 } from '@/modules/music-kit-module/src/MusicKit.types';
 
+const renderIcon = ({
+  name,
+  size,
+  color,
+}: { name: string; size: number; color: string }) => {
+  const IconComponent = IconoirIcons[
+    name as keyof typeof IconoirIcons
+  ] as React.ElementType;
+  return (
+    <IconComponent width={size} height={size} color={color} fill={color} />
+  );
+};
+
+const PlaylistHeader = memo(({ playlist }: { playlist: Playlist }) => {
+  return (
+    <View style={styles.container}>
+      <View
+        style={[
+          styles.imageContainer,
+          {
+            backgroundColor: playlist.artwork.backgroundColor,
+            shadowColor: playlist.artwork.backgroundColor,
+          },
+        ]}
+      >
+        <Animated.View entering={FadeIn} style={styles.image}>
+          <LibraryItemArtworkView
+            artworkUrl={playlist.artwork.url}
+            style={styles.image}
+          />
+        </Animated.View>
+      </View>
+      <View style={{ gap: 4, alignItems: 'center' }}>
+        <Text style={styles.name}>{playlist.name}</Text>
+        <Text style={styles.curatorName}>{playlist.curatorName}</Text>
+      </View>
+      <View style={styles.buttonContainer}>
+        <View style={styles.buttonWrapper}>
+          <Button
+            onPress={() => console.log('Button pressed')}
+            text='再生'
+            icon='Play'
+            renderIcon={renderIcon}
+          />
+        </View>
+        <View style={styles.buttonWrapper}>
+          <Button
+            onPress={() => console.log('Button pressed')}
+            text='曲を追加'
+            icon='Edit'
+            renderIcon={renderIcon}
+            variant='outline'
+          />
+        </View>
+      </View>
+      <Text secondary style={{ width: '100%', fontSize: 15 }}>
+        {playlist.description}
+      </Text>
+    </View>
+  );
+});
+
 const PlaylistDetailScreen = (): JSX.Element => {
   const { playlistID } = useLocalSearchParams();
   const headerHeight = useHeaderHeight();
   const bottomTabBarHeight = useBottomTabBarHeight();
   const queryClient = useQueryClient();
   const cachedPlaylists = queryClient.getQueryData<Playlist[]>(['playlists']);
-
-  const playlist = cachedPlaylists?.find(
-    (playlist) => playlist.id === playlistID,
-  );
-  if (!playlist) {
-    return (
-      <BgView style={[styles.container, { marginTop: headerHeight }]}>
-        <Text>エラーが発生しました</Text>
-      </BgView>
-    );
-  }
-
+  const { data: playlist } = useQuery({
+    queryKey: ['playlist', playlistID],
+    queryFn: async () => {
+      return MusicKit.getUserLibraryPlaylist(playlistID as string);
+    },
+  });
   const {
     data: playlistTracks,
     error,
@@ -47,66 +105,16 @@ const PlaylistDetailScreen = (): JSX.Element => {
       return MusicKit.getPlaylistTracks(playlistID as string);
     },
   });
+  //const playlist = cachedPlaylists?.find(
+  //  (playlist) => playlist.id === playlistID,
+  //);
 
-  const renderIcon = ({
-    name,
-    size,
-    color,
-  }: { name: string; size: number; color: string }) => {
-    const IconComponent = IconoirIcons[
-      name as keyof typeof IconoirIcons
-    ] as React.ElementType;
-    return (
-      <IconComponent width={size} height={size} color={color} fill={color} />
-    );
-  };
-
-  const renderListHeaderComponent = () => {
-    return (
-      <View style={styles.container}>
-        <View
-          style={[
-            styles.imageContainer,
-            {
-              backgroundColor: playlist.artwork.backgroundColor,
-              shadowColor: playlist.artwork.backgroundColor,
-            },
-          ]}
-        >
-          <LibraryItemArtworkView
-            artworkUrl={playlist.artwork.url}
-            style={styles.image}
-          />
-        </View>
-        <View style={{ gap: 4, alignItems: 'center' }}>
-          <Text style={styles.name}>{playlist.name}</Text>
-          <Text style={styles.curatorName}>{playlist.curatorName}</Text>
-        </View>
-        <View style={styles.buttonContainer}>
-          <View style={styles.buttonWrapper}>
-            <Button
-              onPress={() => console.log('Button pressed')}
-              text='再生'
-              icon='Play'
-              renderIcon={renderIcon}
-            />
-          </View>
-          <View style={styles.buttonWrapper}>
-            <Button
-              onPress={() => console.log('Button pressed')}
-              text='曲を追加'
-              icon='Edit'
-              renderIcon={renderIcon}
-              variant='outline'
-            />
-          </View>
-        </View>
-        <Text secondary style={{ width: '100%', fontSize: 15 }}>
-          {playlist.description}
-        </Text>
-      </View>
-    );
-  };
+  const renderListHeaderComponent = useCallback(() => {
+    if (!playlist) {
+      return null;
+    }
+    return <PlaylistHeader playlist={playlist} />;
+  }, [playlist]);
 
   return (
     <BgView style={{ flex: 1 }}>
@@ -141,6 +149,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: 240,
+    height: 240,
     borderCurve: 'continuous',
     borderRadius: 8,
     shadowOffset: {
@@ -149,14 +158,15 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.37,
     shadowRadius: 7.49,
-    aspectRatio: 1,
     elevation: 12,
   },
   image: {
     overflow: 'hidden',
-    flex: 1,
+    width: 240,
+    height: 240,
     borderCurve: 'continuous',
     borderRadius: 8,
+    aspectRatio: 1,
   },
   name: {
     fontSize: 20,
