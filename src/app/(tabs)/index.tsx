@@ -79,7 +79,7 @@ export default function TabIndex() {
 
   const handlePress = async () => {
     const searchSuggestions = await MusicKit.getSearchSuggestions('the sh');
-    console.log(searchSuggestions.topResults);
+    console.log(searchSuggestions);
   };
 
   const handleCachePress = async () => {

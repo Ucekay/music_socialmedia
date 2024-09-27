@@ -74,7 +74,7 @@ export type Suggestion = {
 
 type RecommendationItem = Album | Playlist | Song;
 
-type TopSearchResultItem =
+export type TopSearchResultItem =
   | Artist
   | Album
   | Curator

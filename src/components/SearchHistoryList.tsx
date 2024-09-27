@@ -9,12 +9,16 @@ import { useTheme } from '../contexts/ColorThemeContext';
 import Text from './ThemedText';
 
 import type { SearchHistoryItem } from '@/src/types';
-import type { SearchBarCommands } from 'react-native-screens';
+import type { SearchBarCommands as NativeSearchBarCommands } from 'react-native-screens';
 
 type CustomFlatListProps<T> = Omit<
   FlatListProps<T>,
   'renderItem' | 'keyExtractor'
 >;
+
+type SearchBarCommands = NativeSearchBarCommands & {
+  value: string;
+};
 
 interface SearchHistoryListProps
   extends CustomFlatListProps<SearchHistoryItem> {
@@ -27,6 +31,7 @@ const SearchHistoryList = (props: SearchHistoryListProps) => {
   const {
     onItemPress: handleItemPress,
     onClearHistory: handleClearHistory,
+    searchRef,
     ...flatListProps
   } = props;
   const { colors } = useTheme();
@@ -36,7 +41,7 @@ const SearchHistoryList = (props: SearchHistoryListProps) => {
   }
   const renderHistoryItem = ({ item }: { item: SearchHistoryItem }) => {
     return (
-      <View style={styles.itemContainer}>
+      <View style={[styles.itemContainer, { borderColor: colors.border }]}>
         <Pressable
           onPress={() => handleItemPress(item.query)}
           style={styles.termContainer}
@@ -57,6 +62,7 @@ const SearchHistoryList = (props: SearchHistoryListProps) => {
       </View>
     );
   };
+
   return (
     <View>
       <View style={styles.listHeader}>
@@ -69,9 +75,15 @@ const SearchHistoryList = (props: SearchHistoryListProps) => {
           keyExtractor={(item) => item.timestamp.toString()}
           style={{ height: '100%' }}
           onScroll={() => {
-            if (props.searchRef.current) {
-              props.searchRef.current.blur();
+            if (searchRef.current) {
+              searchRef.current.blur();
             }
+          }}
+          contentContainerStyle={{
+            borderBottomWidth: 0.2,
+            borderTopWidth: 0.2,
+            borderColor: colors.border,
+            marginHorizontal: 16,
           }}
         />
       </View>
@@ -87,20 +99,21 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     alignItems: 'center',
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    borderBottomWidth: 0.2,
+    borderTopWidth: 0.2,
   },
   termContainer: {
     alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 12,
     gap: 8,
   },
   searchIconContainer: {
     justifyContent: 'center',
-    height: '100%',
   },
   body: {
     fontSize: 17,
@@ -108,6 +121,5 @@ const styles = StyleSheet.create({
   xmarkContainer: {
     justifyContent: 'center',
     height: '100%',
-    paddingHorizontal: 16,
   },
 });

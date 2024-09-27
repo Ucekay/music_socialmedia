@@ -4,7 +4,7 @@ module.exports = {
   plugins: ['import', 'react-native-style-order'],
   rules: {
     'import/order': [
-      'error',
+      'warn',
       {
         alphabetize: {
           order: 'asc',

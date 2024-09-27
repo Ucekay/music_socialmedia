@@ -67,6 +67,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
       ref,
       () => {
         return {
+          value: value,
           focus: () => inputRef.current?.focus(),
           blur: () => inputRef.current?.blur(),
           clearText: () => {
@@ -83,7 +84,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
           },
         };
       },
-      [onChangeText],
+      [onChangeText, value],
     );
 
     const handleLayout = (event: LayoutChangeEvent) => {
@@ -173,21 +174,11 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
     };
 
     return (
-      <View
-        style={{
-          width: '100%',
-          height: 36,
-          flexDirection: 'row',
-          gap: 12,
-        }}
-      >
+      <View style={styles.container}>
         <View style={{ flexDirection: 'row' }}>
           {canBack === true && (
             <Animated.View
-              style={[
-                animatedBackButtonStyle,
-                { marginLeft: -16, overflow: 'hidden' },
-              ]}
+              style={[animatedBackButtonStyle, styles.backButtonContainer]}
             >
               <Pressable onPress={handleBack} style={[styles.button]}>
                 <NavArrowLeft
@@ -201,7 +192,7 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
           )}
           <Animated.View
             style={[
-              styles.container,
+              styles.searchBoxContainer,
               animatedSearchBoxStyle,
               {
                 backgroundColor: colors.searchBar,
@@ -241,14 +232,10 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
             )}
           </Animated.View>
         </View>
-        <Animated.View style={[animatedCancelButtonStyle, { width: 53 }]}>
+        <Animated.View style={animatedCancelButtonStyle}>
           <Pressable
             onPress={handleCancel}
-            style={{
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+            style={styles.cancelButtonContainer}
           >
             <Text style={{ fontSize: 17 }}>Cancel</Text>
           </Pressable>
@@ -260,6 +247,12 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
+    width: '100%',
+    height: 36,
+    gap: 12,
+  },
+  searchBoxContainer: {
     alignItems: 'center',
     flexDirection: 'row',
     height: 36,
@@ -267,6 +260,10 @@ const styles = StyleSheet.create({
     borderCurve: 'continuous',
     borderRadius: 10,
     backgroundColor: '#f0f0f0',
+  },
+  backButtonContainer: {
+    overflow: 'hidden',
+    marginLeft: -16,
   },
   searchIcon: {
     marginRight: 8,
@@ -279,6 +276,12 @@ const styles = StyleSheet.create({
   },
   button: {
     justifyContent: 'center',
+    height: '100%',
+  },
+  cancelButtonContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 53,
     height: '100%',
   },
 });
