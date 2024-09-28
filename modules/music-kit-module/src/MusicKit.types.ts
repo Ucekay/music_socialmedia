@@ -1,6 +1,6 @@
 interface ArtworkObject {
   backgroundColor: string;
-  url: URL;
+  url: string;
 }
 
 export interface Artist {

@@ -1,20 +1,28 @@
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  type TextStyle,
-  View,
-} from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import type { TextStyle } from 'react-native';
 
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { Search } from 'iconoir-react-native';
 
 import { useTheme } from '../contexts/ColorThemeContext';
 
+import {
+  AlbumItem,
+  ArtistItem,
+  MusicVideoItem,
+  PlaylistItem,
+  SongItem,
+} from './MusicItemListItems';
 import BgView from './ThemedBgView';
 import Text from './ThemedText';
 
 import type {
+  Album,
+  Artist,
+  MusicVideo,
+  Playlist,
   SearchSuggestions,
+  Song,
   Suggestion,
   TopSearchResultItem,
 } from '@/modules/music-kit-module/src/MusicKit.types';
@@ -74,23 +82,21 @@ const SearchSuggestionItem = ({
 }) => {
   const { colors } = useTheme();
   return (
-    <View style={[styles.itemContainer, { borderColor: colors.border }]}>
-      <Pressable
-        onPress={() => handleItemPress(item.displayTerm)}
-        style={styles.termContainer}
-      >
-        <View style={styles.searchIconContainer}>
-          <Search color={colors.text} width={18} height={18} />
-        </View>
-        <View>
-          <HighlightedText
-            text={item.displayTerm}
-            highlight={query}
-            style={styles.body}
-          />
-        </View>
-      </Pressable>
-    </View>
+    <Pressable
+      onPress={() => handleItemPress(item.displayTerm)}
+      style={[styles.termItemContainer, { borderColor: colors.border }]}
+    >
+      <View style={styles.searchIconContainer}>
+        <Search color={colors.text} width={18} height={18} />
+      </View>
+      <View>
+        <HighlightedText
+          text={item.displayTerm}
+          highlight={query}
+          style={styles.body}
+        />
+      </View>
+    </Pressable>
   );
 };
 
@@ -106,6 +112,7 @@ const SearchSuggestionsList = (props: SearchSuggestionListProps) => {
   }
 
   const { colors } = useTheme();
+  const bottomTabBarHeight = useBottomTabBarHeight();
   const termSuggestions = suggestions.suggestions;
   const termSuggestionsLength = termSuggestions.length;
   const combinedSuggestions = [
@@ -125,6 +132,29 @@ const SearchSuggestionsList = (props: SearchSuggestionListProps) => {
         />
       );
     }
+    switch ((item as TopSearchResultItem).type) {
+      case 'album':
+        return <AlbumItem item={item as Album} onItemPress={handleItemPress} />;
+      case 'artist':
+        return (
+          <ArtistItem item={item as Artist} onItemPress={handleItemPress} />
+        );
+      case 'musicVideo':
+        return (
+          <MusicVideoItem
+            item={item as MusicVideo}
+            onItemPress={handleItemPress}
+          />
+        );
+      case 'playlist':
+        return (
+          <PlaylistItem item={item as Playlist} onItemPress={handleItemPress} />
+        );
+      case 'song':
+        return <SongItem item={item as Song} onItemPress={handleItemPress} />;
+      default:
+        break;
+    }
     return (
       <View>
         <Text>{(item as TopSearchResultItem).type}</Text>
@@ -133,16 +163,21 @@ const SearchSuggestionsList = (props: SearchSuggestionListProps) => {
   };
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <FlatList
         data={combinedSuggestions}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
+        onScroll={() => {
+          if (searchRef.current) {
+            searchRef.current.blur();
+          }
+        }}
         contentContainerStyle={{
           marginHorizontal: 16,
-          borderBottomWidth: 0.2,
           borderTopWidth: 0.2,
           borderColor: colors.border,
+          paddingBottom: bottomTabBarHeight,
         }}
       />
     </View>
@@ -152,19 +187,12 @@ const SearchSuggestionsList = (props: SearchSuggestionListProps) => {
 export default SearchSuggestionsList;
 
 const styles = StyleSheet.create({
-  itemContainer: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomWidth: 0.2,
-    borderTopWidth: 0.2,
-  },
-  termContainer: {
+  termItemContainer: {
     alignItems: 'center',
     flex: 1,
     flexDirection: 'row',
     paddingVertical: 12,
+    borderBottomWidth: 0.2,
     gap: 8,
   },
   searchIconContainer: {

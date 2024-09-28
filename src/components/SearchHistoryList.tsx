@@ -80,7 +80,6 @@ const SearchHistoryList = (props: SearchHistoryListProps) => {
             }
           }}
           contentContainerStyle={{
-            borderBottomWidth: 0.2,
             borderTopWidth: 0.2,
             borderColor: colors.border,
             marginHorizontal: 16,
@@ -103,7 +102,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderBottomWidth: 0.2,
-    borderTopWidth: 0.2,
   },
   termContainer: {
     alignItems: 'center',
