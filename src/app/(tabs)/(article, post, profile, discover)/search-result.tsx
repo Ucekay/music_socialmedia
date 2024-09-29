@@ -56,11 +56,15 @@ import type {
   Track,
   UsersListItemProps,
 } from '@/src/types';
-import type { SearchBarCommands } from 'react-native-screens';
+import type { SearchBarCommands as NativeSearchBarCommands } from 'react-native-screens';
 import type {
   Event,
   Scene,
 } from 'react-native-tab-view/lib/typescript/src/types';
+
+type SearchBarCommands = NativeSearchBarCommands & {
+  value: string;
+};
 
 const fetchData = async (
   type: 'post' | 'article' | 'today' | 'user' | 'music',

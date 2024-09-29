@@ -1,5 +1,4 @@
 import { Link, Stack, useFocusEffect, useRouter } from 'expo-router';
-import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import {
   type NativeSyntheticEvent,
