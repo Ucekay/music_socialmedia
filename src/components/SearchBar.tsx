@@ -221,9 +221,9 @@ const SearchBar = forwardRef<SearchBarCommands, SearchBarProps>(
               onBlur={handleBlur}
               onPress={handlePress}
               autoCapitalize='none'
+              autoCorrect={false}
               enablesReturnKeyAutomatically
               enterKeyHint='search'
-              spellCheck={false}
             />
             {value.length > 0 && isFocused && (
               <Pressable onPress={handleClear} style={styles.button}>

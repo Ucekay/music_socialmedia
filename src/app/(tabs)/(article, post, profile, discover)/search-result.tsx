@@ -1,9 +1,4 @@
-import {
-  Stack,
-  router,
-  useFocusEffect,
-  useLocalSearchParams,
-} from 'expo-router';
+import { Stack, router, useLocalSearchParams } from 'expo-router';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -42,12 +37,15 @@ import ArticleCard from '@/src/components/ArticleCard';
 import PostCard from '@/src/components/PostCard';
 import SearchBar from '@/src/components/SearchBar';
 import SearchHistoryList from '@/src/components/SearchHistoryList';
+import SearchSuggestionsList from '@/src/components/SearchSuggestionsList';
 import BgView from '@/src/components/ThemedBgView';
 import Text from '@/src/components/ThemedText';
 import TodaySongsListItem from '@/src/components/TodaySongsListItem';
 import UsersListItem from '@/src/components/UsersListItem';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
+import * as MusicKit from 'music-kit-module';
 
+import type { SearchSuggestions } from '@/modules/music-kit-module/src/MusicKit.types';
 import type {
   ArticleData,
   PostData,
@@ -438,23 +436,27 @@ const SearchResultTabs = ({ query }: { query: string }) => {
 
 const SearchResult = () => {
   const { query } = useLocalSearchParams();
-  const { colors } = useTheme();
   const insetsTop = useSafeAreaInsets().top;
   const [history, setHistory] = useState<SearchHistoryItem[]>([]);
-  const [returnFromSearchResult, setReturnFromSearchResult] = useState(false);
+  const [suggestions, setSuggestions] = useState<SearchSuggestions>();
   const [showHistory, setShowHistory] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchRef = useRef<SearchBarCommands>(null);
 
   const showCurrentQuery = () => {
     searchRef.current?.setText(query as string);
   };
 
-  useFocusEffect(() => {
-    if (returnFromSearchResult) {
-      searchRef.current?.blur();
-      showCurrentQuery();
-      setReturnFromSearchResult(false);
-    }
-  });
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    showCurrentQuery();
+    setShowSuggestions(false);
+  }, []);
+
+  /*useFocusEffect(() => {
+    showCurrentQuery();
+    setShowSuggestions(false);
+  });*/
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -485,24 +487,31 @@ const SearchResult = () => {
     });
   };
 
-  const searchRef = useRef<SearchBarCommands>(null);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    showCurrentQuery();
-  }, []);
+  const handleChangeText = async (text: string) => {
+    if (text === '') {
+      setShowSuggestions(false);
+      setShowHistory(true);
+      setSuggestions?.({ suggestions: [], topResults: [] });
+    } else {
+      setShowHistory(false);
+      setShowSuggestions(true);
+      const suggestions = await MusicKit.getSearchSuggestions(text);
+      setSuggestions?.(suggestions);
+    }
+  };
 
   const handleCancelButtonPress = () => {
     showCurrentQuery();
     setShowHistory(false);
+    setShowSuggestions(false);
   };
 
   const handleSearchFocus = () => {
-    setShowHistory(true);
+    setShowSuggestions(true);
   };
 
   const handleSearch = (query: string) => {
     searchRef.current?.cancelSearch();
-    setReturnFromSearchResult(true);
     const newHistoryItem = {
       query,
       timestamp: Date.now(),
@@ -538,24 +547,25 @@ const SearchResult = () => {
   };
 
   return (
-    <BgView style={{ flex: 1, paddingTop: insetsTop }}>
+    <BgView style={{ flex: 1 }}>
       <Stack.Screen
         options={{
           header: () => (
             <BlurView
-              tint='systemUltraThinMaterial'
+              tint='regular'
               intensity={100}
-              style={{ height: insetsTop, paddingHorizontal: 16 }}
+              style={{ height: insetsTop }}
             />
           ),
           headerTransparent: true,
         }}
       />
       <BlurView
-        tint='systemUltraThinMaterial'
+        tint='regular'
         intensity={100}
         style={{
-          height: 44,
+          height: 40,
+          marginTop: insetsTop,
           paddingHorizontal: 16,
         }}
       >
@@ -563,9 +573,11 @@ const SearchResult = () => {
           ref={searchRef}
           canBack={true}
           placeholder='検索'
+          onChangeText={handleChangeText}
           onCancelButtonPress={handleCancelButtonPress}
           onFocus={handleSearchFocus}
           onSearchButtonPress={handleSearchButtonPress}
+          key={query as string}
         />
       </BlurView>
 
@@ -574,14 +586,14 @@ const SearchResult = () => {
       </View>
 
       {showHistory && (
-        <View
+        <BgView
           style={{
             position: 'absolute',
-            top: 44 + insetsTop,
+            top: 40 + insetsTop,
             right: 0,
             bottom: 0,
             left: 0,
-            backgroundColor: colors.background,
+            zIndex: 1,
           }}
         >
           <SearchHistoryList
@@ -590,7 +602,25 @@ const SearchResult = () => {
             onClearHistory={clearHistory}
             searchRef={searchRef}
           />
-        </View>
+        </BgView>
+      )}
+      {showSuggestions && (
+        <BgView
+          style={{
+            position: 'absolute',
+            top: 40 + insetsTop,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            zIndex: 2,
+          }}
+        >
+          <SearchSuggestionsList
+            data={suggestions}
+            onItemPress={handleSearch}
+            searchRef={searchRef}
+          />
+        </BgView>
       )}
     </BgView>
   );
