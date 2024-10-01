@@ -1,6 +1,10 @@
-import { Text as DefaultText, type TextProps } from 'react-native';
+import {
+  Text as DefaultText,
+  type TextProps,
+  useColorScheme,
+} from 'react-native';
 
-import { useTheme } from '../contexts/ColorThemeContext';
+import Colors from '../constants/Colors';
 
 type ThemedTextProps = TextProps & {
   secondary?: boolean;
@@ -8,8 +12,10 @@ type ThemedTextProps = TextProps & {
 
 const Text = (props: ThemedTextProps) => {
   const { style, ...otherProps } = props;
-  const { colors } = useTheme();
-  const color = props.secondary ? colors.secondaryText : colors.text;
+  const colorScheme = useColorScheme();
+  const color = props.secondary
+    ? Colors[colorScheme ?? 'light'].secondaryText
+    : Colors[colorScheme ?? 'light'].text;
   return <DefaultText style={[{ color }, style]} {...otherProps} />;
 };
 
