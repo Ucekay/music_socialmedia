@@ -104,10 +104,10 @@ export type ColorScheme = {
   appleMusicBg: string;
   cancelBg: string;
   cancelText: string;
-  buttonSolid: string;
-  buttonGhost: string;
-  buttonOutline: string;
-  buttonOutlineBorder: string;
+  buttonFilled: string;
+  buttonBezeled: string;
+  buttonBezeledGray: string;
+  buttonBorderless: string;
   buttonText: string;
   buttonGhostText: string;
   buttonDisabled: string;

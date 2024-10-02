@@ -10,11 +10,11 @@ import {
 
 import { useTheme } from '../contexts/ColorThemeContext';
 
-type ButtonVariant = 'solid' | 'ghost' | 'outline';
+type ButtonVariant = 'filled' | 'bezeled' | 'bezeledGray' | 'borderless';
 type ButtonSize = 'small' | 'medium' | 'large';
 
 interface IconProps {
-  name: string;
+  name?: string;
   size: number;
   color: string;
   fill?: string;
@@ -31,17 +31,18 @@ interface ButtonProps {
   fullWidth?: boolean;
   backgroundColor?: string;
   textColor?: string;
-  borderColor?: string;
   style?: ViewStyle;
   textStyle?: TextStyle;
-  renderIcon?: (props: IconProps) => React.ReactNode;
+  renderIcon?:
+    | ((props: IconProps) => React.ReactNode)
+    | ((props: IconProps) => React.JSX.Element);
   iconFill?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
   onPress,
   text,
-  variant = 'solid',
+  variant = 'filled',
   size = 'medium',
   icon,
   iconPosition = 'left',
@@ -49,7 +50,6 @@ export const Button: React.FC<ButtonProps> = ({
   fullWidth = false,
   backgroundColor,
   textColor,
-  borderColor,
   style,
   textStyle,
   renderIcon,
@@ -61,13 +61,16 @@ export const Button: React.FC<ButtonProps> = ({
     if (backgroundColor) return backgroundColor;
     if (disabled) return colors.buttonDisabled;
     switch (variant) {
-      case 'solid':
-        return colors.buttonSolid;
-      case 'ghost':
-      case 'outline':
-        return colors.buttonGhost;
+      case 'filled':
+        return colors.buttonFilled;
+      case 'bezeled':
+        return colors.buttonBezeled;
+      case 'bezeledGray':
+        return colors.buttonBezeledGray;
+      case 'borderless':
+        return colors.buttonBorderless;
       default:
-        return colors.buttonSolid;
+        return colors.buttonFilled;
     }
   };
 
@@ -75,29 +78,21 @@ export const Button: React.FC<ButtonProps> = ({
     if (textColor) return textColor;
     if (disabled) return colors.buttonDisabledText;
     switch (variant) {
-      case 'solid':
+      case 'filled':
         return colors.buttonText;
-      case 'ghost':
-      case 'outline':
-        return colors.buttonGhostText;
+      case 'bezeled':
+      case 'bezeledGray':
+      case 'borderless':
+        return colors.tint;
       default:
         return colors.buttonText;
     }
   };
 
-  const getBorderColor = () => {
-    if (borderColor) return borderColor;
-    if (variant === 'outline') return colors.buttonOutlineBorder;
-    return 'transparent';
-  };
-
   const buttonStyles = [
-    styles.button,
     { backgroundColor: getBackgroundColor() },
-    { borderColor: getBorderColor() },
     styles[size],
     fullWidth && styles.fullWidth,
-    disabled && styles.disabled,
     style,
   ];
 
@@ -131,6 +126,22 @@ export const Button: React.FC<ButtonProps> = ({
         </View>
       );
     }
+    if (renderIcon) {
+      <View
+        style={{
+          width: iconSize,
+          height: iconSize,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {renderIcon({
+          size: iconSize,
+          color: iconColor,
+          fill: iconFill,
+        })}
+      </View>;
+    }
     if (React.isValidElement(icon)) {
       return icon;
     }
@@ -155,30 +166,24 @@ export const Button: React.FC<ButtonProps> = ({
 };
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 100,
-    borderWidth: 1,
-    gap: 8,
-  },
   small: {
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 4,
+    borderRadius: 100,
   },
   medium: {
     paddingHorizontal: 16,
     paddingVertical: 8,
+    borderRadius: 100,
   },
   large: {
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 12,
+    borderCurve: 'continuous',
+    borderRadius: 12,
   },
   fullWidth: {
     width: '100%',
-  },
-  disabled: {
-    opacity: 0.5,
   },
   pressed: {
     opacity: 0.8,
@@ -187,23 +192,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
+    gap: 4,
   },
   text: {
     fontWeight: '600',
     textAlign: 'center',
   },
   smallText: {
-    fontSize: 14,
+    fontSize: 15,
   },
   mediumText: {
-    fontSize: 16,
+    fontSize: 15,
   },
   largeText: {
-    fontSize: 18,
+    fontSize: 17,
   },
   textContainer: {
     alignItems: 'center',
-    flex: 1,
     justifyContent: 'center',
   },
 });

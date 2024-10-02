@@ -3,8 +3,8 @@ import chroma from 'chroma-js';
 
 import type { ColorScheme } from '@/src/types';
 
-const tintColorLight = chroma(palette.sky['500']).hex();
-const tintColorDark = chroma(palette.sky['500']).hex();
+const tintColorLight = chroma(palette.blue['500']).hex();
+const tintColorDark = chroma(palette.blue['400']).hex();
 const tabBarGradientLight = ['rgba(256,256,256,0)', 'rgba(256,256,256,1)'];
 const tabBarGradientDark = ['rgba(0,0,0,0)', 'rgba(0,0,0,1)'];
 const headerLight = 'rgba(250, 251, 254, 0.7)';
@@ -32,14 +32,14 @@ const Colors: {
     appleMusicBg: chroma(palette.rose['100']).hex(),
     cancelBg: chroma(palette.red['100']).hex(),
     cancelText: chroma(palette.red['700']).hex(),
-    buttonSolid: chroma(palette.zinc['900']).hex(),
-    buttonGhost: 'transparent',
-    buttonOutline: 'transparent',
-    buttonOutlineBorder: chroma(palette.zinc['900']).hex(),
-    buttonText: chroma(palette.zinc['100']).hex(),
+    buttonFilled: chroma(palette.blue['500']).hex(),
+    buttonBezeled: chroma(palette.blue['200']).hex(),
+    buttonBezeledGray: chroma(palette.zinc['100']).hex(),
+    buttonBorderless: 'transparent',
+    buttonText: 'white',
     buttonGhostText: chroma(palette.zinc['900']).hex(),
     buttonDisabled: chroma(palette.zinc['300']).hex(),
-    buttonDisabledText: chroma(palette.zinc['500']).hex(),
+    buttonDisabledText: chroma(palette.zinc['100']).hex(),
     searchBar: chroma(palette.zinc['400']).alpha(0.25).hex(),
   },
   dark: {
@@ -60,14 +60,14 @@ const Colors: {
     appleMusicBg: chroma(palette.rose['800']).hex(),
     cancelBg: chroma(palette.red['800']).hex(),
     cancelText: chroma(palette.red['300']).hex(),
-    buttonSolid: chroma(palette.zinc['100']).hex(),
-    buttonGhost: 'transparent',
-    buttonOutline: 'transparent',
-    buttonOutlineBorder: chroma(palette.zinc['100']).hex(),
-    buttonText: chroma(palette.zinc['900']).hex(),
+    buttonFilled: chroma(palette.blue['500']).hex(),
+    buttonBezeled: chroma(palette.blue['800']).hex(),
+    buttonBezeledGray: chroma(palette.zinc['900']).hex(),
+    buttonBorderless: 'transparent',
+    buttonText: 'white',
     buttonGhostText: chroma(palette.zinc['100']).hex(),
-    buttonDisabled: chroma(palette.zinc['700']).hex(),
-    buttonDisabledText: chroma(palette.zinc['500']).hex(),
+    buttonDisabled: chroma(palette.zinc['900']).hex(),
+    buttonDisabledText: chroma(palette.zinc['600']).hex(),
     searchBar: chroma(palette.gray['700']).alpha(0.25).hex(),
   },
 };
