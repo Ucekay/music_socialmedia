@@ -2,7 +2,7 @@ import { supabase } from '../../lib/supabase';
 
 import { checkAuth } from './checkAuth';
 
-import type { Database } from '../../types/supabasetypes';
+import type { Database } from '../../schema/supabasetypes';
 
 export type Likes = Database['public']['Tables']['Postlikes']['Row'];
 

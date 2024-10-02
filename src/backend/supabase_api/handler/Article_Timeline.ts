@@ -2,18 +2,18 @@ import {
   getInitialArticleMetaData,
   getNewerMetaData,
   getOlderArticleMetaData,
-} from '../DB_Access/Article/Article';
+} from '../dbdriver/Article';
 import {
   type GetGetArticleContent,
   getGeneral,
-} from '../DB_Access/Article/General';
-import { getLiveReport } from '../DB_Access/Article/LiveReport';
-import { getPlaylistArticle } from '../DB_Access/Article/PlaylistArticle';
-import { getReview } from '../DB_Access/Article/Review';
-import { checkAuth } from '../DB_Access/checkAuth';
-import { getUserProfileforPosts } from '../DB_Access/profile';
+} from '../dbdriver/General';
+import { getLiveReport } from '../dbdriver/LiveReport';
+import { getPlaylistArticle } from '../dbdriver/PlaylistArticle';
+import { getReview } from '../dbdriver/Review';
+import { checkAuth } from '../dbdriver/checkAuth';
+import { getUserProfileforPosts } from '../dbdriver/profile';
 
-import type { Database } from '../../types/supabasetypes';
+import type { Database } from '../../schema/supabasetypes';
 
 export type ArticleMetaData = Database['public']['Tables']['Article']['Row'];
 

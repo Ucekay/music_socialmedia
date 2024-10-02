@@ -19,8 +19,8 @@ const ArticleTag = ({ type, size }: ArticleTagProps) => {
     return style[0].toUpperCase() + style.slice(1).toLowerCase();
   }
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={{ color: colors.text, fontSize: size }}>
+    <View style={[styles.container, { backgroundColor: '#dddddd' }]}>
+      <Text style={{ color: '#ffffff', fontSize: size }}>
         {titleCase(type)}
       </Text>
     </View>

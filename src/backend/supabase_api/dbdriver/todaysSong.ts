@@ -2,7 +2,7 @@ import { supabase } from '../../lib/supabase';
 
 import { checkAuth } from './checkAuth';
 
-import type { Database } from '../../types/supabasetypes';
+import type { Database } from '../../schema/supabasetypes';
 
 type TodaysSong = Database['public']['Tables']['TodaysSong']['Insert'];
 type GetTodaysSong = Database['public']['Tables']['TodaysSong']['Row'];

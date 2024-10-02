@@ -3,7 +3,7 @@ import {
   getInitialUsersPosts,
   getNewerUsersPosts,
   getOlderUsersPosts,
-} from '../DB_Access/post';
+} from '../dbdriver/post';
 
 import type { PostData } from '@/src/types';
 
