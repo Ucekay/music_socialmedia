@@ -3,7 +3,7 @@ import type { ViewProps } from 'react-native';
 import { requireNativeViewManager } from 'expo-modules-core';
 
 export type LibraryItemArtworkViewProps = {
-  artworkUrl: URL;
+  artworkUrl: string;
 } & ViewProps;
 const NativeView: React.ComponentType<LibraryItemArtworkViewProps> =
   requireNativeViewManager('MusicKitModule');

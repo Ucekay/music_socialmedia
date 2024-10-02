@@ -25,7 +25,8 @@ const renderIcon = ({
   name,
   size,
   color,
-}: { name: string; size: number; color: string }) => {
+}: { name?: string; size: number; color: string }) => {
+  if (!name) return null;
   const IconComponent = IconoirIcons[
     name as keyof typeof IconoirIcons
   ] as React.ElementType;
@@ -63,16 +64,20 @@ const PlaylistHeader = memo(({ playlist }: { playlist: Playlist }) => {
             onPress={() => console.log('Button pressed')}
             text='再生'
             icon='Play'
+            size='large'
             renderIcon={renderIcon}
+            variant='bezeledGray'
           />
         </View>
         <View style={styles.buttonWrapper}>
           <Button
             onPress={() => console.log('Button pressed')}
             text='曲を追加'
-            icon='Edit'
+            icon='Plus'
+            fullWidth={false}
+            size='large'
             renderIcon={renderIcon}
-            variant='outline'
+            variant='bezeledGray'
           />
         </View>
       </View>
@@ -180,7 +185,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     marginTop: 8,
-    gap: 8,
+    gap: 16,
   },
   buttonWrapper: {
     flex: 1,

@@ -46,13 +46,20 @@ const ArticleDetailsScreen = () => {
     name,
     size,
     color,
-  }: { name: string; size: number; color: string }) => {
+  }: { name?: string; size: number; color: string }) => {
+    if (!name) return null;
     const IconComponent = IconoirIcons[
       name as keyof typeof IconoirIcons
     ] as React.ElementType;
     return (
       <IconComponent width={size} height={size} color={color} fill={color} />
     );
+  };
+  const renderHeartIcon = ({
+    size,
+    color,
+  }: { size: number; color: string }) => {
+    return <HeartIcon width={size} height={size} initialColor={color} />;
   };
 
   return (
@@ -103,15 +110,19 @@ const ArticleDetailsScreen = () => {
                   onPress={() => console.log('Button pressed')}
                   text='曲を再生'
                   icon='Play'
+                  size='large'
                   renderIcon={renderIcon}
+                  variant='filled'
                 />
               </View>
-              <View style={styles.buttonWrapper}>
+              <View>
                 <Button
                   onPress={() => console.log('Button pressed')}
                   text='いいね'
-                  icon={<HeartIcon width={16} height={16} />}
-                  variant='outline'
+                  icon='Heart'
+                  renderIcon={renderHeartIcon}
+                  size='large'
+                  variant='borderless'
                 />
               </View>
             </View>
@@ -161,7 +172,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     marginTop: 8,
-    gap: 8,
+    gap: 16,
   },
   buttonWrapper: {
     flex: 1,
