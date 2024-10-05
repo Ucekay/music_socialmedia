@@ -1,8 +1,6 @@
 name: Biome formatter check
 on:
   push:
-    branches: [main]
-  pull_request:
 jobs:
   format:
     name: Biome formatter
