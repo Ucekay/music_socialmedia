@@ -75,7 +75,6 @@ function RootLayoutNav() {
                   name='article-editor-modal'
                   options={{
                     title: 'Article Editor',
-                    headerTransparent: true,
                     presentation: 'modal',
                     gestureEnabled: false,
                   }}

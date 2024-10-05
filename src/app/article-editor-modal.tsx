@@ -9,16 +9,28 @@ import {
   StyleSheet,
   View,
   useColorScheme,
+  useWindowDimensions,
 } from 'react-native';
 
 import {
+  type ColorKeyboardTheme,
   CoreBridge,
+  type EditorTheme,
   RichText,
   TenTapStartKit,
   Toolbar,
+  type ToolbarTheme,
   useEditorBridge,
   useEditorContent,
 } from '@10play/tentap-editor';
+import {
+  darkColorKeyboardTheme,
+  defaultColorKeyboardTheme,
+} from '@10play/tentap-editor/src/RichText/Keyboard/keyboardTheme';
+import {
+  darkToolbarTheme,
+  defaultToolbarTheme,
+} from '@10play/tentap-editor/src/RichText/Toolbar/toolbarTheme';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { StatusBar } from 'expo-status-bar';
@@ -46,24 +58,47 @@ import { useTheme } from '../contexts/ColorThemeContext';
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
+  const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const { top } = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
-  const keyboardVerticalOffset = headerHeight + top;
-  const { colors } = useTheme();
+  const insetsTop = insets.top;
+  const keyboardVerticalOffset = headerHeight + insetsTop + 12;
+  const { colors, theme } = useTheme();
+
   const { showActionSheetWithOptions } = useActionSheet();
 
   const textColor = colors.text;
 
+  const editorWidth = width - 32;
+
+  const defaultEditorTheme: EditorTheme = {
+    toolbar: defaultToolbarTheme,
+    colorKeyboard: defaultColorKeyboardTheme,
+    webview: {},
+    webviewContainer: {},
+  };
+
+  const darkEditorTheme: EditorTheme = {
+    toolbar: darkToolbarTheme as ToolbarTheme,
+    colorKeyboard: darkColorKeyboardTheme as ColorKeyboardTheme,
+    webview: {},
+    webviewContainer: {},
+  };
+
+  const editorTheme = theme === 'light' ? defaultEditorTheme : darkEditorTheme;
+
   const editorStyle = `
   *{
     color: ${textColor};
-    }`;
+    }
+  
+    `;
 
   const editor = useEditorBridge({
     autofocus: true,
     avoidIosKeyboard: true,
     bridgeExtensions: [...TenTapStartKit, CoreBridge.configureCSS(editorStyle)],
+    theme: editorTheme,
   });
 
   editor.injectCSS(editorStyle, '*');
@@ -116,13 +151,15 @@ const ArticleEditorModal = () => {
   };
 
   return (
-    <BgView style={{ flex: 1, paddingTop: insets.top }}>
+    <BgView style={{ flex: 1 }}>
       <Stack.Screen
         options={{
           headerLeft: () => (
             <Button title='閉じる' color={textColor} onPress={onClose} />
           ),
           headerRight: () => <Button title='公開する' onPress={onPublish} />,
+          headerStyle: { backgroundColor: colors.secondaryBackground },
+          headerTintColor: textColor,
         }}
       />
       <PagerView style={{ flex: 1 }} initialPage={0}>
@@ -305,32 +342,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     gap: 12,
   },
-  bottomButtonWrapper: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    left: 0,
-    padding: 0,
-  },
-  bottomButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginHorizontal: 16,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    gap: 8,
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    gap: 4,
-  },
   editorContainer: {
     flex: 1,
   },
   editor: {
-    marginHorizontal: 16,
     backgroundColor: 'transparent',
   },
   keyboardAvoidingView: {
