@@ -54,7 +54,7 @@ export const ArticleThumbnail = ({
           <MeshGradient
             rows={2}
             cols={3}
-            width={height ? (height / 9) * 16 : width ?? 0}
+            width={height ? (height / 9) * 16 : (width ?? 0)}
             height={height ? height : width ? (width / 16) * 9 : 0}
             colors={gradientColors}
           />
