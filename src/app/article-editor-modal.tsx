@@ -115,11 +115,11 @@ const ArticleEditorModal = () => {
   const editorCss = theme === 'light' ? defaultEditorCss : darkEditorCss;
 
   const editor = useEditorBridge({
-    customSource: editorHtml,
     autofocus: true,
     avoidIosKeyboard: true,
     bridgeExtensions: [...TenTapStartKit, CoreBridge.configureCSS(editorCss)],
     theme: editorTheme,
+    customSource: editorHtml,
   });
 
   editor.injectCSS(editorCss);
