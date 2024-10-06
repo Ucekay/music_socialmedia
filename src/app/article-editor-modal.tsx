@@ -18,7 +18,6 @@ import {
   type EditorTheme,
   RichText,
   TenTapStartKit,
-  Toolbar,
   type ToolbarTheme,
   useEditorBridge,
   useEditorContent,
@@ -55,22 +54,26 @@ import { editorHtml } from '@/web-editor/build/editorHtml';
 import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import EditorImagePicker from '../components/EditorImagePicker';
 import LiveInputField from '../components/LiveInputField';
+import { Toolbar } from '../components/RichText/Toolbar/Toolbar';
+import {
+  DEFAULT_TOOLBAR_ITEMS,
+  YouTube,
+} from '../components/RichText/Toolbar/actions';
 import { useTheme } from '../contexts/ColorThemeContext';
+import { YouTubeBridge } from '../rich-text-bridges/youtube';
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
-  const { width } = useWindowDimensions();
+  const { height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const insetsTop = insets.top;
-  const keyboardVerticalOffset = headerHeight + insetsTop + 12;
+  const keyboardVerticalOffset = headerHeight + insetsTop + 10;
   const { colors, theme } = useTheme();
 
   const { showActionSheetWithOptions } = useActionSheet();
 
   const textColor = colors.text;
-
-  const editorWidth = width - 32;
 
   const defaultEditorTheme: EditorTheme = {
     toolbar: defaultToolbarTheme,
@@ -91,17 +94,24 @@ const ArticleEditorModal = () => {
   const defaultEditorCss = `
   *{
     color: black;
+    background-color: transparent;
   }
   .tiptap {
     padding: 0 16px;
+    height: ${height}px;
+  }
+  .highlight-background {
+    background-color: transparent;
   }
     `;
   const darkEditorCss = `
   *{
     color: white;
+    background-color: transparent;
   }
   .tiptap {
     padding: 0 16px;
+    height: ${height}px;
   }
   blockquote {
     border-left: 3px solid #babaca;
@@ -117,14 +127,23 @@ const ArticleEditorModal = () => {
   const editor = useEditorBridge({
     autofocus: true,
     avoidIosKeyboard: true,
-    bridgeExtensions: [...TenTapStartKit, CoreBridge.configureCSS(editorCss)],
+    bridgeExtensions: [
+      YouTubeBridge,
+      ...TenTapStartKit,
+      CoreBridge.configureCSS(editorCss),
+    ],
+    dynamicHeight: true,
     theme: editorTheme,
     customSource: editorHtml,
   });
 
   editor.injectCSS(editorCss);
+  editor.injectJS(`document.querySelectorAll('iframe').forEach(iframe => {
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+});
+`);
 
-  const content = useEditorContent(editor, { type: 'html' });
+  const content = useEditorContent(editor, { type: 'json' });
 
   const onClose = () => {
     const title = '下書きに保存しまますか？';
@@ -195,7 +214,10 @@ const ArticleEditorModal = () => {
               style={styles.keyboardAvoidingView}
               keyboardVerticalOffset={keyboardVerticalOffset}
             >
-              <Toolbar editor={editor} />
+              <Toolbar
+                editor={editor}
+                items={[YouTube, ...DEFAULT_TOOLBAR_ITEMS]}
+              />
             </KeyboardAvoidingView>
           </View>
         </View>
@@ -367,6 +389,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   editor: {
+    marginBottom: 44,
     backgroundColor: 'transparent',
   },
   keyboardAvoidingView: {
