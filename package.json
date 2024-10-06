@@ -11,7 +11,11 @@
     "check": "biome check ./src/**/*.{js,jsx,ts,tsx}",
     "fix": "biome check --write ./src/**/*.{js,jsx,ts,tsx}",
     "postinstall": "patch-package",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "editor:dev": "vite --config ./web-editor/vite.config.ts -w build",
+    "editor:build": "vite --config ./web-editor/vite.config.ts build && bun run editor:post-build",
+    "editor:post-build": "node ./node_modules/@10play/tentap-editor/scripts/buildEditor.js ./web-editor/build/index.html",
+    "reverse-android": "adb reverse tcp:3000 tcp:3000"
   },
   "jest": {
     "preset": "jest-expo",
@@ -67,7 +71,7 @@
     "hugeicons-react-native": "^0.0.2",
     "iconoir-react-native": "^7.9.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react-dom": "^18.3.1",
     "react-native": "~0.75.4",
     "react-native-collapsible-tab-view": "^7.0.1",
     "react-native-color-thief": "git://github.com/6DegreeLabs/react-native-color-thief.git",
@@ -94,6 +98,8 @@
     "@testing-library/react-native": "^12.7.2",
     "@types/jest": "^29.5.13",
     "@types/react": "~18.2.79",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
     "eslint": "^8.57.1",
     "eslint-config-expo": "^7.1.2",
     "eslint-plugin-import": "^2.31.0",
@@ -103,7 +109,9 @@
     "patch-package": "^8.0.0",
     "react-native-ide": "^0.0.2",
     "react-test-renderer": "18.2.0",
-    "typescript": "~5.3.3"
+    "typescript": "~5.3.3",
+    "vite": "^5.4.8",
+    "vite-plugin-singlefile": "^2.0.2"
   },
   "expo": {
     "install": {

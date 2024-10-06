@@ -50,6 +50,7 @@ import BgView from '@/src/components/ThemedSecondaryBgView';
 import Text from '@/src/components/ThemedText';
 import TrackEntry from '@/src/components/TrackEntry';
 import Color from '@/src/constants/Colors';
+import { editorHtml } from '@/web-editor/build/editorHtml';
 
 import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import EditorImagePicker from '../components/EditorImagePicker';
@@ -114,6 +115,7 @@ const ArticleEditorModal = () => {
   const editorCss = theme === 'light' ? defaultEditorCss : darkEditorCss;
 
   const editor = useEditorBridge({
+    customSource: editorHtml,
     autofocus: true,
     avoidIosKeyboard: true,
     bridgeExtensions: [...TenTapStartKit, CoreBridge.configureCSS(editorCss)],
