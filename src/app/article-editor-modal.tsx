@@ -74,34 +74,53 @@ const ArticleEditorModal = () => {
   const defaultEditorTheme: EditorTheme = {
     toolbar: defaultToolbarTheme,
     colorKeyboard: defaultColorKeyboardTheme,
-    webview: {},
+    webview: { backgroundColor: 'transparent' },
     webviewContainer: {},
   };
 
   const darkEditorTheme: EditorTheme = {
     toolbar: darkToolbarTheme as ToolbarTheme,
     colorKeyboard: darkColorKeyboardTheme as ColorKeyboardTheme,
-    webview: {},
+    webview: { backgroundColor: 'transparent' },
     webviewContainer: {},
   };
 
   const editorTheme = theme === 'light' ? defaultEditorTheme : darkEditorTheme;
 
-  const editorStyle = `
+  const defaultEditorCss = `
   *{
-    color: ${textColor};
-    }
-  
+    color: black;
+  }
+  .tiptap {
+    padding: 0 16px;
+  }
     `;
+  const darkEditorCss = `
+  *{
+    color: white;
+  }
+  .tiptap {
+    padding: 0 16px;
+  }
+  blockquote {
+    border-left: 3px solid #babaca;
+    padding-left: 1rem;
+  }
+  .highlight-background {
+    background-color: #474749;
+  }
+  `;
+
+  const editorCss = theme === 'light' ? defaultEditorCss : darkEditorCss;
 
   const editor = useEditorBridge({
     autofocus: true,
     avoidIosKeyboard: true,
-    bridgeExtensions: [...TenTapStartKit, CoreBridge.configureCSS(editorStyle)],
+    bridgeExtensions: [...TenTapStartKit, CoreBridge.configureCSS(editorCss)],
     theme: editorTheme,
   });
 
-  editor.injectCSS(editorStyle, '*');
+  editor.injectCSS(editorCss);
 
   const content = useEditorContent(editor, { type: 'html' });
 
