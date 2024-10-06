@@ -1,4 +1,4 @@
-import { CoreBridge, TenTapStartKit, useTenTap } from '@10play/tentap-editor';
+import { TenTapStartKit, useTenTap } from '@10play/tentap-editor';
 import { EditorContent } from '@tiptap/react';
 
 /**
@@ -6,10 +6,7 @@ import { EditorContent } from '@tiptap/react';
  */
 export const AdvancedEditor = () => {
   const editor = useTenTap({
-    bridges: [CoreBridge],
-    tiptapOptions: {
-      extensions: [...TenTapStartKit],
-    },
+    bridges: [...TenTapStartKit],
   });
   return <EditorContent editor={editor} />;
 };
