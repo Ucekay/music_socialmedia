@@ -140,3 +140,27 @@ export type CUReplyDataParams = {
     user_id: string;
     parent_id: number;
 }
+
+//
+export type Today = {
+    content: string;
+    createdAt: string;
+    deletedAt: string | null;
+    todayId: number;
+    musicId: string;
+    likes: number;
+    userId: string;
+    views: number;
+}
+
+export type TodayInteg = {
+    today: Today;
+    user: profileSummary;
+    like: likeStatus;
+}
+
+export type TodayDataParams = {
+    content: string;
+    music_id: string;
+    user_id: string;
+}

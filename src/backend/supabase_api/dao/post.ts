@@ -1,6 +1,6 @@
 import type { Database } from '../../schema/supabasetypes';
 
-export type Post = Database['public']['Tables']['post']['Row'];
+export type Post = Database['public']['Tables']['posts']['Row'];
 
 export type CreatePostParams = Omit<Post, 'entry_id' | 'likes' | 'view' | 'created_at'>;
 
