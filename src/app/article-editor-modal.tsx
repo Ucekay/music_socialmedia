@@ -1,5 +1,5 @@
 import { Stack, useNavigation } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Button,
   KeyboardAvoidingView,
@@ -13,14 +13,20 @@ import {
 } from 'react-native';
 
 import {
+  ColorKeyboard,
   type ColorKeyboardTheme,
   CoreBridge,
+  CustomKeyboard,
+  type EditorBridge,
   type EditorTheme,
+  Images,
   RichText,
   TenTapStartKit,
   type ToolbarTheme,
+  useBridgeState,
   useEditorBridge,
   useEditorContent,
+  useKeyboard,
 } from '@10play/tentap-editor';
 import {
   darkColorKeyboardTheme,
@@ -55,10 +61,7 @@ import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import EditorImagePicker from '../components/EditorImagePicker';
 import LiveInputField from '../components/LiveInputField';
 import { Toolbar } from '../components/RichText/Toolbar/Toolbar';
-import {
-  DEFAULT_TOOLBAR_ITEMS,
-  YouTube,
-} from '../components/RichText/Toolbar/actions';
+import { DEFAULT_TOOLBAR_ITEMS } from '../components/RichText/Toolbar/actions';
 import { useTheme } from '../contexts/ColorThemeContext';
 import { YouTubeBridge } from '../rich-text-bridges/youtube';
 
@@ -70,6 +73,9 @@ const ArticleEditorModal = () => {
   const insetsTop = insets.top;
   const keyboardVerticalOffset = headerHeight + insetsTop + 10;
   const { colors, theme } = useTheme();
+
+  const rootRef = useRef(null);
+  const [activeKeyboard, setActiveKeyboard] = useState<string>();
 
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -206,7 +212,7 @@ const ArticleEditorModal = () => {
         <View key={1}>
           <ArticleConfigScreen />
         </View>
-        <View key={2}>
+        <View key={2} ref={rootRef}>
           <View style={styles.editorContainer}>
             <RichText editor={editor} style={styles.editor} />
             <KeyboardAvoidingView
@@ -214,9 +220,17 @@ const ArticleEditorModal = () => {
               style={styles.keyboardAvoidingView}
               keyboardVerticalOffset={keyboardVerticalOffset}
             >
-              <Toolbar
+              <ToolbarWithColor
                 editor={editor}
-                items={[YouTube, ...DEFAULT_TOOLBAR_ITEMS]}
+                activeKeyboard={activeKeyboard}
+                setActiveKeyboard={setActiveKeyboard}
+              />
+              <CustomKeyboard
+                rootRef={rootRef}
+                activeKeyboardID={activeKeyboard}
+                setActiveKeyboardID={setActiveKeyboard}
+                keyboards={[ColorKeyboard]} // <-- here we add the color keyboard
+                editor={editor}
               />
             </KeyboardAvoidingView>
           </View>
@@ -225,6 +239,58 @@ const ArticleEditorModal = () => {
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
+  );
+};
+
+interface ToolbarWithColorProps {
+  editor: EditorBridge;
+  activeKeyboard: string | undefined;
+  setActiveKeyboard: (id: string | undefined) => void;
+}
+const ToolbarWithColor = ({
+  editor,
+  activeKeyboard,
+  setActiveKeyboard,
+}: ToolbarWithColorProps) => {
+  // Get updates of editor state
+  const editorState = useBridgeState(editor);
+
+  const { isKeyboardUp: isNativeKeyboardUp } = useKeyboard();
+  const customKeyboardOpen = activeKeyboard !== undefined;
+  const isKeyboardUp = isNativeKeyboardUp || customKeyboardOpen;
+
+  // Here we make sure not to hide the keyboard if our custom keyboard is visible
+  const hideToolbar =
+    !isKeyboardUp || (!editorState.isFocused && !customKeyboardOpen);
+
+  return (
+    <Toolbar
+      editor={editor}
+      hidden={hideToolbar}
+      items={[
+        {
+          onPress: () => () => {
+            console.log(editorState.isFocused);
+          },
+          active: () => false,
+          disabled: () => false,
+          image: () => Images.bold,
+          key: 'isFocused',
+        },
+        {
+          onPress: () => () => {
+            const isActive = activeKeyboard === ColorKeyboard.id;
+            if (isActive) editor.focus();
+            setActiveKeyboard(isActive ? undefined : ColorKeyboard.id);
+          },
+          active: () => activeKeyboard === ColorKeyboard.id,
+          disabled: () => false,
+          image: () => Images.palette,
+          key: 'color',
+        },
+        ...DEFAULT_TOOLBAR_ITEMS,
+      ]}
+    />
   );
 };
 

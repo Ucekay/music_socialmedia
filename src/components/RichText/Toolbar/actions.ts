@@ -1,3 +1,4 @@
+import {} from 'react';
 import { Platform } from 'react-native';
 
 import { EditorActionType, Images } from '@10play/tentap-editor';
@@ -205,21 +206,20 @@ export const YouTube: ToolbarItem = {
   onPress:
     ({ setToolbarContext, editorState, editor }) =>
     () => {
-      if (Platform.OS === 'android') {
-        // On android focus outside the editor will lose the tiptap selection so we wait for the next tick and set it with the last selection value we had
-        setTimeout(() => {
-          editor.setSelection(
-            editorState.selection.from,
-            editorState.selection.to,
-          );
-        });
-      }
       setToolbarContext(ToolbarContext.YoutubeVideo);
     },
   active: () => false,
   disabled: () => false,
   image: () => Images.link,
   key: 'youtube',
+};
+
+export const Format: ToolbarItem = {
+  onPress: () => () => {},
+  active: () => false,
+  disabled: () => false,
+  image: () => Images.Aa,
+  key: 'format',
 };
 
 export const HEADING_ITEMS: ToolbarItem[] = [
