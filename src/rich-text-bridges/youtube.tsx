@@ -28,6 +28,8 @@ export const YouTubeBridge = new BridgeExtension<
   YoutubeLinkMessage
 >({
   tiptapExtension: Youtube.configure({
+    width: 640,
+    height: 360,
     nocookie: true,
   }),
   onBridgeMessage: (editor, { type, payload }) => {
@@ -72,13 +74,14 @@ export const YouTubeBridge = new BridgeExtension<
   .tiptap div[data-youtube-video] {
   cursor: move;
   padding: 0.5rem 0;
+  width: 100%;
+  aspect-ratio: 16 / 9;
 }
 
 .tiptap div[data-youtube-video] iframe {
   border: 0.5rem solid var(--black-contrast);
-  height: auto;
+  height: 100%;
   width: 100%;
-  aspect-ratio: 1;
   outline: 0px solid transparent;
   border-radius: 0.5rem;
 }

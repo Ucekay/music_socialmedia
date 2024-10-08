@@ -1,32 +1,25 @@
 import { Stack, useNavigation } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button,
-  KeyboardAvoidingView,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   View,
   useColorScheme,
-  useWindowDimensions,
 } from 'react-native';
 
 import {
-  ColorKeyboard,
   type ColorKeyboardTheme,
   CoreBridge,
-  CustomKeyboard,
-  type EditorBridge,
   type EditorTheme,
   Images,
   RichText,
   TenTapStartKit,
   type ToolbarTheme,
-  useBridgeState,
   useEditorBridge,
   useEditorContent,
-  useKeyboard,
 } from '@10play/tentap-editor';
 import {
   darkColorKeyboardTheme,
@@ -37,8 +30,12 @@ import {
   defaultToolbarTheme,
 } from '@10play/tentap-editor/src/RichText/Toolbar/toolbarTheme';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { useHeaderHeight } from '@react-navigation/elements';
 import { StatusBar } from 'expo-status-bar';
+import {
+  KeyboardController,
+  KeyboardStickyView,
+  useReanimatedKeyboardAnimation,
+} from 'react-native-keyboard-controller';
 import PagerView from 'react-native-pager-view';
 import Animated, {
   FadeIn,
@@ -48,7 +45,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ArticleTag from '@/src/components/ArticleTag';
 import BgView from '@/src/components/ThemedSecondaryBgView';
@@ -61,21 +57,17 @@ import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import EditorImagePicker from '../components/EditorImagePicker';
 import LiveInputField from '../components/LiveInputField';
 import { Toolbar } from '../components/RichText/Toolbar/Toolbar';
-import { DEFAULT_TOOLBAR_ITEMS } from '../components/RichText/Toolbar/actions';
+import {
+  DEFAULT_TOOLBAR_ITEMS,
+  YouTube,
+} from '../components/RichText/Toolbar/actions';
 import { useTheme } from '../contexts/ColorThemeContext';
 import { YouTubeBridge } from '../rich-text-bridges/youtube';
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
-  const { height } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
-  const insetsTop = insets.top;
-  const keyboardVerticalOffset = headerHeight + insetsTop + 10;
+  const { height: keyboardHeight, progress } = useReanimatedKeyboardAnimation();
   const { colors, theme } = useTheme();
-
-  const rootRef = useRef(null);
-  const [activeKeyboard, setActiveKeyboard] = useState<string>();
 
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -104,7 +96,6 @@ const ArticleEditorModal = () => {
   }
   .tiptap {
     padding: 0 16px;
-    height: ${height}px;
   }
   .highlight-background {
     background-color: transparent;
@@ -117,7 +108,6 @@ const ArticleEditorModal = () => {
   }
   .tiptap {
     padding: 0 16px;
-    height: ${height}px;
   }
   blockquote {
     border-left: 3px solid #babaca;
@@ -138,7 +128,6 @@ const ArticleEditorModal = () => {
       ...TenTapStartKit,
       CoreBridge.configureCSS(editorCss),
     ],
-    dynamicHeight: true,
     theme: editorTheme,
     customSource: editorHtml,
   });
@@ -150,6 +139,16 @@ const ArticleEditorModal = () => {
 `);
 
   const content = useEditorContent(editor, { type: 'json' });
+
+  useEffect(() => {
+    editor;
+  });
+
+  const editorWrapperStyle = useAnimatedStyle(() => {
+    return {
+      marginBottom: -keyboardHeight.value + progress.value * 12,
+    };
+  });
 
   const onClose = () => {
     const title = '下書きに保存しまますか？';
@@ -212,85 +211,38 @@ const ArticleEditorModal = () => {
         <View key={1}>
           <ArticleConfigScreen />
         </View>
-        <View key={2} ref={rootRef}>
+        <View key={2}>
           <View style={styles.editorContainer}>
-            <RichText editor={editor} style={styles.editor} />
-            <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              style={styles.keyboardAvoidingView}
-              keyboardVerticalOffset={keyboardVerticalOffset}
+            <Animated.View style={[{ flex: 1 }, editorWrapperStyle]}>
+              <RichText scalesPageToFit editor={editor} style={styles.editor} />
+            </Animated.View>
+            <KeyboardStickyView
+              offset={{ closed: 44, opened: 0 }}
+              style={{ height: 44 }}
             >
-              <ToolbarWithColor
+              <Toolbar
                 editor={editor}
-                activeKeyboard={activeKeyboard}
-                setActiveKeyboard={setActiveKeyboard}
+                items={[
+                  {
+                    onPress: () => () => {
+                      KeyboardController.dismiss();
+                    },
+                    disabled: () => false,
+                    active: () => false,
+                    image: () => Images.close,
+                    key: 'dismiss-keyboard',
+                  },
+                  YouTube,
+                  ...DEFAULT_TOOLBAR_ITEMS,
+                ]}
               />
-              <CustomKeyboard
-                rootRef={rootRef}
-                activeKeyboardID={activeKeyboard}
-                setActiveKeyboardID={setActiveKeyboard}
-                keyboards={[ColorKeyboard]} // <-- here we add the color keyboard
-                editor={editor}
-              />
-            </KeyboardAvoidingView>
+            </KeyboardStickyView>
           </View>
         </View>
       </PagerView>
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
-  );
-};
-
-interface ToolbarWithColorProps {
-  editor: EditorBridge;
-  activeKeyboard: string | undefined;
-  setActiveKeyboard: (id: string | undefined) => void;
-}
-const ToolbarWithColor = ({
-  editor,
-  activeKeyboard,
-  setActiveKeyboard,
-}: ToolbarWithColorProps) => {
-  // Get updates of editor state
-  const editorState = useBridgeState(editor);
-
-  const { isKeyboardUp: isNativeKeyboardUp } = useKeyboard();
-  const customKeyboardOpen = activeKeyboard !== undefined;
-  const isKeyboardUp = isNativeKeyboardUp || customKeyboardOpen;
-
-  // Here we make sure not to hide the keyboard if our custom keyboard is visible
-  const hideToolbar =
-    !isKeyboardUp || (!editorState.isFocused && !customKeyboardOpen);
-
-  return (
-    <Toolbar
-      editor={editor}
-      hidden={hideToolbar}
-      items={[
-        {
-          onPress: () => () => {
-            console.log(editorState.isFocused);
-          },
-          active: () => false,
-          disabled: () => false,
-          image: () => Images.bold,
-          key: 'isFocused',
-        },
-        {
-          onPress: () => () => {
-            const isActive = activeKeyboard === ColorKeyboard.id;
-            if (isActive) editor.focus();
-            setActiveKeyboard(isActive ? undefined : ColorKeyboard.id);
-          },
-          active: () => activeKeyboard === ColorKeyboard.id,
-          disabled: () => false,
-          image: () => Images.palette,
-          key: 'color',
-        },
-        ...DEFAULT_TOOLBAR_ITEMS,
-      ]}
-    />
   );
 };
 
@@ -455,7 +407,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   editor: {
-    marginBottom: 44,
+    flex: 1,
     backgroundColor: 'transparent',
   },
   keyboardAvoidingView: {

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
     <title>RichTextEditor</title>
   </head>
   <style>
@@ -11,7 +11,7 @@
       padding: 0;
     }
     #root > div:nth-of-type(1) {
-      overflow: auto;
+      overflow: visible;
       height: 100%;
       position: absolute;
       width: 100%;
@@ -20,7 +20,7 @@
     }
     #root div .ProseMirror {
       height: 100%;
-      overflow: auto;
+      overflow: scroll;
     }
     .ProseMirror:focus {
       outline: none;

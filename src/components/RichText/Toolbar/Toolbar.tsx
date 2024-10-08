@@ -60,10 +60,7 @@ export function Toolbar({
       return (
         <FlatList
           data={toolbarContext === ToolbarContext.Main ? items : HEADING_ITEMS}
-          style={[
-            editor.theme.toolbar.toolbarBody,
-            hideToolbar ? editor.theme.toolbar.hidden : undefined,
-          ]}
+          style={[editor.theme.toolbar.toolbarBody]}
           renderItem={({ item }) => {
             return <ToolbarItemComp {...item} args={args} editor={editor} />;
           }}
