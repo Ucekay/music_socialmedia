@@ -40,12 +40,18 @@ import {
   ArrowDown01Icon,
   ArrowTurnBackwardIcon,
   ArrowTurnForwardIcon,
+  LeftToRightBlockQuoteIcon,
   LeftToRightListBulletIcon,
-  SourceCodeIcon,
+  LeftToRightListNumberIcon,
+  SolidLine01Icon,
   TextBoldIcon,
   TextFontIcon,
+  TextIndentLessIcon,
+  TextIndentMoreIcon,
   TextItalicIcon,
   TextStrikethroughIcon,
+  TextSubscriptIcon,
+  TextSuperscriptIcon,
   TextUnderlineIcon,
 } from 'hugeicons-react-native';
 import {
@@ -76,7 +82,13 @@ import EditorImagePicker from '../components/EditorImagePicker';
 import EditorToolbar from '../components/EditorToolbar';
 import LiveInputField from '../components/LiveInputField';
 import { useTheme } from '../contexts/ColorThemeContext';
-import { CodeBlockBridge, YouTubeBridge } from '../rich-text-bridges';
+import {
+  CodeBlockBridge,
+  HorizontalRuleBridge,
+  SubscriptBridge,
+  SuperscriptBridge,
+  YouTubeBridge,
+} from '../rich-text-bridges';
 
 import type { Level } from '@tiptap/extension-heading';
 import type { ArgsToolbarCB } from '../components/RichText/Toolbar/actions';
@@ -296,6 +308,7 @@ const HeadingOptions = ({
       </Pressable>
       <Pressable
         onPress={() => {
+          const headingLevel = editorState.headingLevel;
           if (headingLevel !== undefined) {
             editor.toggleHeading(headingLevel as Level);
           }
@@ -306,7 +319,7 @@ const HeadingOptions = ({
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor:
-            headingLevel === undefined && !editorState.isCodeBlockActive
+            headingLevel === undefined && !isCodeBlockActive
               ? colors.tint
               : 'transparent',
           paddingHorizontal: 12,
@@ -319,7 +332,7 @@ const HeadingOptions = ({
             fontSize: 17,
             textAlign: 'center',
             color:
-              headingLevel === undefined && !editorState.isCodeBlockActive
+              headingLevel === undefined && !isCodeBlockActive
                 ? 'white'
                 : colors.text,
           }}
@@ -329,6 +342,7 @@ const HeadingOptions = ({
       </Pressable>
       <Pressable
         onPress={() => {
+          const headingLevel = editorState.headingLevel;
           if (headingLevel !== undefined) {
             editor.toggleHeading(headingLevel as Level);
           }
@@ -370,6 +384,9 @@ const StylingOptions = ({
   const isBoldActive = editorState.isBoldActive;
   const isItalicActive = editorState.isItalicActive;
   const isUnderlineActive = editorState.isUnderlineActive;
+  const isStrikeActive = editorState.isStrikeActive;
+  const isSubscriptActive = editorState.isSubscriptActive;
+  const isSuperscriptActive = editorState.isSuperscriptActive;
   return (
     <View
       style={{
@@ -381,16 +398,20 @@ const StylingOptions = ({
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <Pressable
           onPress={editor.toggleBold}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 12,
-            aspectRatio: 1,
-            backgroundColor: isBoldActive
-              ? colors.tint
-              : colors.secondaryBackground,
-            borderRadius: 8,
-            borderCurve: 'continuous',
+          disabled={!editorState.canToggleBold}
+          style={(disabled) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 12,
+              aspectRatio: 1,
+              backgroundColor: isBoldActive
+                ? colors.tint
+                : colors.secondaryBackground,
+              borderRadius: 8,
+              borderCurve: 'continuous',
+              opacity: disabled ? 0.5 : 1,
+            };
           }}
         >
           <TextBoldIcon
@@ -401,16 +422,20 @@ const StylingOptions = ({
         </Pressable>
         <Pressable
           onPress={editor.toggleItalic}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 12,
-            aspectRatio: 1,
-            backgroundColor: isItalicActive
-              ? colors.tint
-              : colors.secondaryBackground,
-            borderRadius: 8,
-            borderCurve: 'continuous',
+          disabled={!editorState.canToggleItalic}
+          style={(disabled) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 12,
+              aspectRatio: 1,
+              backgroundColor: isItalicActive
+                ? colors.tint
+                : colors.secondaryBackground,
+              borderRadius: 8,
+              borderCurve: 'continuous',
+              opacity: disabled ? 0.5 : 1,
+            };
           }}
         >
           <TextItalicIcon
@@ -421,16 +446,20 @@ const StylingOptions = ({
         </Pressable>
         <Pressable
           onPress={editor.toggleUnderline}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 12,
-            aspectRatio: 1,
-            backgroundColor: isUnderlineActive
-              ? colors.tint
-              : colors.secondaryBackground,
-            borderRadius: 8,
-            borderCurve: 'continuous',
+          disabled={!editorState.canToggleUnderline}
+          style={(disabled) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 12,
+              aspectRatio: 1,
+              backgroundColor: isUnderlineActive
+                ? colors.tint
+                : colors.secondaryBackground,
+              borderRadius: 8,
+              borderCurve: 'continuous',
+              opacity: disabled ? 0.5 : 1,
+            };
           }}
         >
           <TextUnderlineIcon
@@ -443,20 +472,24 @@ const StylingOptions = ({
         </Pressable>
         <Pressable
           onPress={editor.toggleStrike}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 12,
-            aspectRatio: 1,
-            backgroundColor: editorState.isStrikeActive
-              ? colors.tint
-              : colors.secondaryBackground,
-            borderRadius: 8,
-            borderCurve: 'continuous',
+          disabled={!editorState.canToggleStrike}
+          style={(disabled) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 12,
+              aspectRatio: 1,
+              backgroundColor: isStrikeActive
+                ? colors.tint
+                : colors.secondaryBackground,
+              borderRadius: 8,
+              borderCurve: 'continuous',
+              opacity: disabled ? 0.5 : 1,
+            };
           }}
         >
           <TextStrikethroughIcon
-            color={editorState.isStrikeActive ? 'white' : colors.text}
+            color={isStrikeActive ? 'white' : colors.text}
             size={20}
             strokeWidth={2}
           />
@@ -464,22 +497,212 @@ const StylingOptions = ({
       </View>
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <Pressable
-          onPress={editor.toggleCode}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 12,
-            aspectRatio: 1,
-            backgroundColor: editorState.isCodeActive
-              ? colors.tint
-              : colors.secondaryBackground,
-            borderRadius: 8,
-            borderCurve: 'continuous',
+          onPress={editor.toggleSubscript}
+          disabled={!editorState.canToggleSubscript}
+          style={(disabled) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 12,
+              aspectRatio: 1,
+              backgroundColor: isSubscriptActive
+                ? colors.tint
+                : colors.secondaryBackground,
+              borderRadius: 8,
+              borderCurve: 'continuous',
+              opacity: disabled ? 0.5 : 1,
+            };
           }}
         >
-          <SourceCodeIcon
+          <TextSubscriptIcon
             size={20}
-            color={editorState.isCodeActive ? 'white' : colors.text}
+            color={isSubscriptActive ? 'white' : colors.text}
+          />
+        </Pressable>
+        <Pressable
+          onPress={editor.toggleSuperscript}
+          disabled={!editorState.canToggleSuperscript}
+          style={(disabled) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 12,
+              aspectRatio: 1,
+              backgroundColor: isSuperscriptActive
+                ? colors.tint
+                : colors.secondaryBackground,
+              borderRadius: 8,
+              borderCurve: 'continuous',
+              opacity: disabled ? 0.5 : 1,
+            };
+          }}
+        >
+          <TextSuperscriptIcon
+            size={20}
+            color={isSuperscriptActive ? 'white' : colors.text}
+          />
+        </Pressable>
+      </View>
+    </View>
+  );
+};
+
+const BlockOptions = ({
+  editor,
+  editorState,
+}: { editor: EditorBridge; editorState: BridgeState }) => {
+  const { colors } = useTheme();
+  const isBulletListActive = editorState.isBulletListActive;
+  const isOrderedListActive = editorState.isOrderedListActive;
+  const isBlockquoteActive = editorState.isBlockquoteActive;
+  const idsHorizontalRuleActive = editorState.isHorizontalRuleActive;
+
+  return (
+    <View
+      style={{
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}
+    >
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 8,
+        }}
+      >
+        <Pressable
+          onPress={editor.toggleBulletList}
+          disabled={!editorState.canToggleBulletList}
+          style={(disabled) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 12,
+              aspectRatio: 1,
+              backgroundColor: isBulletListActive
+                ? colors.tint
+                : colors.secondaryBackground,
+              borderRadius: 8,
+              borderCurve: 'continuous',
+              opacity: disabled ? 0.5 : 1,
+            };
+          }}
+        >
+          <LeftToRightListBulletIcon
+            size={20}
+            color={isBulletListActive ? 'white' : colors.text}
+          />
+        </Pressable>
+        <Pressable
+          onPress={editor.toggleOrderedList}
+          disabled={!editorState.canToggleOrderedList}
+          style={(disabled) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 12,
+              aspectRatio: 1,
+              backgroundColor: isOrderedListActive
+                ? colors.tint
+                : colors.secondaryBackground,
+              borderRadius: 8,
+              borderCurve: 'continuous',
+              opacity: disabled ? 0.5 : 1,
+            };
+          }}
+        >
+          <LeftToRightListNumberIcon
+            size={20}
+            color={isOrderedListActive ? 'white' : colors.text}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() =>
+            editorState.canSink ? editor.sink() : editor.sinkTaskListItem()
+          }
+          disabled={!editorState.canSink && !editorState.canSinkTaskListItem}
+          style={(disabled) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 12,
+              aspectRatio: 1,
+              backgroundColor: colors.secondaryBackground,
+              borderRadius: 8,
+              borderCurve: 'continuous',
+              opacity: disabled ? 0.5 : 1,
+            };
+          }}
+        >
+          <TextIndentMoreIcon size={20} color={colors.text} />
+        </Pressable>
+        <Pressable
+          onPress={() =>
+            editorState.canLift ? editor.lift() : editor.liftTaskListItem()
+          }
+          disabled={!editorState.canLift && !editorState.canLiftTaskListItem}
+          style={(disabled) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 12,
+              aspectRatio: 1,
+              backgroundColor: colors.secondaryBackground,
+              borderRadius: 8,
+              borderCurve: 'continuous',
+              opacity: disabled ? 0.5 : 1,
+            };
+          }}
+        >
+          <TextIndentLessIcon size={20} color={colors.text} />
+        </Pressable>
+      </View>
+      <View style={{ flexDirection: 'row', gap: 8 }}>
+        <Pressable
+          onPress={editor.toggleBlockquote}
+          disabled={!editorState.canToggleBlockquote}
+          style={(disabled) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 12,
+              aspectRatio: 1,
+              backgroundColor: isBlockquoteActive
+                ? colors.tint
+                : colors.secondaryBackground,
+              borderRadius: 8,
+              borderCurve: 'continuous',
+              opacity: disabled ? 0.5 : 1,
+            };
+          }}
+        >
+          <LeftToRightBlockQuoteIcon
+            size={20}
+            color={isBlockquoteActive ? 'white' : colors.text}
+          />
+        </Pressable>
+        <Pressable
+          onPress={editor.toggleHorizontalRule}
+          disabled={!editorState.canToggleHorizontalRule}
+          style={(disabled) => {
+            return {
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 12,
+              aspectRatio: 1,
+              backgroundColor: idsHorizontalRuleActive
+                ? colors.tint
+                : colors.secondaryBackground,
+              borderRadius: 8,
+              borderCurve: 'continuous',
+              opacity: disabled ? 0.5 : 1,
+            };
+          }}
+        >
+          <SolidLine01Icon
+            size={20}
+            color={idsHorizontalRuleActive ? 'white' : colors.text}
           />
         </Pressable>
       </View>
@@ -526,8 +749,11 @@ const ArticleEditorModal = () => {
     autofocus: true,
     avoidIosKeyboard: true,
     bridgeExtensions: [
-      YouTubeBridge,
       CodeBlockBridge,
+      HorizontalRuleBridge,
+      SubscriptBridge,
+      SuperscriptBridge,
+      YouTubeBridge,
       ...TenTapStartKit,
       CoreBridge.configureCSS(editorCss),
     ],
@@ -748,7 +974,7 @@ const ArticleEditorModal = () => {
                 <BottomSheetView
                   style={{
                     flex: 1,
-                    paddingHorizontal: 16,
+                    paddingHorizontal: 24,
                     alignItems: 'center',
                     paddingBottom: insets.bottom,
                     gap: 8,
@@ -756,6 +982,7 @@ const ArticleEditorModal = () => {
                 >
                   <HeadingOptions editor={editor} editorState={editorState} />
                   <StylingOptions editor={editor} editorState={editorState} />
+                  <BlockOptions editor={editor} editorState={editorState} />
                 </BottomSheetView>
               </BottomSheet>
             </View>

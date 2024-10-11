@@ -3,14 +3,27 @@ import { useEffect } from 'react';
 import { TenTapStartKit, useTenTap } from '@10play/tentap-editor';
 import { EditorContent } from '@tiptap/react';
 
-import { CodeBlockBridge, YouTubeBridge } from '../src/rich-text-bridges';
+import {
+  CodeBlockBridge,
+  HorizontalRuleBridge,
+  SubscriptBridge,
+  SuperscriptBridge,
+  YouTubeBridge,
+} from '../src/rich-text-bridges';
 
 /**
  * Here we control the web side of our custom editor
  */
 export const AdvancedEditor = () => {
   const editor = useTenTap({
-    bridges: [YouTubeBridge, CodeBlockBridge, ...TenTapStartKit],
+    bridges: [
+      CodeBlockBridge,
+      HorizontalRuleBridge,
+      SubscriptBridge,
+      SuperscriptBridge,
+      YouTubeBridge,
+      ...TenTapStartKit,
+    ],
   });
   const isFocused = editor?.isFocused;
   useEffect(() => {
