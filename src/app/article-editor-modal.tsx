@@ -1,20 +1,25 @@
 import { Stack, useNavigation } from 'expo-router';
-import { useEffect, useState } from 'react';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Button,
+  PixelRatio,
   Platform,
   Pressable,
+  Text as RNText,
   ScrollView,
   StyleSheet,
   View,
   useColorScheme,
+  useWindowDimensions,
 } from 'react-native';
 
 import {
+  type BridgeState,
   type ColorKeyboardTheme,
   CoreBridge,
+  type EditorBridge,
   type EditorTheme,
-  Images,
   RichText,
   TenTapStartKit,
   type ToolbarTheme,
@@ -25,12 +30,25 @@ import {
   darkColorKeyboardTheme,
   defaultColorKeyboardTheme,
 } from '@10play/tentap-editor/src/RichText/Keyboard/keyboardTheme';
-import {
-  darkToolbarTheme,
-  defaultToolbarTheme,
-} from '@10play/tentap-editor/src/RichText/Toolbar/toolbarTheme';
+import { darkToolbarTheme } from '@10play/tentap-editor/src/RichText/Toolbar/toolbarTheme';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { StatusBar } from 'expo-status-bar';
+import {
+  Add01Icon,
+  ArrowDown01Icon,
+  ArrowTurnBackwardIcon,
+  ArrowTurnForwardIcon,
+  LeftToRightListBulletIcon,
+  SourceCodeIcon,
+  TextBoldIcon,
+  TextFontIcon,
+  TextItalicIcon,
+  TextStrikethroughIcon,
+  TextUnderlineIcon,
+} from 'hugeicons-react-native';
 import {
   KeyboardController,
   KeyboardStickyView,
@@ -45,6 +63,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ArticleTag from '@/src/components/ArticleTag';
 import BgView from '@/src/components/ThemedSecondaryBgView';
@@ -55,196 +74,37 @@ import { editorHtml } from '@/web-editor/build/editorHtml';
 
 import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import EditorImagePicker from '../components/EditorImagePicker';
+import EditorToolbar from '../components/EditorToolbar';
 import LiveInputField from '../components/LiveInputField';
-import { Toolbar } from '../components/RichText/Toolbar/Toolbar';
-import {
-  DEFAULT_TOOLBAR_ITEMS,
-  YouTube,
-} from '../components/RichText/Toolbar/actions';
 import { useTheme } from '../contexts/ColorThemeContext';
-import { YouTubeBridge } from '../rich-text-bridges/youtube';
+import { CodeBlockBridge, YouTubeBridge } from '../rich-text-bridges';
 
-const ArticleEditorModal = () => {
-  const navigation = useNavigation();
-  const { height: keyboardHeight, progress } = useReanimatedKeyboardAnimation();
-  const { colors, theme } = useTheme();
+import type { Level } from '@tiptap/extension-heading';
+import type { ArgsToolbarCB } from '../components/RichText/Toolbar/actions';
 
-  const { showActionSheetWithOptions } = useActionSheet();
+interface ToolbarItem {
+  onPress: ({ editor, editorState }: ArgsToolbarCB) => () => void;
+  active: ({ editor, editorState }: ArgsToolbarCB) => boolean;
+  disabled: ({ editor, editorState }: ArgsToolbarCB) => boolean;
+  icon?: React.ReactNode;
+}
 
-  const textColor = colors.text;
-
-  const defaultEditorTheme: EditorTheme = {
-    toolbar: defaultToolbarTheme,
-    colorKeyboard: defaultColorKeyboardTheme,
-    webview: { backgroundColor: 'transparent' },
-    webviewContainer: {},
-  };
-
-  const darkEditorTheme: EditorTheme = {
-    toolbar: darkToolbarTheme as ToolbarTheme,
-    colorKeyboard: darkColorKeyboardTheme as ColorKeyboardTheme,
-    webview: { backgroundColor: 'transparent' },
-    webviewContainer: {},
-  };
-
-  const editorTheme = theme === 'light' ? defaultEditorTheme : darkEditorTheme;
-
-  const defaultEditorCss = `
+const DEFAULT_EDITOR_CSS = `
   *{
     color: black;
     background-color: transparent;
   }
-  .tiptap {
-    padding: 0 16px;
-  }
-  .highlight-background {
-    background-color: transparent;
-  }
     `;
-  const darkEditorCss = `
+const DARK_EDITOR_CSS = `
   *{
     color: white;
     background-color: transparent;
-  }
-  .tiptap {
-    padding: 0 16px;
   }
   blockquote {
     border-left: 3px solid #babaca;
     padding-left: 1rem;
   }
-  .highlight-background {
-    background-color: #474749;
-  }
   `;
-
-  const editorCss = theme === 'light' ? defaultEditorCss : darkEditorCss;
-
-  const editor = useEditorBridge({
-    autofocus: true,
-    avoidIosKeyboard: true,
-    bridgeExtensions: [
-      YouTubeBridge,
-      ...TenTapStartKit,
-      CoreBridge.configureCSS(editorCss),
-    ],
-    theme: editorTheme,
-    customSource: editorHtml,
-  });
-
-  editor.injectCSS(editorCss);
-  editor.injectJS(`document.querySelectorAll('iframe').forEach(iframe => {
-  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
-});
-`);
-
-  const content = useEditorContent(editor, { type: 'json' });
-
-  useEffect(() => {
-    editor;
-  });
-
-  const editorWrapperStyle = useAnimatedStyle(() => {
-    return {
-      marginBottom: -keyboardHeight.value + progress.value * 12,
-    };
-  });
-
-  const onClose = () => {
-    const title = '下書きに保存しまますか？';
-    const options = ['内容を削除する', '内容を保存する', '編集を続行する'];
-    const destructiveButtonIndex = 0;
-    const cancelButtonIndex = 2;
-
-    showActionSheetWithOptions(
-      {
-        title,
-        options,
-        cancelButtonIndex,
-        destructiveButtonIndex,
-      },
-      (selectedIndex) => {
-        switch (selectedIndex) {
-          case 0:
-            navigation.goBack();
-            break;
-          case 1:
-            navigation.goBack();
-            break;
-          case 2:
-            break;
-        }
-      },
-    );
-  };
-
-  const onPublish = () => {
-    const options = ['公開する', '編集を続行する'];
-    const cancelButtonIndex = 1;
-
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-      },
-      (selectedIndex) => {
-        if (selectedIndex === 0) {
-          console.log(content);
-        }
-      },
-    );
-  };
-
-  return (
-    <BgView style={{ flex: 1 }}>
-      <Stack.Screen
-        options={{
-          headerLeft: () => (
-            <Button title='閉じる' color={textColor} onPress={onClose} />
-          ),
-          headerRight: () => <Button title='公開する' onPress={onPublish} />,
-          headerStyle: { backgroundColor: colors.secondaryBackground },
-          headerTintColor: textColor,
-        }}
-      />
-      <PagerView style={{ flex: 1 }} initialPage={0}>
-        <View key={1}>
-          <ArticleConfigScreen />
-        </View>
-        <View key={2}>
-          <View style={styles.editorContainer}>
-            <Animated.View style={[{ flex: 1 }, editorWrapperStyle]}>
-              <RichText scalesPageToFit editor={editor} style={styles.editor} />
-            </Animated.View>
-            <KeyboardStickyView
-              offset={{ closed: 44, opened: 0 }}
-              style={{ height: 44 }}
-            >
-              <Toolbar
-                editor={editor}
-                items={[
-                  {
-                    onPress: () => () => {
-                      KeyboardController.dismiss();
-                    },
-                    disabled: () => false,
-                    active: () => false,
-                    image: () => Images.close,
-                    key: 'dismiss-keyboard',
-                  },
-                  YouTube,
-                  ...DEFAULT_TOOLBAR_ITEMS,
-                ]}
-              />
-            </KeyboardStickyView>
-          </View>
-        </View>
-      </PagerView>
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-    </BgView>
-  );
-};
 
 const ArticleConfigScreen = () => {
   const colorScheme = useColorScheme();
@@ -358,6 +218,613 @@ const ArticleConfigScreen = () => {
         </View>
       </BgView>
     </ScrollView>
+  );
+};
+
+const HeadingOptions = ({
+  editor,
+  editorState,
+}: { editor: EditorBridge; editorState: BridgeState }) => {
+  const { colors } = useTheme();
+  const headingLevel = editorState.headingLevel;
+  const isCodeBlockActive = editorState.isCodeBlockActive;
+  const deactivateCodeBlock = () => {
+    if (isCodeBlockActive) {
+      editor.toggleCodeBlock();
+    }
+  };
+  return (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+    >
+      <Pressable
+        onPress={() => {
+          deactivateCodeBlock();
+          editor.toggleHeading(2);
+        }}
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: headingLevel === 2 ? colors.tint : 'transparent',
+          paddingHorizontal: 12,
+          paddingVertical: 8,
+          borderRadius: 8,
+          borderCurve: 'continuous',
+        }}
+      >
+        <RNText
+          style={{
+            fontSize: 22,
+            textAlign: 'center',
+            color: headingLevel === 2 ? 'white' : colors.text,
+            fontWeight: '600',
+          }}
+        >
+          見出し
+        </RNText>
+      </Pressable>
+      <Pressable
+        onPress={() => {
+          deactivateCodeBlock();
+          editor.toggleHeading(3);
+        }}
+        style={{
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: headingLevel === 3 ? colors.tint : 'transparent',
+          paddingHorizontal: 12,
+          borderRadius: 8,
+          borderCurve: 'continuous',
+        }}
+      >
+        <RNText
+          style={{
+            fontSize: 20,
+            textAlign: 'center',
+            color: headingLevel === 3 ? 'white' : colors.text,
+            fontWeight: '500',
+          }}
+        >
+          小見出し
+        </RNText>
+      </Pressable>
+      <Pressable
+        onPress={() => {
+          if (headingLevel !== undefined) {
+            editor.toggleHeading(headingLevel as Level);
+          }
+          deactivateCodeBlock();
+        }}
+        style={{
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor:
+            headingLevel === undefined && !editorState.isCodeBlockActive
+              ? colors.tint
+              : 'transparent',
+          paddingHorizontal: 12,
+          borderRadius: 8,
+          borderCurve: 'continuous',
+        }}
+      >
+        <RNText
+          style={{
+            fontSize: 17,
+            textAlign: 'center',
+            color:
+              headingLevel === undefined && !editorState.isCodeBlockActive
+                ? 'white'
+                : colors.text,
+          }}
+        >
+          本文
+        </RNText>
+      </Pressable>
+      <Pressable
+        onPress={() => {
+          if (headingLevel !== undefined) {
+            editor.toggleHeading(headingLevel as Level);
+          }
+          editor.toggleCodeBlock();
+        }}
+        style={{
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: isCodeBlockActive ? colors.tint : 'transparent',
+          paddingHorizontal: 12,
+          borderRadius: 8,
+          borderCurve: 'continuous',
+        }}
+      >
+        <RNText
+          style={{
+            fontSize: 14,
+            textAlign: 'center',
+            color: isCodeBlockActive ? 'white' : colors.text,
+          }}
+        >
+          等幅
+        </RNText>
+      </Pressable>
+    </View>
+  );
+};
+
+const StylingOptions = ({
+  editor,
+  editorState,
+}: { editor: EditorBridge; editorState: BridgeState }) => {
+  const { colors } = useTheme();
+  const isBoldActive = editorState.isBoldActive;
+  const isItalicActive = editorState.isItalicActive;
+  const isUnderlineActive = editorState.isUnderlineActive;
+  return (
+    <View
+      style={{
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}
+    >
+      <View style={{ flexDirection: 'row', gap: 8 }}>
+        <Pressable
+          onPress={editor.toggleBold}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 12,
+            aspectRatio: 1,
+            backgroundColor: isBoldActive
+              ? colors.tint
+              : colors.secondaryBackground,
+            borderRadius: 8,
+            borderCurve: 'continuous',
+          }}
+        >
+          <TextBoldIcon
+            color={isBoldActive ? 'white' : colors.text}
+            size={20}
+            strokeWidth={3}
+          />
+        </Pressable>
+        <Pressable
+          onPress={editor.toggleItalic}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 12,
+            aspectRatio: 1,
+            backgroundColor: isItalicActive
+              ? colors.tint
+              : colors.secondaryBackground,
+            borderRadius: 8,
+            borderCurve: 'continuous',
+          }}
+        >
+          <TextItalicIcon
+            color={isItalicActive ? 'white' : colors.text}
+            size={20}
+            strokeWidth={2}
+          />
+        </Pressable>
+        <Pressable
+          onPress={editor.toggleUnderline}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 12,
+            aspectRatio: 1,
+            backgroundColor: isUnderlineActive
+              ? colors.tint
+              : colors.secondaryBackground,
+            borderRadius: 8,
+            borderCurve: 'continuous',
+          }}
+        >
+          <TextUnderlineIcon
+            color={isUnderlineActive ? 'white' : colors.text}
+            height={20}
+            width={18}
+            preserveAspectRatio='none'
+            strokeWidth={2}
+          />
+        </Pressable>
+        <Pressable
+          onPress={editor.toggleStrike}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 12,
+            aspectRatio: 1,
+            backgroundColor: editorState.isStrikeActive
+              ? colors.tint
+              : colors.secondaryBackground,
+            borderRadius: 8,
+            borderCurve: 'continuous',
+          }}
+        >
+          <TextStrikethroughIcon
+            color={editorState.isStrikeActive ? 'white' : colors.text}
+            size={20}
+            strokeWidth={2}
+          />
+        </Pressable>
+      </View>
+      <View style={{ flexDirection: 'row', gap: 8 }}>
+        <Pressable
+          onPress={editor.toggleCode}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 12,
+            aspectRatio: 1,
+            backgroundColor: editorState.isCodeActive
+              ? colors.tint
+              : colors.secondaryBackground,
+            borderRadius: 8,
+            borderCurve: 'continuous',
+          }}
+        >
+          <SourceCodeIcon
+            size={20}
+            color={editorState.isCodeActive ? 'white' : colors.text}
+          />
+        </Pressable>
+      </View>
+    </View>
+  );
+};
+
+const ArticleEditorModal = () => {
+  const navigation = useNavigation();
+  const { height } = useWindowDimensions();
+  const headerHeight = useHeaderHeight();
+  const insets = useSafeAreaInsets();
+  const { height: keyboardHeight, progress } = useReanimatedKeyboardAnimation();
+  const { colors, theme } = useTheme();
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const { showActionSheetWithOptions } = useActionSheet();
+
+  const textColor = colors.text;
+
+  const defaultEditorTheme: EditorTheme = {
+    toolbar: {
+      toolbarBody: {},
+      toolbarButton: {
+        paddingHorizontal: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'transparent',
+      },
+      iconDisabled: {
+        tintColor: '#CACACA',
+      },
+      iconWrapperDisabled: {
+        opacity: 0.3,
+      },
+      iconWrapperActive: {
+        backgroundColor: '#E5E5E5',
+      },
+      hidden: {
+        display: 'none',
+      },
+      keyboardAvoidingView: {
+        position: 'absolute',
+        width: '100%',
+        bottom: 0,
+      },
+      iconWrapper: {
+        borderRadius: 4,
+        backgroundColor: 'transparent',
+      },
+      icon: {
+        height: 28,
+        width: 28,
+        tintColor: '#898989',
+      },
+      iconActive: {},
+      linkBarTheme: {
+        addLinkContainer: {},
+        linkInput: {
+          paddingLeft: 12,
+          paddingTop: 1,
+          paddingBottom: 1,
+          paddingRight: 12,
+          flex: 1,
+        },
+        doneButton: {
+          backgroundColor: 'transparent',
+          justifyContent: 'center',
+          height: 32,
+          padding: 8,
+          borderRadius: 4,
+        },
+        doneButtonText: {
+          color: '#0085FF',
+        },
+        linkToolbarButton: {
+          paddingHorizontal: 0,
+        },
+      },
+    } as ToolbarTheme,
+    colorKeyboard: defaultColorKeyboardTheme,
+    webview: {
+      backgroundColor: 'transparent',
+    },
+    webviewContainer: {},
+  };
+
+  const darkEditorTheme: EditorTheme = {
+    toolbar: darkToolbarTheme as ToolbarTheme,
+    colorKeyboard: darkColorKeyboardTheme as ColorKeyboardTheme,
+    webview: {
+      backgroundColor: 'transparent',
+    },
+    webviewContainer: {},
+  };
+
+  const editorTheme = theme === 'light' ? defaultEditorTheme : darkEditorTheme;
+
+  const editorCss = theme === 'light' ? DEFAULT_EDITOR_CSS : DARK_EDITOR_CSS;
+
+  const editor = useEditorBridge({
+    autofocus: true,
+    avoidIosKeyboard: true,
+    bridgeExtensions: [
+      YouTubeBridge,
+      CodeBlockBridge,
+      ...TenTapStartKit,
+      CoreBridge.configureCSS(editorCss),
+    ],
+    customSource: editorHtml,
+    theme: editorTheme,
+  });
+  const editorState = editor.getEditorState();
+  const isEditorFocused = editorState.isFocused;
+  const editorPaddingHorizontal = PixelRatio.roundToNearestPixel(16);
+  useEffect(() => {
+    if (!isEditorFocused) {
+      editor.injectCSS(
+        `
+        .highlight-background {
+          background-color: ${colors.editorHighlight};
+          border-radius: 4px;
+        }
+        .tiptap {
+          padding: 0 ${editorPaddingHorizontal}px;
+        }
+        .tiptap pre {
+          background: ${colors.border};
+          color: ${colors.text};
+        }
+          ${editorCss}
+        `,
+      );
+    } else {
+      editor.injectCSS(
+        `
+        .highlight-background {
+          background-color: transparent;
+          border-radius: 4px;
+        }
+        .tiptap {
+          padding: 0 ${editorPaddingHorizontal}px;
+        }
+        .tiptap pre {
+          background: ${colors.border};
+          color: ${colors.text};
+        }
+          ${editorCss}
+          `,
+      );
+    }
+  });
+
+  editor.injectJS(`document.querySelectorAll('iframe').forEach(iframe => {
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+});
+`);
+
+  const content = useEditorContent(editor, { type: 'json' });
+
+  const toolbarItems: ToolbarItem[] = [
+    {
+      onPress: () => () => {
+        KeyboardController.dismiss();
+        bottomSheetRef.current?.snapToIndex(0);
+      },
+      active: () => false,
+      disabled: () => false,
+      icon: <TextFontIcon size={24} color='white' />,
+    },
+    {
+      onPress:
+        ({ editor }) =>
+        () => {
+          editor.toggleBulletList();
+        },
+      active: ({ editorState }) => editorState.isBulletListActive,
+      disabled: ({ editorState }) => !editorState.canToggleBulletList,
+      icon: <LeftToRightListBulletIcon size={24} color='white' />,
+    },
+    {
+      onPress: () => () => {
+        KeyboardController.dismiss();
+        bottomSheetRef.current?.snapToIndex(0);
+      },
+      active: () => false,
+      disabled: () => false,
+      icon: <Add01Icon size={24} color='white' />,
+    },
+    {
+      onPress:
+        ({ editor }) =>
+        () =>
+          editor.undo(),
+      active: () => false,
+      disabled: ({ editorState }) => !editorState.canUndo,
+      icon: (
+        <ArrowTurnBackwardIcon
+          size={24}
+          color='white'
+          style={{ transform: [{ rotateX: '180deg' }] }}
+        />
+      ),
+    },
+    {
+      onPress:
+        ({ editor }) =>
+        () =>
+          editor.redo(),
+      active: () => false,
+      disabled: ({ editorState }) => !editorState.canRedo,
+      icon: (
+        <ArrowTurnForwardIcon
+          size={24}
+          color='white'
+          style={{ transform: [{ rotateX: '180deg' }] }}
+        />
+      ),
+    },
+    {
+      onPress:
+        ({ editor }) =>
+        () => {
+          editor.blur();
+        },
+      active: () => false,
+      disabled: () => false,
+      icon: <ArrowDown01Icon size={24} color='white' />,
+    },
+  ];
+
+  const onClose = () => {
+    const title = '下書きに保存しまますか？';
+    const options = ['内容を削除する', '内容を保存する', '編集を続行する'];
+    const destructiveButtonIndex = 0;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        title,
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (selectedIndex) => {
+        switch (selectedIndex) {
+          case 0:
+            navigation.goBack();
+            break;
+          case 1:
+            navigation.goBack();
+            break;
+          case 2:
+            break;
+        }
+      },
+    );
+  };
+
+  const onPublish = () => {
+    const options = ['公開する', '編集を続行する'];
+    const cancelButtonIndex = 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      (selectedIndex) => {
+        if (selectedIndex === 0) {
+          console.log(content);
+        }
+      },
+    );
+  };
+  const snapPoints: number[] = [];
+  const animatedEditorStyle = useAnimatedStyle(() => {
+    return {
+      height:
+        height +
+        keyboardHeight.value -
+        (44 + headerHeight + insets.top + 10) * progress.value,
+      borderBottomLeftRadius: 16 * progress.value,
+      borderBottomRightRadius: 16 * progress.value,
+    };
+  });
+
+  return (
+    <BgView style={{ flex: 1 }}>
+      <Stack.Screen
+        options={{
+          headerLeft: () => (
+            <Button title='閉じる' color={textColor} onPress={onClose} />
+          ),
+          headerRight: () => <Button title='公開する' onPress={onPublish} />,
+          headerStyle: { backgroundColor: colors.secondaryBackground },
+          headerTintColor: textColor,
+        }}
+      />
+      <PagerView style={{ flex: 1 }} initialPage={0}>
+        <View key={1}>
+          <ArticleConfigScreen />
+        </View>
+        <View key={2}>
+          <View style={styles.editorContainer}>
+            <View style={{ flex: 1, backgroundColor: 'black' }}>
+              <Animated.View
+                style={[
+                  animatedEditorStyle,
+                  { backgroundColor: colors.secondaryBackground },
+                ]}
+              >
+                <RichText
+                  editor={editor}
+                  scalesPageToFit
+                  style={styles.editor}
+                />
+              </Animated.View>
+              <BottomSheet
+                ref={bottomSheetRef}
+                index={-1}
+                snapPoints={snapPoints}
+                enablePanDownToClose
+                enableDynamicSizing
+              >
+                <BottomSheetView
+                  style={{
+                    flex: 1,
+                    paddingHorizontal: 16,
+                    alignItems: 'center',
+                    paddingBottom: insets.bottom,
+                    gap: 8,
+                  }}
+                >
+                  <HeadingOptions editor={editor} editorState={editorState} />
+                  <StylingOptions editor={editor} editorState={editorState} />
+                </BottomSheetView>
+              </BottomSheet>
+            </View>
+            <KeyboardStickyView offset={{ closed: 44, opened: 0 }}>
+              <EditorToolbar editor={editor} items={toolbarItems} />
+            </KeyboardStickyView>
+          </View>
+        </View>
+      </PagerView>
+      {/* Use a light status bar on iOS to account for the black space above the modal */}
+      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+    </BgView>
   );
 };
 

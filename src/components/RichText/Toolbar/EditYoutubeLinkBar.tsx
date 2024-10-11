@@ -19,7 +19,18 @@ export const EditYoutubeLinkBar = ({
 }: EditYoutubeLinkBarProps) => {
   const [link, setLink] = useState('');
   return (
-    <View style={theme.toolbar.linkBarTheme.addLinkContainer}>
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+        height: 44,
+        backgroundColor: 'transparent',
+        padding: 4,
+        paddingHorizontal: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       <Pressable
         onPress={onLinkIconClick}
         style={[

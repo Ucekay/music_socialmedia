@@ -17,7 +17,7 @@ export const ToolbarItems = {
   ToggleH6: 'toggle-h6',
 } as const;
 
-type ArgsToolbarCB = {
+export type ArgsToolbarCB = {
   editor: EditorBridge;
   editorState: BridgeState;
   setToolbarContext: React.Dispatch<React.SetStateAction<ToolbarContext>>;
@@ -28,8 +28,9 @@ export interface ToolbarItem {
   active: ({ editor, editorState }: ArgsToolbarCB) => boolean;
   disabled: ({ editor, editorState }: ArgsToolbarCB) => boolean;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  image: ({ editor, editorState }: ArgsToolbarCB) => any;
-  key: string;
+  image?: ({ editor, editorState }: ArgsToolbarCB) => any;
+  icon?: React.ReactNode;
+  key?: string;
 }
 
 export const DEFAULT_TOOLBAR_ITEMS: ToolbarItem[] = [

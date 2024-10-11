@@ -113,6 +113,7 @@ export type ColorScheme = {
   buttonDisabled: string;
   buttonDisabledText: string;
   searchBar: string;
+  editorHighlight: string;
 };
 
 export type TodaySongDataType = {

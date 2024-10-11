@@ -60,11 +60,20 @@ export function Toolbar({
       return (
         <FlatList
           data={toolbarContext === ToolbarContext.Main ? items : HEADING_ITEMS}
-          style={[editor.theme.toolbar.toolbarBody]}
+          style={[
+            {
+              minWidth: '100%',
+              flex: 1,
+              backgroundColor: 'black',
+              height: 44,
+            },
+            hideToolbar ? editor.theme.toolbar.hidden : undefined,
+          ]}
           renderItem={({ item }) => {
             return <ToolbarItemComp {...item} args={args} editor={editor} />;
           }}
           horizontal
+          contentContainerStyle={{ borderWidth: 0 }}
         />
       );
     case ToolbarContext.Link:

@@ -41,6 +41,7 @@ const Colors: {
     buttonDisabled: chroma(palette.zinc['300']).hex(),
     buttonDisabledText: chroma(palette.zinc['100']).hex(),
     searchBar: chroma(palette.zinc['400']).alpha(0.25).hex(),
+    editorHighlight: chroma(palette.blue['500']).alpha(0.3),
   },
   dark: {
     text: '#fff',
@@ -69,6 +70,7 @@ const Colors: {
     buttonDisabled: chroma(palette.zinc['900']).hex(),
     buttonDisabledText: chroma(palette.zinc['600']).hex(),
     searchBar: chroma(palette.gray['700']).alpha(0.25).hex(),
+    editorHighlight: chroma(palette.blue['500']).alpha(0.3),
   },
 };
 

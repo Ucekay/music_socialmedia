@@ -1,7 +1,7 @@
 import { type Href, Link, Tabs } from 'expo-router';
 import type React from 'react';
 import { useCallback, useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
@@ -38,11 +38,9 @@ export default function TabLayout() {
 
   const insetsBottom = useSafeAreaInsets().bottom;
 
-  const bottomSheetHeight = 222 + insetsBottom;
-
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  const snapPoints = [bottomSheetHeight];
+  const snapPoints: number[] = [];
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -147,15 +145,16 @@ export default function TabLayout() {
         ref={bottomSheetModalRef}
         snapPoints={snapPoints}
         enablePanDownToClose
+        enableDynamicSizing
         backdropComponent={renderBackdrop}
         handleIndicatorStyle={{ backgroundColor: colors.border }}
-        maxDynamicContentSize={bottomSheetHeight}
         backgroundComponent={BottomSheetBackground}
+        maxDynamicContentSize={insetsBottom + 204}
       >
-        <BottomSheetView style={styles.contentContainer}>
-          <View style={[styles.content, { marginBottom: 16 + insetsBottom }]}>
-            <CreateContentList colors={colors} />
-          </View>
+        <BottomSheetView
+          style={[styles.contentContainer, { paddingBottom: insetsBottom }]}
+        >
+          <CreateContentList colors={colors} />
         </BottomSheetView>
       </BottomSheetModal>
     </View>
@@ -166,13 +165,7 @@ const BottomSheetBackground: React.FC<BottomSheetBackgroundProps> = ({
   style,
 }) => {
   const containerStyle = [styles.bottomSheetBackground, style];
-  return (
-    <BlurView
-      tint='systemUltraThinMaterial'
-      intensity={100}
-      style={containerStyle}
-    />
-  );
+  return <BlurView tint='regular' intensity={100} style={containerStyle} />;
 };
 
 type CreateItemData = {
@@ -243,17 +236,19 @@ const CreateContentListItem = ({
   href,
 }: ListItemProps) => {
   return (
-    <Link href={href}>
-      <View
-        style={[
-          styles.listItemContainer,
-          {
-            borderColor: colors.border,
-            borderTopWidth: showBorder ? 1 : 0,
-            borderBottomWidth: showBorder ? 1 : 0,
-          },
-        ]}
-      >
+    <Link
+      href={href}
+      style={[
+        styles.listItemContainer,
+        {
+          borderColor: colors.border,
+          borderTopWidth: showBorder ? 1 : 0,
+          borderBottomWidth: showBorder ? 1 : 0,
+        },
+      ]}
+      asChild
+    >
+      <Pressable>
         <View>{icon}</View>
         <View style={styles.listTextContainer}>
           <Text style={styles.listText}>{text}</Text>
@@ -261,7 +256,7 @@ const CreateContentListItem = ({
         <View>
           <MultiplePages width={28} height={28} color={'transparent'} />
         </View>
-      </View>
+      </Pressable>
     </Link>
   );
 };
@@ -297,9 +292,8 @@ const styles = StyleSheet.create({
   list: {
     alignContent: 'center',
     alignSelf: 'flex-start',
-    flex: 1,
     justifyContent: 'flex-start',
-    height: 182,
+    height: 180,
     borderCurve: 'continuous',
     borderRadius: 12,
     borderWidth: 1,
@@ -309,7 +303,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    padding: 16,
+    height: 60,
+    paddingHorizontal: 16,
     gap: 16,
   },
   listTextContainer: {

@@ -28,7 +28,7 @@ export const ToolbarItemComp = ({
         ]}
       >
         <Image
-          source={image(args)}
+          source={image ? image(args) : undefined}
           style={[
             editor.theme.toolbar.icon,
             active(args) ? editor.theme.toolbar.iconActive : undefined,
