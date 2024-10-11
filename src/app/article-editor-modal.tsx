@@ -67,6 +67,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
+  interpolate,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -244,6 +245,7 @@ const HeadingOptions = ({
       editor.toggleCodeBlock();
     }
   };
+
   return (
     <View
       style={{
@@ -308,7 +310,6 @@ const HeadingOptions = ({
       </Pressable>
       <Pressable
         onPress={() => {
-          const headingLevel = editorState.headingLevel;
           if (headingLevel !== undefined) {
             editor.toggleHeading(headingLevel as Level);
           }
@@ -342,7 +343,6 @@ const HeadingOptions = ({
       </Pressable>
       <Pressable
         onPress={() => {
-          const headingLevel = editorState.headingLevel;
           if (headingLevel !== undefined) {
             editor.toggleHeading(headingLevel as Level);
           }
@@ -410,7 +410,7 @@ const StylingOptions = ({
                 : colors.secondaryBackground,
               borderRadius: 8,
               borderCurve: 'continuous',
-              opacity: disabled ? 0.5 : 1,
+              opacity: !disabled ? 0.5 : 1,
             };
           }}
         >
@@ -434,7 +434,7 @@ const StylingOptions = ({
                 : colors.secondaryBackground,
               borderRadius: 8,
               borderCurve: 'continuous',
-              opacity: disabled ? 0.5 : 1,
+              opacity: !disabled ? 0.5 : 1,
             };
           }}
         >
@@ -458,7 +458,7 @@ const StylingOptions = ({
                 : colors.secondaryBackground,
               borderRadius: 8,
               borderCurve: 'continuous',
-              opacity: disabled ? 0.5 : 1,
+              opacity: !disabled ? 0.5 : 1,
             };
           }}
         >
@@ -484,7 +484,7 @@ const StylingOptions = ({
                 : colors.secondaryBackground,
               borderRadius: 8,
               borderCurve: 'continuous',
-              opacity: disabled ? 0.5 : 1,
+              opacity: !disabled ? 0.5 : 1,
             };
           }}
         >
@@ -510,7 +510,7 @@ const StylingOptions = ({
                 : colors.secondaryBackground,
               borderRadius: 8,
               borderCurve: 'continuous',
-              opacity: disabled ? 0.5 : 1,
+              opacity: !disabled ? 0.5 : 1,
             };
           }}
         >
@@ -533,7 +533,7 @@ const StylingOptions = ({
                 : colors.secondaryBackground,
               borderRadius: 8,
               borderCurve: 'continuous',
-              opacity: disabled ? 0.5 : 1,
+              opacity: !disabled ? 0.5 : 1,
             };
           }}
         >
@@ -552,10 +552,18 @@ const BlockOptions = ({
   editorState,
 }: { editor: EditorBridge; editorState: BridgeState }) => {
   const { colors } = useTheme();
-  const isBulletListActive = editorState.isBulletListActive;
-  const isOrderedListActive = editorState.isOrderedListActive;
-  const isBlockquoteActive = editorState.isBlockquoteActive;
-  const idsHorizontalRuleActive = editorState.isHorizontalRuleActive;
+  const {
+    isBulletListActive,
+    isOrderedListActive,
+    isBlockquoteActive,
+    canToggleBulletList,
+    canToggleOrderedList,
+    canToggleBlockquote,
+    canSink,
+    canSinkTaskListItem,
+    canLift,
+    canLiftTaskListItem,
+  } = editorState;
 
   return (
     <View
@@ -573,20 +581,18 @@ const BlockOptions = ({
       >
         <Pressable
           onPress={editor.toggleBulletList}
-          disabled={!editorState.canToggleBulletList}
-          style={(disabled) => {
-            return {
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 12,
-              aspectRatio: 1,
-              backgroundColor: isBulletListActive
-                ? colors.tint
-                : colors.secondaryBackground,
-              borderRadius: 8,
-              borderCurve: 'continuous',
-              opacity: disabled ? 0.5 : 1,
-            };
+          disabled={!canToggleBulletList}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 12,
+            aspectRatio: 1,
+            backgroundColor: isBulletListActive
+              ? colors.tint
+              : colors.secondaryBackground,
+            borderRadius: 8,
+            borderCurve: 'continuous',
+            opacity: !canToggleBulletList ? 0.5 : 1,
           }}
         >
           <LeftToRightListBulletIcon
@@ -596,20 +602,18 @@ const BlockOptions = ({
         </Pressable>
         <Pressable
           onPress={editor.toggleOrderedList}
-          disabled={!editorState.canToggleOrderedList}
-          style={(disabled) => {
-            return {
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 12,
-              aspectRatio: 1,
-              backgroundColor: isOrderedListActive
-                ? colors.tint
-                : colors.secondaryBackground,
-              borderRadius: 8,
-              borderCurve: 'continuous',
-              opacity: disabled ? 0.5 : 1,
-            };
+          disabled={!canToggleOrderedList}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 12,
+            aspectRatio: 1,
+            backgroundColor: isOrderedListActive
+              ? colors.tint
+              : colors.secondaryBackground,
+            borderRadius: 8,
+            borderCurve: 'continuous',
+            opacity: !canToggleOrderedList ? 0.5 : 1,
           }}
         >
           <LeftToRightListNumberIcon
@@ -618,41 +622,33 @@ const BlockOptions = ({
           />
         </Pressable>
         <Pressable
-          onPress={() =>
-            editorState.canSink ? editor.sink() : editor.sinkTaskListItem()
-          }
-          disabled={!editorState.canSink && !editorState.canSinkTaskListItem}
-          style={(disabled) => {
-            return {
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 12,
-              aspectRatio: 1,
-              backgroundColor: colors.secondaryBackground,
-              borderRadius: 8,
-              borderCurve: 'continuous',
-              opacity: disabled ? 0.5 : 1,
-            };
+          onPress={() => (canSink ? editor.sink() : editor.sinkTaskListItem())}
+          disabled={!canSink && !canSinkTaskListItem}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 12,
+            aspectRatio: 1,
+            backgroundColor: colors.secondaryBackground,
+            borderRadius: 8,
+            borderCurve: 'continuous',
+            opacity: !canSink && !canSinkTaskListItem ? 0.5 : 1,
           }}
         >
           <TextIndentMoreIcon size={20} color={colors.text} />
         </Pressable>
         <Pressable
-          onPress={() =>
-            editorState.canLift ? editor.lift() : editor.liftTaskListItem()
-          }
-          disabled={!editorState.canLift && !editorState.canLiftTaskListItem}
-          style={(disabled) => {
-            return {
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 12,
-              aspectRatio: 1,
-              backgroundColor: colors.secondaryBackground,
-              borderRadius: 8,
-              borderCurve: 'continuous',
-              opacity: disabled ? 0.5 : 1,
-            };
+          onPress={() => (canLift ? editor.lift() : editor.liftTaskListItem())}
+          disabled={!canLift && !canLiftTaskListItem}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 12,
+            aspectRatio: 1,
+            backgroundColor: colors.secondaryBackground,
+            borderRadius: 8,
+            borderCurve: 'continuous',
+            opacity: !canLift && !canLiftTaskListItem ? 0.5 : 1,
           }}
         >
           <TextIndentLessIcon size={20} color={colors.text} />
@@ -661,20 +657,18 @@ const BlockOptions = ({
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <Pressable
           onPress={editor.toggleBlockquote}
-          disabled={!editorState.canToggleBlockquote}
-          style={(disabled) => {
-            return {
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 12,
-              aspectRatio: 1,
-              backgroundColor: isBlockquoteActive
-                ? colors.tint
-                : colors.secondaryBackground,
-              borderRadius: 8,
-              borderCurve: 'continuous',
-              opacity: disabled ? 0.5 : 1,
-            };
+          disabled={!canToggleBlockquote}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 12,
+            aspectRatio: 1,
+            backgroundColor: isBlockquoteActive
+              ? colors.tint
+              : colors.secondaryBackground,
+            borderRadius: 8,
+            borderCurve: 'continuous',
+            opacity: !canToggleBlockquote ? 0.5 : 1,
           }}
         >
           <LeftToRightBlockQuoteIcon
@@ -683,27 +677,18 @@ const BlockOptions = ({
           />
         </Pressable>
         <Pressable
-          onPress={editor.toggleHorizontalRule}
-          disabled={!editorState.canToggleHorizontalRule}
-          style={(disabled) => {
-            return {
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 12,
-              aspectRatio: 1,
-              backgroundColor: idsHorizontalRuleActive
-                ? colors.tint
-                : colors.secondaryBackground,
-              borderRadius: 8,
-              borderCurve: 'continuous',
-              opacity: disabled ? 0.5 : 1,
-            };
+          onPress={editor.setHorizontalRule}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 12,
+            aspectRatio: 1,
+            backgroundColor: colors.secondaryBackground,
+            borderRadius: 8,
+            borderCurve: 'continuous',
           }}
         >
-          <SolidLine01Icon
-            size={20}
-            color={idsHorizontalRuleActive ? 'white' : colors.text}
-          />
+          <SolidLine01Icon size={20} color={colors.text} />
         </Pressable>
       </View>
     </View>
@@ -718,6 +703,7 @@ const ArticleEditorModal = () => {
   const { height: keyboardHeight, progress } = useReanimatedKeyboardAnimation();
   const { colors, theme } = useTheme();
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const animatedBottomSheetIndex = useSharedValue(-1);
 
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -777,6 +763,16 @@ const ArticleEditorModal = () => {
           background: ${colors.border};
           color: ${colors.text};
         }
+        .tiptap hr {
+          border: none;
+          border-top: 1px solid ${colors.border};
+          cursor: pointer;
+          margin: 2rem 0;
+        }
+
+        .tiptap hr.ProseMirror-selectednode {
+          border-top: 1px solid ${colors.tint};
+        }
           ${editorCss}
         `,
     );
@@ -793,6 +789,16 @@ const ArticleEditorModal = () => {
         .tiptap pre {
           background: ${colors.border};
           color: ${colors.text};
+        }
+        .tiptap hr {
+          border: none;
+          border-top: 1px solid ${colors.border};
+          cursor: pointer;
+          margin: 2rem 0;
+        }
+
+        .tiptap hr.ProseMirror-selectednode {
+          border-top: 1px solid ${colors.tint};
         }
           ${editorCss}
           `,
@@ -923,13 +929,31 @@ const ArticleEditorModal = () => {
   };
   const snapPoints: number[] = [];
   const animatedEditorStyle = useAnimatedStyle(() => {
+    if (
+      keyboardHeight.value <
+      animatedBottomSheetIndex.value * (146.3 + insets.bottom)
+    ) {
+      return {
+        height:
+          height -
+          (headerHeight + insets.top + 10) +
+          keyboardHeight.value -
+          44 * progress.value,
+        borderBottomLeftRadius: 16 * progress.value,
+        borderBottomRightRadius: 16 * progress.value,
+      };
+    }
     return {
-      height:
-        height +
-        keyboardHeight.value -
-        (44 + headerHeight + insets.top + 10) * progress.value,
-      borderBottomLeftRadius: 16 * progress.value,
-      borderBottomRightRadius: 16 * progress.value,
+      height: interpolate(
+        animatedBottomSheetIndex.value,
+        [-1, 0],
+        [
+          height - (headerHeight + insets.top + 10),
+          height - (170.3 + 18 + headerHeight + insets.top + insets.bottom),
+        ],
+      ),
+      borderBottomLeftRadius: 16,
+      borderBottomRightRadius: 16,
     };
   });
 
@@ -966,10 +990,19 @@ const ArticleEditorModal = () => {
               </Animated.View>
               <BottomSheet
                 ref={bottomSheetRef}
+                animatedIndex={animatedBottomSheetIndex}
                 index={-1}
                 snapPoints={snapPoints}
                 enablePanDownToClose
                 enableDynamicSizing
+                backgroundComponent={() => (
+                  <View
+                    style={{
+                      flex: 1,
+                      backgroundColor: 'black',
+                    }}
+                  />
+                )}
               >
                 <BottomSheetView
                   style={{

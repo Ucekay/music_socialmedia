@@ -1,13 +1,12 @@
 import { BridgeExtension } from '@10play/tentap-editor';
-import HorizontalRule from '@tiptap/extension-horizontal-rule';
+import { HorizontalRule } from '@tiptap/extension-horizontal-rule';
 
 type HorizontalRuleEditorState = {
-  isHorizontalRuleActive: boolean;
-  canToggleHorizontalRule: boolean;
+  canSetHorizontalRule: boolean;
 };
 
 type HorizontalRuleEditorInstance = {
-  toggleHorizontalRule: () => void;
+  setHorizontalRule: () => void;
 };
 
 declare module '@10play/tentap-editor' {
@@ -16,11 +15,11 @@ declare module '@10play/tentap-editor' {
 }
 
 export enum HorizontalRuleEditorActionType {
-  ToggleHorizontalRule = 'toggle-horizontal-rule',
+  SetHorizontalRule = 'set-horizontal-rule',
 }
 
 type HorizontalRuleMessage = {
-  type: HorizontalRuleEditorActionType.ToggleHorizontalRule;
+  type: HorizontalRuleEditorActionType.SetHorizontalRule;
   payload?: undefined;
 };
 
@@ -31,36 +30,23 @@ export const HorizontalRuleBridge = new BridgeExtension<
 >({
   tiptapExtension: HorizontalRule,
   onBridgeMessage: (editor, message) => {
-    if (message.type === HorizontalRuleEditorActionType.ToggleHorizontalRule) {
-      editor.chain().focus().toggleHorizontalRule().run();
+    if (message.type === HorizontalRuleEditorActionType.SetHorizontalRule) {
+      editor.chain().focus().setHorizontalRule().run();
     }
 
     return false;
   },
   extendEditorInstance: (sendBridgeMessage) => {
     return {
-      toggleHorizontalRule: () =>
+      setHorizontalRule: () =>
         sendBridgeMessage({
-          type: HorizontalRuleEditorActionType.ToggleHorizontalRule,
+          type: HorizontalRuleEditorActionType.SetHorizontalRule,
         }),
     };
   },
   extendEditorState: (editor) => {
     return {
-      canToggleHorizontalRule: editor.can().toggleHorizontalRule(),
-      isHorizontalRuleActive: editor.isActive('horizontalRule'),
+      canSetHorizontalRule: editor.can().setHorizontalRule(),
     };
   },
-  extendCSS: `
-  .tiptap hr {
-    border: none;
-    border-top: 1px solid var(--gray-2);
-    cursor: pointer;
-    margin: 2rem 0;
-  }
-
-  .tiptap hr.ProseMirror-selectednode {
-    border-top: 1px solid var(--purple);
-  }
-    `,
 });
