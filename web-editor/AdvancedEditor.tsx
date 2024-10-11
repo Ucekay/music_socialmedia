@@ -26,8 +26,9 @@ export const AdvancedEditor = () => {
     ],
   });
   const isFocused = editor?.isFocused;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (isFocused) editor?.commands.scrollIntoView();
-  }, [isFocused, editor]);
+    editor?.commands.scrollIntoView();
+  }, [editor, isFocused]);
   return <EditorContent editor={editor} />;
 };

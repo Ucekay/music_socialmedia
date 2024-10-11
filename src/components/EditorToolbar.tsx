@@ -6,9 +6,8 @@ import {
   useBridgeState,
   useKeyboard,
 } from '@10play/tentap-editor';
-import {} from 'hugeicons-react-native';
 
-import { useTheme } from '../contexts/ColorThemeContext';
+import Colors from '@/src/constants/Colors';
 
 import { ToolbarContext } from './RichText/Toolbar/ToolbarContext';
 
@@ -36,21 +35,22 @@ const ToolbarItemComp = ({
   editor: EditorBridge;
   args: Parameters<ToolbarItem['onPress']>[0];
 }) => {
-  const { colors } = useTheme();
   return (
     <Pressable
       onPress={onPress(args)}
       disabled={disabled(args)}
       style={({ pressed }) => [
-        styles.toolbarItem,
-        disabled(args) ? styles.disabledToolbarItem : undefined,
+        { padding: 8 },
+        disabled(args) ? { opacity: 0.5 } : undefined,
         pressed ? { opacity: 0.5 } : undefined,
       ]}
     >
       <View
         style={[
           styles.iconContainer,
-          active(args) ? { backgroundColor: colors.border } : undefined,
+          active(args)
+            ? { backgroundColor: Colors.dark.secondaryBackground }
+            : undefined,
         ]}
       >
         {icon}

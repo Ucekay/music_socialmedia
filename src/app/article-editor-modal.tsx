@@ -1,6 +1,6 @@
 import { Stack, useNavigation } from 'expo-router';
 import type React from 'react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Button,
   PixelRatio,
@@ -55,7 +55,6 @@ import {
   TextUnderlineIcon,
 } from 'hugeicons-react-native';
 import {
-  KeyboardController,
   KeyboardStickyView,
   useReanimatedKeyboardAnimation,
 } from 'react-native-keyboard-controller';
@@ -67,7 +66,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  interpolate,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -82,6 +80,7 @@ import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
 import EditorImagePicker from '../components/EditorImagePicker';
 import EditorToolbar from '../components/EditorToolbar';
 import LiveInputField from '../components/LiveInputField';
+import Colors from '../constants/Colors';
 import { useTheme } from '../contexts/ColorThemeContext';
 import {
   CodeBlockBridge,
@@ -237,7 +236,6 @@ const HeadingOptions = ({
   editor,
   editorState,
 }: { editor: EditorBridge; editorState: BridgeState }) => {
-  const { colors } = useTheme();
   const headingLevel = editorState.headingLevel;
   const isCodeBlockActive = editorState.isCodeBlockActive;
   const deactivateCodeBlock = () => {
@@ -264,7 +262,8 @@ const HeadingOptions = ({
         style={{
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: headingLevel === 2 ? colors.tint : 'transparent',
+          backgroundColor:
+            headingLevel === 2 ? Colors.dark.tint : 'transparent',
           paddingHorizontal: 12,
           paddingVertical: 8,
           borderRadius: 8,
@@ -275,7 +274,7 @@ const HeadingOptions = ({
           style={{
             fontSize: 22,
             textAlign: 'center',
-            color: headingLevel === 2 ? 'white' : colors.text,
+            color: 'white',
             fontWeight: '600',
           }}
         >
@@ -291,7 +290,8 @@ const HeadingOptions = ({
           height: '100%',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: headingLevel === 3 ? colors.tint : 'transparent',
+          backgroundColor:
+            headingLevel === 3 ? Colors.dark.tint : 'transparent',
           paddingHorizontal: 12,
           borderRadius: 8,
           borderCurve: 'continuous',
@@ -301,7 +301,7 @@ const HeadingOptions = ({
           style={{
             fontSize: 20,
             textAlign: 'center',
-            color: headingLevel === 3 ? 'white' : colors.text,
+            color: 'white',
             fontWeight: '500',
           }}
         >
@@ -321,7 +321,7 @@ const HeadingOptions = ({
           alignItems: 'center',
           backgroundColor:
             headingLevel === undefined && !isCodeBlockActive
-              ? colors.tint
+              ? Colors.dark.tint
               : 'transparent',
           paddingHorizontal: 12,
           borderRadius: 8,
@@ -332,10 +332,7 @@ const HeadingOptions = ({
           style={{
             fontSize: 17,
             textAlign: 'center',
-            color:
-              headingLevel === undefined && !isCodeBlockActive
-                ? 'white'
-                : colors.text,
+            color: 'white',
           }}
         >
           本文
@@ -356,7 +353,7 @@ const HeadingOptions = ({
           height: '100%',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: isCodeBlockActive ? colors.tint : 'transparent',
+          backgroundColor: isCodeBlockActive ? Colors.dark.tint : 'transparent',
           paddingHorizontal: 12,
           borderRadius: 8,
           borderCurve: 'continuous',
@@ -366,7 +363,7 @@ const HeadingOptions = ({
           style={{
             fontSize: 14,
             textAlign: 'center',
-            color: isCodeBlockActive ? 'white' : colors.text,
+            color: 'white',
           }}
         >
           等幅
@@ -380,7 +377,6 @@ const StylingOptions = ({
   editor,
   editorState,
 }: { editor: EditorBridge; editorState: BridgeState }) => {
-  const { colors } = useTheme();
   const isBoldActive = editorState.isBoldActive;
   const isItalicActive = editorState.isItalicActive;
   const isUnderlineActive = editorState.isUnderlineActive;
@@ -406,19 +402,15 @@ const StylingOptions = ({
               padding: 12,
               aspectRatio: 1,
               backgroundColor: isBoldActive
-                ? colors.tint
-                : colors.secondaryBackground,
+                ? Colors.dark.tint
+                : Colors.dark.secondaryBackground,
               borderRadius: 8,
               borderCurve: 'continuous',
               opacity: !disabled ? 0.5 : 1,
             };
           }}
         >
-          <TextBoldIcon
-            color={isBoldActive ? 'white' : colors.text}
-            size={20}
-            strokeWidth={3}
-          />
+          <TextBoldIcon color='white' size={20} strokeWidth={3} />
         </Pressable>
         <Pressable
           onPress={editor.toggleItalic}
@@ -430,19 +422,15 @@ const StylingOptions = ({
               padding: 12,
               aspectRatio: 1,
               backgroundColor: isItalicActive
-                ? colors.tint
-                : colors.secondaryBackground,
+                ? Colors.dark.tint
+                : Colors.dark.secondaryBackground,
               borderRadius: 8,
               borderCurve: 'continuous',
               opacity: !disabled ? 0.5 : 1,
             };
           }}
         >
-          <TextItalicIcon
-            color={isItalicActive ? 'white' : colors.text}
-            size={20}
-            strokeWidth={2}
-          />
+          <TextItalicIcon color='white' size={20} strokeWidth={2} />
         </Pressable>
         <Pressable
           onPress={editor.toggleUnderline}
@@ -454,8 +442,8 @@ const StylingOptions = ({
               padding: 12,
               aspectRatio: 1,
               backgroundColor: isUnderlineActive
-                ? colors.tint
-                : colors.secondaryBackground,
+                ? Colors.dark.tint
+                : Colors.dark.secondaryBackground,
               borderRadius: 8,
               borderCurve: 'continuous',
               opacity: !disabled ? 0.5 : 1,
@@ -463,7 +451,7 @@ const StylingOptions = ({
           }}
         >
           <TextUnderlineIcon
-            color={isUnderlineActive ? 'white' : colors.text}
+            color='white'
             height={20}
             width={18}
             preserveAspectRatio='none'
@@ -480,19 +468,15 @@ const StylingOptions = ({
               padding: 12,
               aspectRatio: 1,
               backgroundColor: isStrikeActive
-                ? colors.tint
-                : colors.secondaryBackground,
+                ? Colors.dark.tint
+                : Colors.dark.secondaryBackground,
               borderRadius: 8,
               borderCurve: 'continuous',
               opacity: !disabled ? 0.5 : 1,
             };
           }}
         >
-          <TextStrikethroughIcon
-            color={isStrikeActive ? 'white' : colors.text}
-            size={20}
-            strokeWidth={2}
-          />
+          <TextStrikethroughIcon color='white' size={20} strokeWidth={2} />
         </Pressable>
       </View>
       <View style={{ flexDirection: 'row', gap: 8 }}>
@@ -506,18 +490,15 @@ const StylingOptions = ({
               padding: 12,
               aspectRatio: 1,
               backgroundColor: isSubscriptActive
-                ? colors.tint
-                : colors.secondaryBackground,
+                ? Colors.dark.tint
+                : Colors.dark.secondaryBackground,
               borderRadius: 8,
               borderCurve: 'continuous',
               opacity: !disabled ? 0.5 : 1,
             };
           }}
         >
-          <TextSubscriptIcon
-            size={20}
-            color={isSubscriptActive ? 'white' : colors.text}
-          />
+          <TextSubscriptIcon size={20} color='white' />
         </Pressable>
         <Pressable
           onPress={editor.toggleSuperscript}
@@ -529,18 +510,15 @@ const StylingOptions = ({
               padding: 12,
               aspectRatio: 1,
               backgroundColor: isSuperscriptActive
-                ? colors.tint
-                : colors.secondaryBackground,
+                ? Colors.dark.tint
+                : Colors.dark.secondaryBackground,
               borderRadius: 8,
               borderCurve: 'continuous',
               opacity: !disabled ? 0.5 : 1,
             };
           }}
         >
-          <TextSuperscriptIcon
-            size={20}
-            color={isSuperscriptActive ? 'white' : colors.text}
-          />
+          <TextSuperscriptIcon size={20} color='white' />
         </Pressable>
       </View>
     </View>
@@ -551,7 +529,6 @@ const BlockOptions = ({
   editor,
   editorState,
 }: { editor: EditorBridge; editorState: BridgeState }) => {
-  const { colors } = useTheme();
   const {
     isBulletListActive,
     isOrderedListActive,
@@ -588,17 +565,14 @@ const BlockOptions = ({
             padding: 12,
             aspectRatio: 1,
             backgroundColor: isBulletListActive
-              ? colors.tint
-              : colors.secondaryBackground,
+              ? Colors.dark.tint
+              : Colors.dark.secondaryBackground,
             borderRadius: 8,
             borderCurve: 'continuous',
             opacity: !canToggleBulletList ? 0.5 : 1,
           }}
         >
-          <LeftToRightListBulletIcon
-            size={20}
-            color={isBulletListActive ? 'white' : colors.text}
-          />
+          <LeftToRightListBulletIcon size={20} color='white' />
         </Pressable>
         <Pressable
           onPress={editor.toggleOrderedList}
@@ -609,17 +583,14 @@ const BlockOptions = ({
             padding: 12,
             aspectRatio: 1,
             backgroundColor: isOrderedListActive
-              ? colors.tint
-              : colors.secondaryBackground,
+              ? Colors.dark.tint
+              : Colors.dark.secondaryBackground,
             borderRadius: 8,
             borderCurve: 'continuous',
             opacity: !canToggleOrderedList ? 0.5 : 1,
           }}
         >
-          <LeftToRightListNumberIcon
-            size={20}
-            color={isOrderedListActive ? 'white' : colors.text}
-          />
+          <LeftToRightListNumberIcon size={20} color='white' />
         </Pressable>
         <Pressable
           onPress={() => (canSink ? editor.sink() : editor.sinkTaskListItem())}
@@ -629,13 +600,13 @@ const BlockOptions = ({
             alignItems: 'center',
             padding: 12,
             aspectRatio: 1,
-            backgroundColor: colors.secondaryBackground,
+            backgroundColor: Colors.dark.secondaryBackground,
             borderRadius: 8,
             borderCurve: 'continuous',
             opacity: !canSink && !canSinkTaskListItem ? 0.5 : 1,
           }}
         >
-          <TextIndentMoreIcon size={20} color={colors.text} />
+          <TextIndentMoreIcon size={20} color='white' />
         </Pressable>
         <Pressable
           onPress={() => (canLift ? editor.lift() : editor.liftTaskListItem())}
@@ -645,13 +616,13 @@ const BlockOptions = ({
             alignItems: 'center',
             padding: 12,
             aspectRatio: 1,
-            backgroundColor: colors.secondaryBackground,
+            backgroundColor: Colors.dark.secondaryBackground,
             borderRadius: 8,
             borderCurve: 'continuous',
             opacity: !canLift && !canLiftTaskListItem ? 0.5 : 1,
           }}
         >
-          <TextIndentLessIcon size={20} color={colors.text} />
+          <TextIndentLessIcon size={20} color='white' />
         </Pressable>
       </View>
       <View style={{ flexDirection: 'row', gap: 8 }}>
@@ -664,17 +635,14 @@ const BlockOptions = ({
             padding: 12,
             aspectRatio: 1,
             backgroundColor: isBlockquoteActive
-              ? colors.tint
-              : colors.secondaryBackground,
+              ? Colors.dark.tint
+              : Colors.dark.secondaryBackground,
             borderRadius: 8,
             borderCurve: 'continuous',
             opacity: !canToggleBlockquote ? 0.5 : 1,
           }}
         >
-          <LeftToRightBlockQuoteIcon
-            size={20}
-            color={isBlockquoteActive ? 'white' : colors.text}
-          />
+          <LeftToRightBlockQuoteIcon size={20} color='white' />
         </Pressable>
         <Pressable
           onPress={editor.setHorizontalRule}
@@ -683,12 +651,12 @@ const BlockOptions = ({
             alignItems: 'center',
             padding: 12,
             aspectRatio: 1,
-            backgroundColor: colors.secondaryBackground,
+            backgroundColor: Colors.dark.secondaryBackground,
             borderRadius: 8,
             borderCurve: 'continuous',
           }}
         >
-          <SolidLine01Icon size={20} color={colors.text} />
+          <SolidLine01Icon size={20} color='white' />
         </Pressable>
       </View>
     </View>
@@ -697,12 +665,14 @@ const BlockOptions = ({
 
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
-  const { height } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
   const { height: keyboardHeight, progress } = useReanimatedKeyboardAnimation();
   const { colors, theme } = useTheme();
+  const [isFormatting, setIsFormatting] = useState(false);
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const animatedBottomSheetPosition = useSharedValue(0);
   const animatedBottomSheetIndex = useSharedValue(-1);
 
   const { showActionSheetWithOptions } = useActionSheet();
@@ -812,11 +782,18 @@ const ArticleEditorModal = () => {
 
   const content = useEditorContent(editor, { type: 'json' });
 
+  useEffect(() => {
+    if (editorState.isFocused) {
+      bottomSheetRef.current?.close();
+    }
+  }, [editorState.isFocused]);
+
   const toolbarItems: ToolbarItem[] = [
     {
       onPress: () => () => {
-        KeyboardController.dismiss();
         bottomSheetRef.current?.snapToIndex(0);
+        editor.blur();
+        setIsFormatting(true);
       },
       active: () => false,
       disabled: () => false,
@@ -834,8 +811,7 @@ const ArticleEditorModal = () => {
     },
     {
       onPress: () => () => {
-        KeyboardController.dismiss();
-        bottomSheetRef.current?.snapToIndex(0);
+        editor.blur();
       },
       active: () => false,
       disabled: () => false,
@@ -872,11 +848,9 @@ const ArticleEditorModal = () => {
       ),
     },
     {
-      onPress:
-        ({ editor }) =>
-        () => {
-          editor.blur();
-        },
+      onPress: () => () => {
+        editor.blur();
+      },
       active: () => false,
       disabled: () => false,
       icon: <ArrowDown01Icon size={24} color='white' />,
@@ -928,11 +902,15 @@ const ArticleEditorModal = () => {
     );
   };
   const snapPoints: number[] = [];
+  const handleBottomSheetClose = () => {
+    if (isFormatting) {
+      editor.focus();
+    }
+    setIsFormatting(false);
+  };
+
   const animatedEditorStyle = useAnimatedStyle(() => {
-    if (
-      keyboardHeight.value <
-      animatedBottomSheetIndex.value * (146.3 + insets.bottom)
-    ) {
+    if (-keyboardHeight.value > height - animatedBottomSheetPosition.value) {
       return {
         height:
           height -
@@ -944,16 +922,9 @@ const ArticleEditorModal = () => {
       };
     }
     return {
-      height: interpolate(
-        animatedBottomSheetIndex.value,
-        [-1, 0],
-        [
-          height - (headerHeight + insets.top + 10),
-          height - (170.3 + 18 + headerHeight + insets.top + insets.bottom),
-        ],
-      ),
-      borderBottomLeftRadius: 16,
-      borderBottomRightRadius: 16,
+      height: animatedBottomSheetPosition.value,
+      borderBottomLeftRadius: 16 * animatedBottomSheetIndex.value + 12,
+      borderBottomRightRadius: 16 * animatedBottomSheetIndex.value + 12,
     };
   });
 
@@ -974,12 +945,15 @@ const ArticleEditorModal = () => {
           <ArticleConfigScreen />
         </View>
         <View key={2}>
-          <View style={styles.editorContainer}>
+          <View style={[styles.editorContainer]}>
             <View style={{ flex: 1, backgroundColor: 'black' }}>
               <Animated.View
                 style={[
                   animatedEditorStyle,
-                  { backgroundColor: colors.secondaryBackground },
+                  {
+                    backgroundColor: colors.secondaryBackground,
+                    borderCurve: 'continuous',
+                  },
                 ]}
               >
                 <RichText
@@ -991,6 +965,7 @@ const ArticleEditorModal = () => {
               <BottomSheet
                 ref={bottomSheetRef}
                 animatedIndex={animatedBottomSheetIndex}
+                animatedPosition={animatedBottomSheetPosition}
                 index={-1}
                 snapPoints={snapPoints}
                 enablePanDownToClose
@@ -1003,6 +978,7 @@ const ArticleEditorModal = () => {
                     }}
                   />
                 )}
+                onClose={handleBottomSheetClose}
               >
                 <BottomSheetView
                   style={{
