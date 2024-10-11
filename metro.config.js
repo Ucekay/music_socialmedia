@@ -11,4 +11,6 @@ config.resolver.nodeModulesPaths = [
   path.resolve(__dirname, 'modules'),
 ];
 
+config.resolver.unstable_enablePackageExports = true;
+
 module.exports = config;
