@@ -1,6 +1,6 @@
 import { Stack, useNavigation } from 'expo-router';
 import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Button,
   PixelRatio,
@@ -30,7 +30,6 @@ import {
   darkColorKeyboardTheme,
   defaultColorKeyboardTheme,
 } from '@10play/tentap-editor/src/RichText/Keyboard/keyboardTheme';
-import { darkToolbarTheme } from '@10play/tentap-editor/src/RichText/Toolbar/toolbarTheme';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -333,7 +332,11 @@ const HeadingOptions = ({
           if (headingLevel !== undefined) {
             editor.toggleHeading(headingLevel as Level);
           }
-          editor.toggleCodeBlock();
+          if (isCodeBlockActive) {
+            editor.setHardBreak();
+          } else {
+            editor.toggleCodeBlock();
+          }
         }}
         style={{
           height: '100%',
@@ -498,65 +501,7 @@ const ArticleEditorModal = () => {
   const textColor = colors.text;
 
   const defaultEditorTheme: EditorTheme = {
-    toolbar: {
-      toolbarBody: {},
-      toolbarButton: {
-        paddingHorizontal: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'transparent',
-      },
-      iconDisabled: {
-        tintColor: '#CACACA',
-      },
-      iconWrapperDisabled: {
-        opacity: 0.3,
-      },
-      iconWrapperActive: {
-        backgroundColor: '#E5E5E5',
-      },
-      hidden: {
-        display: 'none',
-      },
-      keyboardAvoidingView: {
-        position: 'absolute',
-        width: '100%',
-        bottom: 0,
-      },
-      iconWrapper: {
-        borderRadius: 4,
-        backgroundColor: 'transparent',
-      },
-      icon: {
-        height: 28,
-        width: 28,
-        tintColor: '#898989',
-      },
-      iconActive: {},
-      linkBarTheme: {
-        addLinkContainer: {},
-        linkInput: {
-          paddingLeft: 12,
-          paddingTop: 1,
-          paddingBottom: 1,
-          paddingRight: 12,
-          flex: 1,
-        },
-        doneButton: {
-          backgroundColor: 'transparent',
-          justifyContent: 'center',
-          height: 32,
-          padding: 8,
-          borderRadius: 4,
-        },
-        doneButtonText: {
-          color: '#0085FF',
-        },
-        linkToolbarButton: {
-          paddingHorizontal: 0,
-        },
-      },
-    } as ToolbarTheme,
+    toolbar: {} as ToolbarTheme,
     colorKeyboard: defaultColorKeyboardTheme,
     webview: {
       backgroundColor: 'transparent',
@@ -565,7 +510,7 @@ const ArticleEditorModal = () => {
   };
 
   const darkEditorTheme: EditorTheme = {
-    toolbar: darkToolbarTheme as ToolbarTheme,
+    toolbar: {} as ToolbarTheme,
     colorKeyboard: darkColorKeyboardTheme as ColorKeyboardTheme,
     webview: {
       backgroundColor: 'transparent',
@@ -583,6 +528,7 @@ const ArticleEditorModal = () => {
     bridgeExtensions: [
       YouTubeBridge,
       CodeBlockBridge,
+      CodeBlockLowlightBridge,
       ...TenTapStartKit,
       CoreBridge.configureCSS(editorCss),
     ],
@@ -592,10 +538,9 @@ const ArticleEditorModal = () => {
   const editorState = editor.getEditorState();
   const isEditorFocused = editorState.isFocused;
   const editorPaddingHorizontal = PixelRatio.roundToNearestPixel(16);
-  useEffect(() => {
-    if (!isEditorFocused) {
-      editor.injectCSS(
-        `
+  if (!isEditorFocused) {
+    editor.injectCSS(
+      `
         .highlight-background {
           background-color: ${colors.editorHighlight};
           border-radius: 4px;
@@ -609,10 +554,10 @@ const ArticleEditorModal = () => {
         }
           ${editorCss}
         `,
-      );
-    } else {
-      editor.injectCSS(
-        `
+    );
+  } else {
+    editor.injectCSS(
+      `
         .highlight-background {
           background-color: transparent;
           border-radius: 4px;
@@ -626,9 +571,8 @@ const ArticleEditorModal = () => {
         }
           ${editorCss}
           `,
-      );
-    }
-  });
+    );
+  }
 
   editor.injectJS(`document.querySelectorAll('iframe').forEach(iframe => {
   iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');

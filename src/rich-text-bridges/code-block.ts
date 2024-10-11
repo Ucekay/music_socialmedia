@@ -1,5 +1,5 @@
 import { BridgeExtension } from '@10play/tentap-editor';
-import CodeBlock from '@tiptap/extension-code-block';
+import { CodeBlock } from '@tiptap/extension-code-block';
 
 type CodeBlockEditorState = {
   isCodeBlockActive: boolean;
