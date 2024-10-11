@@ -528,7 +528,6 @@ const ArticleEditorModal = () => {
     bridgeExtensions: [
       YouTubeBridge,
       CodeBlockBridge,
-      CodeBlockLowlightBridge,
       ...TenTapStartKit,
       CoreBridge.configureCSS(editorCss),
     ],
