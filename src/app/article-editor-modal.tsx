@@ -26,8 +26,7 @@ import {
   defaultColorKeyboardTheme,
 } from '@10play/tentap-editor/src/RichText/Keyboard/keyboardTheme';
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { BottomSheetView } from '@gorhom/bottom-sheet';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { StatusBar } from 'expo-status-bar';
 import {
@@ -247,131 +246,81 @@ const HeadingOptions = ({
     }
   };
 
+  const handleSelectHeading = (level: Level) => {
+    deactivateCodeBlock();
+    editor.toggleHeading(level);
+  };
+
+  const handleSelectBody = () => {
+    if (headingLevel !== undefined) {
+      editor.toggleHeading(headingLevel as Level);
+    }
+    deactivateCodeBlock();
+  };
+
+  const handleSelectMono = () => {
+    if (headingLevel !== undefined) {
+      editor.toggleHeading(headingLevel as Level);
+    }
+    if (isCodeBlockActive) {
+      editor.setHardBreak();
+    } else {
+      editor.toggleCodeBlock();
+    }
+  };
+
   return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'row',
-        width: '100%',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}
-    >
+    <View style={styles.headingOptionsContainer}>
       <Pressable
-        onPress={() => {
-          deactivateCodeBlock();
-          editor.toggleHeading(2);
-        }}
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor:
-            headingLevel === 2 ? Colors.dark.tint : 'transparent',
-          height: 44,
-          paddingHorizontal: 12,
-          paddingVertical: 8,
-          borderRadius: 8,
-          borderCurve: 'continuous',
-        }}
+        onPress={() => handleSelectHeading(2)}
+        style={[
+          styles.headingOptionWrapper,
+          {
+            backgroundColor:
+              headingLevel === 2 ? Colors.dark.tint : 'transparent',
+          },
+        ]}
       >
-        <RNText
-          style={{
-            fontSize: 22,
-            textAlign: 'center',
-            color: 'white',
-            fontWeight: '600',
-          }}
-        >
-          見出し
-        </RNText>
+        <RNText style={styles.headingText}>見出し</RNText>
       </Pressable>
       <Pressable
-        onPress={() => {
-          deactivateCodeBlock();
-          editor.toggleHeading(3);
-        }}
-        style={{
-          height: 44,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor:
-            headingLevel === 3 ? Colors.dark.tint : 'transparent',
-          paddingHorizontal: 12,
-          borderRadius: 8,
-          borderCurve: 'continuous',
-        }}
+        onPress={() => handleSelectHeading(3)}
+        style={[
+          styles.headingOptionWrapper,
+          {
+            backgroundColor:
+              headingLevel === 3 ? Colors.dark.tint : 'transparent',
+          },
+        ]}
       >
-        <RNText
-          style={{
-            fontSize: 20,
-            textAlign: 'center',
-            color: 'white',
-            fontWeight: '500',
-          }}
-        >
-          小見出し
-        </RNText>
+        <RNText style={styles.subheadingText}>小見出し</RNText>
       </Pressable>
       <Pressable
-        onPress={() => {
-          if (headingLevel !== undefined) {
-            editor.toggleHeading(headingLevel as Level);
-          }
-          deactivateCodeBlock();
-        }}
-        style={{
-          height: 44,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor:
-            headingLevel === undefined && !isCodeBlockActive
+        onPress={() => handleSelectBody()}
+        style={[
+          styles.headingOptionWrapper,
+          {
+            backgroundColor:
+              headingLevel === undefined && !isCodeBlockActive
+                ? Colors.dark.tint
+                : 'transparent',
+          },
+        ]}
+      >
+        <RNText style={styles.bodyText}>本文</RNText>
+      </Pressable>
+      <Pressable
+        onPress={() => handleSelectMono()}
+        style={[
+          styles.headingOptionWrapper,
+          {
+            backgroundColor: isCodeBlockActive
               ? Colors.dark.tint
               : 'transparent',
-          paddingHorizontal: 12,
-          borderRadius: 8,
-          borderCurve: 'continuous',
-        }}
+          },
+        ]}
       >
-        <RNText
-          style={{
-            fontSize: 17,
-            textAlign: 'center',
-            color: 'white',
-          }}
-        >
-          本文
-        </RNText>
-      </Pressable>
-      <Pressable
-        onPress={() => {
-          if (headingLevel !== undefined) {
-            editor.toggleHeading(headingLevel as Level);
-          }
-          if (isCodeBlockActive) {
-            editor.setHardBreak();
-          } else {
-            editor.toggleCodeBlock();
-          }
-        }}
-        style={{
-          height: 44,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: isCodeBlockActive ? Colors.dark.tint : 'transparent',
-          paddingHorizontal: 12,
-          borderRadius: 8,
-          borderCurve: 'continuous',
-        }}
-      >
-        <RNText
-          style={{
-            fontSize: 14,
-            textAlign: 'center',
-            color: 'white',
-          }}
-        >
-          等幅
-        </RNText>
+        <RNText style={styles.monoText}>等幅</RNText>
       </Pressable>
     </View>
   );
@@ -388,59 +337,44 @@ const StylingOptions = ({
   const isSubscriptActive = editorState.isSubscriptActive;
   const isSuperscriptActive = editorState.isSuperscriptActive;
   return (
-    <View
-      style={{
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
-    >
-      <View style={{ flexDirection: 'row', gap: 8 }}>
+    <View style={styles.stylingOptionsOuterContainer}>
+      <View style={styles.stylingOptionsContainer}>
         <Pressable
           onPress={editor.toggleBold}
           disabled={!editorState.canToggleBold}
-          style={(disabled) => {
-            return {
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 12,
-              aspectRatio: 1,
+          style={(disabled) => [
+            styles.stylingOptionsWrapper,
+            {
               backgroundColor: isBoldActive
                 ? Colors.dark.tint
                 : Colors.dark.secondaryBackground,
-              borderRadius: 8,
-              borderCurve: 'continuous',
               opacity: !disabled ? 0.5 : 1,
-            };
-          }}
+            },
+          ]}
         >
           <TextBoldIcon color='white' size={20} strokeWidth={3} />
         </Pressable>
         <Pressable
           onPress={editor.toggleItalic}
           disabled={!editorState.canToggleItalic}
-          style={(disabled) => {
-            return {
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 12,
-              aspectRatio: 1,
+          style={(disabled) => [
+            styles.stylingOptionsWrapper,
+            {
               backgroundColor: isItalicActive
                 ? Colors.dark.tint
                 : Colors.dark.secondaryBackground,
-              borderRadius: 8,
-              borderCurve: 'continuous',
               opacity: !disabled ? 0.5 : 1,
-            };
-          }}
+            },
+          ]}
         >
           <TextItalicIcon color='white' size={20} strokeWidth={2} />
         </Pressable>
         <Pressable
           onPress={editor.toggleUnderline}
           disabled={!editorState.canToggleUnderline}
-          style={(disabled) => {
-            return {
+          style={(disabled) => [
+            styles.stylingOptionsWrapper,
+            {
               justifyContent: 'center',
               alignItems: 'center',
               padding: 12,
@@ -451,8 +385,8 @@ const StylingOptions = ({
               borderRadius: 8,
               borderCurve: 'continuous',
               opacity: !disabled ? 0.5 : 1,
-            };
-          }}
+            },
+          ]}
         >
           <TextUnderlineIcon
             color='white'
@@ -465,62 +399,47 @@ const StylingOptions = ({
         <Pressable
           onPress={editor.toggleStrike}
           disabled={!editorState.canToggleStrike}
-          style={(disabled) => {
-            return {
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 12,
-              aspectRatio: 1,
+          style={(disabled) => [
+            styles.stylingOptionsWrapper,
+            {
               backgroundColor: isStrikeActive
                 ? Colors.dark.tint
                 : Colors.dark.secondaryBackground,
-              borderRadius: 8,
-              borderCurve: 'continuous',
               opacity: !disabled ? 0.5 : 1,
-            };
-          }}
+            },
+          ]}
         >
           <TextStrikethroughIcon color='white' size={20} strokeWidth={2} />
         </Pressable>
       </View>
-      <View style={{ flexDirection: 'row', gap: 8 }}>
+      <View style={styles.stylingOptionsContainer}>
         <Pressable
           onPress={editor.toggleSubscript}
           disabled={!editorState.canToggleSubscript}
-          style={(disabled) => {
-            return {
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 12,
-              aspectRatio: 1,
+          style={(disabled) => [
+            styles.stylingOptionsWrapper,
+            {
               backgroundColor: isSubscriptActive
                 ? Colors.dark.tint
                 : Colors.dark.secondaryBackground,
-              borderRadius: 8,
-              borderCurve: 'continuous',
               opacity: !disabled ? 0.5 : 1,
-            };
-          }}
+            },
+          ]}
         >
           <TextSubscriptIcon size={20} color='white' />
         </Pressable>
         <Pressable
           onPress={editor.toggleSuperscript}
           disabled={!editorState.canToggleSuperscript}
-          style={(disabled) => {
-            return {
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 12,
-              aspectRatio: 1,
+          style={(disabled) => [
+            styles.stylingOptionsWrapper,
+            {
               backgroundColor: isSuperscriptActive
                 ? Colors.dark.tint
                 : Colors.dark.secondaryBackground,
-              borderRadius: 8,
-              borderCurve: 'continuous',
               opacity: !disabled ? 0.5 : 1,
-            };
-          }}
+            },
+          ]}
         >
           <TextSuperscriptIcon size={20} color='white' />
         </Pressable>
@@ -547,118 +466,89 @@ const BlockOptions = ({
   } = editorState;
 
   return (
-    <View
-      style={{
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
-    >
-      <View
-        style={{
-          flexDirection: 'row',
-          gap: 8,
-        }}
-      >
+    <View style={styles.stylingOptionsOuterContainer}>
+      <View style={styles.stylingOptionsContainer}>
         <Pressable
           onPress={editor.toggleBulletList}
           disabled={!canToggleBulletList}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 12,
-            aspectRatio: 1,
-            backgroundColor: isBulletListActive
-              ? Colors.dark.tint
-              : Colors.dark.secondaryBackground,
-            borderRadius: 8,
-            borderCurve: 'continuous',
-            opacity: !canToggleBulletList ? 0.5 : 1,
-          }}
+          style={[
+            styles.stylingOptionsWrapper,
+            {
+              backgroundColor: isBulletListActive
+                ? Colors.dark.tint
+                : Colors.dark.secondaryBackground,
+              opacity: !canToggleBulletList ? 0.5 : 1,
+            },
+          ]}
         >
           <LeftToRightListBulletIcon size={20} color='white' />
         </Pressable>
         <Pressable
           onPress={editor.toggleOrderedList}
           disabled={!canToggleOrderedList}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 12,
-            aspectRatio: 1,
-            backgroundColor: isOrderedListActive
-              ? Colors.dark.tint
-              : Colors.dark.secondaryBackground,
-            borderRadius: 8,
-            borderCurve: 'continuous',
-            opacity: !canToggleOrderedList ? 0.5 : 1,
-          }}
+          style={[
+            styles.stylingOptionsWrapper,
+            {
+              backgroundColor: isOrderedListActive
+                ? Colors.dark.tint
+                : Colors.dark.secondaryBackground,
+              opacity: !canToggleOrderedList ? 0.5 : 1,
+            },
+          ]}
         >
           <LeftToRightListNumberIcon size={20} color='white' />
         </Pressable>
         <Pressable
           onPress={() => (canSink ? editor.sink() : editor.sinkTaskListItem())}
           disabled={!canSink && !canSinkTaskListItem}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 12,
-            aspectRatio: 1,
-            backgroundColor: Colors.dark.secondaryBackground,
-            borderRadius: 8,
-            borderCurve: 'continuous',
-            opacity: !canSink && !canSinkTaskListItem ? 0.5 : 1,
-          }}
+          style={[
+            styles.stylingOptionsWrapper,
+            {
+              backgroundColor: Colors.dark.secondaryBackground,
+              opacity: !canSink && !canSinkTaskListItem ? 0.5 : 1,
+            },
+          ]}
         >
           <TextIndentMoreIcon size={20} color='white' />
         </Pressable>
         <Pressable
           onPress={() => (canLift ? editor.lift() : editor.liftTaskListItem())}
           disabled={!canLift && !canLiftTaskListItem}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 12,
-            aspectRatio: 1,
-            backgroundColor: Colors.dark.secondaryBackground,
-            borderRadius: 8,
-            borderCurve: 'continuous',
-            opacity: !canLift && !canLiftTaskListItem ? 0.5 : 1,
-          }}
+          style={[
+            styles.stylingOptionsWrapper,
+            {
+              backgroundColor: Colors.dark.secondaryBackground,
+              opacity: !canLift && !canLiftTaskListItem ? 0.5 : 1,
+            },
+          ]}
         >
           <TextIndentLessIcon size={20} color='white' />
         </Pressable>
       </View>
-      <View style={{ flexDirection: 'row', gap: 8 }}>
+      <View style={styles.stylingOptionsContainer}>
         <Pressable
           onPress={editor.toggleBlockquote}
           disabled={!canToggleBlockquote}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 12,
-            aspectRatio: 1,
-            backgroundColor: isBlockquoteActive
-              ? Colors.dark.tint
-              : Colors.dark.secondaryBackground,
-            borderRadius: 8,
-            borderCurve: 'continuous',
-            opacity: !canToggleBlockquote ? 0.5 : 1,
-          }}
+          style={[
+            styles.stylingOptionsWrapper,
+            {
+              backgroundColor: isBlockquoteActive
+                ? Colors.dark.tint
+                : Colors.dark.secondaryBackground,
+              opacity: !canToggleBlockquote ? 0.5 : 1,
+            },
+          ]}
         >
           <LeftToRightBlockQuoteIcon size={20} color='white' />
         </Pressable>
         <Pressable
           onPress={editor.setHorizontalRule}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 12,
-            aspectRatio: 1,
-            backgroundColor: Colors.dark.secondaryBackground,
-            borderRadius: 8,
-            borderCurve: 'continuous',
-          }}
+          style={[
+            styles.stylingOptionsWrapper,
+            {
+              backgroundColor: Colors.dark.secondaryBackground,
+            },
+          ]}
         >
           <SolidLine01Icon size={20} color='white' />
         </Pressable>
@@ -925,7 +815,10 @@ const ArticleEditorModal = () => {
   };
 
   const animatedEditorStyle = useAnimatedStyle(() => {
-    if (-keyboardHeight.value > height - animatedBottomSheetPosition.value) {
+    if (
+      -keyboardHeight.value >
+      height - headerHeight - insets.top - animatedBottomSheetPosition.value
+    ) {
       return {
         height:
           height -
@@ -938,8 +831,8 @@ const ArticleEditorModal = () => {
     }
     return {
       height: animatedBottomSheetPosition.value,
-      borderBottomLeftRadius: 16 * animatedBottomSheetIndex.value + 12,
-      borderBottomRightRadius: 16 * animatedBottomSheetIndex.value + 12,
+      borderBottomLeftRadius: 11 * (animatedBottomSheetIndex.value + 1.0) + 1,
+      borderBottomRightRadius: 11 * (animatedBottomSheetIndex.value + 1.0) + 1,
     };
   });
 
@@ -950,7 +843,7 @@ const ArticleEditorModal = () => {
   });
 
   return (
-    <BgView style={{ flex: 1 }}>
+    <BgView style={styles.flex1}>
       <Stack.Screen
         options={{
           headerLeft: () => (
@@ -961,13 +854,13 @@ const ArticleEditorModal = () => {
           headerTintColor: textColor,
         }}
       />
-      <PagerView style={{ flex: 1 }} initialPage={0}>
+      <PagerView style={styles.flex1} initialPage={0}>
         <View key={1}>
           <ArticleConfigScreen />
         </View>
-        <View key={2}>
-          <View style={[styles.editorContainer]}>
-            <View style={{ flex: 1, backgroundColor: 'black' }}>
+        <View style={styles.flex1} key={2}>
+          <View style={styles.editorContainer}>
+            <View style={styles.editorUnderlay}>
               <Animated.View
                 style={[
                   animatedEditorStyle,
@@ -1000,26 +893,19 @@ const ArticleEditorModal = () => {
             animatedPosition={animatedBottomSheetPosition}
             index={-1}
             snapPoints={snapPoints}
-            enablePanDownToClose
             enableDynamicSizing
-            backgroundComponent={() => (
-              <View
-                style={{
-                  flex: 1,
-                  backgroundColor: 'black',
-                }}
-              />
-            )}
+            enablePanDownToClose
+            handleIndicatorStyle={{
+              backgroundColor: colors.secondaryBackground,
+            }}
+            backgroundComponent={() => <View style={styles.editorUnderlay} />}
             onClose={handleBottomSheetClose}
           >
             <BottomSheetView
-              style={{
-                flex: 1,
-                paddingHorizontal: 24,
-                alignItems: 'center',
-                paddingBottom: insets.bottom,
-                gap: 8,
-              }}
+              style={[
+                styles.bottomSheetContent,
+                { paddingBottom: insets.bottom },
+              ]}
             >
               <HeadingOptions editor={editor} editorState={editorState} />
               <StylingOptions editor={editor} editorState={editorState} />
@@ -1037,6 +923,9 @@ const ArticleEditorModal = () => {
 export default ArticleEditorModal;
 
 const styles = StyleSheet.create({
+  flex1: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     padding: 16,
@@ -1083,9 +972,65 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
   },
-  keyboardAvoidingView: {
-    position: 'absolute',
-    bottom: 0,
+  headingOptionsContainer: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     width: '100%',
+  },
+  headingOptionWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 44,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderCurve: 'continuous',
+    borderRadius: 8,
+  },
+  headingText: {
+    fontSize: 22,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: 'white',
+  },
+  subheadingText: {
+    fontSize: 20,
+    fontWeight: '500',
+    textAlign: 'center',
+    color: 'white',
+  },
+  bodyText: {
+    fontSize: 17,
+    textAlign: 'center',
+    color: 'white',
+  },
+  monoText: {
+    fontSize: 14,
+    textAlign: 'center',
+    color: 'white',
+  },
+  stylingOptionsOuterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  stylingOptionsContainer: { flexDirection: 'row', gap: 8 },
+  stylingOptionsWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 12,
+    borderCurve: 'continuous',
+    borderRadius: 8,
+  },
+  bottomSheetContent: {
+    alignItems: 'center',
+    flex: 1,
+    paddingHorizontal: 24,
+    gap: 8,
+  },
+  editorUnderlay: {
+    flex: 1,
+    backgroundColor: 'black',
   },
 });
