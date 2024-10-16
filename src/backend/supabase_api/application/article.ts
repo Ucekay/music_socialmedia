@@ -1,7 +1,7 @@
 import { BadRequestError, GetArticleError, InternalError } from "../../schema/error";
 import { type ArticleInteg, ArticleAdditionalData, type CUArticleDataParams } from "../../schema/supabase_api";
+import { ArticleRepository } from "../dao/article";
 import { checkAuth } from "../dbdriver/checkAuth";
-import { ArticleRepsitory } from "../dao/article";
 
 export interface IArticleApplication {
   createArticle(articleData: CUArticleDataParams, userId: string): Promise<boolean | string>;
@@ -18,8 +18,8 @@ export interface IArticleApplication {
 
 //アプリケーション層classにすることで保守性の向上を図る
 export class ArticleApplication implements IArticleApplication {
-  private articleDao: ArticleRepsitory;
-  constructor(articleRepository: ArticleRepsitory) {
+  private articleDao: ArticleRepository;
+  constructor(articleRepository: ArticleRepository) {
     this.articleDao = articleRepository;
   }
 
@@ -138,60 +138,31 @@ export class ArticleApplication implements IArticleApplication {
     try {
     if (prevcursor == null) {
       const result = await this.articleDao.getInitialData();
-      if (result.posts == null) {
+      if (result.articles == null) {
         throw GetArticleError;
       }
-        metadata = result.posts;
-        cursor = metadata.length > 0 ? metadata[metadata.length - 1].created_at : null;
-        latestcursor = metadata.length > 0 ? metadata[0].created_at : null;
-    } else if (latest == false) {
+        metadata = result.articles;
+        cursor = metadata.length > 0 ? metadata[metadata.length - 1].article.createdAt : null;
+        latestcursor = metadata.length > 0 ? metadata[0].article.createdAt : null;
+    } else if (latest === false) {
         const result = await this.articleDao.getOlderData(prevcursor);
-        metadata = result.posts;
+        metadata = result.articles;
         cursor = metadata.length > 0
-        ? metadata[metadata.length - 1].created_at
+        ? metadata[metadata.length - 1].article.createdAt
         : prevcursor;
         if (result.err != null) {
         throw result.err;
         }
     } else {
         const result = await this.articleDao.getNewerData(prevcursor);
-        metadata = result.posts;
-        latestcursor = metadata.length > 0 ? metadata[0].created_at : null;
+        metadata = result.articles;
+        latestcursor = metadata.length > 0 ? metadata[0].article.createdAt : null;
     }
+      return { articlemetaData: metadata, cursor: cursor, latestcursor: latestcursor };
     } catch (error) {
       throw GetArticleError;
     }
 
-  try {
-    const articlemetaData: ArticleInteg[] = await Promise.all(
-      metadata.map(async (Data) => {
-        const data = await this.articleDao.getUserProfile(Data.user_id);
-
-        return {
-          article: {
-            ArticleID: Data.article_id,
-            Title: Data.title,
-            ThumbnailUrl: Data.thumbnail_url,
-            userID: data.ProfileID,
-            Info1: Data.info_1,
-            Info2: Data.info_2,
-            Type: Data.type,
-            createdAt: Data.created_at,
-          },
-          user: {
-            userId: data.ProfileID,
-            userName: data.UserName,
-            userAvatarUrl: data.IconImageUrl,
-          }
-        };
-      }),
-    );
-
-    return { articlemetaData, cursor, latestcursor };
-  } catch (error) {
-    console.error(error);
-    return { articlemetaData: [], cursor, latestcursor };
-  }
     };
     
     async getArticle(articleId: number, type: string): Promise<{ content: ArticleAdditionalData, likeStatus: boolean }> {

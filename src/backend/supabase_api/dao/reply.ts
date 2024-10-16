@@ -1,4 +1,4 @@
-import type { Database } from "../../schema/supabasetypes"
+import type { Database } from "../../schema/schema"
 
 export type Reply = Database['public']['Tables']['reply']['Row'];
 

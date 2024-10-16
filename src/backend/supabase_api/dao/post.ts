@@ -4,6 +4,7 @@ export type Post = Database['public']['Tables']['post']['Row'];
 
 export type CreatePostParams = Omit<Post, 'entry_id' | 'likes' | 'view' | 'created_at'>;
 
+//いいね情報の取得に関しては検討中
 export interface PostRepository {
   createPost(createData: CreatePostParams): Promise<number>;
   deletePost(postId: number, userId: string): Promise<boolean>;
@@ -11,7 +12,10 @@ export interface PostRepository {
   getInitialPosts(): Promise<{ posts: Post[] }>;
   getOlderPosts(cursor: string): Promise<{ posts: Post[] | null }>;
   getNewerPosts(latestcursor: string): Promise<{ posts: Post[] | null }>;
-  
+  getInitialPostsFollowing(userId: string): Promise<{ posts: Post[] }>;
+  getOlderPostsFollowing(userId: string, cursor: string): Promise<{ posts: Post[] | null }>;
+  getNewerPostsFollowing(userId: string, latestcursor: string): Promise<{ posts: Post[] | null }>;
+
   getPostLikes(entryId: number, userId: string): Promise<boolean>;
 }
 
@@ -122,13 +126,8 @@ export class PostDao implements PostRepository {
     cursor: string
   ): Promise<{ posts: Post[] | null }> {
     try {
-      const LIMIT = 10;
-      const { data: posts, error } = await this.db
-        .from(this.tableName)
-        .select('*')
-        .order('created_at', { ascending: false })
-        .lt('created_at', cursor)
-        .limit(LIMIT);
+      const { data: posts, error } = await this.db.
+        rpc('fetch_posts_general_older', { cursor: cursor});
 
       if (error) {
         console.error('Error fetching more posts:', error);
