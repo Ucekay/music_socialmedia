@@ -6,6 +6,7 @@ import { EditorContent } from '@tiptap/react';
 import {
   CodeBlockBridge,
   HorizontalRuleBridge,
+  NodeHighlightBridge,
   SubscriptBridge,
   SuperscriptBridge,
   YouTubeBridge,
@@ -18,6 +19,7 @@ export const AdvancedEditor = () => {
   const editor = useTenTap({
     bridges: [
       CodeBlockBridge,
+      NodeHighlightBridge,
       HorizontalRuleBridge,
       SubscriptBridge,
       SuperscriptBridge,
@@ -26,9 +28,21 @@ export const AdvancedEditor = () => {
     ],
   });
   const isFocused = editor?.isFocused;
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  const state = editor?.state;
+
   useEffect(() => {
     editor?.commands.scrollIntoView();
+    if (isFocused) {
+      editor?.commands.unsetNodeHighlight();
+    } else {
+      editor?.commands.setNodeHighlight();
+    }
   }, [editor, isFocused]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (isFocused) editor?.commands.unsetNodeHighlight();
+  }, [editor, isFocused, state]);
+
   return <EditorContent editor={editor} />;
 };

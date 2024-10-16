@@ -15,14 +15,9 @@ import {
 } from 'react-native';
 
 import {
-  type BridgeState,
-  type ColorKeyboardTheme,
   CoreBridge,
-  type EditorBridge,
-  type EditorTheme,
   RichText,
   TenTapStartKit,
-  type ToolbarTheme,
   useEditorBridge,
   useEditorContent,
 } from '@10play/tentap-editor';
@@ -85,11 +80,19 @@ import { useTheme } from '../contexts/ColorThemeContext';
 import {
   CodeBlockBridge,
   HorizontalRuleBridge,
+  NodeHighlightBridge,
   SubscriptBridge,
   SuperscriptBridge,
   YouTubeBridge,
 } from '../rich-text-bridges';
 
+import type {
+  BridgeState,
+  ColorKeyboardTheme,
+  EditorBridge,
+  EditorTheme,
+  ToolbarTheme,
+} from '@10play/tentap-editor';
 import type { Level } from '@tiptap/extension-heading';
 import type { ArgsToolbarCB } from '../components/RichText/Toolbar/actions';
 
@@ -264,6 +267,7 @@ const HeadingOptions = ({
           alignItems: 'center',
           backgroundColor:
             headingLevel === 2 ? Colors.dark.tint : 'transparent',
+          height: 44,
           paddingHorizontal: 12,
           paddingVertical: 8,
           borderRadius: 8,
@@ -287,7 +291,7 @@ const HeadingOptions = ({
           editor.toggleHeading(3);
         }}
         style={{
-          height: '100%',
+          height: 44,
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor:
@@ -316,7 +320,7 @@ const HeadingOptions = ({
           deactivateCodeBlock();
         }}
         style={{
-          height: '100%',
+          height: 44,
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor:
@@ -350,7 +354,7 @@ const HeadingOptions = ({
           }
         }}
         style={{
-          height: '100%',
+          height: 44,
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: isCodeBlockActive ? Colors.dark.tint : 'transparent',
@@ -706,6 +710,7 @@ const ArticleEditorModal = () => {
     avoidIosKeyboard: true,
     bridgeExtensions: [
       CodeBlockBridge,
+      NodeHighlightBridge,
       HorizontalRuleBridge,
       SubscriptBridge,
       SuperscriptBridge,
@@ -743,6 +748,11 @@ const ArticleEditorModal = () => {
         .tiptap hr.ProseMirror-selectednode {
           border-top: 1px solid ${colors.tint};
         }
+        .has-focus {
+          background-color: ${colors.editorHighlight};
+          box-shadow: 0 0 0 4px ${colors.editorHighlight};
+          border-radius: 4px;
+        }
           ${editorCss}
         `,
     );
@@ -769,6 +779,11 @@ const ArticleEditorModal = () => {
 
         .tiptap hr.ProseMirror-selectednode {
           border-top: 1px solid ${colors.tint};
+        }
+        .has-focus {
+          background-color: ${colors.editorHighlight};
+          box-shadow: 0 0 0 4px ${colors.editorHighlight};
+          border-radius: 4px;
         }
           ${editorCss}
           `,
@@ -928,6 +943,12 @@ const ArticleEditorModal = () => {
     };
   });
 
+  const animatedToolbarStyle = useAnimatedStyle(() => {
+    return {
+      height: 44 * progress.value,
+    };
+  });
+
   return (
     <BgView style={{ flex: 1 }}>
       <Stack.Screen
@@ -962,43 +983,49 @@ const ArticleEditorModal = () => {
                   style={styles.editor}
                 />
               </Animated.View>
-              <BottomSheet
-                ref={bottomSheetRef}
-                animatedIndex={animatedBottomSheetIndex}
-                animatedPosition={animatedBottomSheetPosition}
-                index={-1}
-                snapPoints={snapPoints}
-                enablePanDownToClose
-                enableDynamicSizing
-                backgroundComponent={() => (
-                  <View
-                    style={{
-                      flex: 1,
-                      backgroundColor: 'black',
-                    }}
-                  />
-                )}
-                onClose={handleBottomSheetClose}
-              >
-                <BottomSheetView
-                  style={{
-                    flex: 1,
-                    paddingHorizontal: 24,
-                    alignItems: 'center',
-                    paddingBottom: insets.bottom,
-                    gap: 8,
-                  }}
-                >
-                  <HeadingOptions editor={editor} editorState={editorState} />
-                  <StylingOptions editor={editor} editorState={editorState} />
-                  <BlockOptions editor={editor} editorState={editorState} />
-                </BottomSheetView>
-              </BottomSheet>
             </View>
-            <KeyboardStickyView offset={{ closed: 44, opened: 0 }}>
-              <EditorToolbar editor={editor} items={toolbarItems} />
+            <KeyboardStickyView offset={{ closed: 0, opened: 0 }}>
+              <Animated.View style={animatedToolbarStyle}>
+                <EditorToolbar
+                  editor={editor}
+                  items={toolbarItems}
+                  hidden={false}
+                />
+              </Animated.View>
             </KeyboardStickyView>
           </View>
+          <BottomSheet
+            ref={bottomSheetRef}
+            animatedIndex={animatedBottomSheetIndex}
+            animatedPosition={animatedBottomSheetPosition}
+            index={-1}
+            snapPoints={snapPoints}
+            enablePanDownToClose
+            enableDynamicSizing
+            backgroundComponent={() => (
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: 'black',
+                }}
+              />
+            )}
+            onClose={handleBottomSheetClose}
+          >
+            <BottomSheetView
+              style={{
+                flex: 1,
+                paddingHorizontal: 24,
+                alignItems: 'center',
+                paddingBottom: insets.bottom,
+                gap: 8,
+              }}
+            >
+              <HeadingOptions editor={editor} editorState={editorState} />
+              <StylingOptions editor={editor} editorState={editorState} />
+              <BlockOptions editor={editor} editorState={editorState} />
+            </BottomSheetView>
+          </BottomSheet>
         </View>
       </PagerView>
       {/* Use a light status bar on iOS to account for the black space above the modal */}
