@@ -101,6 +101,7 @@
     "patch-package": "^8.0.0",
     "react-native-ide": "^0.0.2",
     "react-test-renderer": "18.2.0",
+    "supabase": "^1.200.3",
     "typescript": "~5.3.3"
   },
   "expo": {

@@ -95,7 +95,6 @@ export class PostApplication implements IPostApplication {
         try {
             const posts: PostInteg[] = await Promise.all(
             result.posts.map(async (post) => {
-                const data = await this.userDao.getUserProfile(post.user_id);
                 const like = await this.postDao.getPostLikes(post.entry_id, post.user_id);
 
                 return {
@@ -109,7 +108,7 @@ export class PostApplication implements IPostApplication {
                         view: post.view,
                     },
                     user: {
-                        userId: data.ProfileID,
+                        userId: post.user_id,
                         userName: data.UserName,
                         userAvatarUrl: data.IconImageUrl,
                     },

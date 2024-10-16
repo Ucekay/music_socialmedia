@@ -15,24 +15,17 @@ export type CUArticleDataParams = {
     playlist_id?: number | null;
 }
 
-export type ArticleMetaData = {
-    thumbnail_url: string;
-    type: string;
-    title: string;
-    info_1: string | null;
-    info_2: string | null;
-    user_id?: string;
-}
-
 export type Article = {
-  ArticleID: number;
-  Title: string;
-  ThumbnailUrl: string;
-  userID: string;
-  Info1: string | null;
-  Info2: string | null;
-  Type: string;
-  createdAt: string;
+    articleID: number;
+    title: string;
+    thumbnailUrl: string;
+    userID: string;
+    info1: string | null;
+    info2: string | null;
+    type: string;
+    createdAt: string;
+    likes: number;
+    view: number;
 };
 
 export type ArticleInteg = {
@@ -52,6 +45,7 @@ export type CProfileDataParams = {
     user_name: string;
     profile_id: string;
     bio: string;
+    is_private: boolean;
 }
 
 export type UProfileDataParams = {
@@ -59,30 +53,19 @@ export type UProfileDataParams = {
     user_name?: string;
     profile_id?: string;
     bio?: string;
+    is_private?: boolean;
     user_id: string;
 }
 
 export type Profile = {
     bio: string;
-    createdAt: string;
     follow: number;
     followed: number;
     iconImageUrl: string;
     profileId: string;
     userId: string;
     userName: string;
-    favArtist: { artistId: string; artistName: string }[];
-}
-
-export type GetProfileRes = {
-    bio: string;
-    createdAt: string;
-    follow: number;
-    followed: number;
-    iconImageUrl: string;
-    profileId: string;
-    userId: string;
-    userName: string;
+    favArtists: { artistId: string; artistName: string }[];
 }
 
 export type Post = {

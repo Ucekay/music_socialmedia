@@ -1,7 +1,7 @@
 import { GetArticleError } from "../../schema/error";
 import { Profile, Article, Post, CProfileDataParams, UProfileDataParams } from "../../schema/supabase_api";
-import { ProfileRepositoryKari } from "../dao/user";
-import { getUserProfileforPosts } from "../dbdriver/profile";
+import { ArtistRepository } from "../dao/artist";
+import { UserRepository } from "../dao/user";
 
 export interface IProfileApplication {
     createProfile(profileData: CProfileDataParams): Promise<string>;
@@ -19,14 +19,19 @@ export interface IProfileApplication {
 }
 
 export class ProfileApplication implements IProfileApplication {
-    private profileDao: ProfileRepositoryKari;
-    constructor(profileRepository: ProfileRepositoryKari) {
+    private profileDao: UserRepository;
+    constructor(profileRepository: UserRepository) {
         this.profileDao = profileRepository;
     }
 
     async createProfile(profileData: CProfileDataParams): Promise<string> {
         try {
-            const result = await this.profileDao.createProfileData(profileData);
+            const exist = await this.profileDao.existProfileId(profileData.profile_id);
+            if (exist) {
+                throw new Error('profile_id is invalid');
+            }
+
+            const result = await this.profileDao.createUserProfile(profileData);
             return result;
         } catch (error) {
             throw error;
@@ -42,7 +47,7 @@ export class ProfileApplication implements IProfileApplication {
         }
 
         try {
-            const result = await this.profileDao.updateProfileData(profileData);
+            const result = await this.profileDao.updateUserProfile(profileData);
             return result;
         } catch (error) {
             throw error;
@@ -51,8 +56,8 @@ export class ProfileApplication implements IProfileApplication {
 
     async getProfile(userId: string): Promise<Profile> {
         try {
-            const profileWithoutFavArtists = await this.profileDao.getProfileData(userId);
-            const favoriteArtists = await this.profileDao.getFavoriteArtistsByUserId(userId);
+            const profileWithoutFavArtists = await this.profileDao.getUserProfile(userId);
+            const favoriteArtists = await this.profileDao.getFavArtistsByUserId(userId);
             const result = { ...profileWithoutFavArtists, favArtist: favoriteArtists.artists }
 
             return result;
@@ -62,7 +67,7 @@ export class ProfileApplication implements IProfileApplication {
     }
 
     async registerFavoriteArtist(userId: string, artistId: string, artistName: string): Promise<boolean> {
-        const favArtists = await this.profileDao.getFavoriteArtistsByUserId(userId);
+        const favArtists = await this.profileDao.getFavArtistsByUserId(userId);
         const count = favArtists.artists.length;
 
         if (count > 10) {
@@ -74,7 +79,7 @@ export class ProfileApplication implements IProfileApplication {
         }
 
         try {
-            const result = await this.profileDao.registerFavoriteArtist(userId, artistId, artistName);
+            const result = await this.profileDao.registerFavArtist(userId, artistId, artistName);
             return result;
         } catch (error) {
             throw error;

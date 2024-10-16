@@ -1,18 +1,19 @@
+import { supabase } from "../../lib/supabase";
+import { ArticleInteg } from "../../schema/supabase_api";
+import { CreateArticleParams, Article, GetArticleRes } from "../dbdriver/Article";
 import { GetGeneralDetailRes, CreateGeneralParams, UpdateGeneralParams } from "../dbdriver/General";
-import { CreateReviewParams, GetReviewDetailRes, UpdateReviewParams } from "../dbdriver/Review";
 import { CreateLiveReportParams, GetLiveReportDetailRes, UpdateLiveReportParams } from "../dbdriver/LiveReport";
 import { CreatePlaylistArticleParams, GetPlaylistArticleDetailRes, UpdatePlaylistArticleParams } from "../dbdriver/PlaylistArticle";
-import { CreateArticleParams, Article, GetArticleRes } from "../dbdriver/Article";
-import { supabase } from "../../lib/supabase";
+import { CreateReviewParams, GetReviewDetailRes, UpdateReviewParams } from "../dbdriver/Review";
 
 
-export interface ArticleRepsitory {
+export interface ArticleRepository {
 	createArticleData(articleData: CreateArticleParams): Promise<number>;
 	deleteArticleData(articleId: number, userId: string): Promise<boolean>;
 	updateArticleData(articleId: number, updateData: Partial<CreateArticleParams>): Promise<boolean>;
-	getInitialData(): Promise<{ posts: Article[] | null; }>
-	getOlderData(cursor: string): Promise<{ posts: Article[], err: Error | null }>
-	getNewerData(latestCursor: string): Promise<{ posts: Article[], err: Error | null }>
+	getInitialData(): Promise<{ articles: ArticleInteg[] | null; }>
+	getOlderData(cursor: string): Promise<{ articles: ArticleInteg[], err: Error | null }>
+	getNewerData(latestCursor: string): Promise<{ articles: ArticleInteg[], err: Error | null }>
 	
 	createGeneralData(generalData: CreateGeneralParams ): Promise<boolean>;
 	deleteGeneralData(articleId: number, userId: string): Promise<boolean>;
@@ -35,15 +36,9 @@ export interface ArticleRepsitory {
 	getPlaylistArticleData(articleId: number): Promise<GetPlaylistArticleDetailRes | null>;
 
 	getLikeStatus(articleId: number, userId: string): Promise<boolean>
-	
-	getUserProfile(userId: string): Promise<{
-	IconImageUrl: string;
-	ProfileID: string;
-	UserName: string;
-	}>
 }
 
-export class ArticleDao implements ArticleRepsitory {
+export class ArticleDao implements ArticleRepository {
 	private readonly tableNameArticle: string = 'article';
 	private readonly tableNameArticleLikes: string = 'article_likes';
 	private readonly tableNameGeneral: string = 'general';
@@ -122,63 +117,125 @@ export class ArticleDao implements ArticleRepsitory {
 
 	// データ取得関数 (最初)
 	public async getInitialData(): Promise<{
-		posts: GetArticleRes[];
+		articles: ArticleInteg[];
 	}> {
 		try {
-			const LIMIT = 10;
-			const { data: posts, error } = await supabase
-				.from(this.tableNameArticle)
-				.select('*')
-				.order('created_at', { ascending: false })
-				.limit(LIMIT);
+			const { data: rowArticles, error } = await supabase
+				.rpc('fetch_articles_general_init', {})
 
 			if (error) {
 				throw new Error('データの取得エラー: ' + error.message);
 			}
 
-			return { posts };
+			const articles: ArticleInteg[] = rowArticles.map((row: any) => {
+				return {
+					article: {
+						articleId: row.mlog_id,
+						title: row.title,
+						thumbnailUrl: row.thumbnail_url,
+						userID: row.user_id,
+						info1: row.info_1,
+						info2: row.info_2,
+						type: row.type,
+						createdAt: row.created_at,
+						likes: row.likes,
+						view: row.view,
+					},
+					user: {
+						IconImageUrl: row.icon_image_url,
+						ProfileID: row.profile_id,
+						UserName: row.user_name,
+					},
+				};
+			});
+			
+			return { articles: articles };
 		} catch (error) {
 			console.error('データの取得中にエラーが発生しました:', error);
 			throw error;
 		}
 	}
 
-	public async getOlderData(
-		cursor: string
-	): Promise<{ posts: GetArticleRes[], err: Error | null }> {
-		const LIMIT = 10;
-		const { data: nextArticles, error } = await supabase
-			.from(this.tableNameArticle)
-			.select('*')
-			.order('created_at', { ascending: false })
-			.lt('created_at', cursor)
-			.limit(LIMIT);
+	public async getOlderData(cursor: string): Promise<{
+		articles: ArticleInteg[];
+		err: Error | null;
+	}> {
+		try {
+			const { data: rowArticles, error } = await supabase
+				.rpc('fetch_articles_general_older', {cursor: cursor})
 
-		if (error) {
-			console.error('Error fetching more posts:', error);
-			return { posts: [], err: Error(error.message) };
+			if (error) {
+				throw new Error('データの取得エラー: ' + error.message);
+			}
+
+			const articles: ArticleInteg[] = rowArticles.map((row: any) => {
+				return {
+					article: {
+						articleId: row.mlog_id,
+						title: row.title,
+						thumbnailUrl: row.thumbnail_url,
+						userID: row.user_id,
+						info1: row.info_1,
+						info2: row.info_2,
+						type: row.type,
+						createdAt: row.created_at,
+						likes: row.likes,
+						view: row.view,
+					},
+					user: {
+						IconImageUrl: row.icon_image_url,
+						ProfileID: row.profile_id,
+						UserName: row.user_name,
+					},
+				};
+			});
+			
+			return { articles: articles, err: null};
+		} catch (error) {
+			console.error('データの取得中にエラーが発生しました:', error);
+			throw error;
 		}
-		
-		return { posts: nextArticles, err: null };
 	}
 	
-	public async getNewerData(
-		latestCursor: string
-	): Promise<{ posts: GetArticleRes[], err: Error | null }> {
-		const LIMIT = 10;
-		const { data: nextArticles, error } = await supabase
-			.from(this.tableNameArticle)
-			.select('*')
-			.order('created_at', { ascending: false })
-			.gt('created_at', latestCursor)
-			.limit(LIMIT);
+	public async getNewerData(latestcursor: string): Promise<{
+		articles: ArticleInteg[];
+		err: Error | null;
+	}> {
+		try {
+			const { data: rowArticles, error } = await supabase
+				.rpc('fetch_articles_general_newer', {cursor: latestcursor})
 
-		if (error) {
-			console.error('Error fetching more posts:', error);
-			return { posts: [], err: Error(error.message) };
+			if (error) {
+				throw new Error('データの取得エラー: ' + error.message);
+			}
+
+			const articles: ArticleInteg[] = rowArticles.map((row: any) => {
+				return {
+					article: {
+						articleId: row.mlog_id,
+						title: row.title,
+						thumbnailUrl: row.thumbnail_url,
+						userID: row.user_id,
+						info1: row.info_1,
+						info2: row.info_2,
+						type: row.type,
+						createdAt: row.created_at,
+						likes: row.likes,
+						view: row.view,
+					},
+					user: {
+						IconImageUrl: row.icon_image_url,
+						ProfileID: row.profile_id,
+						UserName: row.user_name,
+					},
+				};
+			});
+			
+			return { articles: articles, err: null};
+		} catch (error) {
+			console.error('データの取得中にエラーが発生しました:', error);
+			throw error;
 		}
-
-		return { posts: nextArticles, err: null };
 	}
 
 	// general
@@ -582,30 +639,6 @@ export class ArticleDao implements ArticleRepsitory {
 			console.error('データの取得中にエラーが発生しました:', error);
 			throw error;
 		}
-	}
-	
-	public async getUserProfile(userId: string): Promise<{
-		IconImageUrl: string;
-		ProfileID: string;
-		UserName: string;
-	}> {
-		try {
-			const { data, error } = await supabase // UserIDによる絞り込みを削除
-				.from('users') // テーブル名を修正
-				.select('icon_image_url, user_name, profile_id')
-				.eq('user_id', userId)
-				.single();
-
-			if (error) {
-				throw new Error('データの取得エラー: ' + error.message);
-			}
-
-			return { IconImageUrl: data.icon_image_url, ProfileID: data.profile_id, UserName: data.user_name };
-		} catch (error) {
-			console.error('データの取得中にエラーが発生しました:', error);
-			throw error;
-		}
-
 	}
 
 }
