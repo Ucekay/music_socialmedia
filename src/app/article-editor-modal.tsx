@@ -31,12 +31,15 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { StatusBar } from 'expo-status-bar';
 import {
   Add01Icon,
+  Album02Icon,
   ArrowDown01Icon,
   ArrowTurnBackwardIcon,
   ArrowTurnForwardIcon,
   LeftToRightBlockQuoteIcon,
   LeftToRightListBulletIcon,
   LeftToRightListNumberIcon,
+  Link04Icon,
+  PlayIcon,
   SolidLine01Icon,
   TextBoldIcon,
   TextFontIcon,
@@ -47,6 +50,8 @@ import {
   TextSubscriptIcon,
   TextSuperscriptIcon,
   TextUnderlineIcon,
+  Vynil03Icon,
+  YoutubeIcon,
 } from 'hugeicons-react-native';
 import {
   KeyboardStickyView,
@@ -293,7 +298,7 @@ const HeadingOptions = ({
           },
         ]}
       >
-        <RNText style={styles.subheadingText}>小見出し</RNText>
+        <RNText style={styles.textSubhead}>小見出し</RNText>
       </Pressable>
       <Pressable
         onPress={() => handleSelectBody()}
@@ -307,7 +312,7 @@ const HeadingOptions = ({
           },
         ]}
       >
-        <RNText style={styles.bodyText}>本文</RNText>
+        <RNText style={styles.textBody}>本文</RNText>
       </Pressable>
       <Pressable
         onPress={() => handleSelectMono()}
@@ -557,6 +562,52 @@ const BlockOptions = ({
   );
 };
 
+const PlayerObject = ({ color }: { color: string }) => {
+  const width = 80;
+  return (
+    <View style={[styles.playerContainer, { backgroundColor: color }]}>
+      <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
+        <View
+          style={{
+            height: 12,
+            width: 12,
+            backgroundColor: Colors.dark.border,
+            borderRadius: 4,
+          }}
+        />
+        <View
+          style={{
+            paddingHorizontal: 2,
+            height: '100%',
+            justifyContent: 'space-around',
+          }}
+        >
+          <View
+            style={{
+              height: 2,
+              width: (width * 1) / 4,
+              backgroundColor: Colors.dark.border,
+              borderRadius: 2,
+              borderCurve: 'continuous',
+            }}
+          />
+          <View
+            style={{
+              height: 2,
+              width: (width * 1) / 3,
+              backgroundColor: Colors.dark.border,
+              borderRadius: 2,
+              borderCurve: 'continuous',
+            }}
+          />
+          <View />
+        </View>
+      </View>
+      <PlayIcon size={8} color={Colors.dark.border} fill={Colors.dark.border} />
+    </View>
+  );
+};
+
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
@@ -565,9 +616,13 @@ const ArticleEditorModal = () => {
   const { height: keyboardHeight, progress } = useReanimatedKeyboardAnimation();
   const { colors, theme } = useTheme();
   const [isFormatting, setIsFormatting] = useState(false);
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const animatedBottomSheetPosition = useSharedValue(0);
-  const animatedBottomSheetIndex = useSharedValue(-1);
+  const [isAddingContents, setIsAddingContents] = useState(false);
+  const formattingBottomSheetRef = useRef<BottomSheet>(null);
+  const contentsBottomSheetRef = useRef<BottomSheet>(null);
+  const animatedBottomFormattingSheetPosition = useSharedValue(0);
+  const animatedFormattingBottomSheetIndex = useSharedValue(-1);
+  const animatedContentsBottomSheetPosition = useSharedValue(0);
+  const animatedContentsBottomSheetIndex = useSharedValue(-1);
 
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -689,14 +744,17 @@ const ArticleEditorModal = () => {
 
   useEffect(() => {
     if (editorState.isFocused) {
-      bottomSheetRef.current?.close();
+      formattingBottomSheetRef.current?.close();
+      contentsBottomSheetRef.current?.close();
+      setIsFormatting(false);
+      setIsAddingContents(false);
     }
   }, [editorState.isFocused]);
 
   const toolbarItems: ToolbarItem[] = [
     {
       onPress: () => () => {
-        bottomSheetRef.current?.snapToIndex(0);
+        formattingBottomSheetRef.current?.snapToIndex(0);
         editor.blur();
         setIsFormatting(true);
       },
@@ -716,7 +774,9 @@ const ArticleEditorModal = () => {
     },
     {
       onPress: () => () => {
+        contentsBottomSheetRef.current?.snapToIndex(0);
         editor.blur();
+        setIsAddingContents(true);
       },
       active: () => false,
       disabled: () => false,
@@ -807,32 +867,59 @@ const ArticleEditorModal = () => {
     );
   };
   const snapPoints: number[] = [];
-  const handleBottomSheetClose = () => {
+  const handleFormattingBottomSheetClose = () => {
     if (isFormatting) {
       editor.focus();
     }
     setIsFormatting(false);
   };
 
+  const handleContentsBottomSheetClose = () => {
+    if (isAddingContents) {
+      editor.focus();
+    }
+  };
+
+  const editorMaxHeight = height - headerHeight - insets.top;
+
   const animatedEditorStyle = useAnimatedStyle(() => {
     if (
-      -keyboardHeight.value >
-      height - headerHeight - insets.top - animatedBottomSheetPosition.value
+      Math.max(
+        -keyboardHeight.value,
+        editorMaxHeight - animatedBottomFormattingSheetPosition.value,
+        editorMaxHeight - animatedContentsBottomSheetPosition.value,
+      ) === -keyboardHeight.value
     ) {
       return {
         height:
-          height -
-          (headerHeight + insets.top + 10) +
-          keyboardHeight.value -
-          44 * progress.value,
+          editorMaxHeight - 10 + keyboardHeight.value - 44 * progress.value,
         borderBottomLeftRadius: 16 * progress.value,
         borderBottomRightRadius: 16 * progress.value,
       };
     }
+    if (
+      Math.max(
+        -keyboardHeight.value,
+        editorMaxHeight - animatedBottomFormattingSheetPosition.value,
+        editorMaxHeight - animatedContentsBottomSheetPosition.value,
+      ) ===
+      editorMaxHeight - animatedBottomFormattingSheetPosition.value
+    ) {
+      return {
+        height: animatedBottomFormattingSheetPosition.value,
+        borderBottomLeftRadius:
+          11 * (animatedFormattingBottomSheetIndex.value + 1.0) + 1,
+        borderBottomRightRadius:
+          11 * (animatedFormattingBottomSheetIndex.value + 1.0) + 1,
+      };
+    }
+
     return {
-      height: animatedBottomSheetPosition.value,
-      borderBottomLeftRadius: 11 * (animatedBottomSheetIndex.value + 1.0) + 1,
-      borderBottomRightRadius: 11 * (animatedBottomSheetIndex.value + 1.0) + 1,
+      height: animatedContentsBottomSheetPosition.value,
+      borderBottomLeftRadius:
+        11 * (animatedContentsBottomSheetIndex.value + 1.0) + 1,
+      borderBottomRightRadius:
+        11 * (animatedContentsBottomSheetIndex.value + 1.0) + 1,
     };
   });
 
@@ -888,9 +975,9 @@ const ArticleEditorModal = () => {
             </KeyboardStickyView>
           </View>
           <BottomSheet
-            ref={bottomSheetRef}
-            animatedIndex={animatedBottomSheetIndex}
-            animatedPosition={animatedBottomSheetPosition}
+            ref={formattingBottomSheetRef}
+            animatedIndex={animatedFormattingBottomSheetIndex}
+            animatedPosition={animatedBottomFormattingSheetPosition}
             index={-1}
             snapPoints={snapPoints}
             enableDynamicSizing
@@ -899,7 +986,7 @@ const ArticleEditorModal = () => {
               backgroundColor: colors.secondaryBackground,
             }}
             backgroundComponent={() => <View style={styles.editorUnderlay} />}
-            onClose={handleBottomSheetClose}
+            onClose={handleFormattingBottomSheetClose}
           >
             <BottomSheetView
               style={[
@@ -910,6 +997,75 @@ const ArticleEditorModal = () => {
               <HeadingOptions editor={editor} editorState={editorState} />
               <StylingOptions editor={editor} editorState={editorState} />
               <BlockOptions editor={editor} editorState={editorState} />
+            </BottomSheetView>
+          </BottomSheet>
+          <BottomSheet
+            animatedIndex={animatedContentsBottomSheetIndex}
+            animatedPosition={animatedContentsBottomSheetPosition}
+            enableDynamicSizing
+            enablePanDownToClose
+            handleIndicatorStyle={{
+              backgroundColor: colors.secondaryBackground,
+            }}
+            backgroundComponent={() => <View style={styles.editorUnderlay} />}
+            index={-1}
+            onClose={handleContentsBottomSheetClose}
+            ref={contentsBottomSheetRef}
+          >
+            <BottomSheetView
+              style={[
+                styles.bottomSheetContent,
+                { paddingBottom: insets.bottom },
+              ]}
+            >
+              <View
+                style={{
+                  flex: 1,
+                  width: '100%',
+                  gap: 12,
+                }}
+              >
+                <View style={{ width: '100%', flexDirection: 'row', gap: 16 }}>
+                  <View
+                    style={[
+                      styles.contentsOptionWrapper,
+                      { backgroundColor: Color.dark.secondaryBackground },
+                    ]}
+                  >
+                    <Album02Icon size={24} color={'white'} />
+                    <RNText style={styles.textCallout}>ライブラリ</RNText>
+                  </View>
+                  <View
+                    style={[
+                      styles.contentsOptionWrapper,
+                      { backgroundColor: Color.dark.secondaryBackground },
+                    ]}
+                  >
+                    <Vynil03Icon size={24} color={'white'} />
+                    <RNText style={styles.textCallout}>アートワーク</RNText>
+                  </View>
+                </View>
+                <View style={{ flexDirection: 'row', gap: 16 }}>
+                  <View
+                    style={[
+                      styles.contentsOptionWrapper,
+                      { backgroundColor: Color.dark.secondaryBackground },
+                    ]}
+                  >
+                    <Link04Icon size={24} color={'white'} />
+                    <RNText style={styles.textCallout}>リンク</RNText>
+                  </View>
+                  <View
+                    style={[
+                      styles.contentsOptionWrapper,
+                      { backgroundColor: Color.dark.secondaryBackground },
+                    ]}
+                  >
+                    <YoutubeIcon size={24} color={'white'} />
+                    <RNText style={styles.textCallout}>YouTube</RNText>
+                  </View>
+                </View>
+              </View>
             </BottomSheetView>
           </BottomSheet>
         </View>
@@ -994,14 +1150,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
   },
-  subheadingText: {
+  textSubhead: {
     fontSize: 20,
     fontWeight: '500',
     textAlign: 'center',
     color: 'white',
   },
-  bodyText: {
+  textBody: {
     fontSize: 17,
+    textAlign: 'center',
+    color: 'white',
+  },
+  textCallout: {
+    fontSize: 16,
     textAlign: 'center',
     color: 'white',
   },
@@ -1032,5 +1193,31 @@ const styles = StyleSheet.create({
   editorUnderlay: {
     flex: 1,
     backgroundColor: 'black',
+  },
+  contentsOptionWrapper: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 12,
+    borderCurve: 'continuous',
+    borderRadius: 12,
+    gap: 8,
+  },
+  contentsOptionContainer: {
+    flex: 1,
+    gap: 8,
+  },
+  playerContainer: {
+    overflow: 'hidden',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 80,
+    height: 20,
+    padding: 4,
+    borderCurve: 'continuous',
+    borderRadius: 8,
+    gap: 4,
   },
 });

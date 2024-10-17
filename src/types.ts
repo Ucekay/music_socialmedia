@@ -114,6 +114,9 @@ export type ColorScheme = {
   buttonDisabledText: string;
   searchBar: string;
   editorHighlight: string;
+  playerObject1: string;
+  playerObject2: string;
+  playerObject3: string;
 };
 
 export type TodaySongDataType = {
