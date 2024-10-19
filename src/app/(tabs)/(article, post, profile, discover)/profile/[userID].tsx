@@ -1,5 +1,6 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import type React from 'react';
+import { useEffect, useState } from 'react';
 import {
   type Falsy,
   type RecursiveArray,
@@ -21,6 +22,7 @@ import {
 
 import postData from '@/src/assets/postData';
 import userArticleData from '@/src/assets/userArticleData';
+import { GetUserProfile } from '@/src/backend/supabase_api/handler/user';
 import ArticleCard from '@/src/components/ArticleCard';
 import PostCard from '@/src/components/PostCard';
 import BgView from '@/src/components/ThemedBgView';
@@ -28,12 +30,46 @@ import UserProfileTop from '@/src/components/UserProfileTop';
 import LoginUserProfileTop from '@/src/components/UserProfileTopOfLoginUser';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 
+import type { Profile as UserProfile } from '@/src/backend/supabase_api/model/user';
 import type { ArticleData } from '@/src/types';
 import type { AnimatedStyle } from 'react-native-reanimated';
 
 const Profile = () => {
   const { userID } = useLocalSearchParams();
   const { colors } = useTheme();
+
+  const [profile, setProfile] = useState<UserProfile>({
+    bio: '',
+    follow: 0,
+    followed: 0,
+    iconImageUrl: '',
+    profileId: '',
+    userId: '',
+    userName: '',
+    favArtists: [],
+  });
+
+  useEffect(() => {
+    const getUserProfile = async () => {
+      try {
+        if (typeof userID === 'string') {
+          if (userID){
+            const profileData = await GetUserProfile(userID);
+            console.log(profileData);
+            setProfile(profileData);
+          } 
+        } else {
+            const profileData = await GetUserProfile('123e4567-e89b-12d3-a456-426614174001');
+            console.log(profileData);
+            setProfile(profileData);
+          }
+        } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getUserProfile();
+  },[])
 
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
@@ -105,7 +141,7 @@ const Profile = () => {
       <Tabs.Container
         headerHeight={headerHeight}
         renderHeader={() =>
-          userID ? <UserProfileTop /> : <LoginUserProfileTop id={'@Taro1234'} />
+          userID ? <UserProfileTop {...profile} /> : <LoginUserProfileTop {...profile} />
         }
         renderTabBar={renderTabBar}
       >

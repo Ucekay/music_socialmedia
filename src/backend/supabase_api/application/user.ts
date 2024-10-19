@@ -1,7 +1,9 @@
+import { ar } from "date-fns/locale";
+
 import { GetArticleError } from "../../schema/error";
 import { Profile, Article, Post, CProfileDataParams, UProfileDataParams } from "../../schema/supabase_api";
-import { ArtistRepository } from "../dao/artist";
 import { UserRepository } from "../dao/user";
+import { ProfileMeta } from "../model/user";
 
 export interface IProfileApplication {
     createProfile(profileData: CProfileDataParams): Promise<string>;
@@ -16,6 +18,8 @@ export interface IProfileApplication {
         latestcursor: string | null;
     }>;
     existProfileId(profileId: string): Promise<boolean>;
+    getFollowersByUserId(userId: string): Promise<ProfileMeta[]>;
+    getFollowingsByUserId(userId: string): Promise<ProfileMeta[]>;
 }
 
 export class ProfileApplication implements IProfileApplication {
@@ -58,7 +62,8 @@ export class ProfileApplication implements IProfileApplication {
         try {
             const profileWithoutFavArtists = await this.profileDao.getUserProfile(userId);
             const favoriteArtists = await this.profileDao.getFavArtistsByUserId(userId);
-            const result = { ...profileWithoutFavArtists, favArtist: favoriteArtists.artists }
+            let result = { ...profileWithoutFavArtists }
+            result.favArtists = [...favoriteArtists];
 
             return result;
         } catch (error) {
@@ -162,6 +167,24 @@ export class ProfileApplication implements IProfileApplication {
         try {
             const result = await this.profileDao.existProfileId(profileId);
             return result;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getFollowersByUserId(userId: string): Promise<ProfileMeta[]> {
+        try {
+            const followers = await this.profileDao.getFollowersByUserId(userId);
+            return followers;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getFollowingsByUserId(userId: string): Promise<ProfileMeta[]> {
+        try {
+            const followings = await this.profileDao.getFollowingsByUserId(userId);
+            return followings;
         } catch (error) {
             throw error;
         }

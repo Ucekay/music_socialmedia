@@ -1,88 +1,189 @@
-import { useLocalSearchParams } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { Link, router } from 'expo-router';
+import {
+  Dimensions,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  View,
+  useColorScheme,
+} from 'react-native';
 
 import { Image } from 'expo-image';
 
-import userData from '../assets/userData';
+import { Profile } from '../backend/supabase_api/model/user';
+import Colors from '../constants/Colors';
 import { useTheme } from '../contexts/ColorThemeContext';
 
-import FollowButton from './FollowButton';
+import BgView from './ThemedBgView';
 import Text from './ThemedText';
 
-const UserProfileTop = () => {
+const { width } = Dimensions.get('window');
+
+const UserProfileTop = (profile: Profile) => {
+  const colorScheme = useColorScheme();
+
   const { colors } = useTheme();
 
-  // stateをuseLoaclSearchParamsで取得したuserIDで変更するとrenderが多数走るためエラーを引き起こす
-  const { userID } = useLocalSearchParams();
+  const textColor = colors.text;
+
+  const labelColor = colorScheme === 'light' ? 'gray' : '#F0F0F0';
 
   const themeTextColor = {
-    color: colors.text,
+    color: Colors[colorScheme ?? 'light'].text,
   };
 
-  const userInfo = userData.find((item) => item.userID === userID);
+  const backgroundColors = [
+    ['#F0F0F0', '#2E2E2E'],
+    ['#D3D3D3', '#444444'],
+    ['#FFE4B5', '#555555'],
+    ['#ADD8E6', '#3B3B3B'],
+    ['#FFF0F5', '#4A4A4A'],
+  ];
+
+  const TagColor =
+    colorScheme === 'light' ? backgroundColors[0][0] : backgroundColors[0][1];
+
+  const DATA = [
+    { id: '1', type: 'bio' },
+    { id: '2', type: 'tags' },
+  ];
+
+  const HandleFollowing = () => {
+    router.push({
+      pathname: `/friends/${profile.userId}`,
+      params: { initialTab: 'following' }
+  });
+  }
+
   const defaultImage = require('../assets/images/snsicon.png');
-  if (!userInfo) {
+  if (!profile) {
     return <Text>User not found</Text>;
   }
+
+  const renderItem = ({ item }: { item: { id: string; type: string } }) => {
+    if (item.type === 'bio') {
+      return (
+        <View
+          style={[
+            styles.swipeContainer,
+            { flexWrap: 'wrap', flexDirection: 'row' },
+          ]}
+        >
+          <Text style={[styles.userBio, { lineHeight: 22 }]} numberOfLines={4}>
+            {profile.bio}
+          </Text>
+        </View>
+      );
+    }
+    if (item.type === 'tags') {
+      return (
+        <View
+          style={[
+            styles.swipeContainer,
+            { flexWrap: 'wrap', flexDirection: 'row' },
+          ]}
+        >
+          {profile.favArtists?.map((item, index) => (
+            <View
+              style={[
+                styles.item,
+                { backgroundColor: TagColor, marginBottom: 8 },
+              ]}
+              key={index}
+            >
+              <Text style={{ fontWeight: '500', fontSize: 12 }}>{item.artistName}</Text>
+            </View>
+          ))}
+        </View>
+      );
+    }
+    return null;
+  };
+
   return (
-    <View style={styles.container}>
+    <BgView style={styles.container}>
       <View style={styles.profile}>
         <View style={styles.profileHeader}>
           <Image
-            source={userInfo.userAvatarUrl || defaultImage}
+            source={profile.iconImageUrl || defaultImage}
             style={styles.avatar}
           />
-          <View>
+          <View style={{ gap: 8 }}>
+            <View
+              style={{ alignItems: 'baseline', flexDirection: 'row', gap: 16 }}
+            >
+              <Text style={[styles.userName, themeTextColor]}>
+                {profile.userName}
+              </Text>
+              <Text>{profile.profileId}</Text>
+            </View>
             <View style={styles.socialStateContainer}>
-              <View style={styles.socialState}>
-                <Text style={[styles.socialStateText, themeTextColor]}>
-                  {userInfo.followers}
-                </Text>
-                <Text style={[styles.socialStateLabel, themeTextColor]}>
-                  Followers
-                </Text>
+              <Link
+                href={{
+                  pathname: '/(tabs)/friends/[userID]',
+                  params: { userID: profile.userId, initialTab: 'follower' },
+                }}
+                asChild
+              >
+                <Pressable style={styles.socialState}>
+                  <Text style={[styles.socialStateText, themeTextColor]}>
+                    {profile.followed}
+                  </Text>
+                  <Text
+                    style={[styles.socialStateLabel, { color: labelColor }]}
+                  >
+                    Followers
+                  </Text>
+                </Pressable>
+              </Link>
+              <View style={{ alignItems: 'flex-end' }}>
+                <Text>|</Text>
               </View>
-              <View style={styles.socialState}>
-                <Text style={[styles.socialStateText, themeTextColor]}>
-                  {userInfo.following}
-                </Text>
-                <Text style={[styles.socialStateLabel, themeTextColor]}>
-                  Following
-                </Text>
-              </View>
+                <Pressable style={styles.socialState} onPress={HandleFollowing}>
+                  <Text style={[styles.socialStateText, themeTextColor]}>
+                    {profile.follow}
+                  </Text>
+                  <Text
+                    style={[styles.socialStateLabel, { color: labelColor }]}
+                  >
+                    Following
+                  </Text>
+                </Pressable>
             </View>
           </View>
-          <FollowButton isMyAccount={false} />
         </View>
-        <Text style={[styles.userName, themeTextColor]}>{userInfo.user}</Text>
       </View>
-      <Text
-        numberOfLines={5}
-        ellipsizeMode='tail'
-        style={[styles.userBio, themeTextColor]}
-      >
-        {userInfo.bio}
-      </Text>
-    </View>
+      <FlatList
+        horizontal
+        pagingEnabled
+        data={DATA}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        showsHorizontalScrollIndicator={false}
+      />
+    </BgView>
   );
 };
 
+export default UserProfileTop;
+
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    backgroundColor: '#ffffff',
-    gap: 16,
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    gap: 20,
     pointerEvents: 'box-none',
   },
   profile: {
-    backgroundColor: '#ffffff',
     gap: 12,
   },
   profileHeader: {
-    alignItems: 'center',
+    alignItems: 'flex-end',
     flexDirection: 'row',
-    backgroundColor: '#ffffff',
-    gap: 24,
+    gap: 20,
+  },
+  swipeContainer: {
+    width: width - 32,
   },
   avatar: {
     width: 64,
@@ -92,16 +193,17 @@ const styles = StyleSheet.create({
   },
   socialStateContainer: {
     flexDirection: 'row',
-    backgroundColor: '#ffffff',
-    gap: 16,
+    marginRight: 8,
+    gap: 8,
   },
   socialState: {
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
+    alignItems: 'flex-end',
+    flexDirection: 'row',
+    gap: 4,
   },
   socialStateText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: '400',
   },
   socialStateLabel: {
     fontSize: 12,
@@ -113,9 +215,29 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   userBio: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '400',
   },
+  button: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  text: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  item: {
+    marginRight: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    backgroundColor: '#f9c2ff',
+  },
 });
-
-export default UserProfileTop;

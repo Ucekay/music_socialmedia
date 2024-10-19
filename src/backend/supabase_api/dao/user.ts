@@ -1,12 +1,13 @@
 import { supabase } from "../../lib/supabase";
 import { Database } from "../../schema/schema"
 import { CProfileDataParams, UProfileDataParams, Profile } from "../../schema/supabase_api";
+import { ProfileMeta } from "../model/user";
+
+import type { Artist } from "../model/artists";
 
 export type User = Database['public']['Tables']['users']['Row'];
 export type CreateUserParams = Omit<User, 'user_id' | 'created_at'>;
 export type UpdateUserParams = Partial<CreateUserParams> & { user_id: string };
-
-export type Artist = Database['public']['Tables']['artists']['Row'];
     
 export interface UserRepository {
     createUserProfile(profileData: CProfileDataParams): Promise<string>;
@@ -19,10 +20,14 @@ export interface UserRepository {
     getFavArtistsByUserId(userId: string): Promise<Artist[]>;
     registerFavArtist(userId: string, artistId: string, artistName: string): Promise<boolean>;
     deleteFavArtist(userId: string, artistId: string): Promise<boolean>;
+
+    getFollowersByUserId(userId: string): Promise<ProfileMeta[]>;
+    getFollowingsByUserId(userId: string): Promise<ProfileMeta[]>;
 }
 
 export class UserDao implements UserRepository {
     private readonly tableNameUser: string = 'users';
+    private readonly tableNameUsersArtists: string = 'users_artists';
 
     public async createUserProfile(profileData: CProfileDataParams): Promise<string> {
         try {
@@ -100,7 +105,9 @@ export class UserDao implements UserRepository {
 				.from(this.tableNameUser)
 				.select('user_id, user_name, icon_image_url, profile_id, bio, follow, followed')
 				.eq('user_id', userId)
-				.single();
+                .single();
+            
+            console.log(userId);
 
 			if (error) {
 				throw new Error('データの取得エラー: ' + error.message);
@@ -118,14 +125,16 @@ export class UserDao implements UserRepository {
         try {
             const { data, error } = await supabase
                 .from('users_artists')
-                .select('artist_id, artist_name, musickit_id')
+                .select(`artist_id,
+                    artists ( artist_name, musickit_id )`)
                 .eq('user_id', userId);
+            
             if (error) {
                 throw new Error('データの取得エラー: ' + error.message);
             }
 
-            const artists = data.map((row) => {
-                return { artist_name: row.artist_name, id: row.artist_id, musickit_id: row.musickit_id };
+            const artists = data.map((row: any) => {
+                return { artistId: row.artist_id, artistName: row.artists.artist_name, musickitId: row.artists.musickit_id };
             })
                 
             return artists;
@@ -138,7 +147,7 @@ export class UserDao implements UserRepository {
     public async registerFavArtist(userId: string, artistId: string, artistName: string): Promise<boolean> {
         try {
             const { error } = await supabase
-                .from('users_artists')
+                .from(this.tableNameUsersArtists)
                 .insert({ user_id: userId, artist_id: artistId, artist_name: artistName });
             if (error) {
                 throw new Error('データの挿入エラー: ' + error.message);
@@ -165,4 +174,48 @@ export class UserDao implements UserRepository {
             throw error;
         }
     }
+
+    public async getFollowersByUserId(userId: string): Promise<ProfileMeta[]> {
+        try {
+            const { data, error } = await supabase
+                .from('follows')
+                .select(`follower_id, users!follower_id(user_name, icon_image_url, profile_id)`)
+                .eq('followed_id', userId);
+            if (error) {
+                throw new Error('データの取得エラー: ' + error.message);
+            }
+
+            const followers = data.map((row: any) => {
+                return { userId: row.follower_id, userName: row.users.user_name, iconImageUrl: row.users.icon_image_url, profileId: row.users.profile_id };
+            });
+
+            console.log(followers);
+
+            return followers;
+        } catch (error) {
+            console.error('データの取得中にエラーが発生しました:', error);
+            throw error;
+        }
+    }
+
+    public async getFollowingsByUserId(userId: string): Promise<ProfileMeta[]> {
+        try {
+            const { data, error } = await supabase
+                .from('follows')
+                .select(`followed_id, users!followed_id(user_name, icon_image_url, profile_id)`)
+                .eq('follower_id', userId);
+            if (error) {
+                throw new Error('データの取得エラー: ' + error.message);
+            }
+
+            const followees = data.map((row: any) => {
+                return { userId: row.followed_id, userName: row.users.user_name, iconImageUrl: row.users.icon_image_url, profileId: row.users.profile_id };
+            });
+            return followees;
+        } catch (error) {
+            console.error('データの取得中にエラーが発生しました:', error);
+            throw error;
+        }
+    }
+
 }
