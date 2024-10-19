@@ -51,16 +51,16 @@ const UserProfileTop = (profile: Profile) => {
   const HandleFollowing = () => {
     router.push({
       pathname: `/friends/${profile.userId}`,
-      params: { initialTab: 'following' }
+      params: { initialTab: 'following' },
     });
-  }
+  };
 
   const HandleFollower = () => {
     router.push({
       pathname: `/friends/${profile.userId}`,
-      params: { initialTab: 'follower' }
+      params: { initialTab: 'follower' },
     });
-  }
+  };
 
   const defaultImage = require('../assets/images/snsicon.png');
   if (!profile) {
@@ -126,14 +126,13 @@ const UserProfileTop = (profile: Profile) => {
               </Text>
               <Text>{profile.profileId}</Text>
             </View>
-            <View style={styles.socialStateContainer} >
+            <View style={styles.socialStateContainer}>
               <Pressable style={styles.socialState} onPress={HandleFollower}>
                 <Text style={[styles.socialStateText, themeTextColor]}>
                   {profile.followed}
                 </Text>
-                <Text
-                  style={[styles.socialStateLabel, { color: labelColor }]}
-                >
+                <Text style=
+                  {[styles.socialStateLabel, { color: labelColor }]}>
                   Followers
                 </Text>
               </Pressable>
@@ -144,9 +143,8 @@ const UserProfileTop = (profile: Profile) => {
                 <Text style={[styles.socialStateText, themeTextColor]}>
                   {profile.follow}
                 </Text>
-                <Text
-                  style={[styles.socialStateLabel, { color: labelColor }]}
-                >
+                <Text style=
+                  {[styles.socialStateLabel, { color: labelColor }]}>
                   Following
                 </Text>
               </Pressable>
