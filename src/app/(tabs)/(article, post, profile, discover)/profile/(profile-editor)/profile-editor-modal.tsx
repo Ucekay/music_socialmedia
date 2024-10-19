@@ -19,7 +19,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { UpdateUserProfile } from '@/src/backend/supabase_api/handler/user';
+import { UpdateUserProfile } from '@/src/backend/supabase_apis/handler/user';
 import BgView from '@/src/components/ThemedBgView';
 import ThemedText from '@/src/components/ThemedText';
 import Colors from '@/src/constants/Colors';

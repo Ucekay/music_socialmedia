@@ -31,8 +31,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 import userData from '../assets/userData';
-import { uploadImage } from '../backend/supabase_api/dbdriver/image';
-import { insertPost } from '../backend/supabase_api/dbdriver/post';
 import IconAntDesign from '../components/Icons/AntDesign';
 import ImageAspectKept from '../components/OriginalAspectImage';
 import BgView from '../components/ThemedBgView';
@@ -181,26 +179,7 @@ const PostEditorModal = () => {
     );
   };
 
-  const handlePost = async () => {
-    try {
-      const ImageUrls = await Promise.all(
-        images.map((image) => uploadImage(image, 'PostImage')),
-      );
-      if (text) {
-        const data = { Body: text, ImageUrl: ImageUrls };
-        const result = await insertPost(data);
-        if (typeof result === 'boolean' && result) {
-          // 記事の挿入に成功した場合の処理
-          console.log('postが正常に挿入されました');
-        } else {
-          // 記事の挿入に失敗した場合の処理
-          console.error('postの挿入に失敗しました:', result);
-        }
-      }
-    } catch (error) {
-      console.error('postの挿入中にエラーが発生しました:', error);
-    }
-  };
+  const handlePost = async () => {};
 
   return (
     <BgView style={[styles.container]}>

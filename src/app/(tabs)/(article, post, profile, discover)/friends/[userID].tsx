@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import {
@@ -25,8 +25,8 @@ import {
 } from 'react-native-collapsible-tab-view';
 import { MaterialTabBar } from 'react-native-collapsible-tab-view';
 
-import { getFollowers, getFollowings } from '@/src/backend/supabase_api/handler/user';
-import { ProfileMeta } from '@/src/backend/supabase_api/model/user';
+import { getFollowers, getFollowings } from '@/src/backend/supabase_apis/handler/user';
+import { ProfileMeta } from '@/src/backend/supabase_apis/model/user';
 import BgView from '@/src/components/ThemedBgView';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 
@@ -103,8 +103,13 @@ const FollowerUserCard = (props: ProfileMeta): JSX.Element => {
     setFollowedStatus(false);
   };
 
+  const HandleUser = () => {
+    router.push(`/profile/${props.userId}`);
+  }
+
   return (
     <BgView style={styles.container}>
+      <Pressable style={{alignItems: 'center', flex: 1, flexDirection: 'row', justifyContent: 'space-between'}} onPress={HandleUser}>
       <View style={styles.userInfoContainer}>
         <Image source={props.iconImageUrl} style={styles.userAvatar} />
         <View>
@@ -119,6 +124,7 @@ const FollowerUserCard = (props: ProfileMeta): JSX.Element => {
           </View>
         </Pressable>
       ) : null}
+      </Pressable>
     </BgView>
   );
 };

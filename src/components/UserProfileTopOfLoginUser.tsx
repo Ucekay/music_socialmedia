@@ -10,7 +10,7 @@ import {
 
 import { Image } from 'expo-image';
 
-import { Profile } from '../backend/supabase_api/model/user';
+import { Profile } from '../backend/supabase_apis/model/user';
 import Colors from '../constants/Colors';
 import { useTheme } from '../contexts/ColorThemeContext';
 
@@ -44,8 +44,8 @@ const LoginUserProfileTop = (profile: Profile) => {
     colorScheme === 'light' ? backgroundColors[0][0] : backgroundColors[0][1];
 
   const DATA = [
-    { id: '1', type: 'bio' },
-    { id: '2', type: 'tags' },
+    { id: '1', type: 'tags' },
+    { id: '2', type: 'bio' },
   ];
 
   const defaultImage = require('../assets/images/snsicon.png');

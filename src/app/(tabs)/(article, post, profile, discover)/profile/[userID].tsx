@@ -31,7 +31,7 @@ import { useTheme } from '@/src/contexts/ColorThemeContext';
 
 import postData from '../../../../assets/postData';
 
-import type { Profile as UserProfile } from '../../../../backend/schema/';
+import type { Profile as UserProfile } from '../../../../backend/supabase_apis/model/user';
 import type { ArticleData } from '@/src/types';
 import type { AnimatedStyle } from 'react-native-reanimated';
 

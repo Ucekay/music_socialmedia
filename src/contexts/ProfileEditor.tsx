@@ -3,8 +3,8 @@ import { createContext, useEffect, useState } from 'react';
 
 import { set } from 'date-fns';
 
-import { GetUserProfile } from '../backend/supabase_api/handler/user';
-import { UpdateUserProfile } from '../backend/supabase_api/handler/user';
+import { GetUserProfile } from '../backend/supabase_apis/handler/user';
+import { UpdateUserProfile } from '../backend/supabase_apis/handler/user';
 
 type ProfileStateType = {
   name: string;
