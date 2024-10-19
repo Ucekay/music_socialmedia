@@ -1,6 +1,8 @@
 // イメージとしてはdaoではsupabaseのスキーマを使っているが、DBの都合上必須としたいデータを必須とできていない
 // したがってhandler。applicationで用いるのはこのファイルのスキーマとして、必須paramsを担保する
 
+import { Artist } from "../supabase_api/model/artists";
+
 import { Json } from "./supabasetypes";
 
 
@@ -65,7 +67,7 @@ export type Profile = {
     profileId: string;
     userId: string;
     userName: string;
-    favArtists: { artistId: string; artistName: string }[];
+    favArtists: Artist[];
 }
 
 export type Post = {

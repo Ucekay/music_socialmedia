@@ -1,10 +1,10 @@
 export type Artist = {
-    artistId: string;
+    artistId: number;
     artistName: string;
     musickitId: string;
 }
 
 export type CArtistParams = {
     artistName: string;
-    musickitId?: string;
+    musickitId?: number;
 }
