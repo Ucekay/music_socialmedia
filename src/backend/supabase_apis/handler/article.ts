@@ -1,6 +1,6 @@
-import { ArticleApplication } from '../application/article';
 import { BadRequestError } from '../../schema/error';
 import { ArticleAdditionalData, ArticleInteg, CUArticleDataParams } from '../../schema/supabase_api';
+import { ArticleApplication } from '../application/article';
 import { ArticleDao } from '../dao/article';
 
 const articleDao = new ArticleDao();

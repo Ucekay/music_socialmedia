@@ -22,7 +22,7 @@ import {
 
 import postData from '@/src/assets/postData';
 import userArticleData from '@/src/assets/userArticleData';
-import { GetUserProfile } from '@/src/backend/supabase_api/handler/user';
+import { GetUserProfile } from '@/src/backend/supabase_apis/handler/user';
 import ArticleCard from '@/src/components/ArticleCard';
 import PostCard from '@/src/components/PostCard';
 import BgView from '@/src/components/ThemedBgView';
@@ -30,7 +30,7 @@ import UserProfileTop from '@/src/components/UserProfileTop';
 import LoginUserProfileTop from '@/src/components/UserProfileTopOfLoginUser';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 
-import type { Profile as UserProfile } from '@/src/backend/supabase_api/model/user';
+import type { Profile as UserProfile } from '../../../../backend/schema/';
 import type { ArticleData } from '@/src/types';
 import type { AnimatedStyle } from 'react-native-reanimated';
 
