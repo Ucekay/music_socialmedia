@@ -29,8 +29,7 @@ export const ProfileStateProvider = ({
   children,
 }: {
   children: React.ReactNode;
-  }) => {
-  
+}) => {
   const [name, setName] = useState('');
   const [id, setId] = useState('');
   const [bio, setBio] = useState('');
@@ -40,7 +39,9 @@ export const ProfileStateProvider = ({
   useEffect(() => {
     const getProfile = async () => {
       try {
-        const profileData = await GetUserProfile('123e4567-e89b-12d3-a456-426614174001');
+        const profileData = await GetUserProfile(
+          '123e4567-e89b-12d3-a456-426614174001'
+        );
         console.log(profileData);
         setName(profileData.userName);
         setId(profileData.profileId);
@@ -55,7 +56,6 @@ export const ProfileStateProvider = ({
 
     getProfile();
   }, []);
-
 
   return (
     <ProfileEditorContext.Provider

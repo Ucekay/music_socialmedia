@@ -82,9 +82,11 @@ const LoginUserProfileTop = (profile: Profile) => {
                 styles.item,
                 { backgroundColor: TagColor, marginBottom: 8 },
               ]}
-              key={index}
+              key={item.artistId}
             >
-              <Text style={{ fontWeight: '500', fontSize: 12 }}>{item.artistName}</Text>
+              <Text style={{ fontWeight: '500', fontSize: 12 }}>
+                {item.artistName}
+              </Text>
             </View>
           ))}
         </View>

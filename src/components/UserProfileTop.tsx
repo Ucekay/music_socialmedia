@@ -52,14 +52,14 @@ const UserProfileTop = (profile: Profile) => {
     router.push({
       pathname: `/friends/${profile.userId}`,
       params: { initialTab: 'following' }
-  });
+    });
   }
 
   const HandleFollower = () => {
     router.push({
       pathname: `/friends/${profile.userId}`,
       params: { initialTab: 'follower' }
-  });
+    });
   }
 
   const defaultImage = require('../assets/images/snsicon.png');
@@ -96,9 +96,11 @@ const UserProfileTop = (profile: Profile) => {
                 styles.item,
                 { backgroundColor: TagColor, marginBottom: 8 },
               ]}
-              key={index}
+              key={item.artistId}
             >
-              <Text style={{ fontWeight: '500', fontSize: 12 }}>{item.artistName}</Text>
+              <Text style={{ fontWeight: '500', fontSize: 12 }}>
+                {item.artistName}
+              </Text>
             </View>
           ))}
         </View>
@@ -125,29 +127,29 @@ const UserProfileTop = (profile: Profile) => {
               <Text>{profile.profileId}</Text>
             </View>
             <View style={styles.socialStateContainer} >
-                <Pressable style={styles.socialState} onPress={HandleFollower}>
-                  <Text style={[styles.socialStateText, themeTextColor]}>
-                    {profile.followed}
-                  </Text>
-                  <Text
-                    style={[styles.socialStateLabel, { color: labelColor }]}
-                  >
-                    Followers
-                  </Text>
-                </Pressable>
+              <Pressable style={styles.socialState} onPress={HandleFollower}>
+                <Text style={[styles.socialStateText, themeTextColor]}>
+                  {profile.followed}
+                </Text>
+                <Text
+                  style={[styles.socialStateLabel, { color: labelColor }]}
+                >
+                  Followers
+                </Text>
+              </Pressable>
               <View style={{ alignItems: 'flex-end' }}>
                 <Text>|</Text>
               </View>
-                <Pressable style={styles.socialState} onPress={HandleFollowing}>
-                  <Text style={[styles.socialStateText, themeTextColor]}>
-                    {profile.follow}
-                  </Text>
-                  <Text
-                    style={[styles.socialStateLabel, { color: labelColor }]}
-                  >
-                    Following
-                  </Text>
-                </Pressable>
+              <Pressable style={styles.socialState} onPress={HandleFollowing}>
+                <Text style={[styles.socialStateText, themeTextColor]}>
+                  {profile.follow}
+                </Text>
+                <Text
+                  style={[styles.socialStateLabel, { color: labelColor }]}
+                >
+                  Following
+                </Text>
+              </Pressable>
             </View>
           </View>
         </View>
