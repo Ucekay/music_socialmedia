@@ -20,7 +20,6 @@ import {
   Tabs,
 } from 'react-native-collapsible-tab-view';
 
-import postData from '@/src/assets/postData';
 import userArticleData from '@/src/assets/userArticleData';
 import { GetUserProfile } from '@/src/backend/supabase_apis/handler/user';
 import ArticleCard from '@/src/components/ArticleCard';
@@ -29,6 +28,8 @@ import BgView from '@/src/components/ThemedBgView';
 import UserProfileTop from '@/src/components/UserProfileTop';
 import LoginUserProfileTop from '@/src/components/UserProfileTopOfLoginUser';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
+
+import postData from '../../../../assets/postData';
 
 import type { Profile as UserProfile } from '../../../../backend/schema/';
 import type { ArticleData } from '@/src/types';
