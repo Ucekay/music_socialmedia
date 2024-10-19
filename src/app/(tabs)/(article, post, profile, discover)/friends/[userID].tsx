@@ -1,6 +1,6 @@
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   type Falsy,
   Pressable,
@@ -25,11 +25,11 @@ import {
 } from 'react-native-collapsible-tab-view';
 import { MaterialTabBar } from 'react-native-collapsible-tab-view';
 
-import userData from '@/src/assets/userData';
+import { getFollowers, getFollowings } from '@/src/backend/supabase_api/handler/user';
+import { ProfileMeta } from '@/src/backend/supabase_api/model/user';
 import BgView from '@/src/components/ThemedBgView';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 
-import type { UserListPropsType } from '@/src/types';
 import type { AnimatedStyle } from 'react-native-reanimated';
 
 const backgroundColors = [
@@ -40,7 +40,7 @@ const backgroundColors = [
   ['#FFF0F5', '#4A4A4A'],
 ];
 
-const FollowingUserCard = (props: UserListPropsType): JSX.Element => {
+const FollowingUserCard = (props: ProfileMeta): JSX.Element => {
   const [followingStatus, setFollowingStatus] = useState(true); //初期値は毎度検証したものを入力してください
   const colorScheme = useColorScheme();
   const { colors } = useTheme();
@@ -48,6 +48,8 @@ const FollowingUserCard = (props: UserListPropsType): JSX.Element => {
     colorScheme === 'light' ? backgroundColors[0][0] : backgroundColors[0][1];
 
   const textColor = colors.text;
+
+  const router = useRouter();
 
   const HandleUnfollow = () => {
     setFollowingStatus(false);
@@ -57,12 +59,17 @@ const FollowingUserCard = (props: UserListPropsType): JSX.Element => {
     setFollowingStatus(true);
   };
 
+  const HandleUser = () => {
+    router.push(`/profile/${props.userId}`);
+  }
+
   return (
     <BgView style={styles.container}>
+      <Pressable style={{alignItems: 'center', flex: 1, flexDirection: 'row', justifyContent: 'space-between'}} onPress={HandleUser}>
       <View style={styles.userInfoContainer}>
-        <Image source={props.userAvatarUrl} style={styles.userAvatar} />
+        <Image source={props.iconImageUrl} style={styles.userAvatar} />
         <View>
-          <Text style={styles.userId}>{props.userID}</Text>
+          <Text style={styles.userId}>{props.profileId}</Text>
           <Text style={styles.userName}>{props.userName}</Text>
         </View>
       </View>
@@ -78,12 +85,13 @@ const FollowingUserCard = (props: UserListPropsType): JSX.Element => {
             <Text style={[styles.text, { color: '#ffffff' }]}>フォロー</Text>
           </View>
         </Pressable>
-      )}
+        )}
+      </Pressable>
     </BgView>
   );
 };
 
-const FollowerUserCard = (props: UserListPropsType): JSX.Element => {
+const FollowerUserCard = (props: ProfileMeta): JSX.Element => {
   const [followedStatus, setFollowedStatus] = useState(true); //初期値は毎度検証したものを入力してください
   const colorScheme = useColorScheme();
   const TagColor =
@@ -98,9 +106,9 @@ const FollowerUserCard = (props: UserListPropsType): JSX.Element => {
   return (
     <BgView style={styles.container}>
       <View style={styles.userInfoContainer}>
-        <Image source={props.userAvatarUrl} style={styles.userAvatar} />
+        <Image source={props.iconImageUrl} style={styles.userAvatar} />
         <View>
-          <Text style={styles.userId}>{props.userID}</Text>
+          <Text style={styles.userId}>{props.profileId}</Text>
           <Text style={styles.userName}>{props.userName}</Text>
         </View>
       </View>
@@ -116,13 +124,40 @@ const FollowerUserCard = (props: UserListPropsType): JSX.Element => {
 };
 
 const UserListScreen = (): JSX.Element => {
-  const { initialTab } = useLocalSearchParams();
+  const { userID, initialTab } = useLocalSearchParams();
   let initialTabName: string;
   if (typeof initialTab === 'string') {
     initialTabName = initialTab;
   } else {
     initialTabName = 'follower';
   }
+
+  let userIdStr: string;
+  if (typeof userID !== 'string') {
+    userIdStr = '123e4567-e89b-12d3-a456-426614174001';
+  } else {
+    userIdStr = userID;
+  };
+
+  const [followerData, setFollowerData] = useState<ProfileMeta[]>([]);
+  const [followingData, setFollowingData] = useState<ProfileMeta[]>([]);
+
+  useEffect(() => {
+    const fetchUserList = async () => {
+      try{
+        const followerData = await getFollowers(userIdStr);
+        const followingData = await getFollowings(userIdStr);
+
+        setFollowerData(followerData);
+        setFollowingData(followingData);
+      } catch (error) {
+        console.error('ユーザーリストの取得中にエラーが発生しました:', error);
+      }
+    };
+
+    fetchUserList();
+  }, []);
+
   const tabBarHeight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
 
@@ -198,10 +233,10 @@ const UserListScreen = (): JSX.Element => {
       >
         <Tabs.Tab name='follower' label='follower'>
           <Tabs.FlashList
-            data={userData}
+            data={followerData}
             renderItem={({ item }) => (
               <View>
-                <FollowerUserCard {...item} userName={item.user} />
+                <FollowerUserCard {...item} />
               </View>
             )}
             estimatedItemSize={70}
@@ -214,10 +249,10 @@ const UserListScreen = (): JSX.Element => {
         </Tabs.Tab>
         <Tabs.Tab name='following' label='following'>
           <Tabs.FlashList
-            data={userData}
+            data={followingData}
             renderItem={({ item }) => (
               <View>
-                <FollowingUserCard {...item} userName={item.user} />
+                <FollowingUserCard {...item} />
               </View>
             )}
             estimatedItemSize={70}

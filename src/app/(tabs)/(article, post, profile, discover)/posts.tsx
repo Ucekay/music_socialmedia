@@ -6,7 +6,7 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { FlashList } from '@shopify/flash-list';
 import { type InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 
-import { createPostDataset } from '@/src/backend/supabase_api/handler/post';
+import { createPostDataset } from '@/src/backend/supabase_api/handler/postRaw';
 import PostCard from '@/src/components/PostCard';
 import BgView from '@/src/components/ThemedBgView';
 
@@ -27,60 +27,17 @@ const postsScreen = () => {
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
 
-  const {
-    data,
-    fetchNextPage,
-    fetchPreviousPage,
-    hasNextPage,
-    hasPreviousPage,
-    isFetchingNextPage,
-    isFetchingPreviousPage,
-    status,
-  } = useInfiniteQuery<
-    PostsResult,
-    Error,
-    InfiniteData<PostsResult>,
-    string[],
-    FetchPostsParams
-  >({
-    queryKey: ['posts'],
-    queryFn: ({ pageParam }) => createPostDataset(pageParam),
-    getNextPageParam: (lastPage) =>
-      lastPage.cursor
-        ? { cursor: lastPage.cursor, isForward: false }
-        : undefined,
-    getPreviousPageParam: (firstPage) =>
-      firstPage.latestcursor
-        ? { cursor: firstPage.latestcursor, isForward: true }
-        : undefined,
-    initialPageParam: { cursor: null, isForward: null },
-  });
-
-  const flattenedData = useMemo(() => {
-    return data?.pages.flatMap((page) => page.postData) ?? [];
-  }, [data]);
-
-  const loadMore = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  };
-
   return (
     <BgView style={styles.container}>
       <FlashList
-        data={flattenedData}
+        data={[]}
         renderItem={({ item }) => <PostCard post={item} />}
         estimatedItemSize={100}
         contentContainerStyle={{
           paddingBottom: tabBarHeight,
           paddingTop: headerHeight,
         }}
-        onEndReached={loadMore}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={
-          isFetchingNextPage ? <Text>Loading...</Text> : null
-        }
       />
     </BgView>
   );

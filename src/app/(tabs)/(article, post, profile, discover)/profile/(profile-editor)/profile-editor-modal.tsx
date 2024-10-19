@@ -13,13 +13,13 @@ import {
   useColorScheme,
 } from 'react-native';
 
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { UpdateUserProfile } from '@/src/backend/supabase_api/handler/user';
 import BgView from '@/src/components/ThemedBgView';
 import ThemedText from '@/src/components/ThemedText';
 import Colors from '@/src/constants/Colors';
@@ -39,9 +39,15 @@ const ProfileEditorModal = () => {
 
   const { name, id, bio, tag, userAvatar, setUserAvatar } = context;
 
-  const handleSave = () => {
-    console.log('Saving profile changes...');
-  };
+  const updateProfile = async () => {
+    try {
+      const result = await UpdateUserProfile({ user_name: name, bio: bio, icon_image_url: userAvatar, user_id: '123e4567-e89b-12d3-a456-426614174001' });
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const insets = useSafeAreaInsets();
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -94,9 +100,26 @@ const ProfileEditorModal = () => {
         showsVerticalScrollIndicator={false}
         style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
       >
-        <View style={styles.header}>
-          <ThemedText style={styles.headerTitle}>プロフィールを編集</ThemedText>
+        <View style={[styles.header]}>
+        <Pressable
+          onPress={() => router.back()}
+          style={[styles.headerItem, { alignItems: 'flex-start' }]}
+        >
+          <Text style={[styles.text1, { color: textColor }]}>キャンセル</Text>
+        </Pressable>
+        <View style={[styles.headerItem]}>
+          <Text style={[styles.text2, { color: textColor }]}>profileを編集</Text>
         </View>
+        <Pressable
+          onPress={() => {
+            updateProfile();
+            router.back();
+          }}
+          style={[styles.headerItem, { alignItems: 'flex-end' }]}
+        >
+          <Text style={[styles.text2, { color: '#2f95dc' }]}>完了</Text>
+        </Pressable>
+      </View>
         <Modal animationType='fade' transparent={true} visible={loading}>
           <View style={styles.dialog}>
             <BlurView tint={'systemMaterial'} style={styles.dialogInner}>
@@ -207,23 +230,6 @@ const ProfileEditorModal = () => {
           },
         ]}
       >
-        <View
-          style={[
-            styles.bottomButtonContainer,
-            { borderTopColor: secondaryTextColor },
-          ]}
-        >
-          <View style={[styles.buttonContainer]}>
-            <FontAwesome6 name='xmark' size={16} color={textColor} />
-            <Button
-              title='Close'
-              onPress={() => {
-                navigation1.goBack();
-              }}
-              color={textColor}
-            />
-          </View>
-        </View>
       </BgView>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
@@ -239,9 +245,21 @@ const styles = StyleSheet.create({
   },
   header: {
     alignItems: 'center',
-    paddingBottom: 20,
-    borderBottomColor: '#ddd',
-    borderBottomWidth: 1,
+    flexDirection: 'row',
+    width: '100%',
+    height: 60,
+    paddingHorizontal: 16,
+  },
+  headerItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  text1: {
+    fontSize: 16,
+  },
+  text2: {
+    fontSize: 16,
+    fontWeight: '600',
   },
   headerTitle: {
     fontSize: 18,

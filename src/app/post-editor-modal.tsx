@@ -31,8 +31,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 import userData from '../assets/userData';
-import { uploadImage } from '../backend/supabase_api/dao/Image';
-import { insertPost } from '../backend/supabase_api/dao/post';
+import { uploadImage } from '../backend/supabase_api/dbdriver/image';
+import { insertPost } from '../backend/supabase_api/dbdriver/post';
 import IconAntDesign from '../components/Icons/AntDesign';
 import ImageAspectKept from '../components/OriginalAspectImage';
 import BgView from '../components/ThemedBgView';
