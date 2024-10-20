@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 export default {
     expo: {
         name: "otography",
@@ -56,8 +54,6 @@ export default {
             eas: {
                 projectId: "f8607735-aef1-45f5-8ae7-bc4b6f6f77af"
             },
-            supabaseUrl: process.env.SUPABASE_URL,
-            supabaseAnonKey: process.env.SUPABASE_ANON_KEY
         }
     }
 };

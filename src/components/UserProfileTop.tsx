@@ -131,8 +131,7 @@ const UserProfileTop = (profile: Profile) => {
                 <Text style={[styles.socialStateText, themeTextColor]}>
                   {profile.followed}
                 </Text>
-                <Text style=
-                  {[styles.socialStateLabel, { color: labelColor }]}>
+                <Text style={[styles.socialStateLabel, { color: labelColor }]}>
                   Followers
                 </Text>
               </Pressable>
@@ -143,8 +142,7 @@ const UserProfileTop = (profile: Profile) => {
                 <Text style={[styles.socialStateText, themeTextColor]}>
                   {profile.follow}
                 </Text>
-                <Text style=
-                  {[styles.socialStateLabel, { color: labelColor }]}>
+                <Text style={[styles.socialStateLabel, { color: labelColor }]}>
                   Following
                 </Text>
               </Pressable>
