@@ -31,7 +31,6 @@ import * as ImagePicker from 'expo-image-picker';
 import  Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 import { insertPost } from '../backend/components/DB_Access/post';
 import { GetImageData } from '../backend/components/DB_Access/Image';
-import { uploadImageToStorage } from '../backend/components/DB_Access/Image';
 import { uploadImage } from '../backend/components/DB_Access/Image';
 
 const PostEditorModal = () => {
