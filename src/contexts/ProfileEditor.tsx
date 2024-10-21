@@ -1,5 +1,7 @@
 import type React from 'react';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
+
+import { GetUserProfile } from '../backend/supabase_apis/handler/user';
 
 type ProfileStateType = {
   name: string;
@@ -25,24 +27,32 @@ export const ProfileStateProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [name, setName] = useState('Initial State');
+  const [name, setName] = useState('');
   const [id, setId] = useState('');
   const [bio, setBio] = useState('');
-  const [userAvatar, setUserAvatar] = useState(
-    'https://api.dicebear.com/8.x/bottts/png',
-  );
-  const [tag, setTag] = useState([
-    'Kana Nishino',
-    'Ikimono Gakari',
-    'AI',
-    'GReeeeN',
-    'Daichi Miura',
-    'Miwa',
-    'Fujifabric',
-    'Little Glee Monster',
-    'Sakanaction',
-    'Shota Shimizu',
-  ]);
+  const [userAvatar, setUserAvatar] = useState('');
+  const [tag, setTag] = useState<string[]>([]);
+
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const profileData = await GetUserProfile(
+          '123e4567-e89b-12d3-a456-426614174001',
+        );
+        console.log(profileData);
+        setName(profileData.userName);
+        setId(profileData.profileId);
+        setBio(profileData.bio);
+        setUserAvatar(profileData.iconImageUrl);
+        const tags = profileData.favArtists.map((artist) => artist.artistName);
+        setTag(tags);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getProfile();
+  }, []);
 
   return (
     <ProfileEditorContext.Provider

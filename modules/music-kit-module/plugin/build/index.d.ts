@@ -1,5 +1,5 @@
-import { type ConfigPlugin } from 'expo/config-plugins';
+import type { ConfigPlugin } from 'expo/config-plugins';
 declare const withMusicKitModule: ConfigPlugin<{
-    appleMusicPermission?: string | false;
+  appleMusicPermission?: string | false;
 } | void>;
 export default withMusicKitModule;
