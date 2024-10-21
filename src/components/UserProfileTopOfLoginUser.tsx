@@ -10,7 +10,7 @@ import {
 
 import { Image } from 'expo-image';
 
-import { Profile } from '../backend/supabase_apis/model/user';
+import type { Profile } from '../backend/supabase_apis/model/user';
 import Colors from '../constants/Colors';
 import { useTheme } from '../contexts/ColorThemeContext';
 

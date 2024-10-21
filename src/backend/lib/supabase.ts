@@ -9,7 +9,6 @@ if (!supabaseAnonKey) {
 if (!supabaseUrl) {
   throw new Error('Missing env SUPABASE_URL');
 }
-  
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {

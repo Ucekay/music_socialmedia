@@ -2,7 +2,6 @@ import type React from 'react';
 import { createContext, useEffect, useState } from 'react';
 
 import { GetUserProfile } from '../backend/supabase_apis/handler/user';
-import { UpdateUserProfile } from '../backend/supabase_apis/handler/user';
 
 type ProfileStateType = {
   name: string;

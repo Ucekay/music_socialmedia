@@ -2,7 +2,6 @@ import { useNavigation, useRouter } from 'expo-router';
 import { useContext, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  Button,
   Modal,
   Platform,
   Pressable,
@@ -41,12 +40,17 @@ const ProfileEditorModal = () => {
 
   const updateProfile = async () => {
     try {
-      const result = await UpdateUserProfile({ user_name: name, bio: bio, icon_image_url: userAvatar, user_id: '123e4567-e89b-12d3-a456-426614174001' });
+      const result = await UpdateUserProfile({
+        user_name: name,
+        bio: bio,
+        icon_image_url: userAvatar,
+        user_id: '123e4567-e89b-12d3-a456-426614174001',
+      });
       console.log(result);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const insets = useSafeAreaInsets();
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -101,25 +105,27 @@ const ProfileEditorModal = () => {
         style={{ marginBottom: BOTTOM_TAB_HEIGHT }}
       >
         <View style={[styles.header]}>
-        <Pressable
-          onPress={() => router.back()}
-          style={[styles.headerItem, { alignItems: 'flex-start' }]}
-        >
-          <Text style={[styles.text1, { color: textColor }]}>キャンセル</Text>
-        </Pressable>
-        <View style={[styles.headerItem]}>
-          <Text style={[styles.text2, { color: textColor }]}>profileを編集</Text>
+          <Pressable
+            onPress={() => router.back()}
+            style={[styles.headerItem, { alignItems: 'flex-start' }]}
+          >
+            <Text style={[styles.text1, { color: textColor }]}>キャンセル</Text>
+          </Pressable>
+          <View style={[styles.headerItem]}>
+            <Text style={[styles.text2, { color: textColor }]}>
+              profileを編集
+            </Text>
+          </View>
+          <Pressable
+            onPress={() => {
+              updateProfile();
+              router.back();
+            }}
+            style={[styles.headerItem, { alignItems: 'flex-end' }]}
+          >
+            <Text style={[styles.text2, { color: '#2f95dc' }]}>完了</Text>
+          </Pressable>
         </View>
-        <Pressable
-          onPress={() => {
-            updateProfile();
-            router.back();
-          }}
-          style={[styles.headerItem, { alignItems: 'flex-end' }]}
-        >
-          <Text style={[styles.text2, { color: '#2f95dc' }]}>完了</Text>
-        </Pressable>
-      </View>
         <Modal animationType='fade' transparent={true} visible={loading}>
           <View style={styles.dialog}>
             <BlurView tint={'systemMaterial'} style={styles.dialogInner}>
@@ -229,8 +235,7 @@ const ProfileEditorModal = () => {
             paddingTop: 12,
           },
         ]}
-      >
-      </BgView>
+      ></BgView>
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </BgView>
   );

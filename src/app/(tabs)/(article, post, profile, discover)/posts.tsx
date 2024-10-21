@@ -1,10 +1,8 @@
-import { useMemo } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { FlashList } from '@shopify/flash-list';
-import { type InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 
 import PostCard from '@/src/components/PostCard';
 import BgView from '@/src/components/ThemedBgView';

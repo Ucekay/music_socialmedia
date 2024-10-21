@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import { router, useLocalSearchParams, useRouter } from 'expo-router';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import {
@@ -25,8 +25,11 @@ import {
 } from 'react-native-collapsible-tab-view';
 import { MaterialTabBar } from 'react-native-collapsible-tab-view';
 
-import { getFollowers, getFollowings } from '@/src/backend/supabase_apis/handler/user';
-import { ProfileMeta } from '@/src/backend/supabase_apis/model/user';
+import {
+  getFollowers,
+  getFollowings,
+} from '@/src/backend/supabase_apis/handler/user';
+import type { ProfileMeta } from '@/src/backend/supabase_apis/model/user';
 import BgView from '@/src/components/ThemedBgView';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 
@@ -61,30 +64,40 @@ const FollowingUserCard = (props: ProfileMeta): JSX.Element => {
 
   const HandleUser = () => {
     router.push(`/profile/${props.userId}`);
-  }
+  };
 
   return (
     <BgView style={styles.container}>
-      <Pressable style={{alignItems: 'center', flex: 1, flexDirection: 'row', justifyContent: 'space-between'}} onPress={HandleUser}>
-      <View style={styles.userInfoContainer}>
-        <Image source={props.iconImageUrl} style={styles.userAvatar} />
-        <View>
-          <Text style={styles.userId}>{props.profileId}</Text>
-          <Text style={styles.userName}>{props.userName}</Text>
+      <Pressable
+        style={{
+          alignItems: 'center',
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+        onPress={HandleUser}
+      >
+        <View style={styles.userInfoContainer}>
+          <Image source={props.iconImageUrl} style={styles.userAvatar} />
+          <View>
+            <Text style={styles.userId}>{props.profileId}</Text>
+            <Text style={styles.userName}>{props.userName}</Text>
+          </View>
         </View>
-      </View>
-      {followingStatus ? (
-        <Pressable onPress={HandleUnfollow} style={{ height: 30 }}>
-          <View style={[styles.button, { backgroundColor: TagColor }]}>
-            <Text style={[styles.text, { color: textColor }]}>フォロー中</Text>
-          </View>
-        </Pressable>
-      ) : (
-        <Pressable onPress={HandleFollow} style={{ height: 30 }}>
-          <View style={[styles.button, { backgroundColor: '#2f95dc' }]}>
-            <Text style={[styles.text, { color: '#ffffff' }]}>フォロー</Text>
-          </View>
-        </Pressable>
+        {followingStatus ? (
+          <Pressable onPress={HandleUnfollow} style={{ height: 30 }}>
+            <View style={[styles.button, { backgroundColor: TagColor }]}>
+              <Text style={[styles.text, { color: textColor }]}>
+                フォロー中
+              </Text>
+            </View>
+          </Pressable>
+        ) : (
+          <Pressable onPress={HandleFollow} style={{ height: 30 }}>
+            <View style={[styles.button, { backgroundColor: '#2f95dc' }]}>
+              <Text style={[styles.text, { color: '#ffffff' }]}>フォロー</Text>
+            </View>
+          </Pressable>
         )}
       </Pressable>
     </BgView>
@@ -105,25 +118,33 @@ const FollowerUserCard = (props: ProfileMeta): JSX.Element => {
 
   const HandleUser = () => {
     router.push(`/profile/${props.userId}`);
-  }
+  };
 
   return (
     <BgView style={styles.container}>
-      <Pressable style={{alignItems: 'center', flex: 1, flexDirection: 'row', justifyContent: 'space-between'}} onPress={HandleUser}>
-      <View style={styles.userInfoContainer}>
-        <Image source={props.iconImageUrl} style={styles.userAvatar} />
-        <View>
-          <Text style={styles.userId}>{props.profileId}</Text>
-          <Text style={styles.userName}>{props.userName}</Text>
-        </View>
-      </View>
-      {followedStatus ? (
-        <Pressable onPress={HandleDelete} style={{ height: 30 }}>
-          <View style={[styles.button, { backgroundColor: TagColor }]}>
-            <Text style={[styles.text, { color: textColor }]}>削除</Text>
+      <Pressable
+        style={{
+          alignItems: 'center',
+          flex: 1,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+        onPress={HandleUser}
+      >
+        <View style={styles.userInfoContainer}>
+          <Image source={props.iconImageUrl} style={styles.userAvatar} />
+          <View>
+            <Text style={styles.userId}>{props.profileId}</Text>
+            <Text style={styles.userName}>{props.userName}</Text>
           </View>
-        </Pressable>
-      ) : null}
+        </View>
+        {followedStatus ? (
+          <Pressable onPress={HandleDelete} style={{ height: 30 }}>
+            <View style={[styles.button, { backgroundColor: TagColor }]}>
+              <Text style={[styles.text, { color: textColor }]}>削除</Text>
+            </View>
+          </Pressable>
+        ) : null}
       </Pressable>
     </BgView>
   );
@@ -143,14 +164,14 @@ const UserListScreen = (): JSX.Element => {
     userIdStr = '123e4567-e89b-12d3-a456-426614174001';
   } else {
     userIdStr = userID;
-  };
+  }
 
   const [followerData, setFollowerData] = useState<ProfileMeta[]>([]);
   const [followingData, setFollowingData] = useState<ProfileMeta[]>([]);
 
   useEffect(() => {
     const fetchUserList = async () => {
-      try{
+      try {
         const followerData = await getFollowers(userIdStr);
         const followingData = await getFollowings(userIdStr);
 
