@@ -39,7 +39,6 @@ import {
   LeftToRightListBulletIcon,
   LeftToRightListNumberIcon,
   Link04Icon,
-  PlayIcon,
   SolidLine01Icon,
   TextBoldIcon,
   TextFontIcon,
@@ -53,6 +52,7 @@ import {
   Vynil03Icon,
   YoutubeIcon,
 } from 'hugeicons-react-native';
+import ImagePicker, { type Image } from 'react-native-image-crop-picker';
 import {
   KeyboardStickyView,
   useReanimatedKeyboardAnimation,
@@ -69,6 +69,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ArticleTag from '@/src/components/ArticleTag';
+import { Button as CustomButton } from '@/src/components/Button';
 import BgView from '@/src/components/ThemedSecondaryBgView';
 import Text from '@/src/components/ThemedText';
 import TrackEntry from '@/src/components/TrackEntry';
@@ -112,11 +113,21 @@ const DEFAULT_EDITOR_CSS = `
     color: black;
     background-color: transparent;
   }
+  img {
+  width: 100%;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
+  }
     `;
 const DARK_EDITOR_CSS = `
   *{
     color: white;
     background-color: transparent;
+  }
+  img {
+  width: 100%;
+  margin: 1rem 0;
+  border-radius: 0.5rem;
   }
   blockquote {
     border-left: 3px solid #babaca;
@@ -562,52 +573,6 @@ const BlockOptions = ({
   );
 };
 
-const PlayerObject = ({ color }: { color: string }) => {
-  const width = 80;
-  return (
-    <View style={[styles.playerContainer, { backgroundColor: color }]}>
-      <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
-        <View
-          style={{
-            height: 12,
-            width: 12,
-            backgroundColor: Colors.dark.border,
-            borderRadius: 4,
-          }}
-        />
-        <View
-          style={{
-            paddingHorizontal: 2,
-            height: '100%',
-            justifyContent: 'space-around',
-          }}
-        >
-          <View
-            style={{
-              height: 2,
-              width: (width * 1) / 4,
-              backgroundColor: Colors.dark.border,
-              borderRadius: 2,
-              borderCurve: 'continuous',
-            }}
-          />
-          <View
-            style={{
-              height: 2,
-              width: (width * 1) / 3,
-              backgroundColor: Colors.dark.border,
-              borderRadius: 2,
-              borderCurve: 'continuous',
-            }}
-          />
-          <View />
-        </View>
-      </View>
-      <PlayIcon size={8} color={Colors.dark.border} fill={Colors.dark.border} />
-    </View>
-  );
-};
-
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
@@ -617,6 +582,8 @@ const ArticleEditorModal = () => {
   const { colors, theme } = useTheme();
   const [isFormatting, setIsFormatting] = useState(false);
   const [isAddingContents, setIsAddingContents] = useState(false);
+  const [isLinkActive, setIsLinkActive] = useState(false);
+  const [isYoutubeActive, setIsYoutubeActive] = useState(false);
   const formattingBottomSheetRef = useRef<BottomSheet>(null);
   const contentsBottomSheetRef = useRef<BottomSheet>(null);
   const animatedBottomFormattingSheetPosition = useSharedValue(0);
@@ -929,6 +896,20 @@ const ArticleEditorModal = () => {
     };
   });
 
+  const handlePickImage = async () => {
+    ImagePicker.openPicker({
+      mediaType: 'photo',
+      cropping: true,
+      freeStyleCropEnabled: true,
+      width: width,
+      height: (width / 16) * 9,
+      includeBase64: true,
+    }).then((image: Image) => {
+      editor.setImage(`data:${image.mime};base64,${image.data}`);
+      console.log(image);
+    });
+  };
+
   return (
     <BgView style={styles.flex1}>
       <Stack.Screen
@@ -970,6 +951,8 @@ const ArticleEditorModal = () => {
                   editor={editor}
                   items={toolbarItems}
                   hidden={false}
+                  useLinkActive={{ isLinkActive, setIsLinkActive }}
+                  useYoutubeActive={{ isYoutubeActive, setIsYoutubeActive }}
                 />
               </Animated.View>
             </KeyboardStickyView>
@@ -1026,43 +1009,75 @@ const ArticleEditorModal = () => {
                 }}
               >
                 <View style={{ width: '100%', flexDirection: 'row', gap: 16 }}>
-                  <View
-                    style={[
-                      styles.contentsOptionWrapper,
-                      { backgroundColor: Color.dark.secondaryBackground },
-                    ]}
-                  >
-                    <Album02Icon size={24} color={'white'} />
-                    <RNText style={styles.textCallout}>ライブラリ</RNText>
+                  <View style={styles.flex1}>
+                    <CustomButton
+                      backgroundColor={Colors.dark.secondaryBackground}
+                      text='ライブラリ'
+                      textColor='white'
+                      variant='bezeledGray'
+                      size='large'
+                      icon='Album02Icon'
+                      renderIcon={({ size, color }) => (
+                        <Album02Icon size={size} color={color} />
+                      )}
+                      fullWidth
+                      onPress={handlePickImage}
+                    />
                   </View>
-                  <View
-                    style={[
-                      styles.contentsOptionWrapper,
-                      { backgroundColor: Color.dark.secondaryBackground },
-                    ]}
-                  >
-                    <Vynil03Icon size={24} color={'white'} />
-                    <RNText style={styles.textCallout}>アートワーク</RNText>
+                  <View style={styles.flex1}>
+                    <CustomButton
+                      backgroundColor={Colors.dark.secondaryBackground}
+                      text='アートワーク'
+                      textColor='white'
+                      variant='bezeledGray'
+                      size='large'
+                      icon='Vynil03Icon'
+                      renderIcon={({ size, color }) => (
+                        <Vynil03Icon size={size} color={color} />
+                      )}
+                      fullWidth
+                      onPress={() => {}}
+                    />
                   </View>
                 </View>
                 <View style={{ flexDirection: 'row', gap: 16 }}>
-                  <View
-                    style={[
-                      styles.contentsOptionWrapper,
-                      { backgroundColor: Color.dark.secondaryBackground },
-                    ]}
-                  >
-                    <Link04Icon size={24} color={'white'} />
-                    <RNText style={styles.textCallout}>リンク</RNText>
+                  <View style={styles.flex1}>
+                    <CustomButton
+                      backgroundColor={Colors.dark.secondaryBackground}
+                      text='リンク'
+                      textColor='white'
+                      variant='bezeledGray'
+                      size='large'
+                      icon='Link04Icon'
+                      disabled={!editorState.canSetLink}
+                      colorScheme='dark'
+                      renderIcon={({ size, color }) => (
+                        <Link04Icon size={size} color={color} />
+                      )}
+                      fullWidth
+                      onPress={() => {
+                        setIsLinkActive(true);
+                        editor.focus();
+                      }}
+                    />
                   </View>
-                  <View
-                    style={[
-                      styles.contentsOptionWrapper,
-                      { backgroundColor: Color.dark.secondaryBackground },
-                    ]}
-                  >
-                    <YoutubeIcon size={24} color={'white'} />
-                    <RNText style={styles.textCallout}>YouTube</RNText>
+                  <View style={styles.flex1}>
+                    <CustomButton
+                      backgroundColor={Colors.dark.secondaryBackground}
+                      text='YouTube'
+                      textColor='white'
+                      variant='bezeledGray'
+                      size='large'
+                      icon='YoutubeIcon'
+                      renderIcon={({ size, color }) => (
+                        <YoutubeIcon size={size} color={color} />
+                      )}
+                      fullWidth
+                      onPress={() => {
+                        setIsYoutubeActive(true);
+                        editor.focus();
+                      }}
+                    />
                   </View>
                 </View>
               </View>

@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { Button, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import {
   type EditorBridge,
   useBridgeState,
   useKeyboard,
 } from '@10play/tentap-editor';
+import { ArrowLeft01Icon, CancelCircleIcon } from 'hugeicons-react-native';
 
 import Colors from '@/src/constants/Colors';
 
@@ -17,6 +18,14 @@ interface EditorToolbarProps {
   editor: EditorBridge;
   hidden?: boolean;
   items: ToolbarItem[];
+  useLinkActive: {
+    isLinkActive: boolean;
+    setIsLinkActive: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+  useYoutubeActive: {
+    isYoutubeActive: boolean;
+    setIsYoutubeActive: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 }
 
 interface ToolbarItemProps extends ToolbarItem {
@@ -63,12 +72,16 @@ const EditorToolbar = ({
   editor,
   hidden = undefined,
   items,
+  useLinkActive,
+  useYoutubeActive,
 }: EditorToolbarProps) => {
   const editorState = useBridgeState(editor);
   const { isKeyboardUp } = useKeyboard();
   const [toolbarContext, setToolbarContext] = useState<ToolbarContext>(
     ToolbarContext.Main,
   );
+  const [link, setLink] = useState('');
+  const textInputRef = useRef<TextInput>(null);
 
   const args = {
     editor,
@@ -81,6 +94,71 @@ const EditorToolbar = ({
     hidden === undefined ? !isKeyboardUp || !editorState.isFocused : hidden;
 
   if (hideToolbar) return null;
+
+  if (useLinkActive.isLinkActive || useYoutubeActive.isYoutubeActive) {
+    return (
+      <View style={styles.toolbar}>
+        <Pressable
+          onPress={() => {
+            textInputRef.current?.clear();
+            useLinkActive.setIsLinkActive(false);
+            useYoutubeActive.setIsYoutubeActive(false);
+          }}
+          style={{ justifyContent: 'center', alignItems: 'center' }}
+        >
+          <ArrowLeft01Icon size={20} color='white' />
+        </Pressable>
+        <View style={{ flex: 1, padding: 8 }}>
+          <View
+            style={{
+              flex: 1,
+              borderRadius: 4,
+              borderCurve: 'continuous',
+              flexDirection: 'row',
+              backgroundColor: Colors.dark.secondaryBackground,
+            }}
+          >
+            <TextInput
+              style={{
+                flex: 1,
+                color: 'white',
+                paddingHorizontal: 8,
+              }}
+              autoCapitalize='none'
+              autoCorrect={false}
+              autoFocus={true}
+              placeholder='Enter URL'
+              placeholderTextColor='rgba(255, 255, 255, 0.5)'
+              ref={textInputRef}
+              value={link}
+              onChangeText={setLink}
+            />
+            <Pressable
+              onPress={() => textInputRef.current?.clear()}
+              style={{
+                justifyContent: 'center',
+                alignContent: 'center',
+                padding: 8,
+              }}
+            >
+              <CancelCircleIcon size={16} color='white' />
+            </Pressable>
+          </View>
+        </View>
+        <Button
+          color={'white'}
+          title='挿入'
+          onPress={() => {
+            useLinkActive.setIsLinkActive(false);
+            useLinkActive.isLinkActive && editor.setLink(link);
+            useYoutubeActive.isYoutubeActive && editor.setYoutubeVideo(link);
+            textInputRef.current?.clear();
+            editor.focus();
+          }}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.toolbar}>
@@ -102,11 +180,13 @@ export default EditorToolbar;
 
 const styles = StyleSheet.create({
   toolbar: {
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
     height: 44,
     paddingHorizontal: 16,
+    gap: 8,
   },
   toolbarItem: {
     height: 44,
