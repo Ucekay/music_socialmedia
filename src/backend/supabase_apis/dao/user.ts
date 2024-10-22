@@ -1,13 +1,13 @@
 import { supabase } from '../../lib/supabase';
+
 import type { Database } from '../../schema/schema';
 import type {
   CProfileDataParams,
   Profile,
   UProfileDataParams,
 } from '../../schema/supabase_api';
-import type { ProfileMeta } from '../model/user';
-
 import type { Artist } from '../model/artists';
+import type { ProfileMeta } from '../model/user';
 
 export type User = Database['public']['Tables']['users']['Row'];
 export type CreateUserParams = Omit<User, 'user_id' | 'created_at'>;
@@ -47,7 +47,7 @@ export class UserDao implements UserRepository {
         .insert({ ...params })
         .select('profile_id');
       if (error) {
-        throw new Error('データの挿入エラー: ' + error.message);
+        throw new Error(`データの挿入エラー: ${error.message}`);
       }
       if (result === null || result.length !== 1) {
         throw new Error('データの挿入エラー');
@@ -69,7 +69,7 @@ export class UserDao implements UserRepository {
         .update({ ...params })
         .match({ user_id: profileData.user_id });
       if (error) {
-        throw new Error('データの更新エラー: ' + error.message);
+        throw new Error(`データの更新エラー: ${error.message}`);
       }
       return true;
     } catch (error) {
@@ -85,7 +85,7 @@ export class UserDao implements UserRepository {
         .update({ deleted_at: new Date().toISOString() })
         .match({ user_id: userId });
       if (error) {
-        throw new Error('データの削除エラー: ' + error.message);
+        throw new Error(`データの削除エラー: ${error.message}`);
       }
       return true;
     } catch (error) {
@@ -102,7 +102,7 @@ export class UserDao implements UserRepository {
         .eq('profile_id', profileId)
         .single();
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
       return data !== null;
     } catch (error) {
@@ -124,7 +124,7 @@ export class UserDao implements UserRepository {
       console.log(userId);
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       return {
@@ -152,7 +152,7 @@ export class UserDao implements UserRepository {
         .eq('user_id', userId);
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       const artists = data.map((row: any) => {
@@ -176,15 +176,13 @@ export class UserDao implements UserRepository {
     artistName: string,
   ): Promise<boolean> {
     try {
-      const { error } = await supabase
-        .from(this.tableNameUsersArtists)
-        .insert({
-          user_id: userId,
-          artist_id: artistId,
-          artist_name: artistName,
-        });
+      const { error } = await supabase.from(this.tableNameUsersArtists).insert({
+        user_id: userId,
+        artist_id: artistId,
+        artist_name: artistName,
+      });
       if (error) {
-        throw new Error('データの挿入エラー: ' + error.message);
+        throw new Error(`データの挿入エラー: ${error.message}`);
       }
       return true;
     } catch (error) {
@@ -203,7 +201,7 @@ export class UserDao implements UserRepository {
         .delete()
         .match({ user_id: userId, artist_id: artistId });
       if (error) {
-        throw new Error('データの削除エラー: ' + error.message);
+        throw new Error(`データの削除エラー: ${error.message}`);
       }
       return true;
     } catch (error) {
@@ -217,11 +215,11 @@ export class UserDao implements UserRepository {
       const { data, error } = await supabase
         .from('follows')
         .select(
-          `follower_id, users!follower_id(user_name, icon_image_url, profile_id)`,
+          'follower_id, users!follower_id(user_name, icon_image_url, profile_id)',
         )
         .eq('followed_id', userId);
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       const followers = data.map((row: any) => {
@@ -247,11 +245,11 @@ export class UserDao implements UserRepository {
       const { data, error } = await supabase
         .from('follows')
         .select(
-          `followed_id, users!followed_id(user_name, icon_image_url, profile_id)`,
+          'followed_id, users!followed_id(user_name, icon_image_url, profile_id)',
         )
         .eq('follower_id', userId);
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       const followees = data.map((row: any) => {

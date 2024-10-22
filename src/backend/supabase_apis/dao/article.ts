@@ -1,4 +1,5 @@
 import { supabase } from '../../lib/supabase';
+
 import type { ArticleInteg } from '../../schema/supabase_api';
 import type { CreateArticleParams } from '../dbdriver/Article';
 import type {
@@ -100,7 +101,7 @@ export class ArticleDao implements ArticleRepository {
         .select('article_id');
 
       if (error) {
-        throw new Error('データの挿入エラー: ' + error.message);
+        throw new Error(`データの挿入エラー: ${error.message}`);
       }
 
       if (result === null || result.length !== 1) {
@@ -126,7 +127,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId, user_id: userId });
 
       if (error) {
-        throw new Error('データの削除エラー: ' + error.message);
+        throw new Error(`データの削除エラー: ${error.message}`);
       }
 
       return true;
@@ -148,7 +149,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId });
 
       if (error) {
-        throw new Error('データの更新エラー: ' + error.message);
+        throw new Error(`データの更新エラー: ${error.message}`);
       }
 
       return true;
@@ -169,7 +170,7 @@ export class ArticleDao implements ArticleRepository {
       );
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       const articles: ArticleInteg[] = rowArticles.map((row: any) => {
@@ -212,7 +213,7 @@ export class ArticleDao implements ArticleRepository {
       );
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       const articles: ArticleInteg[] = rowArticles.map((row: any) => {
@@ -255,7 +256,7 @@ export class ArticleDao implements ArticleRepository {
       );
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       const articles: ArticleInteg[] = rowArticles.map((row: any) => {
@@ -302,7 +303,7 @@ export class ArticleDao implements ArticleRepository {
         .insert({ ...generalData });
 
       if (error) {
-        throw new Error('データの挿入エラー: ' + error.message);
+        throw new Error(`データの挿入エラー: ${error.message}`);
       }
 
       return true;
@@ -324,7 +325,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId, user_id: userId });
 
       if (error) {
-        throw new Error('データの削除エラー: ' + error.message);
+        throw new Error(`データの削除エラー: ${error.message}`);
       }
 
       return true;
@@ -346,7 +347,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId });
 
       if (error) {
-        throw new Error('データの更新エラー: ' + error.message);
+        throw new Error(`データの更新エラー: ${error.message}`);
       }
 
       return true;
@@ -367,7 +368,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId });
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       if (data === null || data.length !== 1) {
@@ -396,7 +397,7 @@ export class ArticleDao implements ArticleRepository {
         .insert({ ...reviewData });
 
       if (error) {
-        throw new Error('データの挿入エラー: ' + error.message);
+        throw new Error(`データの挿入エラー: ${error.message}`);
       }
 
       return true;
@@ -418,7 +419,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId, user_id: userId });
 
       if (error) {
-        throw new Error('データの削除エラー: ' + error.message);
+        throw new Error(`データの削除エラー: ${error.message}`);
       }
 
       return true;
@@ -440,7 +441,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId });
 
       if (error) {
-        throw new Error('データの更新エラー: ' + error.message);
+        throw new Error(`データの更新エラー: ${error.message}`);
       }
 
       return true;
@@ -461,7 +462,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId });
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       if (data === null || data.length !== 1) {
@@ -490,7 +491,7 @@ export class ArticleDao implements ArticleRepository {
         .insert({ ...liveReportData });
 
       if (error) {
-        throw new Error('データの挿入エラー: ' + error.message);
+        throw new Error(`データの挿入エラー: ${error.message}`);
       }
 
       return true;
@@ -512,7 +513,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId, user_id: userId });
 
       if (error) {
-        throw new Error('データの削除エラー: ' + error.message);
+        throw new Error(`データの削除エラー: ${error.message}`);
       }
 
       return true;
@@ -534,7 +535,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId });
 
       if (error) {
-        throw new Error('データの更新エラー: ' + error.message);
+        throw new Error(`データの更新エラー: ${error.message}`);
       }
 
       return true;
@@ -555,7 +556,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId });
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       if (data === null || data.length !== 1) {
@@ -584,7 +585,7 @@ export class ArticleDao implements ArticleRepository {
         .insert({ ...playlistArticleData });
 
       if (error) {
-        throw new Error('データの挿入エラー: ' + error.message);
+        throw new Error(`データの挿入エラー: ${error.message}`);
       }
 
       return true;
@@ -606,7 +607,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId, user_id: userId });
 
       if (error) {
-        throw new Error('データの削除エラー: ' + error.message);
+        throw new Error(`データの削除エラー: ${error.message}`);
       }
 
       return true;
@@ -628,7 +629,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId });
 
       if (error) {
-        throw new Error('データの更新エラー: ' + error.message);
+        throw new Error(`データの更新エラー: ${error.message}`);
       }
 
       return true;
@@ -649,7 +650,7 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId });
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       if (data === null || data.length !== 1) {
@@ -674,16 +675,16 @@ export class ArticleDao implements ArticleRepository {
         .match({ article_id: articleId, user_id: userId });
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       if (count === 0) {
         return false;
-      } else if (count === 1) {
-        return true;
-      } else {
-        throw new Error('データの取得エラー');
       }
+      if (count === 1) {
+        return true;
+      }
+      throw new Error('データの取得エラー');
     } catch (error) {
       console.error('データの取得中にエラーが発生しました:', error);
       throw error;

@@ -1,4 +1,5 @@
 import { supabase } from '../../lib/supabase';
+
 import type { Database } from '../../schema/schema';
 import type { CArtistParams } from '../model/artists';
 
@@ -21,7 +22,7 @@ export class ArtistDao implements ArtistRepository {
         .select('artist_id');
 
       if (error) {
-        throw new Error('データの挿入エラー: ' + error.message);
+        throw new Error(`データの挿入エラー: ${error.message}`);
       }
 
       if (data === null || data.length !== 1) {
@@ -43,7 +44,7 @@ export class ArtistDao implements ArtistRepository {
         .ilike('artist_name', `%${searchParam}%`);
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       return data;
@@ -66,14 +67,13 @@ export class ArtistDao implements ArtistRepository {
         .single();
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
       if (data) {
         return true;
-      } else {
-        return false;
       }
+      return false;
     } catch (error) {
       console.error('データの取得中にエラーが発生しました:', error);
       throw error;

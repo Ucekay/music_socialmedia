@@ -1,11 +1,12 @@
 import { BadRequestError } from '../../schema/error';
+import { ArticleApplication } from '../application/article';
+import { ArticleDao } from '../dao/article';
+
 import type {
   ArticleAdditionalData,
   ArticleInteg,
   CUArticleDataParams,
 } from '../../schema/supabase_api';
-import { ArticleApplication } from '../application/article';
-import { ArticleDao } from '../dao/article';
 
 const articleDao = new ArticleDao();
 const articleApplication = new ArticleApplication(articleDao);
@@ -42,13 +43,8 @@ export const CreateArticleHandler = async (
     body: body,
     playlist_id: playlistId,
   };
-
-  try {
-    const result = await articleApplication.createArticle(ArticleData, userId);
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  const result = await articleApplication.createArticle(ArticleData, userId);
+  return result;
 };
 
 export const DeleteArticleHandler = async (
@@ -59,16 +55,12 @@ export const DeleteArticleHandler = async (
   if (!articleId || !userId || !type) {
     throw BadRequestError;
   }
-  try {
-    const result = await articleApplication.deleteArticle(
-      articleId,
-      userId,
-      type,
-    );
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  const result = await articleApplication.deleteArticle(
+    articleId,
+    userId,
+    type,
+  );
+  return result;
 };
 
 export const UpdateArticleHandler = async (
@@ -76,16 +68,12 @@ export const UpdateArticleHandler = async (
   userId: string,
   updateData: Partial<CUArticleDataParams>,
 ): Promise<boolean> => {
-  try {
-    const result = await articleApplication.updateArticle(
-      articleId,
-      userId,
-      updateData,
-    );
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  const result = await articleApplication.updateArticle(
+    articleId,
+    userId,
+    updateData,
+  );
+  return result;
 };
 
 export const GetArticlesHandler = async (
@@ -96,22 +84,14 @@ export const GetArticlesHandler = async (
   cursor: string | null;
   latestcursor: string | null;
 }> => {
-  try {
-    const result = await articleApplication.getArticles(prevcursor, latest);
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  const result = await articleApplication.getArticles(prevcursor, latest);
+  return result;
 };
 
 export const GetArticleHandler = async (
   articleId: number,
   type: string,
 ): Promise<{ content: ArticleAdditionalData; likeStatus: boolean }> => {
-  try {
-    const result = await articleApplication.getArticle(articleId, type);
-    return result;
-  } catch (error) {
-    throw error;
-  }
+  const result = await articleApplication.getArticle(articleId, type);
+  return result;
 };
