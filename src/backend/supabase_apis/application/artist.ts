@@ -13,25 +13,33 @@ export class ArtistApplication implements IArtistApplication {
   }
 
   async registerArtist(artistData: CArtistParams): Promise<string> {
-    var input;
-    if (artistData.musickitId === undefined) {
-      artistData.musickitId = null;
-    }
+    try {
+      var input;
+      if (artistData.musickitId === undefined) {
+        artistData.musickitId = null;
+      }
 
-    const exist = await this.artistDao.existArtist(
-      artistData.artistName,
-      artistData.musickitId,
-    );
-    if (exist) {
-      throw new Error('artist is already registered');
-    }
+      const exist = await this.artistDao.existArtist(
+        artistData.artistName,
+        artistData.musickitId,
+      );
+      if (exist) {
+        throw new Error('artist is already registered');
+      }
 
-    const result = await this.artistDao.registerArtist(artistData);
-    return result;
+      const result = await this.artistDao.registerArtist(artistData);
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async searchArtist(searchParam: string): Promise<Artist[]> {
-    const result = await this.artistDao.searchArtist(searchParam);
-    return result;
+    try {
+      const result = await this.artistDao.searchArtist(searchParam);
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 }

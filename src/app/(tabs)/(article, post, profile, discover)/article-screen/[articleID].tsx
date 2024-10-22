@@ -123,6 +123,7 @@ const ArticleDetailsScreen = () => {
                   renderIcon={renderHeartIcon}
                   size='large'
                   variant='borderless'
+                  textColor={colors.appleMusicText}
                 />
               </View>
             </View>

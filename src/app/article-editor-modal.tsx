@@ -1,4 +1,4 @@
-import { Stack, useNavigation } from 'expo-router';
+import { Stack, useNavigation, useRouter } from 'expo-router';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -579,7 +579,6 @@ interface ContentsOptionsProps {
   setIsLinkActive: (active: boolean) => void;
   setIsYoutubeActive: (active: boolean) => void;
   editor: EditorBridge;
-  artworkBottomSheetRef: React.RefObject<BottomSheet>;
 }
 
 const ContentsOptions = ({
@@ -587,9 +586,9 @@ const ContentsOptions = ({
   setIsLinkActive,
   setIsYoutubeActive,
   editor,
-  artworkBottomSheetRef,
 }: ContentsOptionsProps) => {
   const { width } = useWindowDimensions();
+  const router = useRouter();
   const handlePickImage = async () => {
     ImagePicker.openPicker({
       mediaType: 'photo',
@@ -633,9 +632,7 @@ const ContentsOptions = ({
               <Vynil03Icon size={size} color={color} />
             )}
             fullWidth
-            onPress={() => {
-              artworkBottomSheetRef.current?.expand();
-            }}
+            onPress={() => {}}
           />
         </View>
       </View>
@@ -696,7 +693,7 @@ const ArticleEditorModal = () => {
   const [isYoutubeActive, setIsYoutubeActive] = useState(false);
   const formattingBottomSheetRef = useRef<BottomSheet>(null);
   const contentsBottomSheetRef = useRef<BottomSheet>(null);
-  const artworkBottomSheetRef = useRef<BottomSheet>(null);
+
   const animatedBottomFormattingSheetPosition = useSharedValue(0);
   const animatedFormattingBottomSheetIndex = useSharedValue(-1);
   const animatedContentsBottomSheetPosition = useSharedValue(0);
@@ -1115,7 +1112,6 @@ const ArticleEditorModal = () => {
                 setIsLinkActive={setIsLinkActive}
                 setIsYoutubeActive={setIsYoutubeActive}
                 editor={editor}
-                artworkBottomSheetRef={artworkBottomSheetRef}
               />
             </BottomSheetView>
           </BottomSheet>

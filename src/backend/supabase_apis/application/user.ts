@@ -44,13 +44,19 @@ export class ProfileApplication implements IProfileApplication {
   }
 
   async createProfile(profileData: CProfileDataParams): Promise<string> {
-    const exist = await this.profileDao.existProfileId(profileData.profile_id);
-    if (exist) {
-      throw new Error('profile_id is invalid');
-    }
+    try {
+      const exist = await this.profileDao.existProfileId(
+        profileData.profile_id,
+      );
+      if (exist) {
+        throw new Error('profile_id is invalid');
+      }
 
-    const result = await this.profileDao.createUserProfile(profileData);
-    return result;
+      const result = await this.profileDao.createUserProfile(profileData);
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async updateProfile(
@@ -64,18 +70,28 @@ export class ProfileApplication implements IProfileApplication {
         throw new Error('profile_id is invalid');
       }
     }
-    const result = await this.profileDao.updateUserProfile(profileData);
-    return result;
+
+    try {
+      const result = await this.profileDao.updateUserProfile(profileData);
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getProfile(userId: string): Promise<Profile> {
-    const profileWithoutFavArtists =
-      await this.profileDao.getUserProfile(userId);
-    const favoriteArtists = await this.profileDao.getFavArtistsByUserId(userId);
-    const result = { ...profileWithoutFavArtists };
-    result.favArtists = [...favoriteArtists];
+    try {
+      const profileWithoutFavArtists =
+        await this.profileDao.getUserProfile(userId);
+      const favoriteArtists =
+        await this.profileDao.getFavArtistsByUserId(userId);
+      const result = { ...profileWithoutFavArtists };
+      result.favArtists = [...favoriteArtists];
 
-    return result;
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async registerFavoriteArtist(
@@ -93,20 +109,32 @@ export class ProfileApplication implements IProfileApplication {
     if (count === 10) {
       throw new Error('The number of favorite artists is already 10');
     }
-    const result = await this.profileDao.registerFavArtist(
-      userId,
-      artistId,
-      artistName,
-    );
-    return result;
+
+    try {
+      const result = await this.profileDao.registerFavArtist(
+        userId,
+        artistId,
+        artistName,
+      );
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async deleteFavoriteArtist(
     userId: string,
     artistId: string,
   ): Promise<boolean> {
-    const result = await this.profileDao.deleteFavArtist(userId, artistId);
-    return result;
+    try {
+      const result = await this.profileDao.deleteFavoriteArtist(
+        userId,
+        artistId,
+      );
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getArticlesByUser(
@@ -132,7 +160,7 @@ export class ProfileApplication implements IProfileApplication {
         cursor =
           metadata.length > 0 ? metadata[metadata.length - 1].created_at : null;
         latestcursor = metadata.length > 0 ? metadata[0].created_at : null;
-      } else if (latest === false) {
+      } else if (latest == false) {
         const result = await this.profileDao.getOlderArticlesByUserId(
           userId,
           prevcursor,
@@ -184,17 +212,29 @@ export class ProfileApplication implements IProfileApplication {
   }
 
   async existProfileId(profileId: string): Promise<boolean> {
-    const result = await this.profileDao.existProfileId(profileId);
-    return result;
+    try {
+      const result = await this.profileDao.existProfileId(profileId);
+      return result;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getFollowersByUserId(userId: string): Promise<ProfileMeta[]> {
-    const followers = await this.profileDao.getFollowersByUserId(userId);
-    return followers;
+    try {
+      const followers = await this.profileDao.getFollowersByUserId(userId);
+      return followers;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getFollowingsByUserId(userId: string): Promise<ProfileMeta[]> {
-    const followings = await this.profileDao.getFollowingsByUserId(userId);
-    return followings;
+    try {
+      const followings = await this.profileDao.getFollowingsByUserId(userId);
+      return followings;
+    } catch (error) {
+      throw error;
+    }
   }
 }

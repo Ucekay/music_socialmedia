@@ -85,6 +85,14 @@ function RootLayoutNav() {
                     }}
                   />
                   <Stack.Screen
+                    name='editor-artwork-modal'
+                    options={{
+                      title: 'Search Artwork',
+                      presentation: 'modal',
+                      gestureEnabled: false,
+                    }}
+                  />
+                  <Stack.Screen
                     name='post-editor-modal'
                     options={{
                       headerShown: false,
