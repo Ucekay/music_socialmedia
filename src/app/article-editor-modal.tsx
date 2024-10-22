@@ -54,6 +54,7 @@ import {
 } from 'hugeicons-react-native';
 import ImagePicker, { type Image } from 'react-native-image-crop-picker';
 import {
+  KeyboardController,
   KeyboardStickyView,
   useReanimatedKeyboardAnimation,
 } from 'react-native-keyboard-controller';
@@ -573,6 +574,115 @@ const BlockOptions = ({
   );
 };
 
+interface ContentsOptionsProps {
+  editorState: BridgeState;
+  setIsLinkActive: (active: boolean) => void;
+  setIsYoutubeActive: (active: boolean) => void;
+  editor: EditorBridge;
+  artworkBottomSheetRef: React.RefObject<BottomSheet>;
+}
+
+const ContentsOptions = ({
+  editorState,
+  setIsLinkActive,
+  setIsYoutubeActive,
+  editor,
+  artworkBottomSheetRef,
+}: ContentsOptionsProps) => {
+  const { width } = useWindowDimensions();
+  const handlePickImage = async () => {
+    ImagePicker.openPicker({
+      mediaType: 'photo',
+      cropping: true,
+      freeStyleCropEnabled: true,
+      width: width,
+      height: (width / 16) * 9,
+      includeBase64: true,
+    }).then((image: Image) => {
+      editor.setImage(`data:${image.mime};base64,${image.data}`);
+    });
+  };
+
+  return (
+    <View style={styles.contentsOptionWrapper}>
+      <View style={styles.contentsOptionContainer}>
+        <View style={styles.flex1}>
+          <CustomButton
+            backgroundColor={Colors.dark.secondaryBackground}
+            text='ライブラリ'
+            textColor='white'
+            variant='bezeledGray'
+            size='large'
+            icon='Album02Icon'
+            renderIcon={({ size, color }) => (
+              <Album02Icon size={size} color={color} />
+            )}
+            fullWidth
+            onPress={handlePickImage}
+          />
+        </View>
+        <View style={styles.flex1}>
+          <CustomButton
+            backgroundColor={Colors.dark.secondaryBackground}
+            text='アートワーク'
+            textColor='white'
+            variant='bezeledGray'
+            size='large'
+            icon='Vynil03Icon'
+            renderIcon={({ size, color }) => (
+              <Vynil03Icon size={size} color={color} />
+            )}
+            fullWidth
+            onPress={() => {
+              artworkBottomSheetRef.current?.expand();
+            }}
+          />
+        </View>
+      </View>
+      <View style={styles.contentsOptionContainer}>
+        <View style={styles.flex1}>
+          <CustomButton
+            backgroundColor={Colors.dark.secondaryBackground}
+            text='リンク'
+            textColor='white'
+            variant='bezeledGray'
+            size='large'
+            icon='Link04Icon'
+            disabled={!editorState.canSetLink}
+            colorScheme='dark'
+            renderIcon={({ size, color }) => (
+              <Link04Icon size={size} color={color} />
+            )}
+            fullWidth
+            onPress={() => {
+              setIsLinkActive(true);
+              KeyboardController.setFocusTo('current');
+            }}
+          />
+        </View>
+        <View style={styles.flex1}>
+          <CustomButton
+            backgroundColor={Colors.dark.secondaryBackground}
+            text='YouTube'
+            textColor='white'
+            variant='bezeledGray'
+            size='large'
+            icon='YoutubeIcon'
+            renderIcon={({ size, color }) => (
+              <YoutubeIcon size={size} color={color} />
+            )}
+            fullWidth
+            onPress={() => {
+              setIsYoutubeActive(true);
+              KeyboardController.setFocusTo('current');
+            }}
+          />
+        </View>
+      </View>
+    </View>
+  );
+};
+
 const ArticleEditorModal = () => {
   const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
@@ -586,6 +696,7 @@ const ArticleEditorModal = () => {
   const [isYoutubeActive, setIsYoutubeActive] = useState(false);
   const formattingBottomSheetRef = useRef<BottomSheet>(null);
   const contentsBottomSheetRef = useRef<BottomSheet>(null);
+  const artworkBottomSheetRef = useRef<BottomSheet>(null);
   const animatedBottomFormattingSheetPosition = useSharedValue(0);
   const animatedFormattingBottomSheetIndex = useSharedValue(-1);
   const animatedContentsBottomSheetPosition = useSharedValue(0);
@@ -715,6 +826,8 @@ const ArticleEditorModal = () => {
       contentsBottomSheetRef.current?.close();
       setIsFormatting(false);
       setIsAddingContents(false);
+      setIsLinkActive(false);
+      setIsYoutubeActive(false);
     }
   }, [editorState.isFocused]);
 
@@ -845,6 +958,7 @@ const ArticleEditorModal = () => {
     if (isAddingContents) {
       editor.focus();
     }
+    setIsAddingContents(false);
   };
 
   const editorMaxHeight = height - headerHeight - insets.top;
@@ -880,14 +994,23 @@ const ArticleEditorModal = () => {
           11 * (animatedFormattingBottomSheetIndex.value + 1.0) + 1,
       };
     }
-
-    return {
-      height: animatedContentsBottomSheetPosition.value,
-      borderBottomLeftRadius:
-        11 * (animatedContentsBottomSheetIndex.value + 1.0) + 1,
-      borderBottomRightRadius:
-        11 * (animatedContentsBottomSheetIndex.value + 1.0) + 1,
-    };
+    if (
+      Math.max(
+        -keyboardHeight.value,
+        editorMaxHeight - animatedBottomFormattingSheetPosition.value,
+        editorMaxHeight - animatedContentsBottomSheetPosition.value,
+      ) ===
+      editorMaxHeight - animatedContentsBottomSheetPosition.value
+    ) {
+      return {
+        height: animatedContentsBottomSheetPosition.value,
+        borderBottomLeftRadius:
+          11 * (animatedContentsBottomSheetIndex.value + 1.0) + 1,
+        borderBottomRightRadius:
+          11 * (animatedContentsBottomSheetIndex.value + 1.0) + 1,
+      };
+    }
+    return {};
   });
 
   const animatedToolbarStyle = useAnimatedStyle(() => {
@@ -895,19 +1018,6 @@ const ArticleEditorModal = () => {
       height: 44 * progress.value,
     };
   });
-
-  const handlePickImage = async () => {
-    ImagePicker.openPicker({
-      mediaType: 'photo',
-      cropping: true,
-      freeStyleCropEnabled: true,
-      width: width,
-      height: (width / 16) * 9,
-      includeBase64: true,
-    }).then((image: Image) => {
-      editor.setImage(`data:${image.mime};base64,${image.data}`);
-    });
-  };
 
   return (
     <BgView style={styles.flex1}>
@@ -1000,86 +1110,13 @@ const ArticleEditorModal = () => {
                 { paddingBottom: insets.bottom },
               ]}
             >
-              <View
-                style={{
-                  flex: 1,
-                  width: '100%',
-                  gap: 12,
-                }}
-              >
-                <View style={{ width: '100%', flexDirection: 'row', gap: 16 }}>
-                  <View style={styles.flex1}>
-                    <CustomButton
-                      backgroundColor={Colors.dark.secondaryBackground}
-                      text='ライブラリ'
-                      textColor='white'
-                      variant='bezeledGray'
-                      size='large'
-                      icon='Album02Icon'
-                      renderIcon={({ size, color }) => (
-                        <Album02Icon size={size} color={color} />
-                      )}
-                      fullWidth
-                      onPress={handlePickImage}
-                    />
-                  </View>
-                  <View style={styles.flex1}>
-                    <CustomButton
-                      backgroundColor={Colors.dark.secondaryBackground}
-                      text='アートワーク'
-                      textColor='white'
-                      variant='bezeledGray'
-                      size='large'
-                      icon='Vynil03Icon'
-                      renderIcon={({ size, color }) => (
-                        <Vynil03Icon size={size} color={color} />
-                      )}
-                      fullWidth
-                      onPress={() => {}}
-                    />
-                  </View>
-                </View>
-                <View style={{ flexDirection: 'row', gap: 16 }}>
-                  <View style={styles.flex1}>
-                    <CustomButton
-                      backgroundColor={Colors.dark.secondaryBackground}
-                      text='リンク'
-                      textColor='white'
-                      variant='bezeledGray'
-                      size='large'
-                      icon='Link04Icon'
-                      disabled={!editorState.canSetLink}
-                      colorScheme='dark'
-                      renderIcon={({ size, color }) => (
-                        <Link04Icon size={size} color={color} />
-                      )}
-                      fullWidth
-                      onPress={() => {
-                        setIsLinkActive(true);
-                        editor.focus();
-                      }}
-                    />
-                  </View>
-                  <View style={styles.flex1}>
-                    <CustomButton
-                      backgroundColor={Colors.dark.secondaryBackground}
-                      text='YouTube'
-                      textColor='white'
-                      variant='bezeledGray'
-                      size='large'
-                      icon='YoutubeIcon'
-                      renderIcon={({ size, color }) => (
-                        <YoutubeIcon size={size} color={color} />
-                      )}
-                      fullWidth
-                      onPress={() => {
-                        setIsYoutubeActive(true);
-                        editor.focus();
-                      }}
-                    />
-                  </View>
-                </View>
-              </View>
+              <ContentsOptions
+                editorState={editorState}
+                setIsLinkActive={setIsLinkActive}
+                setIsYoutubeActive={setIsYoutubeActive}
+                editor={editor}
+                artworkBottomSheetRef={artworkBottomSheetRef}
+              />
             </BottomSheetView>
           </BottomSheet>
         </View>
@@ -1209,29 +1246,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   contentsOptionWrapper: {
-    alignItems: 'center',
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    padding: 12,
-    borderCurve: 'continuous',
-    borderRadius: 12,
-    gap: 8,
+    width: '100%',
+    gap: 12,
   },
-  contentsOptionContainer: {
-    flex: 1,
-    gap: 8,
-  },
-  playerContainer: {
-    overflow: 'hidden',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 80,
-    height: 20,
-    padding: 4,
-    borderCurve: 'continuous',
-    borderRadius: 8,
-    gap: 4,
-  },
+  contentsOptionContainer: { flexDirection: 'row', gap: 16 },
 });
