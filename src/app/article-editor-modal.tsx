@@ -906,7 +906,6 @@ const ArticleEditorModal = () => {
       includeBase64: true,
     }).then((image: Image) => {
       editor.setImage(`data:${image.mime};base64,${image.data}`);
-      console.log(image);
     });
   };
 
