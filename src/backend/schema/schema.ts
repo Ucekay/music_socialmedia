@@ -34,121 +34,23 @@ export type Database = {
   };
   public: {
     Tables: {
-      article: {
+      artists: {
         Row: {
-          article_id: number;
-          created_at: string;
-          info_1: string | null;
-          info_2: string | null;
-          thumbnail_url: string;
-          title: string;
-          type: string;
-          user_id: string;
+          artist_name: string;
+          id: number;
+          musickit_id: string | null;
         };
         Insert: {
-          article_id?: number;
-          created_at?: string;
-          info_1?: string | null;
-          info_2?: string | null;
-          thumbnail_url: string;
-          title: string;
-          type: string;
-          user_id?: string;
+          artist_name: string;
+          id?: number;
+          musickit_id?: string | null;
         };
         Update: {
-          article_id?: number;
-          created_at?: string;
-          info_1?: string | null;
-          info_2?: string | null;
-          thumbnail_url?: string;
-          title?: string;
-          type?: string;
-          user_id?: string;
+          artist_name?: string;
+          id?: number;
+          musickit_id?: string | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: 'Article_UserID_fkey';
-            columns: ['user_id'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      article_comment: {
-        Row: {
-          article_comment_id: number;
-          body: string;
-          created_at: string;
-          parent_id: number;
-          type: string;
-          user_id: string;
-        };
-        Insert: {
-          article_comment_id?: number;
-          body: string;
-          created_at?: string;
-          parent_id: number;
-          type: string;
-          user_id?: string;
-        };
-        Update: {
-          article_comment_id?: number;
-          body?: string;
-          created_at?: string;
-          parent_id?: number;
-          type?: string;
-          user_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'article_comment_parent_id_fkey';
-            columns: ['parent_id'];
-            isOneToOne: false;
-            referencedRelation: 'article';
-            referencedColumns: ['article_id'];
-          },
-          {
-            foreignKeyName: 'ArticleComment_UserID_fkey';
-            columns: ['user_id'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
-      article_likes: {
-        Row: {
-          article_id: number;
-          created_at: string;
-          user_id: string;
-        };
-        Insert: {
-          article_id?: number;
-          created_at?: string;
-          user_id?: string;
-        };
-        Update: {
-          article_id?: number;
-          created_at?: string;
-          user_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'article_likes_article_id_fkey';
-            columns: ['article_id'];
-            isOneToOne: false;
-            referencedRelation: 'article';
-            referencedColumns: ['article_id'];
-          },
-          {
-            foreignKeyName: 'article_likes_user_id_fkey';
-            columns: ['user_id'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
-          },
-        ];
+        Relationships: [];
       };
       blocks: {
         Row: {
@@ -187,17 +89,29 @@ export type Database = {
         Row: {
           created_at: string;
           followed_id: string;
+          followed_notified: boolean;
           follower_id: string;
+          follower_notified: boolean;
+          status: string;
+          updated_at: string | null;
         };
         Insert: {
           created_at?: string;
           followed_id: string;
+          followed_notified?: boolean;
           follower_id?: string;
+          follower_notified?: boolean;
+          status: string;
+          updated_at?: string | null;
         };
         Update: {
           created_at?: string;
           followed_id?: string;
+          followed_notified?: boolean;
           follower_id?: string;
+          follower_notified?: boolean;
+          status?: string;
+          updated_at?: string | null;
         };
         Relationships: [
           {
@@ -216,48 +130,45 @@ export type Database = {
           },
         ];
       };
-      general: {
+      generals: {
         Row: {
-          article_id: number;
-          body: Json;
-          likes: number;
+          content: Json;
+          general_id: number;
+          image_urls: Json | null;
           playlist_id: number | null;
           user_id: string;
-          view: number;
         };
         Insert: {
-          article_id?: number;
-          body: Json;
-          likes?: number;
+          content: Json;
+          general_id?: number;
+          image_urls?: Json | null;
           playlist_id?: number | null;
           user_id?: string;
-          view?: number;
         };
         Update: {
-          article_id?: number;
-          body?: Json;
-          likes?: number;
+          content?: Json;
+          general_id?: number;
+          image_urls?: Json | null;
           playlist_id?: number | null;
           user_id?: string;
-          view?: number;
         };
         Relationships: [
-          {
-            foreignKeyName: 'general_article_id_fkey';
-            columns: ['article_id'];
-            isOneToOne: true;
-            referencedRelation: 'article';
-            referencedColumns: ['article_id'];
-          },
           {
             foreignKeyName: 'general_playlist_id_fkey';
             columns: ['playlist_id'];
             isOneToOne: false;
-            referencedRelation: 'playlist';
+            referencedRelation: 'music_playlist';
             referencedColumns: ['playlist_id'];
           },
           {
-            foreignKeyName: 'General_UserID_fkey';
+            foreignKeyName: 'generals_general_id_fkey';
+            columns: ['general_id'];
+            isOneToOne: true;
+            referencedRelation: 'mlogs';
+            referencedColumns: ['mlog_id'];
+          },
+          {
+            foreignKeyName: 'generals_user_id_fkey';
             columns: ['user_id'];
             isOneToOne: false;
             referencedRelation: 'users';
@@ -265,44 +176,34 @@ export type Database = {
           },
         ];
       };
-      live_report: {
+      livereports: {
         Row: {
-          body: Json;
-          likes: number;
-          live_report_id: number;
+          content: Json;
+          image_urls: Json | null;
+          livereport_id: number;
           playlist_id: number | null;
           user_id: string;
-          view: number;
         };
         Insert: {
-          body: Json;
-          likes?: number;
-          live_report_id?: number;
+          content: Json;
+          image_urls?: Json | null;
+          livereport_id?: number;
           playlist_id?: number | null;
           user_id?: string;
-          view?: number;
         };
         Update: {
-          body?: Json;
-          likes?: number;
-          live_report_id?: number;
+          content?: Json;
+          image_urls?: Json | null;
+          livereport_id?: number;
           playlist_id?: number | null;
           user_id?: string;
-          view?: number;
         };
         Relationships: [
-          {
-            foreignKeyName: 'live_report_live_report_id_fkey';
-            columns: ['live_report_id'];
-            isOneToOne: true;
-            referencedRelation: 'article';
-            referencedColumns: ['article_id'];
-          },
           {
             foreignKeyName: 'live_report_playlist_id_fkey';
             columns: ['playlist_id'];
             isOneToOne: false;
-            referencedRelation: 'playlist';
+            referencedRelation: 'music_playlist';
             referencedColumns: ['playlist_id'];
           },
           {
@@ -312,9 +213,135 @@ export type Database = {
             referencedRelation: 'users';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'livereports_livereport_id_fkey';
+            columns: ['livereport_id'];
+            isOneToOne: true;
+            referencedRelation: 'mlogs';
+            referencedColumns: ['mlog_id'];
+          },
         ];
       };
-      playlist: {
+      mlog_comments: {
+        Row: {
+          content: string;
+          created_at: string;
+          target_id: number;
+          user_id: string;
+        };
+        Insert: {
+          content: string;
+          created_at?: string;
+          target_id: number;
+          user_id?: string;
+        };
+        Update: {
+          content?: string;
+          created_at?: string;
+          target_id?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'ArticleComment_UserID_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'mlog_comments_target_id_fkey';
+            columns: ['target_id'];
+            isOneToOne: false;
+            referencedRelation: 'mlogs';
+            referencedColumns: ['mlog_id'];
+          },
+        ];
+      };
+      mlog_likes: {
+        Row: {
+          created_at: string;
+          target_id: number;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          target_id?: number;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          target_id?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'article_likes_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'mlog_likes_target_id_fkey';
+            columns: ['target_id'];
+            isOneToOne: false;
+            referencedRelation: 'mlogs';
+            referencedColumns: ['mlog_id'];
+          },
+        ];
+      };
+      mlogs: {
+        Row: {
+          created_at: string;
+          deleted_at: string | null;
+          info_1: string | null;
+          info_2: string | null;
+          likes: number;
+          mlog_id: number;
+          thumbnail_url: string;
+          title: string;
+          type: string;
+          user_id: string;
+          views: number;
+        };
+        Insert: {
+          created_at?: string;
+          deleted_at?: string | null;
+          info_1?: string | null;
+          info_2?: string | null;
+          likes?: number;
+          mlog_id?: number;
+          thumbnail_url: string;
+          title: string;
+          type: string;
+          user_id?: string;
+          views?: number;
+        };
+        Update: {
+          created_at?: string;
+          deleted_at?: string | null;
+          info_1?: string | null;
+          info_2?: string | null;
+          likes?: number;
+          mlog_id?: number;
+          thumbnail_url?: string;
+          title?: string;
+          type?: string;
+          user_id?: string;
+          views?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'Article_UserID_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      music_playlist: {
         Row: {
           created_at: string;
           playlist_id: number;
@@ -343,44 +370,83 @@ export type Database = {
           },
         ];
       };
-      playlist_article: {
+      notifications: {
         Row: {
-          article_id: number;
-          body: Json;
-          likes: number;
-          playlist_id: number | null;
+          content: string;
+          created_at: string;
+          notification_id: number;
           user_id: string;
-          view: number;
         };
         Insert: {
-          article_id?: number;
-          body: Json;
-          likes?: number;
-          playlist_id?: number | null;
+          content: string;
+          created_at?: string;
+          notification_id?: number;
           user_id?: string;
-          view?: number;
         };
         Update: {
-          article_id?: number;
-          body?: Json;
-          likes?: number;
-          playlist_id?: number | null;
+          content?: string;
+          created_at?: string;
+          notification_id?: number;
           user_id?: string;
-          view?: number;
         };
         Relationships: [
           {
-            foreignKeyName: 'playlist_article_article_id_fkey';
-            columns: ['article_id'];
-            isOneToOne: true;
-            referencedRelation: 'article';
-            referencedColumns: ['article_id'];
+            foreignKeyName: 'notifications_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
           },
+        ];
+      };
+      playlist_musics: {
+        Row: {
+          music_id: string;
+          playlist_id: number;
+        };
+        Insert: {
+          music_id: string;
+          playlist_id?: number;
+        };
+        Update: {
+          music_id?: string;
+          playlist_id?: number;
+        };
+        Relationships: [
           {
-            foreignKeyName: 'playlist_article_playlist_id_fkey';
+            foreignKeyName: 'playlist_songs_playlist_id_fkey';
             columns: ['playlist_id'];
             isOneToOne: false;
-            referencedRelation: 'playlist';
+            referencedRelation: 'music_playlist';
+            referencedColumns: ['playlist_id'];
+          },
+        ];
+      };
+      playlists: {
+        Row: {
+          content: Json;
+          image_urls: Json | null;
+          mlog_playlist_id: number;
+          user_id: string;
+        };
+        Insert: {
+          content: Json;
+          image_urls?: Json | null;
+          mlog_playlist_id: number;
+          user_id?: string;
+        };
+        Update: {
+          content?: Json;
+          image_urls?: Json | null;
+          mlog_playlist_id?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'playlist_article_playlist_id_fkey';
+            columns: ['mlog_playlist_id'];
+            isOneToOne: true;
+            referencedRelation: 'music_playlist';
             referencedColumns: ['playlist_id'];
           },
           {
@@ -390,79 +456,28 @@ export type Database = {
             referencedRelation: 'users';
             referencedColumns: ['id'];
           },
-        ];
-      };
-      playlist_songs: {
-        Row: {
-          playlist_id: number;
-          song_id: string;
-        };
-        Insert: {
-          playlist_id?: number;
-          song_id: string;
-        };
-        Update: {
-          playlist_id?: number;
-          song_id?: string;
-        };
-        Relationships: [
           {
-            foreignKeyName: 'playlist_songs_playlist_id_fkey';
-            columns: ['playlist_id'];
-            isOneToOne: false;
-            referencedRelation: 'playlist';
-            referencedColumns: ['playlist_id'];
-          },
-        ];
-      };
-      post: {
-        Row: {
-          body: string;
-          created_at: string;
-          entry_id: number;
-          image_url: Json;
-          likes: number;
-          user_id: string;
-          view: number;
-        };
-        Insert: {
-          body: string;
-          created_at?: string;
-          entry_id?: number;
-          image_url?: Json;
-          likes?: number;
-          user_id?: string;
-          view?: number;
-        };
-        Update: {
-          body?: string;
-          created_at?: string;
-          entry_id?: number;
-          image_url?: Json;
-          likes?: number;
-          user_id?: string;
-          view?: number;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'PostAndComment_UserID_fkey';
-            columns: ['user_id'];
-            isOneToOne: false;
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: 'playlists_mlog_playlist_id_fkey';
+            columns: ['mlog_playlist_id'];
+            isOneToOne: true;
+            referencedRelation: 'mlogs';
+            referencedColumns: ['mlog_id'];
           },
         ];
       };
       post_likes: {
         Row: {
+          created_at: string;
           post_id: number;
           user_id: string;
         };
         Insert: {
+          created_at?: string;
           post_id: number;
           user_id?: string;
         };
         Update: {
+          created_at?: string;
           post_id?: number;
           user_id?: string;
         };
@@ -478,69 +493,116 @@ export type Database = {
             foreignKeyName: 'post_likes_post_id_fkey';
             columns: ['post_id'];
             isOneToOne: false;
-            referencedRelation: 'post';
+            referencedRelation: 'posts';
             referencedColumns: ['entry_id'];
           },
         ];
       };
-      profiles: {
+      posts: {
+        Row: {
+          content: string;
+          created_at: string;
+          deleted_at: string | null;
+          entry_id: number;
+          image_urls: Json;
+          likes: number;
+          user_id: string;
+          views: number;
+        };
+        Insert: {
+          content: string;
+          created_at?: string;
+          deleted_at?: string | null;
+          entry_id?: number;
+          image_urls?: Json;
+          likes?: number;
+          user_id?: string;
+          views?: number;
+        };
+        Update: {
+          content?: string;
+          created_at?: string;
+          deleted_at?: string | null;
+          entry_id?: number;
+          image_urls?: Json;
+          likes?: number;
+          user_id?: string;
+          views?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'PostAndComment_UserID_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      profile: {
         Row: {
           avatar_url: string | null;
           created_at: string;
           full_name: string | null;
-          id: string | null;
+          id: string;
         };
         Insert: {
           avatar_url?: string | null;
           created_at?: string;
           full_name?: string | null;
-          id?: string | null;
+          id?: string;
         };
         Update: {
           avatar_url?: string | null;
           created_at?: string;
           full_name?: string | null;
-          id?: string | null;
+          id?: string;
         };
         Relationships: [];
       };
-      reply: {
+      replies: {
         Row: {
-          body: string;
+          content: string;
           created_at: string;
+          deleted_at: string | null;
           entry_id: number;
-          image_url: Json | null;
+          image_urls: Json | null;
           likes: number;
-          parent_id: number;
+          parent_post_id: number;
+          parent_reply_id: number | null;
           user_id: string;
-          view: number;
+          views: number;
         };
         Insert: {
-          body: string;
+          content: string;
           created_at?: string;
+          deleted_at?: string | null;
           entry_id?: number;
-          image_url?: Json | null;
+          image_urls?: Json | null;
           likes?: number;
-          parent_id: number;
+          parent_post_id: number;
+          parent_reply_id?: number | null;
           user_id?: string;
-          view?: number;
+          views?: number;
         };
         Update: {
-          body?: string;
+          content?: string;
           created_at?: string;
+          deleted_at?: string | null;
           entry_id?: number;
-          image_url?: Json | null;
+          image_urls?: Json | null;
           likes?: number;
-          parent_id?: number;
+          parent_post_id?: number;
+          parent_reply_id?: number | null;
           user_id?: string;
-          view?: number;
+          views?: number;
         };
         Relationships: [
           {
             foreignKeyName: 'reply_parent_id_fkey';
-            columns: ['parent_id'];
+            columns: ['parent_post_id'];
             isOneToOne: false;
-            referencedRelation: 'post';
+            referencedRelation: 'posts';
             referencedColumns: ['entry_id'];
           },
           {
@@ -552,37 +614,67 @@ export type Database = {
           },
         ];
       };
-      review: {
+      reply_likes: {
+        Row: {
+          created_at: string;
+          target_id: number;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          target_id: number;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          target_id?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'reply_likes_target_id_fkey';
+            columns: ['target_id'];
+            isOneToOne: false;
+            referencedRelation: 'replies';
+            referencedColumns: ['entry_id'];
+          },
+          {
+            foreignKeyName: 'reply_likes_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      reviews: {
         Row: {
           body: Json;
-          likes: number;
+          image_urls: Json | null;
           playlist_id: number | null;
           review_id: number;
           user_id: string;
-          view: number;
         };
         Insert: {
           body: Json;
-          likes?: number;
+          image_urls?: Json | null;
           playlist_id?: number | null;
           review_id?: number;
           user_id?: string;
-          view?: number;
         };
         Update: {
           body?: Json;
-          likes?: number;
+          image_urls?: Json | null;
           playlist_id?: number | null;
           review_id?: number;
           user_id?: string;
-          view?: number;
         };
         Relationships: [
           {
             foreignKeyName: 'review_playlist_id_fkey';
             columns: ['playlist_id'];
             isOneToOne: false;
-            referencedRelation: 'playlist';
+            referencedRelation: 'music_playlist';
             referencedColumns: ['playlist_id'];
           },
           {
@@ -592,35 +684,45 @@ export type Database = {
             referencedRelation: 'users';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'reviews_review_id_fkey';
+            columns: ['review_id'];
+            isOneToOne: true;
+            referencedRelation: 'mlogs';
+            referencedColumns: ['mlog_id'];
+          },
         ];
       };
-      todays_song: {
+      todays: {
         Row: {
-          body: string;
+          content: string;
           created_at: string;
+          deleted_at: string | null;
           likes: number;
-          song_id: string;
+          music_id: string;
           todays_song_id: number;
           user_id: string;
-          view: number;
+          views: number;
         };
         Insert: {
-          body: string;
+          content: string;
           created_at?: string;
+          deleted_at?: string | null;
           likes?: number;
-          song_id: string;
+          music_id: string;
           todays_song_id?: number;
           user_id?: string;
-          view?: number;
+          views?: number;
         };
         Update: {
-          body?: string;
+          content?: string;
           created_at?: string;
+          deleted_at?: string | null;
           likes?: number;
-          song_id?: string;
+          music_id?: string;
           todays_song_id?: number;
           user_id?: string;
-          view?: number;
+          views?: number;
         };
         Relationships: [
           {
@@ -632,25 +734,28 @@ export type Database = {
           },
         ];
       };
-      todays_song_likes: {
+      todays_likes: {
         Row: {
-          todays_song_id: number;
+          created_at: string | null;
+          target_id: number;
           user_id: string;
         };
         Insert: {
-          todays_song_id: number;
+          created_at?: string | null;
+          target_id: number;
           user_id?: string;
         };
         Update: {
-          todays_song_id?: number;
+          created_at?: string | null;
+          target_id?: number;
           user_id?: string;
         };
         Relationships: [
           {
             foreignKeyName: 'todays_song_likes_todays_song_id_fkey';
-            columns: ['todays_song_id'];
+            columns: ['target_id'];
             isOneToOne: false;
-            referencedRelation: 'todays_song';
+            referencedRelation: 'todays';
             referencedColumns: ['todays_song_id'];
           },
           {
@@ -664,34 +769,37 @@ export type Database = {
       };
       users: {
         Row: {
-          bio: string;
+          bio: string | null;
           created_at: string;
-          fav_artist: Json | null;
+          deleted_at: string | null;
           follow: number;
           followed: number;
-          icon_image_url: string;
+          icon_image_url: string | null;
+          is_private: boolean;
           profile_id: string;
           user_id: string;
           user_name: string;
         };
         Insert: {
-          bio: string;
+          bio?: string | null;
           created_at?: string;
-          fav_artist?: Json | null;
+          deleted_at?: string | null;
           follow?: number;
           followed?: number;
-          icon_image_url: string;
+          icon_image_url?: string | null;
+          is_private?: boolean;
           profile_id: string;
           user_id?: string;
           user_name: string;
         };
         Update: {
-          bio?: string;
+          bio?: string | null;
           created_at?: string;
-          fav_artist?: Json | null;
+          deleted_at?: string | null;
           follow?: number;
           followed?: number;
-          icon_image_url?: string;
+          icon_image_url?: string | null;
+          is_private?: boolean;
           profile_id?: string;
           user_id?: string;
           user_name?: string;
@@ -701,6 +809,36 @@ export type Database = {
             foreignKeyName: 'Users_UserID_fkey';
             columns: ['user_id'];
             isOneToOne: true;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      users_artists: {
+        Row: {
+          artist_id: number;
+          user_id: string;
+        };
+        Insert: {
+          artist_id: number;
+          user_id?: string;
+        };
+        Update: {
+          artist_id?: number;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'users_artists_artist_id_fkey';
+            columns: ['artist_id'];
+            isOneToOne: false;
+            referencedRelation: 'artists';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'users_artists_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
             referencedRelation: 'users';
             referencedColumns: ['id'];
           },

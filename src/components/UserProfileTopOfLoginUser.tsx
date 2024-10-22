@@ -10,20 +10,16 @@ import {
 
 import { Image } from 'expo-image';
 
-import userData from '../assets/userData';
+import type { Profile } from '../backend/supabase_apis/model/user';
 import Colors from '../constants/Colors';
 import { useTheme } from '../contexts/ColorThemeContext';
 
 import BgView from './ThemedBgView';
 import Text from './ThemedText';
 
-interface LoginUserProps {
-  id: string;
-}
-
 const { width } = Dimensions.get('window');
 
-const LoginUserProfileTop = (props: LoginUserProps) => {
+const LoginUserProfileTop = (profile: Profile) => {
   const colorScheme = useColorScheme();
 
   const { colors } = useTheme();
@@ -32,7 +28,6 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
 
   const labelColor = colorScheme === 'light' ? 'gray' : '#F0F0F0';
 
-  const userID = props.id;
   const themeTextColor = {
     color: Colors[colorScheme ?? 'light'].text,
   };
@@ -49,13 +44,12 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
     colorScheme === 'light' ? backgroundColors[0][0] : backgroundColors[0][1];
 
   const DATA = [
-    { id: '1', type: 'bio' },
-    { id: '2', type: 'tags' },
+    { id: '1', type: 'tags' },
+    { id: '2', type: 'bio' },
   ];
 
-  const userInfo = userData.find((item) => item.userID === userID);
   const defaultImage = require('../assets/images/snsicon.png');
-  if (!userInfo) {
+  if (!profile) {
     return <Text>User not found</Text>;
   }
 
@@ -69,7 +63,7 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
           ]}
         >
           <Text style={[styles.userBio, { lineHeight: 22 }]} numberOfLines={4}>
-            {userInfo.bio}
+            {profile.bio}
           </Text>
         </View>
       );
@@ -82,15 +76,17 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
             { flexWrap: 'wrap', flexDirection: 'row' },
           ]}
         >
-          {userInfo.tag?.map((item) => (
+          {profile.favArtists?.map((item, index) => (
             <View
               style={[
                 styles.item,
                 { backgroundColor: TagColor, marginBottom: 8 },
               ]}
-              key={item}
+              key={item.artistId}
             >
-              <Text style={{ fontWeight: '500', fontSize: 12 }}>{item}</Text>
+              <Text style={{ fontWeight: '500', fontSize: 12 }}>
+                {item.artistName}
+              </Text>
             </View>
           ))}
         </View>
@@ -104,7 +100,7 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
       <View style={styles.profile}>
         <View style={styles.profileHeader}>
           <Image
-            source={userInfo.userAvatarUrl || defaultImage}
+            source={profile.iconImageUrl || defaultImage}
             style={styles.avatar}
           />
           <View style={{ gap: 8 }}>
@@ -112,21 +108,21 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
               style={{ alignItems: 'baseline', flexDirection: 'row', gap: 16 }}
             >
               <Text style={[styles.userName, themeTextColor]}>
-                {userInfo.user}
+                {profile.userName}
               </Text>
-              <Text>{userInfo.userID}</Text>
+              <Text>{profile.profileId}</Text>
             </View>
             <View style={styles.socialStateContainer}>
               <Link
                 href={{
                   pathname: '/(tabs)/friends/[userID]',
-                  params: { userID: 'Taro1234', initialTab: 'follower' },
+                  params: { userID: profile.userId, initialTab: 'follower' },
                 }}
                 asChild
               >
                 <Pressable style={styles.socialState}>
                   <Text style={[styles.socialStateText, themeTextColor]}>
-                    {userInfo.followers}
+                    {profile.followed}
                   </Text>
                   <Text
                     style={[styles.socialStateLabel, { color: labelColor }]}
@@ -141,13 +137,13 @@ const LoginUserProfileTop = (props: LoginUserProps) => {
               <Link
                 href={{
                   pathname: '/(tabs)/friends/[userID]',
-                  params: { userID: 'Taro1234', initialTab: 'following' },
+                  params: { userID: profile.userId, initialTab: 'following' },
                 }}
                 asChild
               >
                 <Pressable style={styles.socialState}>
                   <Text style={[styles.socialStateText, themeTextColor]}>
-                    {userInfo.following}
+                    {profile.follow}
                   </Text>
                   <Text
                     style={[styles.socialStateLabel, { color: labelColor }]}
