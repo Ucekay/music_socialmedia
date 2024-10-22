@@ -41,6 +41,10 @@ const Colors: {
     buttonDisabled: chroma(palette.zinc['300']).hex(),
     buttonDisabledText: chroma(palette.zinc['100']).hex(),
     searchBar: chroma(palette.zinc['400']).alpha(0.25).hex(),
+    editorHighlight: chroma(palette.blue['500']).alpha(0.3),
+    playerObject1: chroma(palette.amber['300']).alpha(0.3).hex(),
+    playerObject2: chroma(palette.lime['300']).hex(),
+    playerObject3: chroma(palette.sky['300']).hex(),
   },
   dark: {
     text: '#fff',
@@ -69,6 +73,10 @@ const Colors: {
     buttonDisabled: chroma(palette.zinc['900']).hex(),
     buttonDisabledText: chroma(palette.zinc['600']).hex(),
     searchBar: chroma(palette.gray['700']).alpha(0.25).hex(),
+    editorHighlight: chroma(palette.blue['500']).alpha(0.3),
+    playerObject1: chroma(palette.amber['200']).hex(),
+    playerObject2: chroma(palette.lime['200']).hex(),
+    playerObject3: chroma(palette.sky['200']).hex(),
   },
 };
 

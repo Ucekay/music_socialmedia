@@ -20,7 +20,7 @@ export class likeDao implements likeRepository {
         .insert({ post_id: postId, user_id: userId });
 
       if (error) {
-        throw new Error('データの挿入エラー: ' + error.message);
+        throw new Error(`データの挿入エラー: ${error.message}`);
       }
 
       return true;
@@ -38,7 +38,7 @@ export class likeDao implements likeRepository {
         .match({ post_id: postId, user_id: userId });
 
       if (error) {
-        throw new Error('データの削除エラー: ' + error.message);
+        throw new Error(`データの削除エラー: ${error.message}`);
       }
 
       return true;
@@ -57,10 +57,10 @@ export class likeDao implements likeRepository {
         .eq('user_id', userId);
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
-      return data ? true : false;
+      return !!data;
     } catch (error) {
       console.error('データの取得中にエラーが発生しました:', error);
       throw error;
@@ -74,7 +74,7 @@ export class likeDao implements likeRepository {
         .insert({ reply_id: replyId, user_id: userId });
 
       if (error) {
-        throw new Error('データの挿入エラー: ' + error.message);
+        throw new Error(`データの挿入エラー: ${error.message}`);
       }
 
       return true;
@@ -92,7 +92,7 @@ export class likeDao implements likeRepository {
         .match({ reply_id: replyId, user_id: userId });
 
       if (error) {
-        throw new Error('データの削除エラー: ' + error.message);
+        throw new Error(`データの削除エラー: ${error.message}`);
       }
 
       return true;
@@ -111,10 +111,10 @@ export class likeDao implements likeRepository {
         .eq('user_id', userId);
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
-      return data ? true : false;
+      return !!data;
     } catch (error) {
       console.error('データの取得中にエラーが発生しました:', error);
       throw error;
@@ -131,7 +131,7 @@ export class likeDao implements likeRepository {
         .insert({ article_id: articleId, user_id: userId });
 
       if (error) {
-        throw new Error('データの挿入エラー: ' + error.message);
+        throw new Error(`データの挿入エラー: ${error.message}`);
       }
 
       return true;
@@ -152,7 +152,7 @@ export class likeDao implements likeRepository {
         .match({ article_id: articleId, user_id: userId });
 
       if (error) {
-        throw new Error('データの削除エラー: ' + error.message);
+        throw new Error(`データの削除エラー: ${error.message}`);
       }
 
       return true;
@@ -174,10 +174,10 @@ export class likeDao implements likeRepository {
         .eq('user_id', userId);
 
       if (error) {
-        throw new Error('データの取得エラー: ' + error.message);
+        throw new Error(`データの取得エラー: ${error.message}`);
       }
 
-      return data ? true : false;
+      return !!data;
     } catch (error) {
       console.error('データの取得中にエラーが発生しました:', error);
       throw error;

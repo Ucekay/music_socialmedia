@@ -17,7 +17,7 @@ export class FollowDao implements FollowRepository {
     if (error) {
       throw error;
     }
-    return data ? true : false;
+    return !!data;
   }
 
   async insertFollow(followedId: string, userId: string): Promise<boolean> {

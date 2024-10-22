@@ -20,7 +20,6 @@ class MusicCatalogSearchManager {
             ])
         request.limit = 10
         let response = try await request.response()
-        print(response)
         return response
     }
     func getTopSearchResults(term: String, offset: Int = 0) async throws

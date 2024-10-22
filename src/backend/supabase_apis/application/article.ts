@@ -3,13 +3,14 @@ import {
   GetArticleError,
   InternalError,
 } from '../../schema/error';
+import { checkAuth } from '../dbdriver/checkAuth';
+
 import type {
   ArticleAdditionalData,
   ArticleInteg,
   CUArticleDataParams,
 } from '../../schema/supabase_api';
 import type { ArticleRepository } from '../dao/article';
-import { checkAuth } from '../dbdriver/checkAuth';
 
 export interface IArticleApplication {
   createArticle(
@@ -67,7 +68,7 @@ export class ArticleApplication implements IArticleApplication {
       let result: boolean | string = false;
 
       switch (articleData.type) {
-        case 'general':
+        case 'general': {
           const GeneralData = {
             body: articleData.body,
             playlist_id: articleData.playlist_id,
@@ -75,7 +76,8 @@ export class ArticleApplication implements IArticleApplication {
           };
           result = await this.articleDao.createGeneralData(GeneralData);
           break;
-        case 'review':
+        }
+        case 'review': {
           const ReviewData = {
             body: articleData.body,
             playlist_id: articleData.playlist_id,
@@ -83,7 +85,8 @@ export class ArticleApplication implements IArticleApplication {
           };
           result = await this.articleDao.createReviewData(ReviewData);
           break;
-        case 'liveReport':
+        }
+        case 'liveReport': {
           const LiveReportData = {
             body: articleData.body,
             playlist_id: articleData.playlist_id,
@@ -91,7 +94,8 @@ export class ArticleApplication implements IArticleApplication {
           };
           result = await this.articleDao.createLiveReportData(LiveReportData);
           break;
-        case 'playlist':
+        }
+        case 'playlist': {
           const PlaylistData = {
             body: articleData.body,
             playlist_id: articleData.playlist_id,
@@ -100,6 +104,7 @@ export class ArticleApplication implements IArticleApplication {
           result =
             await this.articleDao.createPlaylistArticleData(PlaylistData);
           break;
+        }
         default:
           throw new Error('Invalid type');
       }
@@ -296,9 +301,8 @@ export class ArticleApplication implements IArticleApplication {
     } catch (error) {
       if (error === BadRequestError) {
         throw BadRequestError;
-      } else {
-        throw InternalError;
       }
+      throw InternalError;
     }
   }
 }

@@ -1,4 +1,5 @@
 import { GetArticleError } from '../../schema/error';
+
 import type {
   Article,
   CProfileDataParams,
@@ -99,7 +100,7 @@ export class ProfileApplication implements IProfileApplication {
     artistName: string,
   ): Promise<boolean> {
     const favArtists = await this.profileDao.getFavArtistsByUserId(userId);
-    const count = favArtists.artists.length;
+    const count = favArtists.length;
 
     if (count > 10) {
       throw new Error('The number of favorite artists exceeds 10');

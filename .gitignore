@@ -41,11 +41,13 @@ yarn-error.*
 expo-env.d.ts
 # @end expo-cli
 
-/ios
+# native directory
+/ios/
+android/
 
-android
-
-node_modules
+# lock file
+bun.lockb
+pacjage-lock.json
 
 # ローカルのsupabase構築用
 Makefile

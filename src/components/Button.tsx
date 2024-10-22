@@ -8,6 +8,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 
+import Colors from '../constants/Colors';
 import { useTheme } from '../contexts/ColorThemeContext';
 
 type ButtonVariant = 'filled' | 'bezeled' | 'bezeledGray' | 'borderless';
@@ -37,6 +38,7 @@ interface ButtonProps {
     | ((props: IconProps) => React.ReactNode)
     | ((props: IconProps) => React.JSX.Element);
   iconFill?: string;
+  colorScheme?: 'light' | 'dark';
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -54,38 +56,63 @@ export const Button: React.FC<ButtonProps> = ({
   textStyle,
   renderIcon,
   iconFill,
+  colorScheme,
 }) => {
   const { colors } = useTheme();
 
   const getBackgroundColor = () => {
+    if (colorScheme === 'dark') {
+      return getBackgroundColorByScheme(Colors.dark);
+    }
+    if (colorScheme === 'light') {
+      return getBackgroundColorByScheme(Colors.light);
+    }
+    return getBackgroundColorByScheme(colors);
+  };
+
+  const getBackgroundColorByScheme = (
+    colorScheme: typeof Colors.light | typeof Colors.dark | typeof colors,
+  ) => {
+    if (disabled) return colorScheme.buttonDisabled;
     if (backgroundColor) return backgroundColor;
-    if (disabled) return colors.buttonDisabled;
     switch (variant) {
       case 'filled':
-        return colors.buttonFilled;
+        return colorScheme.buttonFilled;
       case 'bezeled':
-        return colors.buttonBezeled;
+        return colorScheme.buttonBezeled;
       case 'bezeledGray':
-        return colors.buttonBezeledGray;
+        return colorScheme.buttonBezeledGray;
       case 'borderless':
-        return colors.buttonBorderless;
+        return colorScheme.buttonBorderless;
       default:
-        return colors.buttonFilled;
+        return colorScheme.buttonFilled;
     }
   };
 
   const getTextColor = () => {
+    if (colorScheme === 'dark') {
+      return getTextColorByScheme(Colors.dark);
+    }
+    if (colorScheme === 'light') {
+      return getTextColorByScheme(Colors.light);
+    }
+    return getTextColorByScheme(colors);
+  };
+
+  const getTextColorByScheme = (
+    colorScheme: typeof Colors.light | typeof Colors.dark | typeof colors,
+  ) => {
+    if (disabled) return colorScheme.buttonDisabledText;
     if (textColor) return textColor;
-    if (disabled) return colors.buttonDisabledText;
     switch (variant) {
       case 'filled':
-        return colors.buttonText;
+        return colorScheme.buttonText;
       case 'bezeled':
       case 'bezeledGray':
       case 'borderless':
-        return colors.tint;
+        return colorScheme.tint;
       default:
-        return colors.buttonText;
+        return colorScheme.buttonText;
     }
   };
 

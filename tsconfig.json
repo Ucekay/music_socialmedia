@@ -3,9 +3,19 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": ["./*"],
-      "*": ["./modules/*"]
+      "@/*": [
+        "./*"
+      ],
+      "*": [
+        "./modules/*"
+      ]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "./editor-web"
+  ]
 }

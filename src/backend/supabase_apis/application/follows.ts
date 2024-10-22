@@ -1,6 +1,7 @@
 import { InternalError } from '../../schema/error';
-import type { FollowRepository } from '../dao/follows';
 import { checkAuth } from '../dbdriver/checkAuth';
+
+import type { FollowRepository } from '../dao/follows';
 
 export interface IFollowApplication {
   insertFollow(followedId: string): Promise<boolean>;
