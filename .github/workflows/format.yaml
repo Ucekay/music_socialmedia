@@ -13,4 +13,4 @@ jobs:
         with:
           version: latest
       - name: Run Biome formatter
-        run: biome ci --formatter-enabled=true --linter-enabled=false --organize-imports-enabled=true --assists-enabled=true ./src/**/*.{js,jsx,ts,tsx} ./modules/**/*.{js,jsx,ts,tsx}
+        run: biome ci --formatter-enabled=true --linter-enabled=false --organize-imports-enabled=true --assists-enabled=true .
