@@ -1,3 +1,7 @@
+import type { FlatListProps } from 'react-native';
+
+import type { SearchBarCommands as NativeSearchBarCommands } from 'react-native-screens';
+
 export type StackParamList = {
   Tests: {
     title?: string;
@@ -170,4 +174,13 @@ export type UsersListItemProps = {
   userID: string;
   user: string;
   userAvatarUrl: string;
+};
+
+export type CustomFlatListProps<T> = Omit<
+  FlatListProps<T>,
+  'renderItem' | 'keyExtractor'
+>;
+
+export type SearchBarCommands = NativeSearchBarCommands & {
+  value: string;
 };

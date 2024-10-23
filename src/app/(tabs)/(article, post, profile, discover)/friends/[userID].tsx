@@ -29,10 +29,10 @@ import {
   getFollowers,
   getFollowings,
 } from '@/src/backend/supabase_apis/handler/user';
-import type { ProfileMeta } from '@/src/backend/supabase_apis/model/user';
 import BgView from '@/src/components/ThemedBgView';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 
+import type { ProfileMeta } from '@/src/backend/supabase_apis/model/user';
 import type { AnimatedStyle } from 'react-native-reanimated';
 
 const backgroundColors = [
@@ -183,7 +183,7 @@ const UserListScreen = (): JSX.Element => {
     };
 
     fetchUserList();
-  }, []);
+  }, [userIdStr]);
 
   const tabBarHeight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();

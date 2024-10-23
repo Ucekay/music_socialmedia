@@ -632,7 +632,9 @@ const ContentsOptions = ({
               <Vynil03Icon size={size} color={color} />
             )}
             fullWidth
-            onPress={() => {}}
+            onPress={() => {
+              router.push('/editor-artwork-modal');
+            }}
           />
         </View>
       </View>

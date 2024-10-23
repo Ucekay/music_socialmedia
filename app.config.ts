@@ -10,6 +10,8 @@ export default {
       resizeMode: 'contain',
       backgroundColor: '#ffffff',
     },
+    scheme: 'oto',
+    userInterfaceStyle: 'automatic',
     updates: {
       fallbackToCacheTimeout: 0,
     },
@@ -23,7 +25,7 @@ export default {
         foregroundImage: './src/assets/images/adaptive-icon.png',
         backgroundColor: '#ffffff',
       },
-      package: 'com.example.sns',
+      package: 'com.musicsocial.otography',
     },
     web: {
       bundler: 'metro',

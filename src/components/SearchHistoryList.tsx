@@ -1,5 +1,5 @@
 import type React from 'react';
-import { FlatList, type FlatListProps, Pressable, View } from 'react-native';
+import { FlatList, Pressable, View } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 import { Search, Xmark } from 'iconoir-react-native';
@@ -8,17 +8,11 @@ import { useTheme } from '../contexts/ColorThemeContext';
 
 import Text from './ThemedText';
 
-import type { SearchHistoryItem } from '@/src/types';
-import type { SearchBarCommands as NativeSearchBarCommands } from 'react-native-screens';
-
-type CustomFlatListProps<T> = Omit<
-  FlatListProps<T>,
-  'renderItem' | 'keyExtractor'
->;
-
-type SearchBarCommands = NativeSearchBarCommands & {
-  value: string;
-};
+import type {
+  CustomFlatListProps,
+  SearchBarCommands,
+  SearchHistoryItem,
+} from '@/src/types';
 
 interface SearchHistoryListProps
   extends CustomFlatListProps<SearchHistoryItem> {

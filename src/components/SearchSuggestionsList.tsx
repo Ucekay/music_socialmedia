@@ -1,7 +1,6 @@
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import type { TextStyle } from 'react-native';
 
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { Search } from 'iconoir-react-native';
 
 import { useTheme } from '../contexts/ColorThemeContext';
@@ -26,16 +25,15 @@ import type {
   Suggestion,
   TopSearchResultItem,
 } from '@/modules/music-kit-module/src/MusicKit.types';
-import type { SearchBarCommands as NativeSearchBarCommands } from 'react-native-screens';
+import type { CustomFlatListProps, SearchBarCommands } from '@/src/types';
 
-type SearchSuggestionListProps = {
+type SearchSuggestionListProps = Omit<
+  CustomFlatListProps<Suggestion | TopSearchResultItem>,
+  'data'
+> & {
   data: SearchSuggestions | undefined;
-  onItemPress: (query: string) => void;
+  onItemPress: (item: TopSearchResultItem | Suggestion | string) => void;
   searchRef: React.RefObject<SearchBarCommands>;
-};
-
-type SearchBarCommands = NativeSearchBarCommands & {
-  value: string;
 };
 
 const HighlightedText = ({
@@ -76,14 +74,14 @@ const SearchSuggestionItem = ({
   item,
   query,
 }: {
-  onItemPress: (query: string) => void;
+  onItemPress: (item: Suggestion) => void;
   item: Suggestion;
   query: string;
 }) => {
   const { colors } = useTheme();
   return (
     <Pressable
-      onPress={() => handleItemPress(item.displayTerm)}
+      onPress={() => handleItemPress(item)}
       style={[styles.termItemContainer, { borderColor: colors.border }]}
     >
       <View style={styles.searchIconContainer}>
@@ -111,8 +109,6 @@ const SearchSuggestionsList = (props: SearchSuggestionListProps) => {
     return <BgView style={{ flex: 1 }} />;
   }
 
-  const { colors } = useTheme();
-  const bottomTabBarHeight = useBottomTabBarHeight();
   const termSuggestions = suggestions.suggestions;
   const termSuggestionsLength = termSuggestions.length;
   const combinedSuggestions = [
@@ -173,12 +169,7 @@ const SearchSuggestionsList = (props: SearchSuggestionListProps) => {
             searchRef.current.blur();
           }
         }}
-        contentContainerStyle={{
-          marginHorizontal: 16,
-          borderTopWidth: 0.2,
-          borderColor: colors.border,
-          paddingBottom: bottomTabBarHeight,
-        }}
+        {...flatListProps}
       />
     </View>
   );
