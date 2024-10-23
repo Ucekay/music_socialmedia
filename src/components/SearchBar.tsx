@@ -263,7 +263,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     borderCurve: 'continuous',
     borderRadius: 10,
-    backgroundColor: '#f0f0f0',
   },
   backButtonContainer: {
     overflow: 'hidden',

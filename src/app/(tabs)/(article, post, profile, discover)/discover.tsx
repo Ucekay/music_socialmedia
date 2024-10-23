@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -22,7 +23,11 @@ import TodaySongCard from '@/src/components/TodaySongCard';
 import { useTheme } from '@/src/contexts/ColorThemeContext';
 import * as MusicKit from 'music-kit-module';
 
-import type { SearchSuggestions } from '@/modules/music-kit-module/src/MusicKit.types';
+import type {
+  SearchSuggestions,
+  Suggestion,
+  TopSearchResultItem,
+} from '@/modules/music-kit-module/src/MusicKit.types';
 import type { SearchHistoryItem } from '@/src/types';
 import type { SearchBarCommands as NativeSearchBarCommands } from 'react-native-screens';
 
@@ -35,8 +40,9 @@ type SearchScreenLayoutProps = {
     | React.ReactNode
     | ((props: {
         searchRef: React.RefObject<SearchBarCommands>;
-        handleSearch: (query: string) => void;
+        handleSearch: (item: TopSearchResultItem | Suggestion | string) => void;
         clearHistory: (history: SearchHistoryItem) => void;
+        bottomTabBarHeight: number;
       }) => React.ReactNode);
   setShowSuggestions: React.Dispatch<React.SetStateAction<boolean>>;
   setShowHistory: React.Dispatch<React.SetStateAction<boolean>>;
@@ -57,6 +63,7 @@ const SearchScreenLayout = ({
   const insetsTop = useSafeAreaInsets().top;
   const searchRef = useRef<SearchBarCommands>(null);
   const [returnFromSearchResult, setReturnFromSearchResult] = useState(false);
+  const bottomTabBarHeight = useBottomTabBarHeight();
 
   useFocusEffect(() => {
     if (returnFromSearchResult) {
@@ -83,7 +90,40 @@ const SearchScreenLayout = ({
     });
   };
 
-  const handleSearch = (query: string) => {
+  const handleSearch = (item: TopSearchResultItem | Suggestion | string) => {
+    let query: string;
+    if (typeof item === 'string') {
+      query = item;
+    } else if ('type' in item) {
+      switch (item.type) {
+        case 'artist':
+          query = item.name;
+          break;
+        case 'album':
+          query = item.title;
+          break;
+        case 'curator':
+          query = item.name;
+          break;
+        case 'musicVideo':
+          query = item.title;
+          break;
+        case 'playlist':
+          query = item.name;
+          break;
+        case 'radioShow':
+          query = item.name;
+          break;
+        case 'recordLabel':
+          query = item.name;
+          break;
+        case 'song':
+          query = item.title;
+          break;
+      }
+    } else {
+      query = item.displayTerm;
+    }
     searchRef.current?.setText(query);
     searchRef.current?.focus();
     setReturnFromSearchResult(true);
@@ -187,7 +227,12 @@ const SearchScreenLayout = ({
         />
       </BlurView>
       {typeof children === 'function'
-        ? children({ searchRef, handleSearch, clearHistory })
+        ? children({
+            searchRef,
+            handleSearch,
+            clearHistory,
+            bottomTabBarHeight,
+          })
         : children}
     </BgView>
   );
@@ -242,12 +287,18 @@ const Discover = () => {
         setHistory={setHistory}
         setSuggestions={setSuggestions}
       >
-        {({ handleSearch, searchRef }) => {
+        {({ handleSearch, searchRef, bottomTabBarHeight }) => {
           return (
             <SearchSuggestionsList
               data={suggestions}
               onItemPress={handleSearch}
               searchRef={searchRef}
+              contentContainerStyle={{
+                marginHorizontal: 16,
+                borderTopWidth: 0.2,
+                borderColor: colors.border,
+                paddingBottom: bottomTabBarHeight,
+              }}
             />
           );
         }}

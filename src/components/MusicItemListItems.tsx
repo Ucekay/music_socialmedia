@@ -12,6 +12,8 @@ import type {
   MusicVideo,
   Playlist,
   Song,
+  Suggestion,
+  TopSearchResultItem,
 } from '@/modules/music-kit-module/src/MusicKit.types';
 
 const ItemWrapper = ({
@@ -32,23 +34,13 @@ const ItemWrapper = ({
 export const AlbumItem = ({
   item,
   onItemPress: handleItemPress,
-}: { item: Album; onItemPress: (query: string) => void }) => {
+}: {
+  item: Album;
+  onItemPress: (item: TopSearchResultItem | Suggestion | string) => void;
+}) => {
   return (
-    <ItemWrapper onPress={() => handleItemPress(item.title)}>
-      <View
-        style={{
-          width: 60,
-          height: 60,
-          borderRadius: 4,
-          borderCurve: 'continuous',
-          overflow: 'hidden',
-        }}
-      >
-        <Image
-          source={{ uri: item.artwork.url }}
-          style={{ width: 60, height: 60 }}
-        />
-      </View>
+    <ItemWrapper onPress={() => handleItemPress(item)}>
+      <Image source={{ uri: item.artwork.url }} style={styles.squaredImage} />
       <View style={{ flex: 1, gap: 2 }}>
         <Text numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 15 }}>
           {item.title}
@@ -69,13 +61,13 @@ export const AlbumItem = ({
 export const ArtistItem = ({
   item,
   onItemPress: handleItemPress,
-}: { item: Artist; onItemPress: (query: string) => void }) => {
+}: {
+  item: Artist;
+  onItemPress: (item: TopSearchResultItem | Suggestion | string) => void;
+}) => {
   return (
-    <ItemWrapper onPress={() => handleItemPress(item.name)}>
-      <Image
-        source={{ uri: item.artwork.url }}
-        style={{ width: 60, height: 60, borderRadius: 100 }}
-      />
+    <ItemWrapper onPress={() => handleItemPress(item)}>
+      <Image source={{ uri: item.artwork.url }} style={styles.roundedImage} />
       <View style={{ flex: 1, gap: 2 }}>
         <Text numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 15 }}>
           {item.name}
@@ -96,23 +88,16 @@ export const ArtistItem = ({
 export const MusicVideoItem = ({
   item,
   onItemPress: handleItemPress,
-}: { item: MusicVideo; onItemPress: (query: string) => void }) => {
+}: {
+  item: MusicVideo;
+  onItemPress: (item: TopSearchResultItem | Suggestion | string) => void;
+}) => {
   return (
-    <ItemWrapper onPress={() => handleItemPress(item.title)}>
-      <View
-        style={{
-          height: 60,
-          aspectRatio: 16 / 9,
-          borderRadius: 4,
-          borderCurve: 'continuous',
-          overflow: 'hidden',
-        }}
-      >
-        <Image
-          source={{ uri: item.artwork.url }}
-          style={{ height: 60, aspectRatio: 16 / 9 }}
-        />
-      </View>
+    <ItemWrapper onPress={() => handleItemPress(item)}>
+      <Image
+        source={{ uri: item.artwork.url }}
+        style={styles.rectangularImage}
+      />
       <View style={{ flex: 1, gap: 2 }}>
         <Text numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 15 }}>
           {item.title}
@@ -133,23 +118,13 @@ export const MusicVideoItem = ({
 export const PlaylistItem = ({
   item,
   onItemPress: handleItemPress,
-}: { item: Playlist; onItemPress: (query: string) => void }) => {
+}: {
+  item: Playlist;
+  onItemPress: (item: TopSearchResultItem | Suggestion | string) => void;
+}) => {
   return (
-    <ItemWrapper onPress={() => handleItemPress(item.name)}>
-      <View
-        style={{
-          width: 60,
-          height: 60,
-          borderRadius: 4,
-          borderCurve: 'continuous',
-          overflow: 'hidden',
-        }}
-      >
-        <Image
-          source={{ uri: item.artwork.url }}
-          style={{ width: 60, height: 60 }}
-        />
-      </View>
+    <ItemWrapper onPress={() => handleItemPress(item)}>
+      <Image source={{ uri: item.artwork.url }} style={styles.squaredImage} />
       <View style={{ flex: 1, gap: 2 }}>
         <Text numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 15 }}>
           {item.name}
@@ -170,23 +145,13 @@ export const PlaylistItem = ({
 export const SongItem = ({
   item,
   onItemPress: handleItemPress,
-}: { item: Song; onItemPress: (query: string) => void }) => {
+}: {
+  item: Song;
+  onItemPress: (item: TopSearchResultItem | Suggestion | string) => void;
+}) => {
   return (
-    <ItemWrapper onPress={() => handleItemPress(item.title)}>
-      <View
-        style={{
-          width: 60,
-          height: 60,
-          borderRadius: 4,
-          borderCurve: 'continuous',
-          overflow: 'hidden',
-        }}
-      >
-        <Image
-          source={{ uri: item.artwork.url }}
-          style={{ width: 60, height: 60 }}
-        />
-      </View>
+    <ItemWrapper onPress={() => handleItemPress(item)}>
+      <Image source={{ uri: item.artwork.url }} style={styles.squaredImage} />
       <View style={{ flex: 1, gap: 2 }}>
         <Text numberOfLines={1} ellipsizeMode='tail' style={{ fontSize: 15 }}>
           {item.title}
@@ -212,5 +177,20 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 0.2,
     gap: 12,
+  },
+  squaredImage: {
+    overflow: 'hidden',
+    width: 60,
+    height: 60,
+    borderCurve: 'continuous',
+    borderRadius: 4,
+  },
+  roundedImage: { width: 60, height: 60, borderRadius: 100 },
+  rectangularImage: {
+    overflow: 'hidden',
+    height: 60,
+    borderCurve: 'continuous',
+    borderRadius: 4,
+    aspectRatio: 16 / 9,
   },
 });
