@@ -1,59 +1,62 @@
-export default {
-  expo: {
-    name: 'otography',
-    slug: 'otography',
-    version: '1.0.0',
-    orientation: 'portrait',
-    icon: './src/assets/images/icon.png',
-    splash: {
-      image: './src/assets/images/splash.png',
-      resizeMode: 'contain',
+import 'ts-node/register'; // Add this to import TypeScript files
+import type { ExpoConfig } from 'expo/config';
+
+const config: ExpoConfig = {
+  name: 'otography',
+  slug: 'otography',
+  version: '1.0.0',
+  orientation: 'portrait',
+  icon: './src/assets/images/icon.png',
+  splash: {
+    image: './src/assets/images/splash.png',
+    resizeMode: 'contain',
+    backgroundColor: '#ffffff',
+  },
+  scheme: 'oto',
+  userInterfaceStyle: 'automatic',
+  updates: {
+    fallbackToCacheTimeout: 0,
+  },
+  assetBundlePatterns: ['**/*'],
+  ios: {
+    supportsTablet: true,
+    bundleIdentifier: 'com.musicsocial.otography',
+  },
+  android: {
+    adaptiveIcon: {
+      foregroundImage: './src/assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
-    scheme: 'oto',
-    userInterfaceStyle: 'automatic',
-    updates: {
-      fallbackToCacheTimeout: 0,
-    },
-    assetBundlePatterns: ['**/*'],
-    ios: {
-      supportsTablet: true,
-      bundleIdentifier: 'com.musicsocial.otography',
-    },
-    android: {
-      adaptiveIcon: {
-        foregroundImage: './src/assets/images/adaptive-icon.png',
-        backgroundColor: '#ffffff',
-      },
-      package: 'com.musicsocial.otography',
-    },
-    web: {
-      bundler: 'metro',
-      output: 'static',
-      favicon: './src/assets/images/favicon.png',
-    },
-    plugins: [
-      'expo-router',
-      [
-        'expo-build-properties',
-        {
-          ios: {
-            deploymentTarget: '16.0',
-          },
+    package: 'com.musicsocial.otography',
+  },
+  web: {
+    bundler: 'metro',
+    output: 'static',
+    favicon: './src/assets/images/favicon.png',
+  },
+  plugins: [
+    'expo-router',
+    [
+      'expo-build-properties',
+      {
+        ios: {
+          deploymentTarget: '16.0',
         },
-      ],
-      'expo-font',
+      },
     ],
-    experiments: {
-      typeRoutes: true,
+    'expo-font',
+  ],
+  experiments: {
+    typedRoutes: true,
+  },
+  extra: {
+    router: {
+      origin: false,
     },
-    extra: {
-      router: {
-        origin: false,
-      },
-      eas: {
-        projectId: 'f8607735-aef1-45f5-8ae7-bc4b6f6f77af',
-      },
+    eas: {
+      projectId: 'f8607735-aef1-45f5-8ae7-bc4b6f6f77af',
     },
   },
 };
+
+export default config;
