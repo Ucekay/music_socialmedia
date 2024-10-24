@@ -62,7 +62,7 @@ const PlaylistHeader = memo(({ playlist }: { playlist: Playlist }) => {
         <View style={styles.buttonWrapper}>
           <Button
             onPress={() => console.log('Button pressed')}
-            text='再生'
+            title='再生'
             icon='Play'
             size='large'
             renderIcon={renderIcon}
@@ -72,7 +72,7 @@ const PlaylistHeader = memo(({ playlist }: { playlist: Playlist }) => {
         <View style={styles.buttonWrapper}>
           <Button
             onPress={() => console.log('Button pressed')}
-            text='曲を追加'
+            title='曲を追加'
             icon='Plus'
             fullWidth={false}
             size='large'

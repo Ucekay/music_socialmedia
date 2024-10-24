@@ -108,7 +108,7 @@ const ArticleDetailsScreen = () => {
               <View style={styles.buttonWrapper}>
                 <Button
                   onPress={() => console.log('Button pressed')}
-                  text='曲を再生'
+                  title='曲を再生'
                   icon='Play'
                   size='large'
                   renderIcon={renderIcon}
@@ -118,7 +118,7 @@ const ArticleDetailsScreen = () => {
               <View>
                 <Button
                   onPress={() => console.log('Button pressed')}
-                  text='いいね'
+                  title='いいね'
                   icon='Heart'
                   renderIcon={renderHeartIcon}
                   size='large'

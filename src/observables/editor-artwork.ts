@@ -6,8 +6,6 @@ interface MusicItem {
   item: TopSearchResultItem | undefined;
 }
 
-const musicItem$ = observable<MusicItem>({
+export const musicItem$ = observable<MusicItem>({
   item: undefined,
 });
-
-export default musicItem$;

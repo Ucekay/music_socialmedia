@@ -110,7 +110,7 @@ class Utilities {
         return convertedRecommendation
     }
 
-    static func convertTopSeatchResult(
+    static func convertTopSearchResult(
         _ topResult: MusicCatalogSearchResponse.TopResult
     ) -> [String: Any] {
         switch topResult {

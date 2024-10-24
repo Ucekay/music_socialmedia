@@ -3,14 +3,13 @@ import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import {
   Button,
+  Keyboard,
   PixelRatio,
   Platform,
   Pressable,
   Text as RNText,
-  ScrollView,
   StyleSheet,
   View,
-  useColorScheme,
   useWindowDimensions,
 } from 'react-native';
 
@@ -19,7 +18,6 @@ import {
   RichText,
   TenTapStartKit,
   useEditorBridge,
-  useEditorContent,
 } from '@10play/tentap-editor';
 import {
   darkColorKeyboardTheme,
@@ -60,29 +58,20 @@ import {
 } from 'react-native-keyboard-controller';
 import PagerView from 'react-native-pager-view';
 import Animated, {
-  FadeIn,
-  FadeOut,
-  type SharedValue,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import ArticleTag from '@/src/components/ArticleTag';
 import { Button as CustomButton } from '@/src/components/Button';
 import BgView from '@/src/components/ThemedSecondaryBgView';
-import Text from '@/src/components/ThemedText';
-import TrackEntry from '@/src/components/TrackEntry';
-import Color from '@/src/constants/Colors';
 import { editorHtml } from '@/web-editor/build/editorHtml';
 
-import AnimatedTextInput from '../components/AnimatedPlaceholderTextInput';
-import EditorImagePicker from '../components/EditorImagePicker';
+import ArticleConfigScreen from '../components/ArticleConfigScreen';
 import EditorToolbar from '../components/EditorToolbar';
-import LiveInputField from '../components/LiveInputField';
 import Colors from '../constants/Colors';
 import { useTheme } from '../contexts/ColorThemeContext';
+import { musicItem$ } from '../observables';
 import {
   CodeBlockBridge,
   HorizontalRuleBridge,
@@ -92,6 +81,7 @@ import {
   YouTubeBridge,
 } from '../rich-text-bridges';
 
+import type { ArgsToolbarCB } from '@/src/components/RichText/Toolbar/actions';
 import type {
   BridgeState,
   ColorKeyboardTheme,
@@ -100,7 +90,6 @@ import type {
   ToolbarTheme,
 } from '@10play/tentap-editor';
 import type { Level } from '@tiptap/extension-heading';
-import type { ArgsToolbarCB } from '../components/RichText/Toolbar/actions';
 
 interface ToolbarItem {
   onPress: ({ editor, editorState }: ArgsToolbarCB) => () => void;
@@ -136,207 +125,83 @@ const DARK_EDITOR_CSS = `
   }
   `;
 
-const ArticleConfigScreen = () => {
-  const colorScheme = useColorScheme();
-
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-
-  const articleTypes = ['general', 'review', 'liveReport', 'playlist'];
-
-  const textColor = Color[colorScheme ?? 'light'].text;
-  const secondaryTextColor = Color[colorScheme ?? 'light'].secondaryText;
-
-  const opacityValues: { [key: string]: SharedValue<number> } =
-    articleTypes.reduce(
-      (acc, type) => {
-        acc[type] = useSharedValue(1);
-        return acc;
-      },
-      {} as { [key: string]: SharedValue<number> },
-    );
-
-  const handleTagPress = (type: string) => {
-    if (selectedType === type) {
-      setSelectedType(null);
-      for (const t of articleTypes) {
-        opacityValues[t].value = withTiming(1);
-      }
-    } else {
-      setSelectedType(type);
-      for (const t of articleTypes) {
-        opacityValues[t].value = withTiming(t === type ? 1 : 0.3);
-      }
-    }
-  };
-  return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <BgView style={styles.container}>
-        <AnimatedTextInput
-          label='Article Title'
-          focusedLabelTop={16}
-          focusedLabelSize={16}
-          multiline={true}
-          blurOnSubmit={true}
-          style={[
-            styles.title,
-            { color: textColor, borderBottomColor: secondaryTextColor },
-          ]}
-        />
-        <View style={styles.articleMetadataContainer}>
-          <View style={styles.articleTagWrapper}>
-            <Text style={styles.articlePickerText}>Articleの種類</Text>
-            <View style={styles.articleTagContainer}>
-              {articleTypes.map((type) => {
-                const animatedStyle = useAnimatedStyle(() => {
-                  return {
-                    opacity: opacityValues[type].value,
-                  };
-                });
-
-                return (
-                  <Pressable
-                    key={type}
-                    onPress={() => handleTagPress(type)}
-                    style={styles.articleTag}
-                  >
-                    <Animated.View style={animatedStyle}>
-                      <ArticleTag type={type} size={17} />
-                    </Animated.View>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </View>
-          {selectedType === 'general' && (
-            <>
-              <Animated.Text
-                entering={FadeIn}
-                exiting={FadeOut}
-                style={[styles.imagePickerText, { color: textColor }]}
-              >
-                見出し画像
-              </Animated.Text>
-              <Animated.View
-                entering={FadeIn}
-                exiting={FadeOut}
-                style={styles.imagePickerContainer}
-              >
-                <EditorImagePicker />
-              </Animated.View>
-            </>
-          )}
-          {selectedType === 'review' && <TrackEntry />}
-          {selectedType === 'liveReport' && (
-            <>
-              <LiveInputField />
-              <Animated.Text
-                entering={FadeIn}
-                exiting={FadeOut}
-                style={[styles.imagePickerText, { color: textColor }]}
-              >
-                見出し画像
-              </Animated.Text>
-              <Animated.View
-                entering={FadeIn}
-                exiting={FadeOut}
-                style={styles.imagePickerContainer}
-              >
-                <EditorImagePicker />
-              </Animated.View>
-            </>
-          )}
-        </View>
-      </BgView>
-    </ScrollView>
-  );
-};
-
 const HeadingOptions = ({
   editor,
   editorState,
 }: { editor: EditorBridge; editorState: BridgeState }) => {
   const headingLevel = editorState.headingLevel;
+  const toggleHeading = editor.toggleHeading;
   const isCodeBlockActive = editorState.isCodeBlockActive;
+  const toggleCodeBlock = editor.toggleCodeBlock;
   const deactivateCodeBlock = () => {
     if (isCodeBlockActive) {
-      editor.toggleCodeBlock();
+      toggleCodeBlock();
     }
   };
 
   const handleSelectHeading = (level: Level) => {
     deactivateCodeBlock();
-    editor.toggleHeading(level);
+    toggleHeading(level);
   };
 
   const handleSelectBody = () => {
     if (headingLevel !== undefined) {
-      editor.toggleHeading(headingLevel as Level);
+      toggleHeading(headingLevel as Level);
     }
     deactivateCodeBlock();
   };
 
   const handleSelectMono = () => {
     if (headingLevel !== undefined) {
-      editor.toggleHeading(headingLevel as Level);
+      toggleHeading(headingLevel as Level);
     }
     if (isCodeBlockActive) {
       editor.setHardBreak();
     } else {
-      editor.toggleCodeBlock();
+      toggleCodeBlock();
     }
   };
 
+  const headingStyle = [
+    styles.headingOptionWrapper,
+    {
+      backgroundColor: headingLevel === 2 ? Colors.dark.tint : 'transparent',
+    },
+  ];
+  const subheadingStyle = [
+    styles.headingOptionWrapper,
+    {
+      backgroundColor: headingLevel === 3 ? Colors.dark.tint : 'transparent',
+    },
+  ];
+  const bodyStyle = [
+    styles.headingOptionWrapper,
+    {
+      backgroundColor:
+        headingLevel === undefined && !isCodeBlockActive
+          ? Colors.dark.tint
+          : 'transparent',
+    },
+  ];
+  const monoStyle = [
+    styles.headingOptionWrapper,
+    {
+      backgroundColor: isCodeBlockActive ? Colors.dark.tint : 'transparent',
+    },
+  ];
+
   return (
     <View style={styles.headingOptionsContainer}>
-      <Pressable
-        onPress={() => handleSelectHeading(2)}
-        style={[
-          styles.headingOptionWrapper,
-          {
-            backgroundColor:
-              headingLevel === 2 ? Colors.dark.tint : 'transparent',
-          },
-        ]}
-      >
+      <Pressable onPress={() => handleSelectHeading(2)} style={headingStyle}>
         <RNText style={styles.headingText}>見出し</RNText>
       </Pressable>
-      <Pressable
-        onPress={() => handleSelectHeading(3)}
-        style={[
-          styles.headingOptionWrapper,
-          {
-            backgroundColor:
-              headingLevel === 3 ? Colors.dark.tint : 'transparent',
-          },
-        ]}
-      >
+      <Pressable onPress={() => handleSelectHeading(3)} style={subheadingStyle}>
         <RNText style={styles.textSubhead}>小見出し</RNText>
       </Pressable>
-      <Pressable
-        onPress={() => handleSelectBody()}
-        style={[
-          styles.headingOptionWrapper,
-          {
-            backgroundColor:
-              headingLevel === undefined && !isCodeBlockActive
-                ? Colors.dark.tint
-                : 'transparent',
-          },
-        ]}
-      >
+      <Pressable onPress={() => handleSelectBody()} style={bodyStyle}>
         <RNText style={styles.textBody}>本文</RNText>
       </Pressable>
-      <Pressable
-        onPress={() => handleSelectMono()}
-        style={[
-          styles.headingOptionWrapper,
-          {
-            backgroundColor: isCodeBlockActive
-              ? Colors.dark.tint
-              : 'transparent',
-          },
-        ]}
-      >
+      <Pressable onPress={() => handleSelectMono()} style={monoStyle}>
         <RNText style={styles.monoText}>等幅</RNText>
       </Pressable>
     </View>
@@ -608,7 +473,7 @@ const ContentsOptions = ({
         <View style={styles.flex1}>
           <CustomButton
             backgroundColor={Colors.dark.secondaryBackground}
-            text='ライブラリ'
+            title='ライブラリ'
             textColor='white'
             variant='bezeledGray'
             size='large'
@@ -623,7 +488,7 @@ const ContentsOptions = ({
         <View style={styles.flex1}>
           <CustomButton
             backgroundColor={Colors.dark.secondaryBackground}
-            text='アートワーク'
+            title='アートワーク'
             textColor='white'
             variant='bezeledGray'
             size='large'
@@ -633,7 +498,7 @@ const ContentsOptions = ({
             )}
             fullWidth
             onPress={() => {
-              router.push('/editor-artwork-modal');
+              router.push('/searching-music-modal');
             }}
           />
         </View>
@@ -642,7 +507,7 @@ const ContentsOptions = ({
         <View style={styles.flex1}>
           <CustomButton
             backgroundColor={Colors.dark.secondaryBackground}
-            text='リンク'
+            title='リンク'
             textColor='white'
             variant='bezeledGray'
             size='large'
@@ -662,7 +527,7 @@ const ContentsOptions = ({
         <View style={styles.flex1}>
           <CustomButton
             backgroundColor={Colors.dark.secondaryBackground}
-            text='YouTube'
+            title='YouTube'
             textColor='white'
             variant='bezeledGray'
             size='large'
@@ -687,6 +552,7 @@ const ArticleEditorModal = () => {
   const { width, height } = useWindowDimensions();
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
+  const [keyboardStatus, setKeyboardStatus] = useState('');
   const { height: keyboardHeight, progress } = useReanimatedKeyboardAnimation();
   const { colors, theme } = useTheme();
   const [isFormatting, setIsFormatting] = useState(false);
@@ -704,6 +570,19 @@ const ArticleEditorModal = () => {
   const { showActionSheetWithOptions } = useActionSheet();
 
   const textColor = colors.text;
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardStatus('Keyboard Shown');
+    });
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardStatus('Keyboard Hidden');
+    });
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   const defaultEditorTheme: EditorTheme = {
     toolbar: {} as ToolbarTheme,
@@ -746,7 +625,8 @@ const ArticleEditorModal = () => {
   const editorState = editor.getEditorState();
   const isEditorFocused = editorState.isFocused;
   const editorPaddingHorizontal = PixelRatio.roundToNearestPixel(16);
-  if (!isEditorFocused) {
+
+  if (keyboardStatus === 'Keyboard Hidden') {
     editor.injectCSS(
       `
         .highlight-background {
@@ -816,8 +696,6 @@ const ArticleEditorModal = () => {
   iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
 });
 `);
-
-  const content = useEditorContent(editor, { type: 'json' });
 
   useEffect(() => {
     if (editorState.isFocused) {
@@ -940,7 +818,6 @@ const ArticleEditorModal = () => {
       },
       (selectedIndex) => {
         if (selectedIndex === 0) {
-          console.log(content);
         }
       },
     );
@@ -1016,6 +893,14 @@ const ArticleEditorModal = () => {
     return {
       height: 44 * progress.value,
     };
+  });
+
+  musicItem$.onChange(({ value }) => {
+    const url = value?.item?.artwork.url;
+    if (url) {
+      editor.setImage(url);
+      musicItem$.item.delete();
+    }
   });
 
   return (
@@ -1131,45 +1016,7 @@ const styles = StyleSheet.create({
   flex1: {
     flex: 1,
   },
-  container: {
-    flex: 1,
-    padding: 16,
-    gap: 36,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    borderBottomWidth: 1,
-  },
-  articleMetadataContainer: {
-    paddingHorizontal: 16,
-    gap: 12,
-  },
-  articlePickerText: {
-    fontSize: 17,
-  },
-  articleTagWrapper: {
-    gap: 4,
-  },
-  articleTagContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    paddingHorizontal: 12,
-  },
-  articleTag: {
-    width: '45%',
-    marginVertical: 8,
-  },
-  imagePickerText: {
-    fontSize: 17,
-    marginTop: 8,
-  },
-  imagePickerContainer: {
-    width: '100%',
-    paddingHorizontal: 12,
-    gap: 12,
-  },
+
   editorContainer: {
     flex: 1,
   },

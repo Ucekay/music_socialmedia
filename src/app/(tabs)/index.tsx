@@ -78,7 +78,11 @@ export default function TabIndex() {
   }
 
   const handlePress = async () => {
-    const searchSuggestions = await MusicKit.getSearchSuggestions('the sh');
+    const searchSuggestions = await MusicKit.searchCatalog(
+      'one ok rock',
+      ['song', 'album'],
+      { includeTopResults: true, offset: 0 },
+    );
     console.log(searchSuggestions);
   };
 

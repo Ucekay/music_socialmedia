@@ -39,10 +39,9 @@ export const AdvancedEditor = () => {
     }
   }, [editor, isFocused]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isFocused) editor?.commands.unsetNodeHighlight();
-  }, [editor, isFocused, state]);
+  }, [editor, isFocused]);
 
   return <EditorContent editor={editor} />;
 };

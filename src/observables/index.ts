@@ -1,1 +1,1 @@
-export { default as musicItem$ } from './editor-artwork';
+export * from './editor-artwork';

@@ -182,5 +182,5 @@ export type CustomFlatListProps<T> = Omit<
 >;
 
 export type SearchBarCommands = NativeSearchBarCommands & {
-  value: string;
+  value?: string;
 };

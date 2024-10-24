@@ -63,7 +63,7 @@ public class MusicKitModule: Module {
             (term: String, offset: Int?) async throws -> [[String: Any]] in
             let topResults = try await musicCatalogSearch.getTopSearchResults(
                 term: term, offset: offset ?? 0)
-            return topResults.map { Utilities.convertTopSeatchResult($0) }
+            return topResults.map { Utilities.convertTopSearchResult($0) }
         }
 
         AsyncFunction("getSearchSuggestions") {
@@ -75,8 +75,13 @@ public class MusicKitModule: Module {
             return [
                 "suggestions": searchSuggestions.suggestions.map(Utilities.convertSuggestion),
                 "topResults": searchSuggestions.topResults.map(
-                    Utilities.convertTopSeatchResult),
+                    Utilities.convertTopSearchResult),
             ]
+        }
+        
+        AsyncFunction("searchCatalog"){(term:String,types:[String],includeTopResults:Bool?, offset:Int?) async throws in
+            let result = try await musicCatalogSearch.serachCatalog(term: term, types: types,includeTopResults: includeTopResults ?? false, offset: offset ?? 0)
+            print(result)
         }
 
         View(UserLibraryPlaylistArtworkView.self) {

@@ -1,4 +1,4 @@
-import { Stack, useNavigation } from 'expo-router';
+import { Stack, useFocusEffect, useNavigation } from 'expo-router';
 import {
   Button,
   KeyboardAvoidingView,
@@ -23,6 +23,9 @@ export default function ModalScreen() {
   const isLandscape = width > height;
   const headerHeight = isLandscape ? 32 : 44;
   const keyboardVerticalOffset = headerHeight + top;
+  useFocusEffect(() => {
+    console.log('focused');
+  });
   return (
     <View style={styles.container}>
       <Stack.Screen

@@ -1,17 +1,16 @@
 import React from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import type { TextStyle, ViewStyle } from 'react-native';
 
 import Colors from '../constants/Colors';
 import { useTheme } from '../contexts/ColorThemeContext';
 
-type ButtonVariant = 'filled' | 'bezeled' | 'bezeledGray' | 'borderless';
+type ButtonVariant =
+  | 'filled'
+  | 'bezeled'
+  | 'bezeledGray'
+  | 'borderless'
+  | 'border';
 type ButtonSize = 'small' | 'medium' | 'large';
 
 interface IconProps {
@@ -23,7 +22,7 @@ interface IconProps {
 
 interface ButtonProps {
   onPress: () => void;
-  text: string;
+  title: string;
   variant?: ButtonVariant;
   size?: ButtonSize;
   icon?: string | React.ReactNode;
@@ -43,7 +42,7 @@ interface ButtonProps {
 
 export const Button: React.FC<ButtonProps> = ({
   onPress,
-  text,
+  title,
   variant = 'filled',
   size = 'medium',
   icon,
@@ -84,6 +83,8 @@ export const Button: React.FC<ButtonProps> = ({
         return colorScheme.buttonBezeledGray;
       case 'borderless':
         return colorScheme.buttonBorderless;
+      case 'border':
+        return 'transparent';
       default:
         return colorScheme.buttonFilled;
     }
@@ -111,13 +112,19 @@ export const Button: React.FC<ButtonProps> = ({
       case 'bezeledGray':
       case 'borderless':
         return colorScheme.tint;
+      case 'border':
+        return colorScheme.text;
       default:
         return colorScheme.buttonText;
     }
   };
 
   const buttonStyles = [
-    { backgroundColor: getBackgroundColor() },
+    {
+      backgroundColor: getBackgroundColor(),
+      borderWidth: variant === 'border' ? 1 : 0,
+      borderColor: colors.text,
+    },
     styles[size],
     fullWidth && styles.fullWidth,
     style,
@@ -184,7 +191,7 @@ export const Button: React.FC<ButtonProps> = ({
       <View style={styles.contentContainer}>
         {icon && iconPosition === 'left' && renderIconElement()}
         <View style={styles.textContainer}>
-          <Text style={textStyles}>{text}</Text>
+          <Text style={textStyles}>{title}</Text>
         </View>
         {icon && iconPosition === 'right' && renderIconElement()}
       </View>
@@ -219,7 +226,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 4,
+    gap: 8,
   },
   text: {
     fontWeight: '600',

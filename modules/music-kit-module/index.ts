@@ -46,4 +46,20 @@ export const getTopSearchResults = async (
   return await MusicKitModule.getTopSearchResults(term, offset);
 };
 
+export const searchCatalog = async (
+  term: string,
+  types: string[],
+  {
+    includeTopResults,
+    offset,
+  }: { includeTopResults: boolean; offset?: number },
+) => {
+  return await MusicKitModule.searchCatalog(
+    term,
+    types,
+    includeTopResults,
+    offset,
+  );
+};
+
 export { LibraryItemArtworkView };
