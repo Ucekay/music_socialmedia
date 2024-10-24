@@ -13,6 +13,7 @@ import BgView from '@/src/components/ThemedBgView';
 import Color from '@/src/constants/Colors';
 import Colors from '@/src/constants/Colors';
 import { ProfileEditorContext } from '@/src/contexts/ProfileEditor';
+import { existProfileId } from '@/src/backend/supabase_apis/handler/user';
 
 const IdEditor = (): JSX.Element => {
   const context = useContext(ProfileEditorContext);
@@ -33,7 +34,19 @@ const IdEditor = (): JSX.Element => {
       : Colors.light.background;
 
   const { id, setId } = context;
-  const [idEditing, setIdEditing] = useState(id);
+  const [ idEditing, setIdEditing ] = useState(id);
+  const [ exist, setExist ] = useState(false);
+
+  const HandlePress = async (idE: string) => {
+      const existData = await existProfileId(idE);
+      if (existData) {
+        setExist(true);
+      } else {
+        setExist(false);
+        setId(idE);
+        router.back();
+      };
+  };
 
   return (
     <BgView style={[styles.container, { backgroundColor }]}>
@@ -48,10 +61,7 @@ const IdEditor = (): JSX.Element => {
           <Text style={[styles.text2, { color: textColor }]}>idを編集</Text>
         </View>
         <Pressable
-          onPress={() => {
-            setId(idEditing);
-            router.back();
-          }}
+          onPress={() => HandlePress(idEditing)}
           style={[styles.headerItem, { alignItems: 'flex-end' }]}
         >
           <Text style={[styles.text2, { color: '#2f95dc' }]}>完了</Text>
@@ -67,6 +77,7 @@ const IdEditor = (): JSX.Element => {
           onChangeText={setIdEditing}
           placeholder='idを入力'
         />
+        {!exist ? <></> : <Text style={{color: '#2f95dc', fontWeight: '600'}}>このidはすでに使用されています</Text> }
       </View>
     </BgView>
   );

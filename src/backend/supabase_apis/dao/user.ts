@@ -100,11 +100,13 @@ export class UserDao implements UserRepository {
         .from(this.tableNameUser)
         .select('profile_id')
         .eq('profile_id', profileId)
-        .single();
+      
       if (error) {
         throw new Error(`データの取得エラー: ${error.message}`);
       }
-      return data !== null;
+      
+      return data.length > 0;
+
     } catch (error) {
       console.error('データの取得中にエラーが発生しました:', error);
       throw error;

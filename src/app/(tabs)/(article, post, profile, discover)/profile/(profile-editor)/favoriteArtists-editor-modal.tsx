@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
   useColorScheme,
+  Alert,
 } from 'react-native';
 
 import { Plus, Search, Xmark } from 'iconoir-react-native';
@@ -209,50 +210,7 @@ const FavoriteArtistsEditor = (): JSX.Element => {
                     returnKeyType='search'
                   />
                 </View>
-                <FlatList
-                  data={tagEditing}
-                  keyExtractor={(item) => item}
-                  renderItem={({ item }) => (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginBottom: 4,
-                        justifyContent: 'space-between',
-                        paddingBottom: 4,
-                      }}
-                    >
-                      <Text>{item}</Text>
-                      <Pressable
-                        onPress={() => {
-                          handleAdd();
-                        }}
-                      >
-                        <View
-                          style={{
-                            borderWidth: 0.5,
-                            borderColor: '#2f95dc',
-                            borderRadius: 6,
-                            alignItems: 'center',
-                            flexDirection: 'row',
-                            paddingVertical: 2,
-                            paddingHorizontal: 4,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 12,
-                              fontWeight: '600',
-                              color: '#2f95dc',
-                            }}
-                          >
-                            追加
-                          </Text>
-                        </View>
-                      </Pressable>
-                    </View>
-                  )}
-                />
+              
               </View>
               <Pressable
                 onPress={() => setIsModalVisible(false)}

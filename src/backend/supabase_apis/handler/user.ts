@@ -27,3 +27,12 @@ export const getFollowings = async (userId: string): Promise<ProfileMeta[]> => {
   const followings = await userApplication.getFollowingsByUserId(userId);
   return followings;
 };
+
+export const existProfileId = async (profileId: string): Promise<boolean> => {
+  try {
+    const result = await userApplication.existProfileId(profileId);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
