@@ -34,7 +34,7 @@ const SearchArtwork = () => {
     if ('displayTerm' in item) {
       searchRef.current?.setText(item.displayTerm);
     } else {
-      musicItem$.item.set(item);
+      musicItem$.set({ item, status: 'selected' });
       router.back();
     }
   };

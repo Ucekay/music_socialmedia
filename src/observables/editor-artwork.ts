@@ -1,11 +1,17 @@
 import { observable } from '@legendapp/state';
 
-import type { TopSearchResultItem } from '@/modules/music-kit-module/src/MusicKit.types';
+import type {
+  Album,
+  Artist,
+  Song,
+} from '@/modules/music-kit-module/src/MusicKit.types';
 
 interface MusicItem {
-  item: TopSearchResultItem | undefined;
+  item: Song | Artist | Album | undefined;
+  status: 'idle' | 'pending' | 'selected';
 }
 
 export const musicItem$ = observable<MusicItem>({
   item: undefined,
+  status: 'idle',
 });

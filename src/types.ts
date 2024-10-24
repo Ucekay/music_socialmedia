@@ -106,8 +106,6 @@ export type ColorScheme = {
   placeholder: string;
   appleMusicText: string;
   appleMusicBg: string;
-  cancelBg: string;
-  cancelText: string;
   buttonFilled: string;
   buttonBezeled: string;
   buttonBezeledGray: string;
@@ -116,6 +114,9 @@ export type ColorScheme = {
   buttonGhostText: string;
   buttonDisabled: string;
   buttonDisabledText: string;
+  distractive: string;
+  distractiveBg: string;
+  distractiveText: string;
   searchBar: string;
   editorHighlight: string;
   playerObject1: string;

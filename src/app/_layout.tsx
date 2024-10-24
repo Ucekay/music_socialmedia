@@ -5,8 +5,6 @@ import { useReactQueryDevTools } from '@dev-plugins/react-query';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { enableReactTracking } from '@legendapp/state/config/enableReactTracking';
-import { observer } from '@legendapp/state/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -14,10 +12,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 import { ThemeProvider } from '@/src/contexts/ColorThemeContext';
-
-enableReactTracking({
-  warnUnobserved: true,
-});
 
 const queryClient = new QueryClient();
 
@@ -34,7 +28,7 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const RootLayout = observer(function RootLayout() {
+function RootLayout() {
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
@@ -56,7 +50,7 @@ const RootLayout = observer(function RootLayout() {
   }
 
   return <RootLayoutNav />;
-});
+}
 
 export default RootLayout;
 

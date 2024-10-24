@@ -1,65 +1,82 @@
-import { useState } from 'react';
-import {
-  type NativeSyntheticEvent,
-  Pressable,
-  StyleSheet,
-  type TextInputChangeEventData,
-} from 'react-native';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { useRef, useState } from 'react';
+import { StyleSheet, TextInput, View } from 'react-native';
 
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { when } from '@legendapp/state';
+import { observer } from '@legendapp/state/react';
+import { Add01Icon, Vynil01Icon } from 'hugeicons-react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
-import EditorMetadataInput from '@/src/components/EditorMetadataInput';
 import Text from '@/src/components/ThemedText';
 
 import { useTheme } from '../contexts/ColorThemeContext';
+import { musicItem$ } from '../observables';
 
-import AddOrCancelButtons from './AddOrCancelButtons';
-import TrackSearchField from './TrackSearchField';
+import { Button } from './Button';
+import EditorImagePicker from './EditorImagePicker';
 
 interface Track {
   id: string;
-  songName: string;
+  title: string;
   artistName: string;
   artworkUrl: string;
 }
 
-const TrackEntry = () => {
+const TrackEntry = observer(() => {
+  const router = useRouter();
   const { colors } = useTheme();
-  const searchFieldTextColor = colors.appleMusicText;
   const secondaryTextColor = colors.secondaryText;
+  const titleInputRef = useRef<TextInput>(null);
+  const artistNameInputRef = useRef<TextInput>(null);
 
   const [manualInput, setManualInput] = useState(false);
   const [track, setTrack] = useState<Track>({
     id: '',
-    songName: '',
+    title: '',
     artistName: '',
     artworkUrl: '',
   });
-  const [trackName, setTrackName] = useState('');
+  const [title, setTitle] = useState('');
   const [artistName, setArtistName] = useState('');
+
+  useFocusEffect(() => {
+    musicItem$.status.set('idle');
+  });
 
   const showTrackInput = () => {
     setManualInput(true);
   };
 
+  const handleTrackSearch = () => {
+    musicItem$.status.set('pending');
+    when(
+      () => musicItem$.status.get(),
+      (status) => {
+        if (status === 'selected') {
+          const item = musicItem$.item.get();
+          if (item && item.type === ('song' || 'album')) {
+            setTrack({
+              id: item.id,
+              title: item.title,
+              artistName: item.artistName,
+              artworkUrl: item.artwork.url,
+            });
+            musicItem$.item.delete();
+          }
+        }
+      },
+    );
+    router.push('/searching-music-modal');
+  };
+
   const handleCancel = () => {
+    setTitle('');
+    setArtistName('');
     setManualInput(false);
   };
 
-  const handleTrackChange = (
-    e: NativeSyntheticEvent<TextInputChangeEventData>,
-  ) => {
-    setTrackName(e.nativeEvent.text);
-  };
-
-  const handleArtistChange = (
-    e: NativeSyntheticEvent<TextInputChangeEventData>,
-  ) => {
-    setArtistName(e.nativeEvent.text);
-  };
-
   const handleAdd = () => {
+    setTrack({ ...track, title: title, artistName: artistName });
     setManualInput(false);
   };
 
@@ -70,57 +87,101 @@ const TrackEntry = () => {
       style={styles.searchFieldWrapper}
     >
       <Text style={styles.label}>楽曲</Text>
+      {track.artistName && !manualInput && (
+        <Animated.View
+          entering={FadeIn}
+          exiting={FadeOut}
+          style={styles.inputContainer}
+        >
+          <Text style={{ fontSize: 17 }}>楽曲名　　　　{track.title}</Text>
+          <Text style={{ fontSize: 17 }}>アーティスト　{track.artistName}</Text>
+        </Animated.View>
+      )}
       {!manualInput && (
         <Animated.View
           entering={FadeIn}
           exiting={FadeOut}
           style={styles.inputContainer}
         >
-          <TrackSearchField
-            placeholder='楽曲名を検索'
-            onTrackSelect={() => setTrack}
+          <Button
+            icon={'Vynil01Icon'}
+            iconPosition='right'
+            renderIcon={({ color, size }) => (
+              <Vynil01Icon color={color} size={size} />
+            )}
+            size='large'
+            title='楽曲を検索'
+            variant='border'
+            onPress={handleTrackSearch}
           />
-          <Pressable onPress={showTrackInput}>
-            <Animated.View
-              style={[styles.option, { borderColor: secondaryTextColor }]}
-            >
-              <Text style={[styles.optionText, { color: secondaryTextColor }]}>
-                自分で入力する
-              </Text>
-              <FontAwesome6 name='plus' size={15} color={secondaryTextColor} />
-            </Animated.View>
-          </Pressable>
+          <Button
+            icon={'Add01Icon'}
+            iconPosition='right'
+            renderIcon={({ color, size }) => (
+              <Add01Icon color={color} size={size} />
+            )}
+            size='large'
+            title='自分で入力する'
+            variant='border'
+            onPress={showTrackInput}
+          />
         </Animated.View>
       )}
+
       {manualInput && (
         <Animated.View
           entering={FadeIn}
           exiting={FadeOut}
           style={styles.inputContainer}
         >
-          <EditorMetadataInput
-            borderColor={searchFieldTextColor}
+          <TextInput
+            ref={titleInputRef}
+            style={[styles.input, { borderColor: colors.secondaryText }]}
             placeholder='楽曲名'
             placeholderTextColor={secondaryTextColor}
-            onChange={handleTrackChange}
-            style={{ color: secondaryTextColor }}
+            value={title}
+            onChangeText={(text) => setTitle(text)}
           />
-          <EditorMetadataInput
-            borderColor={searchFieldTextColor}
+          <TextInput
+            ref={artistNameInputRef}
+            style={[styles.input, { borderColor: colors.secondaryText }]}
             placeholder='アーティスト名'
             placeholderTextColor={secondaryTextColor}
-            onChange={handleArtistChange}
-            style={{ color: secondaryTextColor }}
+            value={artistName}
+            onChangeText={(text) => setArtistName(text)}
           />
-          <AddOrCancelButtons
-            handleCancel={handleCancel}
-            handleAdd={handleAdd}
-          />
+          <View style={{ flexDirection: 'row', gap: 12 }}>
+            <View style={{ flex: 1 }}>
+              <Button
+                backgroundColor={colors.distractive}
+                fullWidth
+                title='キャンセル'
+                onPress={handleCancel}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Button fullWidth title='追加' onPress={handleAdd} />
+            </View>
+          </View>
         </Animated.View>
+      )}
+      {track.title && !track.artworkUrl && (
+        <View style={{ gap: 12 }}>
+          <Animated.Text
+            entering={FadeIn}
+            exiting={FadeOut}
+            style={[styles.imagePickerText, { color: colors.text }]}
+          >
+            見出し画像
+          </Animated.Text>
+          <View style={{ paddingHorizontal: 12 }}>
+            <EditorImagePicker />
+          </View>
+        </View>
       )}
     </Animated.View>
   );
-};
+});
 
 export default TrackEntry;
 
@@ -161,5 +222,17 @@ const styles = StyleSheet.create({
   icon: {
     borderRadius: 100,
     borderWidth: 1,
+  },
+  input: {
+    fontSize: 17,
+    width: '100%',
+    padding: 12,
+    paddingVertical: 14,
+    borderCurve: 'continuous',
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  imagePickerText: {
+    fontSize: 17,
   },
 });
